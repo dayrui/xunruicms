@@ -963,6 +963,9 @@ class Api extends \Phpcmf\Common {
             $path = rtrim($data['SYS_ATTACHMENT_PATH'], DIRECTORY_SEPARATOR).'/';
             // 附件访问URL
             $url = trim($data['SYS_ATTACHMENT_URL'], '/').'/';
+            if (!dr_is_url($url)) {
+                $url.= '<font color="red">'.dr_lang('（不是一个合法的地址，缺少http://或者https://前缀）').'</font>';
+            }
             $note = dr_lang('已使用自定义上传目录和自定义访问地址');
         } else {
             // 在当前网站目录
@@ -999,6 +1002,9 @@ class Api extends \Phpcmf\Common {
                 $this->_json(0, '<font color="red">'.dr_lang('没有设置访问URL地址').'</font>');
             }
             $url = trim($data['cache_url'], '/').'/';
+            if (!dr_is_url($url)) {
+                $url.= '<font color="red">'.dr_lang('（不是一个合法的地址，缺少http://或者https://前缀）').'</font>';
+            }
             $note = dr_lang('已使用自定义存储目录和自定义访问地址');
         } else {
             // 在当前网站目录
@@ -1035,6 +1041,9 @@ class Api extends \Phpcmf\Common {
                 $this->_json(0, '<font color="red">'.dr_lang('没有设置访问URL地址').'</font>');
             }
             $url = trim($data['avatar_url'], '/').'/';
+            if (!dr_is_url($url)) {
+                $url.= '<font color="red">'.dr_lang('（不是一个合法的地址，缺少http://或者https://前缀）').'</font>';
+            }
             $note = dr_lang('已使用自定义存储目录和自定义访问地址');
         } else {
             // 在当前网站目录
