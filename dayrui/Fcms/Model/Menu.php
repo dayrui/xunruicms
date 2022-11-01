@@ -34,7 +34,7 @@ class Menu extends \Phpcmf\Model {
                 'uri' => $data['uri'] ? $data['uri'] : '',
                 'url' => $data['url'] ? $data['url'] : '',
                 'mark' => $mark ? $mark : (string)$data['mark'],
-                'site' => '',
+                'site' => $data['site'] ? (string)$data['site'] : '',
                 'icon' => $data['icon'] ? $data['icon'] : '',
                 'hidden' => (int)$data['hidden'],
                 'displayorder' => (int)$data['displayorder'],
@@ -56,7 +56,7 @@ class Menu extends \Phpcmf\Model {
                 'uri' => $data['uri'] ? $data['uri'] : '',
                 'url' => $data['url'] ? $data['url'] : '',
                 'mark' => $mark ? $mark : (string)$data['mark'],
-                'site' => '',
+                'site' => $data['site'] ? (string)$data['site'] : '',
                 'icon' => $data['icon'] ? $data['icon'] : '',
                 'hidden' => (int)$data['hidden'],
                 'displayorder' => (int)$data['displayorder'],
@@ -75,12 +75,6 @@ class Menu extends \Phpcmf\Model {
                     $group[$i] = $i;
                 }
             }
-            $site = [];
-            if ($site['group']) {
-                foreach ($site['group'] as $i) {
-                    $site[$i] = $i;
-                }
-            }
             $this->db->table('member_menu')->replace([
                 'pid' => $pid,
                 'name' => $data['name'],
@@ -89,8 +83,8 @@ class Menu extends \Phpcmf\Model {
                 'mark' => $mark,
                 'icon' => $data['icon'] ? $data['icon'] : '',
                 'group' => dr_array2string($group),
-                'site' => dr_array2string($site),
-                'client' => '',
+                'site' => $data['site'] ? (string)$data['site'] : '',
+                'client' => $data['client'] ? (string)$data['client'] : '',
                 'hidden' => (int)$data['hidden'],
                 'displayorder' => (int)$data['displayorder'],
             ]);
@@ -386,6 +380,15 @@ class Menu extends \Phpcmf\Model {
         }
     }
 
+    // 查询老库值
+    private function _get_old_value($rp, $t) {
+        $key = ((string)$t['name'].(string)$t['mark'].(string)$t['uri'].(string)$t['url']);
+        if (isset($rp[$key]) && $rp[$key]) {
+            return $rp[$key];
+        }
+        return '';
+    }
+
     // 初始化菜单
     public function init($table = '') {
 
@@ -423,20 +426,31 @@ class Menu extends \Phpcmf\Model {
 
         if ($table == 'admin' || !$table) {
             // 清空表
+            $rp = [];
+            $old = $this->table('admin_menu')->where('site<>""')->getAll();
+            if ($old) {
+                foreach ($old as $t) {
+                    $key = ($t['name'].$t['mark'].$t['uri'].$t['url']);
+                    $rp[$key] = $t['site'];
+                }
+            }
             $this->db->table('admin_menu')->truncate();
             $this->db->table('admin_menu')->emptyTable();
             foreach ($menu['admin'] as $mark => $top) {
                 // 插入顶级菜单
-                $mark = strlen($mark) > 2 ? $mark : '';
+                $top['mark'] = $mark = strlen($mark) > 2 ? $mark : '';
+                $top['site'] = $this->_get_old_value($rp, $top);
                 $top_id = $this->_add('admin', 0, $top, $mark, true);
                 // 插入分组菜单
                 if ($top_id) {
                     foreach ($top['left'] as $mark2 => $left) {
-                        $mark2 = strlen($mark2) > 2 ? $mark2 : '';
+                        $left['mark'] = $mark2 = strlen($mark2) > 2 ? $mark2 : '';
+                        $left['site'] = $this->_get_old_value($rp, $left);
                         $left_id = $this->_add('admin', $top_id, $left, $mark2, true);
                         // 插入链接菜单
                         if ($left_id) {
                             foreach ($left['link'] as $link) {
+                                $link['site'] = $this->_get_old_value($rp, $link);
                                 $this->_add('admin', $left_id, $link);
                             }
                         }
@@ -460,15 +474,31 @@ class Menu extends \Phpcmf\Model {
 
         } elseif ($this->is_table_exists('member_menu') && $table == 'member') {
             // 清空表
+            $site = $group = $client = [];
+            $old = $this->table('member_menu')->where('`site`<>"" or `group`<>"" or `client`<>""')->getAll();
+            if ($old) {
+                foreach ($old as $t) {
+                    $key = ($t['name'].$t['mark'].$t['uri'].$t['url']);
+                    $site[$key] = ($t['site']);
+                    $group[$key] = dr_string2array($t['group']);
+                    $client[$key] = ($t['client']);
+                }
+            }
             $this->db->table('member_menu')->truncate();
             $this->db->table('member_menu')->emptyTable();
             foreach ($menu['member'] as $mark => $top) {
                 // 插入顶级菜单
-                $mark = strlen($mark) > 2 ? $mark : '';
+                $top['mark'] = $mark = strlen($mark) > 2 ? $mark : '';
+                $top['site'] = $this->_get_old_value($site, $top);
+                $top['group'] = $this->_get_old_value($group, $top);
+                $top['client'] = $this->_get_old_value($client, $top);
                 $top_id = $this->_add('member', 0, $top, $mark, true);
                 // 插入链接菜单
                 if ($top_id) {
                     foreach ($top['link'] as $mark2 => $link) {
+                        $link['site'] = $this->_get_old_value($site, $link);
+                        $link['group'] = $this->_get_old_value($group, $link);
+                        $link['client'] = $this->_get_old_value($client, $link);
                         $this->_add('member', $top_id, $link);
                     }
                 }
