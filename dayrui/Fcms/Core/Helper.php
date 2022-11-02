@@ -703,7 +703,7 @@ function dr_format_create_sql($sql) {
         return '';
     }
 
-    $sql = trim(str_replace('ENGINE=MyISAM', 'ENGINE=InnoDB', $sql));
+    //$sql = trim(str_replace('ENGINE=MyISAM', 'ENGINE=InnoDB', $sql));
     $sql = trim(str_replace('CHARSET=utf8 ', 'CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci ', $sql));
 
     return $sql;

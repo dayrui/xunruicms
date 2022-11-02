@@ -52,7 +52,7 @@ abstract class Common extends \Frame\Controller {
             return;
         } elseif (defined('IS_COMMON')) {
             // 防止重复实例化
-            return;
+            return $this;
         }
 
         define('IS_COMMON', 1);
@@ -84,7 +84,7 @@ abstract class Common extends \Frame\Controller {
             $this->cmf_version = [
                 'id' => 8,
                 'name' => '迅睿CMS开源框架',
-                'version' => '4.6.0',
+                'version' => '4.6.2',
                 'downtime' => SYS_TIME,
                 'updatetime' => '--',
             ];
