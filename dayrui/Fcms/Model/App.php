@@ -108,6 +108,14 @@ class App extends \Phpcmf\Model {
             $url = dr_url('cloud/local');
         }
 
+        if (defined('IS_VERSION') && IS_VERSION) {
+            // 存在public时，执行
+        } elseif (is_dir(WEBPATH.'public/')) {
+            //将public合并到根目录
+            \Phpcmf\Service::L('file')->copy_dir(WEBPATH.'public/', WEBPATH.'public/', WEBPATH);
+            dr_dir_delete(WEBPATH.'public/', true);
+        }
+
         return dr_return_data(1, dr_lang('安装成功'), [
             'url' => $url
         ]);
