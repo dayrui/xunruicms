@@ -56,6 +56,18 @@ class Linkages extends \Phpcmf\Library\A_Field {
 						<span class="help-block">'.dr_lang('开启后会强制要求用户选择最终一个选项，需要启用必须验证才会生效').'</span>
                     </div>
                 </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">'.dr_lang('折叠显示到一行').'</label>
+                    <div class="col-md-9">
+                        <div class="mt-radio-inline">
+                         <label class="mt-radio mt-radio-outline"><input type="radio" value="0" name="data[setting][option][collapse]" '.($option['collapse'] == 0 ? 'checked' : '').' > '.dr_lang('开启').' <span></span></label>
+                        &nbsp; &nbsp;
+                            <label class="mt-radio mt-radio-outline"><input type="radio" value="1" name="data[setting][option][collapse]" '.($option['collapse'] == 1 ? 'checked' : '').' > '.dr_lang('关闭').' <span></span></label>
+                             
+                            </div>
+						<span class="help-block">'.dr_lang('多选模式下是否折叠显示选择值').'</span>
+                    </div>
+                </div>
 				', '<div class="form-group">
 			<label class="col-md-2 control-label">'.dr_lang('控件宽度').'</label>
 			<div class="col-md-9">
@@ -203,7 +215,7 @@ class Linkages extends \Phpcmf\Library\A_Field {
                     clearable: true,
                      filterable: false,
                     maxSize: '.intval($field['setting']['option']['limit']).',
-                  collapseTags: true,
+                  collapseTags: '.($field['setting']['option']['collapse'] ? 'false' : 'true').',
                   minCollapseTagsNumber: 0,
                   options: linkage_'.$field['setting']['option']['linkage'].',
                   props: {
