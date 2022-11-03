@@ -232,6 +232,35 @@ class Api extends \Phpcmf\Common {
         echo 'var linkage_'.$code.' ='.json_encode($linkage, JSON_UNESCAPED_UNICODE).';';exit;
     }
 
+
+    /**
+     * 经典样式的联动菜单调用
+     */
+    public function linkage_ld() {
+
+        $pid = (int)\Phpcmf\Service::L('input')->get('parent_id');
+        $code = dr_safe_replace(\Phpcmf\Service::L('input')->get('code'));
+        $linkage = dr_linkage_list($code, $pid);
+
+        $json = [];
+        $html = '';
+        foreach ($linkage as $v) {
+            if ($v['pid'] == $pid) {
+                $json[] = [
+                    'region_id' => $v['ii'],
+                    'region_code' => $v['id'],
+                    'region_name' => $v['name']
+                ];
+            }
+        }
+
+
+        echo json_encode([
+            'data' => $json,
+            'html' => $html,
+        ], JSON_UNESCAPED_UNICODE);exit;
+    }
+
     /**
      * Ajax调用字段属性表单
      *

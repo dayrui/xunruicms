@@ -61,6 +61,19 @@ class Linkage extends \Phpcmf\Library\A_Field {
 						<span class="help-block">'.dr_lang('开启后会强制要求用户选择最终一个选项，需要启用必须验证才会生效').'</span>
                     </div>
                 </div>
+                
+                 <div class="form-group">
+                    <label class="col-md-2 control-label">'.dr_lang('输入框显示方式').'</label>
+                    <div class="col-md-9">
+                        <div class="mt-radio-inline">
+                         <label class="mt-radio mt-radio-outline"><input type="radio" value="1" name="data[setting][option][new]" '.($option['new'] == 1 ? 'checked' : '').' > '.dr_lang('经典模式').' <span></span></label>
+                        &nbsp; &nbsp;
+                            <label class="mt-radio mt-radio-outline"><input type="radio" value="0" name="data[setting][option][new]" '.($option['new'] == 0 ? 'checked' : '').' > '.dr_lang('折叠弹窗模式').' <span></span></label>
+                             
+                            </div>
+						<span class="help-block">'.dr_lang('针对输入框效果的显示方式').'</span>
+                    </div>
+                </div>
 			<div class="form-group">
 				<label class="col-md-2 control-label">'.dr_lang('默认选择值').'</label>
 				<div class="col-md-9">
@@ -163,20 +176,22 @@ class Linkage extends \Phpcmf\Library\A_Field {
         // 字段默认值
         $value = $value ? $value : $this->get_default_value($field['setting']['option']['value']);
 
-        // 开始输出
-        $str = '';
-        if (!$this->is_load_js($field['fieldtype'])) {
-            $str.= '
+
+        if ($field['setting']['option']['new']) {
+            // 开始输出
+            $str = '';
+            if (!$this->is_load_js($field['fieldtype'])) {
+                $str.= '
 <link rel="stylesheet" type="text/css" href="'.ROOT_THEME_PATH.'assets/layui/css/layui.css?v='.CMF_UPDATE_TIME.'"/>
 <link rel="stylesheet" type="text/css" href="'.ROOT_THEME_PATH.'assets/layui/cascader/cascader.css?v='.CMF_UPDATE_TIME.'"/>
 <script src="'.ROOT_THEME_PATH.'assets/layui/layui.js?v='.CMF_UPDATE_TIME.'"></script>
 <script src="'.ROOT_THEME_PATH.'assets/layui/cascader/cascader'.(IS_XRDEV ? '' : '.min').'.js?v='.CMF_UPDATE_TIME.'"></script>
             ';
-            $this->set_load_js($field['fieldtype'], 1);
-        }
+                $this->set_load_js($field['fieldtype'], 1);
+            }
 
-        // 输出js支持
-        $str.= '<input type="hidden" name="data['.$name.']" id="dr_'.$name.'" value="'.(int)$value.'" />
+            // 输出js支持
+            $str.= '<input type="hidden" name="data['.$name.']" id="dr_'.$name.'" value="'.(int)$value.'" />
         <script src="'.WEB_DIR.'index.php?s=api&c=api&m=linkage&mid='.APP_DIR.'&file='.$field['setting']['option']['file'].'&code='.$field['setting']['option']['linkage'].'"></script>
 		<script type="text/javascript">
 		$(function (){
@@ -195,6 +210,90 @@ class Linkage extends \Phpcmf\Library\A_Field {
 			})
 				});
 		</script>'.$tips;
+        } else {
+            // 联动菜单缓存
+            $linkage = dr_linkage_list($field['setting']['option']['linkage'], 0);
+            if (!$linkage) {
+                if (CI_DEBUG) {
+                    return $this->input_format($name, $text, '<div class="form-control-static" style="color:red">联动菜单【'.$field['setting']['option']['linkage'].'】没有数据</div>');
+                }
+                return $this->input_format($name, $text, '');
+            }
+
+            // 最大几层
+            $linklevel = dr_linkage_level($field['setting']['option']['linkage']) + 1;
+
+            // 开始输出
+            $str = '<input type="hidden" name="data['.$name.']" id="dr_'.$name.'" value="'.(int)$value.'">';
+            if (!$this->is_load_js($field['fieldtype'].'_LD')) {
+                $str.= '<script type="text/javascript" src="'.ROOT_THEME_PATH.'assets/js/jquery.ld.js?v='.CMF_UPDATE_TIME.'"></script>';
+                $this->set_load_js($field['fieldtype'].'_LD', 1);
+            }
+            $level = 1;
+            $default = '';
+            if ($value) {
+                $link = dr_linkage($field['setting']['option']['linkage'], $value);
+                $pids = substr($link['pids'], 2);
+                $level = substr_count($pids, ',') + 1;
+                $default = !$pids ? '["'.$value.'"]' : '["'.str_replace(',', '","', $pids).'","'.$value.'"]';
+            }
+            // 输出默认菜单
+            $str.= '<span id="dr_linkage_'.$name.'_select" style="'.($value ? 'display:none' : '').'">';
+            for ($i = 1; $i <= $linklevel; $i++) {
+                $style = $i > $level ? 'style="display:none"' : '';
+                $str.= '<label style="padding-right:10px;"><select class="form-control finecms-select-'.$name.'" name="'.$name.'-'.$i.'" id="'.$name.'-'.$i.'" width="100" '.$style.'><option value=""> -- </option></select></label>';
+            }
+            $str.= '<label id="dr_linkage_'.$name.'_html"></label>';
+            $str.= '</span>';
+            // 重新选择
+            if ($value) {
+                $str.= '<div id="dr_linkage_'.$name.'_cxselect">';
+                $edit_html = '<div class="form-control-static" >'.dr_linkagepos($field['setting']['option']['linkage'], $value, ' » ').'&nbsp;&nbsp;<a href="javascript:;" onclick="dr_linkage_select_'.$name.'()" style="color:blue">'.dr_lang('[重新选择]').'</a></div>';
+                if ($field['setting']['option']['file']) {
+                    $data = dr_linkage($field['setting']['option']['linkage'], $value);
+                    $file = CONFIGPATH.'mylinkage/'.$field['setting']['option']['file'];
+                    $file2 = dr_get_app_dir(APP_DIR).'Config/mylinkage/'.$field['setting']['option']['file'];
+                    if (is_file($file)) {
+                        require $file;
+                    } elseif (is_file($file2)) {
+                        require $file2;
+                    } else {
+                        log_message('error', '联动菜单自定义程序文件【'.$field['setting']['option']['file'].'】不存在');
+                        if (CI_DEBUG) {
+                            $edit_html.= '联动菜单自定义程序文件【'.$field['setting']['option']['file'].'】不存在';
+                        }
+                    }
+                }
+                $str.= $edit_html;
+                $str.= '</div>';
+            }
+            // 输出js支持
+            $str.= '
+		<script type="text/javascript">
+			function dr_linkage_select_'.$name.'() {
+				$("#dr_linkage_'.$name.'_select").show();
+				$("#dr_linkage_'.$name.'_cxselect").hide();
+			}
+			$(function(){
+				var $ld5 = $(".finecms-select-'.$name.'");					  
+				$ld5.ld({ajaxOptions:{"url": "'.WEB_DIR.'index.php?s=api&c=api&m=linkage_ld&mid='.APP_DIR.'&file='.$field['setting']['option']['file'].'&code='.$field['setting']['option']['linkage'].'"},inputId:"dr_linkage_'.$name.'_html",defaultParentId:0});
+				var ld5_api = $ld5.ld("api");
+				ld5_api.selected('.$default.');
+				$ld5.bind("change", function(e){
+					var $target = $(e.target);
+					var index = $ld5.index($target);
+					//$("#'.$name.'-'.$i.'").remove();
+					var vv = $ld5.eq(index).show().val();
+					$("#dr_'.$name.'").val(vv);
+					index ++;
+					$ld5.eq(index).show();
+					//console.log("value="+vv);
+				});
+			})
+		</script>'.$tips;
+        }
+
+
         return $this->input_format($name, $text, $str);
     }
 
