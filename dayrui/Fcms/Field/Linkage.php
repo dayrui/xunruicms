@@ -66,9 +66,9 @@ class Linkage extends \Phpcmf\Library\A_Field {
                     <label class="col-md-2 control-label">'.dr_lang('输入框显示方式').'</label>
                     <div class="col-md-9">
                         <div class="mt-radio-inline">
-                         <label class="mt-radio mt-radio-outline"><input type="radio" value="1" name="data[setting][option][new]" '.($option['new'] == 1 ? 'checked' : '').' > '.dr_lang('经典模式').' <span></span></label>
+                         <label class="mt-radio mt-radio-outline"><input type="radio" value="1" name="data[setting][option][new]" '.($option['new'] == 1 ? 'checked' : '').' > '.dr_lang('折叠弹窗模式').' <span></span></label>
                         &nbsp; &nbsp;
-                            <label class="mt-radio mt-radio-outline"><input type="radio" value="0" name="data[setting][option][new]" '.($option['new'] == 0 ? 'checked' : '').' > '.dr_lang('折叠弹窗模式').' <span></span></label>
+                            <label class="mt-radio mt-radio-outline"><input type="radio" value="0" name="data[setting][option][new]" '.($option['new'] == 0 ? 'checked' : '').' > '.dr_lang('经典模式').' <span></span></label>
                              
                             </div>
 						<span class="help-block">'.dr_lang('针对输入框效果的显示方式').'</span>
