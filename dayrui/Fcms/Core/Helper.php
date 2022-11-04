@@ -2930,7 +2930,7 @@ function dr_arraycut($arr, $limit) {
         $b = $limit;
     }
 
-    return array_slice($arr, $a, $b);
+    return array_slice($arr, $a, $b, true);
 }
 
 /**
