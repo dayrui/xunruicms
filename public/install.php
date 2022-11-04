@@ -22,7 +22,15 @@ if (is_file(WEBPATH.'config/api.php')) {
         $min = '7.2.0';
     }
 }
-!defined('WRITEPATH') && define('WRITEPATH', WEBPATH.'cache/');
+if (!defined('WRITEPATH')) {
+    if (is_dir(WEBPATH.'cache/')) {
+        define('WRITEPATH', WEBPATH.'cache/');
+    } elseif (is_dir(dirname(dirname(__FILE__)).'/cache/')) {
+        define('WRITEPATH', dirname(dirname(__FILE__)).'/cache/');
+    } else {
+        exit('无法识别cache目录，请联系官方人员');
+    }
+}
 
 // 判断环境
 if (version_compare(PHP_VERSION, $min) < 0) {
