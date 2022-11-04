@@ -401,7 +401,7 @@ class Router {
     public function get_url_value($data, $rule, $prefix) {
         $rep = new \php5replace($data);
         $url = (string)$rep->replace($rule);
-        if (strpos($url, 'http://') === 0 or strpos($url, 'https://') === 0) {
+        if (dr_is_url($url)) {
             return $url; // 带域名的url直接返回
         }
         $url = ltrim(str_replace('//', '/', $url), '/');
