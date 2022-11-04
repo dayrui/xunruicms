@@ -18,6 +18,9 @@ if (is_file(WEBPATH.'config/api.php')) {
 } else {
     define('CONFIGPATH',dirname(dirname(__FILE__)).'/config/');
 	define('WRITEPATH', dirname(dirname(__FILE__)).'/cache/');
+    if (is_dir(dirname(dirname(__FILE__)).'/CodeIgniter72/')) {
+        $min = '7.2.0';
+    }
 }
 !defined('WRITEPATH') && define('WRITEPATH', WEBPATH.'cache/');
 
