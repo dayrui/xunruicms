@@ -20,7 +20,10 @@ class Member extends \Phpcmf\Model {
             return $this->member['uid'];
         }
 
-        $data = $this->db->table('member')->select('id')->where('username', dr_safe_replace($name))->get()->getRowArray();
+        $data = $this->db->table('member')
+            ->select('id')
+            ->where('username', dr_safe_replace($name))
+            ->get()->getRowArray();
 
         return intval($data['id']);
     }
@@ -38,7 +41,10 @@ class Member extends \Phpcmf\Model {
             return $this->member['username'];
         }
 
-        $data = $this->db->table('member')->select('username')->where('id', $uid)->get()->getRowArray();
+        $data = $this->db->table('member')
+            ->select('username')
+            ->where('id', $uid)
+            ->get()->getRowArray();
 
         return $data['username'];
     }
@@ -67,7 +73,10 @@ class Member extends \Phpcmf\Model {
             return $this->member['phone'];
         }
 
-        $data = $this->db->table('member')->select('phone')->where('id', $uid)->get()->getRowArray();
+        $data = $this->db->table('member')
+            ->select('phone')
+            ->where('id', $uid)
+            ->get()->getRowArray();
 
         return $data['phone'];
     }
@@ -82,7 +91,9 @@ class Member extends \Phpcmf\Model {
             return $this->member;
         }
 
-        $data = $this->db->table('member')->where('id', $uid)->get()->getRowArray();
+        $data = $this->db->table('member')
+            ->where('id', $uid)
+            ->get()->getRowArray();
         if (!$data) {
             return [];
         }
@@ -691,7 +702,13 @@ class Member extends \Phpcmf\Model {
                     break;
             }
             // 发送审核提醒
-            IS_USE_MEMBER && $this->admin_notice(0, 'member', $member, dr_lang('新会员【%s】注册审核', $member['username']), 'member/verify/index:field/id/keyword/'.$uid);
+            IS_USE_MEMBER && $this->admin_notice(
+                0,
+                'member',
+                $member,
+                dr_lang('新会员【%s】注册审核', $member['username']),
+                'member/verify/index:field/id/keyword/'.$uid
+            );
         }
 
         // 注册后的通知
@@ -955,11 +972,13 @@ class Member extends \Phpcmf\Model {
         }
 
         $this->db->table('member_data')->where('id', $member['id'])->update(['is_avatar' => 1]);
+
         // avatar_score
         $value = \Phpcmf\Service::L('member_auth', 'member')->member_auth('avatar_score', $member);
         if ($value) {
             \Phpcmf\Service::M('member')->add_experience($member['id'], $value, dr_lang('头像认证'), '', 'avatar_score', 1);
         }
+
         $value = \Phpcmf\Service::L('member_auth', 'member')->member_auth('avatar_exp', $member);
         if ($value) {
             $this->add_score($member['id'], $value, dr_lang('头像认证'), '', 'avatar_exp', 1);
