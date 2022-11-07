@@ -17,7 +17,7 @@ class Session {
         $this->session->setTempdata(SYS_KEY . $key, $value, $time);
     }
 
-    public function getTempdata($key, $value, $time)
+    public function getTempdata($key = null)
     {
         return $this->session->getTempdata(SYS_KEY . $key);
     }

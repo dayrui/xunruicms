@@ -15,6 +15,11 @@ class Session {
         session(SYS_KEY.$key, $value);
     }
 
+    public function getTempdata($key = null)
+    {
+        return session(SYS_KEY.$key);
+    }
+
     public function get($key = null)
     {
         return session(SYS_KEY.$key);
