@@ -19,7 +19,7 @@ class Session {
 
     public function getTempdata($key, $value, $time)
     {
-        $this->session->getTempdata(SYS_KEY . $key);
+        return $this->session->getTempdata(SYS_KEY . $key);
     }
 
     public function get($key = null)
