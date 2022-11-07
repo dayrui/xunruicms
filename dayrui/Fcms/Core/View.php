@@ -2105,6 +2105,15 @@ class View {
     }
 
     // 模板中的文件引用提示
+    public function add_load_tips($name, $msg) {
+        if ($name) {
+            $this->_load_file_tips[$name] = $msg;
+        } else {
+            $this->_load_file_tips[] = $msg;
+        }
+    }
+
+    // 模板中的文件引用提示
     public function get_load_tips() {
 
         if (!$this->_load_file_tips) {
