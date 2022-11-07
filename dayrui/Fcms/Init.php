@@ -285,9 +285,9 @@ if (!function_exists('dr_get_rewrite_uri')) {
 if (!function_exists('locale_set_default')) {
     function locale_set_default($a) { }
 }
-if (!function_exists('chmod')) {
+//if (!function_exists('chmod')) {
     //function chmod($file, $int = 0) {  }
-}
+//}
 
 /*
  * 重写is_cli
