@@ -246,7 +246,7 @@ class Input {
     /**
      * 后台日志
      */
-    public function system_log($action, $insert = 0, $param = []) {
+    public function system_log($action, $insert = 0, $param = [], $username = '') {
 
         if (!$insert && (!SYS_ADMIN_LOG || !IS_ADMIN)) {
             // 是否开启日志
@@ -260,7 +260,7 @@ class Input {
             'time' => SYS_TIME,
             'param' => $param,
             'action' => addslashes(dr_safe_replace($action)),
-            'username' => \Phpcmf\Service::C()->admin['username'] ? \Phpcmf\Service::C()->admin['username'] : '未登录',
+            'username' => $username ? $username : (\Phpcmf\Service::C()->admin['username'] ? \Phpcmf\Service::C()->admin['username'] : '未登录'),
         ];
 
         $path = WRITEPATH.'log/'.date('Ym', SYS_TIME).'/';

@@ -86,7 +86,7 @@ class Home extends \Phpcmf\Common
             'cmf_update' => $this->cmf_version['updatetime'],
             'cmf_version' => $this->cmf_version['version'],
         ]);
-		\Phpcmf\Service::V()->display($table_data ? 'index_main.html' : 'main.html');exit;
+		\Phpcmf\Service::V()->display($table_data ? 'index_main.html' : 'main.html');
 	}
 
 	public function init_edit() {
@@ -130,7 +130,7 @@ class Home extends \Phpcmf\Common
             'tables' => $this->_main_table(),
             'table_data' => $data,
         ]);
-		\Phpcmf\Service::V()->display('index_edit.html');exit;
+		\Phpcmf\Service::V()->display('index_edit.html');
 	}
 
 	//后台自定义面板 权限划分
@@ -156,7 +156,7 @@ class Home extends \Phpcmf\Common
             'form' => dr_form_hidden(),
             'role' => \Phpcmf\Service::C()->get_cache('auth'),
         ]);
-        \Phpcmf\Service::V()->display('index_auth_edit.html');exit;
+        \Phpcmf\Service::V()->display('index_auth_edit.html');
     }
 
 	public function index() {

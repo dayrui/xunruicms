@@ -55,7 +55,7 @@ class Login extends \Phpcmf\Common
                 }
                 if ($login['code']) {
                     // 登录成功
-                    \Phpcmf\Service::L('input')->system_log('登录后台成功', 1);
+                    \Phpcmf\Service::L('input')->system_log('登录后台成功', 1, [], $data['username']);
 					if ($sn) {
 						// 解除禁止登陆
 						\Phpcmf\Service::C()->session()->set('fclogin_error_sn', 0);
