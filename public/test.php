@@ -105,9 +105,6 @@ if (! extension_loaded('mbstring')) {
 if (! extension_loaded('xml')) {
     dr_echo_msg(0, 'PHP扩展库：xml未安装');
 }
-if (!function_exists('chmod')) {
-    dr_echo_msg(0, 'PHP函数chmod被禁用，需要开启');
-}
 
 if (!fopen('https://www.xunruicms.com/', "rb")) {
     dr_echo_msg(0, 'fopen无法获取远程数据，无法使用在线下载插件和在线升级');
