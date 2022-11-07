@@ -286,7 +286,7 @@ if (!function_exists('locale_set_default')) {
     function locale_set_default($a) { }
 }
 if (!function_exists('chmod')) {
-    function chmod($file, $int = 0) {  }
+    //function chmod($file, $int = 0) {  }
 }
 
 /*
