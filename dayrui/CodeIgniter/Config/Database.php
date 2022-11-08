@@ -67,6 +67,12 @@ class Database extends Config
         $db = [];
         require CONFIGPATH.'database.php';
 
+        if (isset($db['failover']) && $db['failover']) {
+            // 备用库
+            $this->default['failover'] = $db['failover'];
+            unset($db['failover']);
+        }
+
         foreach ($this->default as $p => $t) {
             foreach ($db as $name => $v) {
                 $this->$name[$p] = isset($v[$p]) ? $v[$p] : $t;
