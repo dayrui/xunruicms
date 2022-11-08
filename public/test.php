@@ -96,16 +96,16 @@ if (! extension_loaded('curl')) {
 if (! extension_loaded('json')) {
     dr_echo_msg(0, 'PHP扩展库：JSON未安装');
 }
-if (! extension_loaded('intl')) {
-    dr_echo_msg(0, 'PHP扩展库：intl未安装');
-}
+//if (! extension_loaded('intl')) {
+  //  dr_echo_msg(0, 'PHP扩展库：intl未安装');
+//}
 if (! extension_loaded('mbstring')) {
     dr_echo_msg(0, 'PHP扩展库：mbstring未安装');
 }
 if (! extension_loaded('xml')) {
     dr_echo_msg(0, 'PHP扩展库：xml未安装');
 }
-if (!function_exists('')) {
+if (!function_exists('chmod')) {
     dr_echo_msg(0, 'PHP函数chmod被禁用，需要开启');
 }
 
