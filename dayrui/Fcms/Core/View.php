@@ -969,7 +969,7 @@ class View {
                     return $this->_return($system['return'], "缓存({$_name})不存在，请在后台更新缓存");
                 } elseif ($_name == 'module-content') {
                     // 指定模块
-                    if ($system['module']) {
+                    if ($system['module'] && $system['module'] != 'all') {
                         $mid = explode(',', $system['module']);
                         foreach ($cache as $i => $t) {
                             if (!in_array($t['dirname'], $mid)) {
