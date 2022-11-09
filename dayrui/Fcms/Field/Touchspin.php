@@ -41,15 +41,15 @@ class Touchspin extends \Phpcmf\Library\A_Field {
 			</div>
 		</div>
 		<div class="form-group">
-			<label class="col-md-2 control-label">'.dr_lang('加按钮颜色').'</label>
+			<label class="col-md-2 control-label">'.dr_lang('加按钮class').'</label>
 			<div class="col-md-9">
-				<label>'.$this->_color_select('up', $option['up']).'</label>
+			<label><input type="text" class="form-control" size="10" name="data[setting][option][up]" value="'.$option['up'].'"></label>
 			</div>
 		</div>
 		<div class="form-group">
-			<label class="col-md-2 control-label">'.dr_lang('减按钮颜色').'</label>
+			<label class="col-md-2 control-label">'.dr_lang('减按钮class').'</label>
 			<div class="col-md-9">
-				<label>'.$this->_color_select('down', $option['down']).'</label>
+			<label><input type="text" class="form-control" size="10" name="data[setting][option][down]" value="'.$option['down'].'"></label>
 			</div>
 		</div>
 		
