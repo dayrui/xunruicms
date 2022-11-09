@@ -114,7 +114,7 @@ class FileHandler extends BaseHandler
         fclose($fp);
 
         if (isset($newfile) && $newfile === true) {
-            chmod($filepath, $this->filePermissions);
+            //chmod($filepath, $this->filePermissions);
         }
 
         return is_int($result);

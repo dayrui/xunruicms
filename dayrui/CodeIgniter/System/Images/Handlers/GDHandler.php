@@ -278,7 +278,7 @@ class GDHandler extends BaseHandler
 
         imagedestroy($this->resource);
 
-        chmod($target, $this->filePermissions);
+        //chmod($target, $this->filePermissions);
 
         return true;
     }

@@ -358,7 +358,7 @@ class Toolbar
          * @var Response|null        $response
          */
         if (CI_DEBUG && ! is_cli()) {
-            //$app = Services::codeigniter(); 这里会出现bug
+            $app = Services::codeigniter();
             global $app;
 
             $request ??= Services::request();
@@ -387,7 +387,7 @@ class Toolbar
                 mkdir(WRITEPATH . 'debugbar', 0777);
             }
 
-            write_file(WRITEPATH . 'debugbar/' . 'debugbar_' . $time . '.json', $data, 'w+');
+            write_file(WRITEPATH . 'debugbar/debugbar_' . $time . '.json', $data, 'w+');
 
             $format = $response->getHeaderLine('content-type');
 
@@ -406,6 +406,7 @@ class Toolbar
             $kintScript         = @Kint::dump('');
             Kint::$mode_default = $oldKintMode;
             $kintScript         = substr($kintScript, 0, strpos($kintScript, '</style>') + 8);
+            $kintScript         = ($kintScript === '0') ? '' : $kintScript;
 
             $script = PHP_EOL
                 . '<script type="text/javascript" ' . csp_script_nonce() . ' id="debugbar_loader" '
