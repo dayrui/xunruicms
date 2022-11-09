@@ -28,6 +28,14 @@ function config ($name, $getShared = true) {
     return \CodeIgniter\Config\Config::get($name, $getShared);
 }
 
+/*
+ * 显示完整路径
+ */
+function clean_path(string $path): string
+{
+    return $path;
+}
+
 /******* Locale  *******/
 if (!class_exists('Locale')) {
     class Locale {

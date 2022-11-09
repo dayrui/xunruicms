@@ -250,4 +250,11 @@ class Exceptions extends \CodeIgniter\Debug\Exceptions {
         return $file.'/'.ucfirst(\Phpcmf\Service::L('Router')->class).'.php';
     }
 
+    /**
+     * 显示完整路径
+     */
+    public static function cleanPath(string $file): string
+    {
+        return $file;
+    }
 }
