@@ -60,7 +60,7 @@ class Cache {
 
         // 分析缓存目录
         $cache_dir = ($cache_dir ? WRITEPATH.$cache_dir.'/' : $this->file_dir);
-        !is_dir($cache_dir) ? dr_mkdirs($cache_dir, 0777) : (!is_writeable($cache_dir) && chmod($cache_dir, 0777));
+        !is_dir($cache_dir) && dr_mkdirs($cache_dir, 0777);
 
         // 重置Zend OPcache
         function_exists('opcache_reset') && opcache_reset();

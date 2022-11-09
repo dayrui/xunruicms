@@ -591,7 +591,7 @@ class Image {
         {
             if ($this->source_image !== $this->new_image && @copy($this->full_src_path, $this->full_dst_path))
             {
-                chmod($this->full_dst_path, $this->file_permissions);
+                //chmod($this->full_dst_path, $this->file_permissions);
             }
             return TRUE;
         }
@@ -656,7 +656,7 @@ class Image {
         // Kill the file handles
         imagedestroy($dst_img);
         imagedestroy($src_img);
-        chmod($this->full_dst_path, $this->file_permissions);
+        //chmod($this->full_dst_path, $this->file_permissions);
         return TRUE;
     }
     // --------------------------------------------------------------------
@@ -716,7 +716,7 @@ class Image {
             $this->set_error('imglib_image_process_failed');
             return FALSE;
         }
-        chmod($this->full_dst_path, $this->file_permissions);
+        //chmod($this->full_dst_path, $this->file_permissions);
         return TRUE;
     }
     // --------------------------------------------------------------------
@@ -794,7 +794,7 @@ class Image {
         // we have to rename the temp file.
         copy($this->dest_folder.'netpbm.tmp', $this->full_dst_path);
         unlink($this->dest_folder.'netpbm.tmp');
-        chmod($this->full_dst_path, $this->file_permissions);
+        //chmod($this->full_dst_path, $this->file_permissions);
         return TRUE;
     }
     // --------------------------------------------------------------------
@@ -829,7 +829,7 @@ class Image {
         // Kill the file handles
         imagedestroy($dst_img);
         imagedestroy($src_img);
-        chmod($this->full_dst_path, $this->file_permissions);
+        //chmod($this->full_dst_path, $this->file_permissions);
         return TRUE;
     }
     // --------------------------------------------------------------------
@@ -893,7 +893,7 @@ class Image {
         }
         // Kill the file handles
         imagedestroy($src_img);
-        chmod($this->full_dst_path, $this->file_permissions);
+        //chmod($this->full_dst_path, $this->file_permissions);
         return TRUE;
     }
     // --------------------------------------------------------------------
