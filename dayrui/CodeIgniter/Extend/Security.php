@@ -71,10 +71,18 @@ class Security extends \CodeIgniter\Security\Security {
             $request->setGlobal('post', $_POST);
         }
 
+        return $this;
+    }
+
+    public function updateHash() {
+
         if (defined('SYS_CSRF_TIME') && SYS_CSRF_TIME) {
+            // 每次生成，否则定期生成
             $this->hash = null;
             if ($this->csrfProtection === self::CSRF_PROTECTION_COOKIE) {
                 unset($_COOKIE[$this->cookieName]);
+                \Config\Services::response()->removeHeader('Content-Type');
+                \Config\Services::response()->setcookie($this->cookieName, '', 0)->send();
             } else {
                 // Session based CSRF protection
                 Services::session()->remove($this->tokenName);
@@ -82,8 +90,6 @@ class Security extends \CodeIgniter\Security\Security {
         }
 
         $this->generateHash();
-
-        return $this;
     }
 
 }
