@@ -8,6 +8,7 @@ class Session {
 
     public function set($key, $value = null) {
         session(SYS_KEY.$key, $value);
+        \think\facade\Session::save();
     }
 
     public function setTempdata($key, $value, $time)
