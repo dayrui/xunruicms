@@ -1128,15 +1128,25 @@
          */
         public function get_default_value($value) {
 
-            if (dr_is_empty($value) || $this->id) {
-                // 新发布时才进行填充
+            if (dr_is_empty($value)) {
+                // 没设置时返回空
                 return '';
             }
 
+            $uid = 0;
+            if (isset(\Phpcmf\Service::L('Field')->value['uid']) && \Phpcmf\Service::L('Field')->value['uid']) {
+                $uid = \Phpcmf\Service::L('Field')->value['uid'];
+            }
+
+            $member = \Phpcmf\Service::C()->member;
+            if ($member && $member['id'] != $uid && $uid) {
+                $member = dr_member_info($uid);
+            }
+
             if (preg_match('/\{(\w+)\}/', $value, $match)) {
-                $rt = isset(\Phpcmf\Service::C()->member[$match[1]]) ? \Phpcmf\Service::C()->member[$match[1]] : '';
+                $rt = isset($member[$match[1]]) ? $member[$match[1]] : '';
                 if ($match[1] == 'name' && !$rt) {
-                    $rt = isset(\Phpcmf\Service::C()->member['username']) ? \Phpcmf\Service::C()->member['username'] : '';
+                    $rt = isset($member['username']) ? $member['username'] : '';
                 }
                 return $rt;
             } elseif (strpos((string)$value, '()') !== false) {
