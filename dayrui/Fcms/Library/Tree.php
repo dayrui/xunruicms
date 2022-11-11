@@ -302,7 +302,7 @@ class Tree {
         $string = CI_DEBUG ? '' : \Phpcmf\Service::L('cache')->get_file($name, $dir);
         if (!$string) {
 
-            $string = '<select class="form-control" '.$str.'>'.PHP_EOL;
+            $string = '<select class="bs-select form-control" '.$str.'>'.PHP_EOL;
             $default && $string.= "<option value='0'>$default</option>".PHP_EOL;
 
             $tree = [];
