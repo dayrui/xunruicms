@@ -206,7 +206,7 @@ function dr_ftable_myshow(e){
     }
     var dev = '';
     if (typeof is_cms_dev != "undefined" && is_cms_dev) {
-        dev = '<p style="text-align: center"><a href="'+file+'" target="_blank">'+file+'</a></p>';
+        dev = '<p style="text-align: center"><a href="'+preview+'" target="_blank">'+preview+'</a></p>';
     }
     top.layer.alert(dev+'<p style="text-align: center"><a href="'+url+'" target="_blank"><img style="max-width:100%" src="'+preview+'?'+Date.parse(new Date())+'"></a></p>', {
         shade: 0,
