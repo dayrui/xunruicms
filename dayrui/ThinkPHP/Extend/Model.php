@@ -388,6 +388,7 @@ class db_mysql {
         }
 
         $this->_clear();
+        return $this->affectedRows;
     }
 
     public function escapeString($str, bool $like = false) {
