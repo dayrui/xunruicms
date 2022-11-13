@@ -17,6 +17,7 @@ class Table extends \Phpcmf\Common {
     protected $db_source; // 数据源
     protected $field; // 自定义字段 [ 1 = [主表], 0 = [附表]]
     protected $sys_field; // 系统字段 [ 1 = [主表], 0 = [附表]]
+    protected $not_field; // 无用的字段
     protected $form_rule; // 表单配置规则
     protected $is_data; // 是否支持附表
     protected $is_post_code; // 是否提交验证码
@@ -71,6 +72,7 @@ class Table extends \Phpcmf\Common {
     protected function _init($data) {
         !$data['show_field'] && $data['show_field'] = 'id';
         $this->field = $data['field'] ? $data['field'] : $this->field;
+        $this->not_field = [];
         $this->sys_field = $data['sys_field'] ? \Phpcmf\Service::L('Field')->sys_field($data['sys_field']) : [];
         $data['field'] = $this->sys_field && $this->field ? $this->field + $this->sys_field : ($this->field ? $this->field : $this->sys_field);
         $data['is_diy_where_list'] = $this->is_diy_where_list;
@@ -107,10 +109,12 @@ class Table extends \Phpcmf\Common {
             foreach ($field as $i => $t) {
                 if (!IS_ADMIN && !$t['ismember']) {
                     // 非管理平台验证字段显示权限
+                    $this->not_field[$i] = $t;
                     unset($field[$i]);
                 } elseif (IS_ADMIN && $t['setting']['show_admin'] && !dr_in_array(1, $this->admin['roleid'])
                     && dr_array_intersect($this->admin['roleid'], $t['setting']['show_admin'])) {
                     // 后台时 判断管理员权限
+                    $this->not_field[$i] = $t;
                     unset($field[$i]);
                 }
             }
@@ -672,6 +676,9 @@ class Table extends \Phpcmf\Common {
             // 格式化字段
             if ($this->init['list_field'] && $list) {
                 $field = $this->_field_save(0);
+                if ($this->not_field) {
+                    $field = dr_array22array($field, $this->not_field);
+                }
                 $dfield = \Phpcmf\Service::L('Field')->app(APP_DIR);
                 foreach ($list as $k => $v) {
                     $list[$k] = $dfield->format_value($field, $v, 1);
@@ -761,6 +768,9 @@ class Table extends \Phpcmf\Common {
             // 格式化字段
             if ($list) {
                 $field = $this->_field_save(0);
+                if ($this->not_field) {
+                    $field = dr_array22array($field, $this->not_field);
+                }
                 $dfield = \Phpcmf\Service::L('Field')->app(APP_DIR);
                 foreach ($list as $k => $v) {
                     $list[$k] = $dfield->format_value($field, $v, 1);
