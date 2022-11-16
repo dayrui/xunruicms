@@ -50,6 +50,8 @@ require __DIR__.'/Extend/Error.php';
 $loader = new \Phpcmf\Auto();
 $loader->initialize(\Phpcmf\Service::Auto(new \Phpcmf\AutoConfig()))->register();
 
+// 挂钩点 程序运行之前
+\Phpcmf\Hooks::trigger('cms_run');
 
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Http\Request;

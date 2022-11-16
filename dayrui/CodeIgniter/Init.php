@@ -90,6 +90,9 @@ if (is_file(COMPOSER_PATH)) {
     require_once COMPOSER_PATH;
 }
 
+// 挂钩点 程序运行之前
+\Phpcmf\Hooks::trigger('cms_run');
+
 require BASEPATH . 'Config/DotEnv.php';
 
 $env = new DotEnv(COREPATH);

@@ -43,5 +43,8 @@ if (! function_exists('csrf_hash')) {
 $loader = new \Phpcmf\Auto();
 $loader->initialize(\Phpcmf\Service::Auto(new \Phpcmf\AutoConfig()))->register();
 
+// 挂钩点 程序运行之前
+\Phpcmf\Hooks::trigger('cms_run');
+
 require FRAMEPATH.'Extend/Run.php';
 
