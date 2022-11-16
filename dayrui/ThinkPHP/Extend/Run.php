@@ -12,6 +12,9 @@ require FRAMEPATH . 'System/vendor/autoload.php';
 // 执行HTTP应用并响应
 $http = (new App())->debug(CI_DEBUG ? true : false)->http;
 
+// 挂钩点 程序运行之前
+\Phpcmf\Hooks::trigger('cms_run');
+
 $response = $http->run();
 
 $response->send();
