@@ -301,8 +301,11 @@ class Tree {
         }
         $string = CI_DEBUG ? '' : \Phpcmf\Service::L('cache')->get_file($name, $dir);
         if (!$string) {
-
-            $string = '<select class="bs-select form-control" '.$str.'>'.PHP_EOL;
+            if (dr_count($data) > 30) {
+                $string = '<select class="bs-select form-control" data-live-search="true" '.$str.'>'.PHP_EOL;
+            } else {
+                $string = '<select class="bs-select form-control" '.$str.'>'.PHP_EOL;
+            }
             $default && $string.= "<option value='0'>$default</option>".PHP_EOL;
 
             $tree = [];
