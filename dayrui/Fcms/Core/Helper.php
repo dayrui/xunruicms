@@ -878,19 +878,21 @@ function dr_avatar_path() {
  * @param   $fix 是否加时间戳后缀
  * @return  会员头像url
  */
-function dr_avatar($uid, $fix = 1) {
+if (!function_exists('dr_avatar')) {
+    function dr_avatar($uid, $fix = 1) {
 
-    if ($uid) {
-        list($cache_path, $cache_url) = dr_avatar_path();
-        $dir = dr_avatar_dir($uid);
-        if (is_file($cache_path.$dir.$uid.'.jpg')) {
-            return $cache_url.$dir.$uid.'.jpg'.($fix ? '?time='.filemtime($cache_path.$uid.'.jpg') : '');
-        } elseif (is_file($cache_path.$uid.'.jpg')) {
-            return $cache_url.$uid.'.jpg'.($fix ? '?time='.filemtime($cache_path.$uid.'.jpg') : '');
+        if ($uid) {
+            list($cache_path, $cache_url) = dr_avatar_path();
+            $dir = dr_avatar_dir($uid);
+            if (is_file($cache_path.$dir.$uid.'.jpg')) {
+                return $cache_url.$dir.$uid.'.jpg'.($fix ? '?time='.filemtime($cache_path.$uid.'.jpg') : '');
+            } elseif (is_file($cache_path.$uid.'.jpg')) {
+                return $cache_url.$uid.'.jpg'.($fix ? '?time='.filemtime($cache_path.$uid.'.jpg') : '');
+            }
         }
-    }
 
-    return ROOT_THEME_PATH.'assets/images/avatar.png';
+        return ROOT_THEME_PATH.'assets/images/avatar.png';
+    }
 }
 
 /**
