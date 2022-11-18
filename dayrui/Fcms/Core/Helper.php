@@ -3789,8 +3789,9 @@ function dr_htmlspecialchars($param) {
  * 当前是否是根目录
  */
 function dr_is_root_path() {
-    return SITE_ID == 1 && isset($_SERVER['SCRIPT_FILENAME'])
-        && is_file(dirname($_SERVER['SCRIPT_FILENAME']).'/static/assets/global/css/admin.min.css');
+    return isset($_SERVER['SCRIPT_FILENAME'])
+        && is_file(dirname($_SERVER['SCRIPT_FILENAME']).'/static/assets/global/css/admin.min.css')
+        && is_file(dirname($_SERVER['SCRIPT_FILENAME']).'/static/assets/js/cms.js');
 }
 
 /**
