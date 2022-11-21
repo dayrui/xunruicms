@@ -1134,7 +1134,12 @@ class Api extends \Phpcmf\Common {
             $this->_json(1, dr_lang('正则表达式验证结果：%s', dr_lang('通过')));
         }
 
-        //\Phpcmf\Service::V()->assign([]);
+        \Phpcmf\Service::V()->assign('code', [
+            '纯数字' => '/^[0-9]+$/',
+            '纯汉字' => '/^[\x{4e00}-\x{9fa5}]+$/u',
+            '手机号码' => '/^1[345789]\d{9}$/ims',
+            '电子邮箱' => '/^[a-zA-Z0-9]+([-_.][a-zA-Z0-9]+)*@([a-zA-Z0-9]+[-.])+([a-z]{2,5})$/ims',
+        ]);
         \Phpcmf\Service::V()->display('api_pattern.html');exit;
     }
 
