@@ -1195,6 +1195,7 @@ function dr_fieldform($field, $value = '', $remove_div  = 1, $load_js = 0) {
     if ($load_js) {
         $f->set_load_js($field['fieldtype'], 0);
     }
+
     return $f->input($field, $value);
 }
 

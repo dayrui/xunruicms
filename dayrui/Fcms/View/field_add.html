@@ -217,7 +217,7 @@
 
                                 <label style="min-width: 200px">
                                     <select class="form-control bs-select" name="data[setting][show_member][]" multiple data-actions-box="true">
-                                        <option {if dr_in_array(0, (array)$data.setting.show_member)} selected{/if} value="{$t.id}">{dr_lang('游客')}</option>
+                                        <option {if dr_in_array(0, (array)$data.setting.show_member)} selected{/if} value="0">{dr_lang('游客')}</option>
                                         {list action=cache name=MEMBER.group}
                                         <option {if dr_in_array($t.id, (array)$data.setting.show_member)} selected{/if} value="{$t.id}">{dr_lang($t.name)}</option>
                                         {/list}
