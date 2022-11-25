@@ -49,7 +49,8 @@
             <td>
                 {if $ci->_is_admin_auth() && $t.id>1}
                 <a href="{dr_url('role/auth_edit', ['id'=>$t.id])}" class="btn btn-xs dark"> <i class="fa fa-user-md"></i> {dr_lang('操作权限')} </a>
-                {if IS_SITES}<a href="javascript:dr_iframe('{dr_lang('项目权限')}', '{dr_url('role/site_edit', ['id'=>$t.id])}', '500px', '80%');" class="btn btn-xs blue"> <i class="fa fa-cog"></i> {dr_lang('项目权限')}</a>{/if}
+                {if IS_SITES}<a href="javascript:dr_iframe('{dr_lang('项目权限')}', '{dr_url('role/site_edit', ['id'=>$t.id])}', '500px', '80%', 'nogo');" class="btn btn-xs blue"> <i class="fa fa-cog"></i> {dr_lang('项目权限')}</a>{/if}
+                {if IS_USE_MEMBER && !$t.application.tid}<a href="javascript:dr_iframe('{dr_lang('审核权限')}', '{dr_url('role/verify_edit', ['id'=>$t.id])}', '500px', '80%', 'nogo');" class="btn btn-xs yellow"> <i class="fa fa-user"></i> {dr_lang('审核权限')}</a>{/if}
                 <a onclick="dr_iframe('{dr_lang('复制')}', '{dr_url('role/copy_edit', ['id'=>$t.id])}')" class="btn red btn-xs"> <i class="fa fa-copy"></i> {dr_lang('同步到其他角色')}</a>
                 {/if}
                 {if $ci->_is_admin_auth('edit')}<a href="javascript:dr_iframe('edit', '{dr_url('role/edit', ['id'=>$t.id])}', '500px', '60%');" class="btn btn-xs green"> <i class="fa fa-edit"></i> {dr_lang('修改')} </a>{/if}

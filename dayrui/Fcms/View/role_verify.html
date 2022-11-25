@@ -1,0 +1,25 @@
+{template "header.html"}
+
+<form class="form-horizontal" role="form" id="myform">
+    {$form}
+    <div class="form-body" style="padding: 0 10px">
+
+        {loop $verify $v}
+        <?php $rs=dr_string2array($v.verify);?>
+        <div class="form-group">
+            <label>{$v.name}</label>
+            <div class="mt-checkbox-inline">
+                {loop $rs.role $i $arr}
+                <label class="mt-checkbox">
+                    <input type="checkbox" {if dr_in_array($rid, $arr)} checked{/if} name="data[{$v.id}][]" value="{$i}"> {dr_lang('第%s次审核', $i)}
+                    <span></span>
+                </label>
+                {/loop}
+            </div>
+        </div>
+        {/loop}
+
+
+    </div>
+</form>
+{template "footer.html"}

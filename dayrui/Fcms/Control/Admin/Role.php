@@ -203,6 +203,55 @@ class Role extends \Phpcmf\Common {
 		\Phpcmf\Service::V()->display('role_site.html');exit;
 	}
 
+	public function verify_edit() {
+
+		$id = intval(\Phpcmf\Service::L('input')->get('id'));
+		$data = \Phpcmf\Service::M('auth')->get_role($id);
+		if (!$data) {
+		    $this->_admin_msg(0, dr_lang('角色组（%s）不存在', $id));
+        } elseif (!IS_USE_MEMBER) {
+            $this->_admin_msg(0, dr_lang('需要安装用户系统插件，才能使用本功能'));
+        }
+
+        $verify = \Phpcmf\Service::M()->table('admin_verify')->getAll(30);
+
+		if (IS_AJAX_POST) {
+			$post = \Phpcmf\Service::L('input')->post('data');
+			foreach ($verify as $v) {
+                $rs = dr_string2array($v['verify']);
+                if ($rs) {
+                    foreach ($rs['role'] as $i => $t) {
+                        if (dr_in_array($i, $post[$v['id']])) {
+                            // 表示选择的
+                            $rs['role'][$i][] = $id;
+                        } else {
+                            // 表示没选中
+                            foreach ($t as $k => $kt) {
+                                if ($id == $kt) {
+                                    unset($rs['role'][$i][$k]);
+                                }
+                            }
+                        }
+                    }
+                }
+                \Phpcmf\Service::M()->table('admin_verify')->update($v['id'], [
+                    'verify' => dr_array2string($rs)
+                ]);
+            }
+
+            \Phpcmf\Service::M('cache')->sync_cache('');
+			\Phpcmf\Service::L('input')->system_log('设置角色组('.$data['name'].')审核权限');
+			$this->_json(1, dr_lang('操作成功'));
+		}
+
+		\Phpcmf\Service::V()->assign([
+			'rid' => $id,
+			'form' => dr_form_hidden(),
+            'verify' => $verify,
+		]);
+		\Phpcmf\Service::V()->display('role_verify.html');exit;
+	}
+
 	public function del() {
 
 		$ids = \Phpcmf\Service::L('input')->get_post_ids();
