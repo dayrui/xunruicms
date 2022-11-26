@@ -16,7 +16,8 @@ class Api extends \Phpcmf\Common {
 
         $version = [
             'CodeIgniter' => '7.4.0',
-            'ThinkPHP' => '7.2.0',
+            'CodeIgniter72' => '7.2.0',
+            'ThinkPHP' => '7.4.0',
             'Laravel' => '8.0.2',
         ];
 
@@ -36,7 +37,8 @@ class Api extends \Phpcmf\Common {
             $this->_json(0, '内核（'.$name.'）要求PHP版本不能低于'.$version[$name].'（当前'.PHP_VERSION.'）');
         }
 
-        if ($name != 'CodeIgniter' && !is_file(FCPATH.$name.'/System/vendor/autoload.php')) {
+        if (!in_array($name, ['CodeIgniter', 'CodeIgniter72'])
+            && !is_file(FCPATH.$name.'/System/vendor/autoload.php')) {
             $this->_json(0, '内核目录（'.FCPATH.$name.'/System/vendor/'.'）缺少文件');
         }
 

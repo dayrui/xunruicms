@@ -66,6 +66,7 @@ class Home extends \Phpcmf\Common
         if (IS_DEV || defined('DEMO_ADMIN_USERNAME')) {
             $frame = [
                 'CodeIgniter',
+                'CodeIgniter72',
                 'ThinkPHP',
                 'Laravel',
             ];
