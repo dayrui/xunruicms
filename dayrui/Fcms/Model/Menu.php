@@ -449,9 +449,10 @@ class Menu extends \Phpcmf\Model {
                         $left_id = $this->_add('admin', $top_id, $left, $mark2, true);
                         // 插入链接菜单
                         if ($left_id) {
-                            foreach ($left['link'] as $link) {
+                            foreach ($left['link'] as $mark3 => $link) {
+                                $link['mark'] = $mark3 = strlen($mark3) > 2 ? $mark3 : '';
                                 $link['site'] = $this->_get_old_value($rp, $link);
-                                $this->_add('admin', $left_id, $link);
+                                $this->_add('admin', $left_id, $link, $mark3);
                             }
                         }
                     }
@@ -467,7 +468,7 @@ class Menu extends \Phpcmf\Model {
                 // 插入链接菜单
                 if ($top_id) {
                     foreach ($top['link'] as $mark2 => $link) {
-                        $this->_add('admin_min', $top_id, $link);
+                        $this->_add('admin_min', $top_id, $link, $mark2);
                     }
                 }
             }
@@ -499,7 +500,7 @@ class Menu extends \Phpcmf\Model {
                         $link['site'] = $this->_get_old_value($site, $link);
                         $link['group'] = $this->_get_old_value($group, $link);
                         $link['client'] = $this->_get_old_value($client, $link);
-                        $this->_add('member', $top_id, $link);
+                        $this->_add('member', $top_id, $link, $mark2);
                     }
                 }
             }
