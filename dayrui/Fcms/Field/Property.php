@@ -101,7 +101,13 @@ class Property extends \Phpcmf\Library\A_Field {
             </div>
         </div>
 		';
-		return [$this->_search_field().$str];
+		return ['
+                <div class="form-group">
+                    <label class="col-md-2 control-label">'.dr_lang('重要提示').'</label>
+                    <div class="col-md-9">
+                    <label class="form-control-static" style="color: red">本字段后期将被废除，新建时请使用Ftable字段（功能相同）</label>
+                    </div>
+                </div>'.$str];
 	}
 	
 	/**
