@@ -160,7 +160,7 @@ function dr_ftable_myfileinput (e, url){
                         var v = json2.data.result[0];
                         ob.parent().find('.form-control2').val(v.id);
                         ob.parent().find('.form-control-link').val(v.url);
-                        ob.parent().find('.form-control-preview').val(v.exturl);
+                        ob.parent().find('.form-control-preview').val(v.url);
                         ob.parent().find('.ftable-show').show();
                         ob.parent().find('.ftable-delete').show();
                         dr_tips(1, json2.msg);
