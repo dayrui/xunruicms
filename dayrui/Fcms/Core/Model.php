@@ -1044,6 +1044,7 @@ class Model {
         }
 
         $this->param['select'][] = $field;
+
         return $this;
     }
 
@@ -1073,6 +1074,7 @@ class Model {
         }
 
         $this->param['where'][] = $name.' LIKE "%'.$value.'%"';
+
         return $this;
     }
 
@@ -1097,8 +1099,7 @@ class Model {
      * @param int $length 查询数量
      * @return $this
      */
-    public function limit(int $offset, int $length = null)
-    {
+    public function limit(int $offset, int $length = null) {
 
         $this->param['limit'] = $offset . ($length ? ',' . $length : '');
 
@@ -1106,14 +1107,18 @@ class Model {
     }
 
     // 排序
-    public function order_by($value) {
-        $this->param['order'] = $value;
+    public function order_by($value, $value2= null) {
+
+        $this->param['order'] = $value2 ? $value.' '.$value2 : $value;
+
         return $this;
     }
 
     // 分组
     public function group_by($value) {
+
         $this->param['group'] = $value;
+
         return $this;
     }
 
@@ -1164,6 +1169,7 @@ class Model {
         }
 
         $this->_clear();
+
         return '';
     }
 
