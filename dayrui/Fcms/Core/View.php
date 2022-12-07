@@ -1610,7 +1610,7 @@ class View {
                             // 范围查询
                             list($s, $e) = explode(',', $t['value']);
                             $stime = strtotime($s.'-01 00:00:00');
-                            $etime = strtotime(($e ? $e : date('Y-m')).'-31 23:59:59');
+                            $etime = strtotime($e." +1 month -1 day");
                         } else {
                             $time = strtotime('-'.intval($t['value']).' month');
                             $stime = strtotime(date('Y-m', $time).'-01 00:00:00');;
