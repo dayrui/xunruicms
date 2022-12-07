@@ -192,7 +192,6 @@ class Ftable extends \Phpcmf\Library\A_Field {
                 'size' => $size ? $size : 10,
                 'exts' => $exts ? $exts : 'jpg,gif,png,jpeg',
                 'count' => 1,
-
                 'attachment' => $field['setting']['option']['attachment'],
                 'image_reduce' => $field['setting']['option']['image_reduce'],
             ], 'ENCODE').'&ct=0&one=1';
