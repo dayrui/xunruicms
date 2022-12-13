@@ -225,6 +225,14 @@ class Role extends \Phpcmf\Common {
                             // 表示选择的
                             if (!isset($rs['role'][$i])) {
                                 $rs['role'][$i] = []; // 不存在时重新定义
+                            } elseif (!is_array($rs['role'][$i]) && $rs['role'][$i]) {
+                                if ($id == $rs['role'][$i]) {
+                                    $rs['role'][$i] = []; // 值相同时
+                                } else {
+                                    $rs['role'][$i] = [
+                                        (int)$rs['role'][$i]
+                                    ]; // 老版本的单值
+                                }
                             }
                             $rs['role'][$i][] = $id;
                         } else {
