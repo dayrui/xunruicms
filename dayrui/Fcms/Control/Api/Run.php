@@ -61,8 +61,15 @@ class Run extends \Phpcmf\Common
                     exit('未到执行时间');
                 }
             }
-            // 写入新的时间
-            file_put_contents(WRITEPATH.'config/cron_run_time.php', SYS_TIME);
+            $fp = fopen ( WRITEPATH.'config/cron_run_time.php' , "r" );
+            //加锁
+            if ( flock ( $fp ,LOCK_EX | LOCK_NB)) {
+                // 写入新的时间
+                file_put_contents(WRITEPATH.'config/cron_run_time.php', SYS_TIME);
+            } else {
+                fclose( $fp );
+                exit('正在执行中');
+            }
 
             if (isset($_GET['is_ajax'])) {
                 // 后台脚本自动任务时
@@ -74,6 +81,8 @@ class Run extends \Phpcmf\Common
                     file_put_contents(WRITEPATH.'config/run_lock.php', 'true');
                 }
             }
+        } else {
+            $fp = false;
         }
 
         // 批量执行站点动作
@@ -177,6 +186,11 @@ class Run extends \Phpcmf\Common
 
         // 自动任务执行时间
         file_put_contents(WRITEPATH.'config/run_time.php', dr_date(SYS_TIME));
+
+        if ($fp) {
+            flock ( $fp ,LOCK_UN);
+            fclose( $fp );
+        }
 		
         exit('任务执行成功：Run '.$i);
 	}

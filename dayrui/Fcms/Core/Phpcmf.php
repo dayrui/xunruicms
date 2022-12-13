@@ -745,6 +745,7 @@ abstract class Common extends \Frame\Controller {
         }
 
         \Phpcmf\Hooks::trigger('cms_end', $rt);
+        header('Content-type: application/json');
 
         echo dr_array2string($rt);
         if (!$return) {
