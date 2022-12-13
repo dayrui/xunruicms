@@ -221,8 +221,11 @@ class Role extends \Phpcmf\Common {
                 $rs = dr_string2array($v['verify']);
                 if ($rs) {
                     foreach ($rs['role'] as $i => $t) {
-                        if (dr_in_array($i, $post[$v['id']])) {
+                        if (isset($post[$v['id']]) && dr_in_array($i, $post[$v['id']])) {
                             // 表示选择的
+                            if (!isset($rs['role'][$i])) {
+                                $rs['role'][$i] = []; // 不存在时重新定义
+                            }
                             $rs['role'][$i][] = $id;
                         } else {
                             // 表示没选中
