@@ -2354,7 +2354,7 @@ function dr_post_json_data($url, $param = []) {
  * @param   intval  $timeout 超时时间，0不超时
  * @return  string
  */
-function dr_catcher_data($url, $timeout = 0, $is_log = true) {
+function dr_catcher_data($url, $timeout = 0, $is_log = true, $ct = 0) {
 
     if (!$url) {
         return '';
@@ -2379,14 +2379,16 @@ function dr_catcher_data($url, $timeout = 0, $is_log = true) {
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // 跳过证书检查
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, true); // 从证书中检查SSL加密算法是否存在
         }
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-            'User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:40.0)' . 'Gecko/20100101 Firefox/40.0',
-            'Accept: */*',
-            'X-Requested-With: XMLHttpRequest',
-            'Referer: '.$url,
-            'Accept-Language: pt-BR,en-US;q=0.7,en;q=0.3',
-        ));
-        curl_setopt($ch, CURLOPT_USERAGENT,'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.13) Gecko/20080311 Firefox/2.0.0.13');
+        if ($ct) {
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                'User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:40.0)' . 'Gecko/20100101 Firefox/40.0',
+                'Accept: */*',
+                'X-Requested-With: XMLHttpRequest',
+                'Referer: '.$url,
+                'Accept-Language: pt-BR,en-US;q=0.7,en;q=0.3',
+            ));
+            curl_setopt($ch, CURLOPT_USERAGENT,'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.13) Gecko/20080311 Firefox/2.0.0.13');
+        }
         ///
         curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -2405,7 +2407,10 @@ function dr_catcher_data($url, $timeout = 0, $is_log = true) {
         } elseif ($errno == 35) {
             // 当服务器不支持时改为普通获取方式
         } else {
-            if (CI_DEBUG && $code && $is_log) {
+            if (!$ct) {
+                // 尝试重试
+                return dr_catcher_data($url, $timeout, $is_log, 1);
+            } elseif (CI_DEBUG && $code && $is_log) {
                 log_message('error', '获取远程数据失败['.$url.']http状态：'.$code);
             }
             return '';
