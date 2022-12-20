@@ -92,39 +92,6 @@ class Run extends \Phpcmf\Common
                 unlink(\Phpcmf\Service::L('html')->get_webpath($siteid,'site', 'index.html'));
                 unlink(\Phpcmf\Service::L('html')->get_webpath($siteid,'site', 'mobile/index.html'));
             }
-            // 模块
-            $module = \Phpcmf\Service::L('cache')->get('module-'.$siteid.'-content');
-            if ($module) {
-                foreach ($module as $dir => $mod) {
-                    // 删除模块首页
-                    if ($mod['is_index_html']) {
-                        if ($mod['domain']) {
-                            // 绑定域名时
-                            $file = 'index.html';
-                        } else {
-                            $file = ltrim(\Phpcmf\Service::L('Router')->remove_domain($mod['url']), '/'); // 从地址中获取要生成的文件名;
-                        }
-                        if ($file) {
-                            unlink(\Phpcmf\Service::L('html')->get_webpath($siteid, $dir, $file));
-                            unlink(\Phpcmf\Service::L('html')->get_webpath($siteid, $dir, 'mobile/'.$file));
-                        }
-                    }
-                    // 定时发布动作
-                    $rt = $this->_module_init($dir, $siteid, 1);
-                    if ($rt && $this->module) {
-                        $times = $this->content_model->table($siteid.'_'.$dir.'_time')->where('posttime < '.SYS_TIME)->getAll();
-                        if ($times) {
-                            \Phpcmf\Service::C()->module = $this->module;
-                            foreach ($times as $t) {
-                                $rt = $this->content_model->post_time($t);
-                                if (!$rt['code']) {
-                                    CI_DEBUG && log_message('error', '定时发布（'.$t['id'].'）失败：'.$rt['msg']);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
         }
 
         // 执行队列
