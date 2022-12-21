@@ -536,9 +536,10 @@ class Check extends \Phpcmf\Common
         if (!\Phpcmf\Service::M()->db->tableExists($ptable)) {
             return '数据表【'.$name.'/'.$ptable.'】不存在，请创建';
         }
+
         $counts = \Phpcmf\Service::M()->table($table)->counts();
-        if ($counts > 100000) {
-            return '<font color="green">数据表【'.$name.'/'.$ptable.'】数据量超过10万，会影响加载速度，建议对其进行数据优化</font>';
+        if ($counts > 1000000) {
+            return '<font color="green">数据表【'.$name.'/'.$ptable.'】数据量超过100万，会影响加载速度，建议对其进行数据优化</font>';
         }
     }
 
