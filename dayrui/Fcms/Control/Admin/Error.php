@@ -66,7 +66,7 @@ class Error extends \Phpcmf\Common {
                                 $value['info'] = str_replace("'", '\\\'', $value['info']);
                             } else {
                                 // ci4模式
-                                $value['message'] = str_replace([PHP_EOL, chr(13), chr(10)], ' ', htmlentities($v[1]));
+                                $value['message'] = str_replace([PHP_EOL, chr(13), chr(10)], ' ', htmlentities((string)$v[1]));
                                 if (preg_match('/'.$value['time'].' \-\->(.*)\{main\}/sU', $c, $mt)) {
                                     $value['info'] = str_replace("'", '\\\'', str_replace([PHP_EOL, chr(13), chr(10)], '<br>', $mt[1]));
                                 }
