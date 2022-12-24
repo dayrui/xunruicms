@@ -43,6 +43,10 @@ if (!is_file(__DIR__.'/System/vendor/autoload.php')) {
     exit('缺少文件（'.__DIR__.'/System/vendor/autoload.php'.'）请在官网下载Laravel内核包');
 }
 
+if (defined('CMSURI') && CMSURI && isset($_SERVER['REQUEST_URI'])) {
+    unset($_SERVER['REQUEST_URI']);
+}
+
 require __DIR__.'/System/vendor/autoload.php';
 require __DIR__.'/Extend/Error.php';
 

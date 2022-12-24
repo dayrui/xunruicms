@@ -10,6 +10,10 @@ if (version_compare(PHP_VERSION, FRAME_PHP_VERSION) < 0) {
     exit("<font color=red>ThinkPHP-PHP版本要求在".FRAME_PHP_VERSION."及以上，当前".PHP_VERSION."</font><hr>最低支持PHP7.2环境，需要在这里下载兼容包：https://www.xunruicms.com/doc/1166.html");
 }
 
+if (defined('CMSURI') && CMSURI && isset($_SERVER['REQUEST_URI'])) {
+    unset($_SERVER['REQUEST_URI']);
+}
+
 if (! function_exists('csrf_token')) {
     /**
      * Get the CSRF token value.

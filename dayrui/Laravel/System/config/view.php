@@ -1,5 +1,6 @@
 <?php
 
+!defined('WRITEPATH') && define('WRITEPATH', dirname(__FILE__));
 return [
 
     /*
@@ -30,7 +31,7 @@ return [
 
     'compiled' => env(
         'VIEW_COMPILED_PATH',
-        realpath(storage_path('framework/views'))
+        WRITEPATH.'template/'
     ),
 
 ];
