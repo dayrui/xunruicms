@@ -142,6 +142,9 @@ class Attachments extends \Phpcmf\Table {
                 'remote' => intval($post['n'])
             ]);
 
+            dr_dir_delete(WRITEPATH.'attach');
+            dr_mkdirs(WRITEPATH.'attach');
+
             $this->_json(1, dr_lang('操作成功'));
         }
 
@@ -236,6 +239,9 @@ class Attachments extends \Phpcmf\Table {
             'remote' => $rid
         ]);
 
+        dr_dir_delete(WRITEPATH.'attach');
+        dr_mkdirs(WRITEPATH.'attach');
+        
         $this->_json(1, dr_lang('操作成功'));
     }
 }
