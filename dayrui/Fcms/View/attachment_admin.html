@@ -63,7 +63,7 @@
                         </label>
                     </th>
                     <th style="text-align:center"  width="90" class="{dr_sorting('id')}" name="id">Id</th>
-                    <th style="text-align:center"  width="90" class="{dr_sorting('remote')}" name="remote">{dr_lang('类型')}</th>
+                    <th style="text-align:center"  width="120" class="{dr_sorting('remote')}" name="remote">{dr_lang('储存策略')}</th>
                     <th width="150" class="{dr_sorting('uid')}" name="uid">{dr_lang('账号')}</th>
                     <th class="{dr_sorting('filename')}" name="filename">{dr_lang('名称')}</th>
                     <th style="text-align:center" width="90" class="{dr_sorting('fileext')}" name="fileext">{dr_lang('扩展名')}</th>
@@ -98,7 +98,9 @@
                         {$t.id}
                     </td>
                     <td style="text-align:center">
-                        <label>{if !$t.remote}<span class="label label-sm label-danger">{dr_lang('默认')}</span>{else}<span class="label label-sm label-warning">{dr_lang('自定义')}</span>{/if}</label>
+                        <label>{if !$t.remote}<span class="label label-sm label-info">{dr_lang('默认')}</span>
+                            {elseif !isset($remote[$t.remote])}<span class="label label-sm label-danger">{dr_lang('已失效')}</span>
+                            {else}<span class="label label-sm label-warning">{dr_lang($remote[$t.remote]['name'])}</span>{/if}</label>
                     </td>
                     <td>{Function_list::uid($t.uid)}</td>
                     <td>
@@ -123,10 +125,25 @@
                     <span></span>
                 </label>
                 {if $ci->_is_admin_auth('del')}
-                <button type="button" onclick="dr_ajax_option('{dr_url($uriprefix.'/del')}', '{dr_lang('你确定要删除它们吗？')}', 1)" class="btn red btn-sm"> <i class="fa fa-trash"></i> {dr_lang('删除')}</button>
+                <label><button type="button" onclick="dr_ajax_option('{dr_url($uriprefix.'/del')}', '{dr_lang('你确定要删除它们吗？')}', 1)" class="btn red btn-sm"> <i class="fa fa-trash"></i> {dr_lang('删除')}</button>
+                </label>
+                {/if}
+                {if $ci->_is_admin_auth('edit') && $remote}
+                    <label>
+                        <select name="remote" class="form-control">
+                            <option value="-1"> -- </option>
+                            <option value="0"> {dr_lang('默认')} </option>
+                            {loop $remote $t}
+                            <option value="{$t.id}" {if $param.remote==$t.id}selected{/if}>{$t.name}</option>
+                            {/loop}
+                        </select>
+                    </label>
+                <label><button type="button" onclick="dr_ajax_option('{dr_url($uriprefix.'/type_edit', ['table'=>$table])}', '{dr_lang('需要手动将这些附件复制到储存策略的目录中，你确定要变更吗？')}', 1)" class="btn green btn-sm"> <i class="fa fa-cloud"></i> {dr_lang('变更储存策略')}</button>
+                </label>
                 {/if}
                 {if $ci->_is_admin_auth('edit') && $table != 'data'}
-                <button type="button" onclick="dr_ajax_option('{dr_url($uriprefix.'/edit')}', '{dr_lang('你确定要强制归档它们吗？')}', 1)" class="btn blue btn-sm"> <i class="fa fa-database"></i> {dr_lang('归档')}</button>
+                    <label><button type="button" onclick="dr_ajax_option('{dr_url($uriprefix.'/edit')}', '{dr_lang('你确定要强制归档它们吗？')}', 1)" class="btn blue btn-sm"> <i class="fa fa-database"></i> {dr_lang('归档')}</button>
+                    </label>
                 {/if}
             </div>
             <div class="col-md-7 fc-list-page">

@@ -15,6 +15,7 @@ class Attachments extends \Phpcmf\Table {
                 [
                     '已归档的附件' => [\Phpcmf\Service::L('Router')->class.'/index', 'fa fa-folder'],
                     '未归档的附件' => [\Phpcmf\Service::L('Router')->class.'/unused_index', 'fa fa-folder-o'],
+                    '变更储存策略' => ['add:'.\Phpcmf\Service::L('Router')->class.'/remote_edit', 'fa fa-edit', '500px', '400px'],
                     'help' => [356],
                 ]
             )
@@ -74,7 +75,7 @@ class Attachments extends \Phpcmf\Table {
         \Phpcmf\Service::V()->assign([
             'field' => $field,
             'table' => 'data',
-            'remote' => \Phpcmf\Service::M()->table('attachment_remote')->getAll(),
+            'remote' => \Phpcmf\Service::M()->table('attachment_remote')->getAll(0, 'id'),
         ]);
         \Phpcmf\Service::V()->display('attachment_admin.html');
     }
@@ -120,9 +121,35 @@ class Attachments extends \Phpcmf\Table {
         \Phpcmf\Service::V()->assign([
             'field' => $field,
             'table' => 'unused',
-            'remote' => \Phpcmf\Service::M()->table('attachment_remote')->getAll(),
+            'remote' => \Phpcmf\Service::M()->table('attachment_remote')->getAll(0, 'id'),
         ]);
         \Phpcmf\Service::V()->display('attachment_admin.html');
+    }
+
+    public function remote_edit() {
+
+        if (IS_POST) {
+            $post = \Phpcmf\Service::L('input')->post('data');
+            if ($post['o'] == $post['n']) {
+                $this->_json(0, dr_lang('储存策略不能相同'));
+            }
+
+            \Phpcmf\Service::M()->table('attachment_unused')->where('remote', intval($post['o']))->update(0, [
+                'remote' => intval($post['n'])
+            ]);
+
+            \Phpcmf\Service::M()->table('attachment_data')->where('remote', intval($post['o']))->update(0, [
+                'remote' => intval($post['n'])
+            ]);
+
+            $this->_json(1, dr_lang('操作成功'));
+        }
+
+        \Phpcmf\Service::V()->assign([
+            'form' => dr_form_hidden(),
+            'remote' => \Phpcmf\Service::M()->table('attachment_remote')->getAll(0, 'id'),
+        ]);
+        \Phpcmf\Service::V()->display('attachment_remote_edit.html');
     }
 
     public function del() {
@@ -189,4 +216,26 @@ class Attachments extends \Phpcmf\Table {
         $this->_json(1, dr_lang('操作成功'));
     }
 
+    // 变更储存策略
+    public function type_edit() {
+
+        $ids = \Phpcmf\Service::L('input')->get_post_ids();
+        if (!$ids) {
+            $this->_json(0, dr_lang('你还没有选择呢'));
+        }
+
+        $rid = intval(\Phpcmf\Service::L('input')->post('remote'));
+        if ($rid < 0) {
+            $this->_json(0, dr_lang('你还没有选择储存策略'));
+        }
+
+        $table = \Phpcmf\Service::L('input')->post('table');
+        $table != 'data' && $table = 'unused';
+
+        \Phpcmf\Service::M()->table('attachment_'.$table)->where_in('id', $ids)->update(0, [
+            'remote' => $rid
+        ]);
+
+        $this->_json(1, dr_lang('操作成功'));
+    }
 }
