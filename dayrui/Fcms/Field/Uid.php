@@ -97,7 +97,13 @@ class Uid extends \Phpcmf\Library\A_Field {
 
         // 字段默认值
         if (dr_strlen($value)) {
-            $value = \Phpcmf\Service::M('member')->author($value);
+            if (is_numeric($value)) {
+                // 由uid获取用户名
+                $user = \Phpcmf\Service::M('member')->username($value);
+                if ($user) {
+                    $value = $user;
+                }
+            }
         } else {
             $value = \Phpcmf\Service::C()->member ? \Phpcmf\Service::C()->member['username'] : '';
         }
