@@ -211,7 +211,8 @@ class Menu extends \Phpcmf\Common
 		\Phpcmf\Service::M('menu')->init('admin');
 
 		\Phpcmf\Service::L('input')->system_log('初始化后台菜单');
-        \Phpcmf\Service::M('cache')->sync_cache(''); // 自动更新缓存
+        \Phpcmf\Service::M('cache')->update_cache(); // 自动更新缓存
+
 		$this->_json(1, dr_lang('初始化菜单成功，请按F5刷新整个页面'));
 	}
 
