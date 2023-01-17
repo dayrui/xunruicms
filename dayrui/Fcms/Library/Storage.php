@@ -73,8 +73,11 @@ class Storage {
         }
 
         $info = [];
-        // 图片处理
-        if (dr_is_image($fullname)) {
+        // 图片处理 (严格模式下)
+        if (dr_is_image($fullname)
+            && defined('SYS_ATTACHMENT_SAFE')
+            && !SYS_ATTACHMENT_SAFE
+        ) {
             // 获取图片尺寸
             $img = getimagesize($fullname);
             if (!$img) {
