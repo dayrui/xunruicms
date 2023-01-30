@@ -176,18 +176,7 @@ function dr_ftable_myfileinput (e, url){
         },
         success: function(layero, index){
             // 主要用于权限验证
-            var body = layer.getChildFrame('body', index);
-            var json2 = $(body).html();
-            if (json2.indexOf('\"code\":0') > 0 && jso2n.length < 150){
-                var obj = JSON.parse(json2);
-                layer.close(index);
-                dr_tips(0, obj.msg);
-            }
-            if (json2.indexOf('\"code\":1') > 0 && json2.length < 150){
-                var obj = JSON.parse(json2);
-                layer.close(index);
-                dr_tips(1, obj.msg);
-            }
+            dr_iframe_error(layer, index, 1);
         },
         content: url+'&is_iframe=1'
     });
@@ -1185,7 +1174,7 @@ function dr_iframe_error(layer, index, is_show = 0) {
     var body = layer.getChildFrame('body', index);
     var json = $(body).html();
     json = json.replace(/<.*?>/g,"");//去掉标签
-    if (json.indexOf('"code":0') > 0 && json.length < 500){
+    if (json.indexOf('"code":0') > 0 && json.length < 150){
         var obj = JSON.parse(json);
         layer.close(index);
         dr_cmf_tips(0, obj.msg);
