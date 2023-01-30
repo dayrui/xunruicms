@@ -457,13 +457,7 @@ function dr_iframe(type, url, width, height, rt) {
         },
         success: function(layero, index){
             // 主要用于后台权限验证
-            var body = layer.getChildFrame('body', index);
-            var json = $(body).html();
-            if (json.indexOf('"code":0') > 0 && json.length < 500){
-                var obj = JSON.parse(json);
-                layer.close(index);
-                dr_cmf_tips(0, obj.msg);
-            }
+            dr_iframe_error(layer, index, 0);
         },
         content: url+'&is_iframe=1'
     });
@@ -505,13 +499,7 @@ function dr_iframe_show(type, url, width, height, is_close ) {
         area: [width, height],
         success: function(layero, index){
             // 主要用于后台权限验证
-            var body = layer.getChildFrame('body', index);
-            var json = $(body).html();
-            if (json.indexOf('"code":0') > 0 && json.length < 500){
-                var obj = JSON.parse(json);
-                layer.close(index);
-                dr_cmf_tips(0, obj.msg);
-            }
+            dr_iframe_error(layer, index, 0);
         },end: function(){
             if (is_close == "load") {
                 window.location.reload(true)
@@ -1192,6 +1180,22 @@ function d_isdomain(name) {
         return false
     }
 };
+
+function dr_iframe_error(layer, index, is_show = 0) {
+    var body = layer.getChildFrame('body', index);
+    var json = $(body).html();
+    json = json.replace(/<.*?>/g,"");//去掉标签
+    if (json.indexOf('"code":0') > 0 && json.length < 500){
+        var obj = JSON.parse(json);
+        layer.close(index);
+        dr_cmf_tips(0, obj.msg);
+    }
+    if (is_show == 1 && json.indexOf('"code":1') > 0 && json.length < 150){
+        var obj = JSON.parse(json);
+        layer.close(index);
+        dr_tips(1, obj.msg);
+    }
+}
 
 function dr_ajax_alert_error(HttpRequest, ajax, thrownError) {
     layer.closeAll('loading');

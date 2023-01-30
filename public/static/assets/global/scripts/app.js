@@ -886,13 +886,7 @@ function dr_show_member(name) {
         area: [width, width],
         success: function(layero, index){
             // 主要用于后台权限验证
-            var body = layer.getChildFrame('body', index);
-            var json = $(body).html();
-            if (json.indexOf('"code":0') > 0 && json.length < 150){
-                var obj = JSON.parse(json);
-                layer.close(index);
-                dr_tips(0, obj.msg);
-            }
+            dr_iframe_error(layer, index, 0);
         },
         content: url+'&is_iframe=1'
     });
@@ -920,13 +914,7 @@ jQuery(document).ready(function() {
             area: [width, width],
             success: function(layero, index){
                 // 主要用于后台权限验证
-                var body = layer.getChildFrame('body', index);
-                var json = $(body).html();
-                if (json.indexOf('"code":0') > 0 && json.length < 150){
-                    var obj = JSON.parse(json);
-                    layer.close(index);
-                    dr_tips(0, obj.msg);
-                }
+                dr_iframe_error(layer, index, 0);
             },
             content: url+'&is_iframe=1'
         });
@@ -1298,18 +1286,7 @@ function dr_module_send(title, url, nogo) {
         },
         success: function(layero, index){
             // 主要用于后台权限验证
-            var body = layer.getChildFrame('body', index);
-            var json = $(body).html();
-            if (json.indexOf('"code":0') > 0 && json.length < 150){
-                var obj = JSON.parse(json);
-                layer.close(index);
-                dr_tips(0, obj.msg);
-            }
-            if (json.indexOf('"code":1') > 0 && json.length < 150){
-                var obj = JSON.parse(json);
-                layer.close(index);
-                dr_tips(1, obj.msg);
-            }
+            dr_iframe_error(layer, index, 1);
         },
         content: url+'&is_iframe=1'
     });
@@ -1381,13 +1358,7 @@ function dr_bfb(title, myform, url) {
         area: ['80%', '80%'],
         success: function(layero, index){
             // 主要用于后台权限验证
-            var body = layer.getChildFrame('body', index);
-            var json = $(body).html();
-            if (json.indexOf('"code":0') > 0 && json.length < 150){
-                var obj = JSON.parse(json);
-                layer.closeAll();
-                dr_tips(0, obj.msg);
-            }
+            dr_iframe_error(layer, index, 0);
         },
         content: url+'&'+$('#'+myform).serialize(),
         cancel: function(index, layero){
@@ -1432,13 +1403,7 @@ function dr_bfb_submit(title, myform, url) {
                     area: ['80%', '80%'],
                     success: function(layero, index){
                         // 主要用于后台权限验证
-                        var body = layer.getChildFrame('body', index);
-                        var json = $(body).html();
-                        if (json.indexOf('"code":0') > 0 && json.length < 150){
-                            var obj = JSON.parse(json);
-                            layer.closeAll('loading');
-                            dr_tips(0, obj.msg);
-                        }
+                        dr_iframe_error(layer, index, 0);
                     },
                     content: json.data.url,
                     cancel: function(index, layero){
@@ -1509,13 +1474,7 @@ function dr_submit_htmlfile(myform, url) {
         area: ['480px', '30%'],
         success: function(layero, index){
             // 主要用于后台权限验证
-            var body = layer.getChildFrame('body', index);
-            var json = $(body).html();
-            if (json.indexOf('"code":0') > 0 && json.length < 150){
-                var obj = JSON.parse(json);
-                layer.closeAll(index);
-                dr_tips(0, obj.msg);
-            }
+            dr_iframe_error(layer, index, 0);
         },
         content: url+'&'+$('#'+myform).serialize()
     });
@@ -1535,13 +1494,7 @@ function dr_submit_todo(myform, url) {
         area: ['480px', '30%'],
         success: function(layero, index){
             // 主要用于后台权限验证
-            var body = layer.getChildFrame('body', index);
-            var json = $(body).html();
-            if (json.indexOf('"code":0') > 0 && json.length < 150){
-                var obj = JSON.parse(json);
-                layer.closeAll(index);
-                dr_tips(0, obj.msg);
-            }
+            dr_iframe_error(layer, index, 0);
         },
         content: url+'&'+$('#'+myform).serialize()
     });
@@ -1817,6 +1770,7 @@ function dr_test_html_dir(id) {
 function dr_ajax_admin_alert_error(HttpRequest, ajaxOptions, thrownError) {
     dr_ajax_alert_error(HttpRequest, this, thrownError);
 }
+
 
 /*!
  * jQuery Cookie
