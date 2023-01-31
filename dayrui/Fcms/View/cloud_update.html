@@ -232,13 +232,7 @@
                                 area: ['80%', '80%'],
                                 success: function(layero, index){
                                     // 主要用于后台权限验证
-                                    var body = layer.getChildFrame('body', index);
-                                    var json = $(body).html();
-                                    if (json.indexOf('"code":0') > 0 && json.length < 150){
-                                        var obj = JSON.parse(json);
-                                        layer.closeAll(index);
-                                        dr_tips(0, obj.msg);
-                                    }
+                                    dr_iframe_error(layero, index, 0);
                                 },
                                 content: yz_url
                             });
@@ -278,13 +272,7 @@
                         area: ['80%', '80%'],
                         success: function(layero, index){
                             // 主要用于后台权限验证
-                            var body = layer.getChildFrame('body', index);
-                            var json = $(body).html();
-                            if (json.indexOf('"code":0') > 0 && json.length < 150){
-                                var obj = JSON.parse(json);
-                                layer.closeAll(index);
-                                dr_tips(0, obj.msg);
-                            }
+                            dr_iframe_error(layero, index, 0);
                         },
                         content: url
                     });
