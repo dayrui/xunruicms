@@ -60,6 +60,8 @@ class Run extends \Phpcmf\Common
                 if ($run_time && SYS_TIME - $run_time < 100) {
                     exit('未到执行时间');
                 }
+            } else {
+                file_put_contents(WRITEPATH.'config/cron_run_time.php', SYS_TIME);
             }
             $fp = fopen ( WRITEPATH.'config/cron_run_time.php' , "r" );
             //加锁
