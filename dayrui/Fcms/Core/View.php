@@ -1554,6 +1554,12 @@ class View {
                             $stime = strtotime(date('Y-m-d', $time).' 00:00:00');
                             $etime = SYS_TIME;
                         }
+                        if ($stime > $etime) {
+                            // 判断时间大小
+                            $tp = $stime;
+                            $stime = $etime;
+                            $etime = $tp;
+                        }
                         $string.= $join." ({$t['name']} BETWEEN ".$stime." AND ".$etime.")";
                         break;
 
@@ -1578,6 +1584,12 @@ class View {
                             }
                             $etime = SYS_TIME;
                         }
+                        if ($stime > $etime) {
+                            // 判断时间大小
+                            $tp = $stime;
+                            $stime = $etime;
+                            $etime = $tp;
+                        }
                         $string.= $join." ({$t['name']} BETWEEN ".$stime." AND ".$etime.")";
                         break;
 
@@ -1597,6 +1609,12 @@ class View {
                         ];
                         $stime = strtotime($y.$season[$s][0]);
                         $etime = strtotime($y.$season[$s][1]);
+                        if ($stime > $etime) {
+                            // 判断时间大小
+                            $tp = $stime;
+                            $stime = $etime;
+                            $etime = $tp;
+                        }
                         $string.= $join." ({$t['name']} BETWEEN ".$stime." AND ".$etime.")";
                         break;
 
@@ -1615,6 +1633,12 @@ class View {
                             $time = strtotime('-'.intval($t['value']).' month');
                             $stime = strtotime(date('Y-m', $time).'-01 00:00:00');;
                             $etime = SYS_TIME;
+                        }
+                        if ($stime > $etime) {
+                            // 判断时间大小
+                            $tp = $stime;
+                            $stime = $etime;
+                            $etime = $tp;
                         }
                         $string.= $join."  ({$t['name']}  BETWEEN ".$stime." AND ".$etime.")";
                         break;
@@ -1636,6 +1660,12 @@ class View {
                         } else {
                             $stime = strtotime(date('Y', strtotime('-'.intval($t['value']).' year')).'-01-01 00:00:00');
                             $etime = SYS_TIME;
+                        }
+                        if ($stime > $etime) {
+                            // 判断时间大小
+                            $tp = $stime;
+                            $stime = $etime;
+                            $etime = $tp;
                         }
                         $string.= $join." ({$t['name']} BETWEEN ".$stime." AND ".$etime.")";
                         break;
