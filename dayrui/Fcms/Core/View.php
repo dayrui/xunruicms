@@ -808,7 +808,8 @@ class View {
         }
 
         $sysadj = [
-            'IN', 'BEWTEEN', 'BETWEEN', 'LIKE', 'NOTIN', 'NOT', 'BW',
+            'IN', 'BEWTEEN', 'BETWEEN', 'LIKE', 'NOT', 'BW',
+            'NOTLIKE', 'NOTJSON', 'NOTFIND', 'NOTIN',
             'GT', 'EGT', 'LT', 'ELT',
             'DAY', 'MONTH', 'MAP', 'YEAR', 'SEASON', 'WEEK',
             'JSON', 'FIND'
@@ -1419,6 +1420,7 @@ class View {
                         break;
 
                     case 'JSON':
+                    case 'NOTJSON':
                         if ($t['value'] == '') {
                             $string.= $join." ".$t['name']." = ''";
                         } else {
@@ -1444,20 +1446,28 @@ class View {
                                     }
                                 }
                             }
-                            $string.= $vals ? $join.$t['name'].'<>\'\' AND  ('.implode($or_and ? ' AND ' : ' OR ', $vals).')' : '';
+                            if ($t['adj'] == 'NOTJSON') {
+                                $join.= ' NOT';
+                            }
+                            $string.= $vals ? $join.'('.$t['name'].'<>\'\' AND  ('.implode($or_and ? ' AND ' : ' OR ', $vals).'))' : '';
                         }
 
                         break;
 
                     case 'FIND':
+                    case 'NOTFIND':
                         $v = dr_safe_replace($t['value']);
                         if (!is_numeric($v)) {
                             $v = "'".$v."'";
+                        }
+                        if ($t['adj'] == 'NOTFIND') {
+                            $join.= ' NOT';
                         }
                         $string.= $join." FIND_IN_SET (".$v.", {$t['name']})";
                         break;
 
                     case 'LIKE':
+                    case 'NOTLIKE':
                         $vals = [];
                         $value = dr_safe_replace($t['value']);
                         if ($value) {
@@ -1470,6 +1480,9 @@ class View {
                                    $vals[]= "{$t['name']} LIKE \"".$value."\"";
                                }
                            }
+                        }
+                        if ($t['adj'] == 'NOTLIKE') {
+                            $join.= ' NOT';
                         }
                         $string.= $vals ? $join.' ('.implode(' OR ', $vals).')' : '';
                         break;
