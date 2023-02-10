@@ -79,7 +79,7 @@
             sortOrder: "",
             pageSize: {$mytable_pagesize},
             pageNumber: page_id,
-            pageList: "[10, 25, 50, 100, 200]",
+            pageList: "[{php echo $mytable_pagelist ? $mytable_pagelist : '10, 25, 50, 100, 200, 300'}]",
             {if !\Phpcmf\Service::IS_PC_USER()}
             paginationHAlign: 'center',
             paginationDetailHAlign: 'center',
