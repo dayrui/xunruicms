@@ -77,7 +77,7 @@ return [
     [
         'id' => 'Merge',
         'name' => '多行分组字段',
-        'used' => ['module', 'form', 'mform'],
+        'used' => ['module', 'form', 'mform', 'site'],
     ],
     [
         'id' => 'Linkage',

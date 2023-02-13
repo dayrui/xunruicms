@@ -100,10 +100,13 @@ class Site_param extends \Phpcmf\Common {
                 ]
             ),
             'data' => $data['config'],
+            'field' => $field,
             'myfield' => $field ? \Phpcmf\Service::L('Field')->toform(0, $field, $data['param']) : '',
+            'mymerge' => $field ? \Phpcmf\Service::L('Field')->merge : '',
             'logofield' => dr_fieldform($logo['logo'], $data['config']['logo']),
             'my_site_info' => is_file(MYPATH.'View/site_info.html') ? MYPATH.'View/site_info.html' : '',
 		]);
+
 		\Phpcmf\Service::V()->display('site_param.html');
 	}
 
