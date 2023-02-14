@@ -9,6 +9,8 @@
 class Form {
 
     public $mfields;
+    public $fields;
+
     protected $id = 0;
 
     // 初始化

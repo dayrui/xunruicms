@@ -16,6 +16,8 @@ class Model {
     public $id = 'id';
     public $key = 'id';
 
+    public $site;
+
     public $field;
     public $siteid;
     public $table;

@@ -573,6 +573,10 @@ class Member extends \Phpcmf\Model {
                     $member['username'] = $this->_register_rand_username($member);
                 }
             }
+            if ($member['name'] && \Phpcmf\Service::C()->member_cache['config']['unique_name']
+                && $this->db->table('member')->where('name', $member['name'])->countAllResults()) {
+                $member['name'] = $member['name'].'_XR_RAND_';
+            }
         } else {
             // 验证格式
             if ($member['username'] && dr_in_array('username', \Phpcmf\Service::C()->member_cache['register']['field'])) {
@@ -600,22 +604,22 @@ class Member extends \Phpcmf\Model {
                     }
                 }
             }
-        }
 
-        // 验证唯一性
-        if ($member['username'] && $this->db->table('member')->where('username', $member['username'])->countAllResults()) {
-            return dr_return_data(0, dr_lang('账号已经注册'), ['field' => 'username']);
-        } elseif ($member['email'] && $this->db->table('member')->where('email', $member['email'])->countAllResults()) {
-            return dr_return_data(0, dr_lang('邮箱已经注册'), ['field' => 'email']);
-        } elseif ($member['phone'] && $this->db->table('member')->where('phone', $member['phone'])->countAllResults()) {
-            return dr_return_data(0, dr_lang('手机号码已经注册'), ['field' => 'phone']);
-        } elseif ($member['name'] && \Phpcmf\Service::C()->member_cache['config']['unique_name']
-            && $this->db->table('member')->where('name', $member['name'])->countAllResults()) {
-            return dr_return_data(0, dr_lang('%s已经注册', MEMBER_CNAME), ['field' => 'name']);
-        }
+            // 验证唯一性
+            if ($member['username'] && $this->db->table('member')->where('username', $member['username'])->countAllResults()) {
+                return dr_return_data(0, dr_lang('账号已经注册'), ['field' => 'username']);
+            } elseif ($member['email'] && $this->db->table('member')->where('email', $member['email'])->countAllResults()) {
+                return dr_return_data(0, dr_lang('邮箱已经注册'), ['field' => 'email']);
+            } elseif ($member['phone'] && $this->db->table('member')->where('phone', $member['phone'])->countAllResults()) {
+                return dr_return_data(0, dr_lang('手机号码已经注册'), ['field' => 'phone']);
+            } elseif ($member['name'] && \Phpcmf\Service::C()->member_cache['config']['unique_name']
+                && $this->db->table('member')->where('name', $member['name'])->countAllResults()) {
+                return dr_return_data(0, dr_lang('%s已经注册', MEMBER_CNAME), ['field' => 'name']);
+            }
 
-        if ($member['username'] == 'guest') {
-            return dr_return_data(0, dr_lang('此名称guest系统不允许注册'), ['field' => 'username']);
+            if ($member['username'] == 'guest') {
+                return dr_return_data(0, dr_lang('此名称guest系统不允许注册'), ['field' => 'username']);
+            }
         }
         /*
         elseif (!IS_ADMIN && \Phpcmf\Service::C()->member_cache['register']['notallow']) {
@@ -642,6 +646,11 @@ class Member extends \Phpcmf\Model {
             return dr_return_data(0, $rt['msg']);
         }
 
+        $update = [];
+        // 姓名随机替换
+        if (\Phpcmf\Service::C()->member_cache['config']['unique_name'] && strpos($member['name'], '_XR_RAND_')) {
+            $update['name'] = str_replace( '_XR_RAND_', intval($rt['code']+date('Ymd')), $member['name']);
+        }
         // 再次判断没有账号，随机一个默认登录账号
         if (!$member['username']) {
             $member['username'] = '';
@@ -649,12 +658,10 @@ class Member extends \Phpcmf\Model {
                 $member['username'] = strtolower(trim((string)\Phpcmf\Service::C()->member_cache['register']['unprefix']));
             }
             $member['username'].= intval($rt['code']+date('Ymd'));
-
-            // 更新操作
-            $this->table('member')->update($rt['code'], [
-                'username' => $member['username']
-            ]);
+            $update['name'] = $member['username'];
         }
+        // 更新操作
+        $update && $this->table('member')->update($rt['code'], $update);
 
         // 附表信息
         $data['id'] = $member['uid'] = $uid = $rt['code'];

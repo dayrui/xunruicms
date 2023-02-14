@@ -438,13 +438,13 @@ class Menu extends \Phpcmf\Model {
             $this->db->table('admin_menu')->emptyTable();
             foreach ($menu['admin'] as $mark => $top) {
                 // 插入顶级菜单
-                $top['mark'] = $mark = strlen($mark) > 2 ? $mark : '';
+                $top['mark'] = $mark = strlen($mark) > 2 ? $mark : $top['mark'];
                 $top['site'] = $this->_get_old_value($rp, $top);
                 $top_id = $this->_add('admin', 0, $top, $mark, true);
                 // 插入分组菜单
                 if ($top_id) {
                     foreach ($top['left'] as $mark2 => $left) {
-                        $left['mark'] = $mark2 = strlen($mark2) > 2 ? $mark2 : '';
+                        $left['mark'] = $mark2 = strlen($mark2) > 2 ? $mark2 : $left['mark'];
                         $left['site'] = $this->_get_old_value($rp, $left);
                         $left_id = $this->_add('admin', $top_id, $left, $mark2, true);
                         // 插入链接菜单

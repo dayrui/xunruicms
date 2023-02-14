@@ -7,6 +7,9 @@
 
 class Ftable extends \Phpcmf\Library\A_Field {
 
+    protected $_load_date;
+    protected $_load_datetime;
+
     /**
      * 构造函数
      */

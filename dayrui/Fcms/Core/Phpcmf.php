@@ -20,6 +20,7 @@ abstract class Common extends \Frame\Controller {
     public $admin;
     public $member;
     public $module;
+    public $loadjs;
     public $member_cache;
 
     public $site; // 网站id信息
@@ -30,6 +31,8 @@ abstract class Common extends \Frame\Controller {
     public $session; // 网站session对象
     public $is_mobile; // 是否移动端
     public $temp = []; // 临时数据存储
+
+    public $content_model;
 
     protected $is_module_init; // 防止模块重复初始化
     protected $cmf_version; // 版本信息

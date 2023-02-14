@@ -12,6 +12,7 @@ class Table extends \Phpcmf\Common {
     public $dfield; // 自定义字段对象
     public $init; // 数据表初始化 [ fmode init方法参数 ]
     public $is_get_catid; // 当期栏目id
+    public $mytable;
 
     protected $model; // 模型类
     protected $db_source; // 数据源

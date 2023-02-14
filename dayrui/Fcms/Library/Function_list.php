@@ -11,6 +11,8 @@
 
 class Function_list {
 
+    protected $select_js;
+
     protected $uid_data = [];
     protected $cid_data = [];
 
