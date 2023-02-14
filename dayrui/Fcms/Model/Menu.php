@@ -450,7 +450,7 @@ class Menu extends \Phpcmf\Model {
                         // 插入链接菜单
                         if ($left_id) {
                             foreach ($left['link'] as $mark3 => $link) {
-                                $link['mark'] = $mark3 = strlen($mark3) > 2 ? $mark3 : '';
+                                $link['mark'] = $mark3 = strlen($mark3) > 2 ? $mark3 : $link['mark'];
                                 $link['site'] = $this->_get_old_value($rp, $link);
                                 $this->_add('admin', $left_id, $link, $mark3);
                             }
@@ -489,7 +489,7 @@ class Menu extends \Phpcmf\Model {
             $this->db->table('member_menu')->emptyTable();
             foreach ($menu['member'] as $mark => $top) {
                 // 插入顶级菜单
-                $top['mark'] = $mark = strlen($mark) > 2 ? $mark : '';
+                $top['mark'] = $mark = strlen($mark) > 2 ? $mark : $top['mark'];
                 $top['site'] = $this->_get_old_value($site, $top);
                 $top['group'] = $this->_get_old_value($group, $top);
                 $top['client'] = $this->_get_old_value($client, $top);
