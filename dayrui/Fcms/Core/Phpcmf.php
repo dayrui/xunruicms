@@ -16,12 +16,12 @@ abstract class Common extends \Frame\Controller {
     private $load_init = [];
     private $is_load_init_run = false;
 
-    public $uid;
-    public $admin;
-    public $member;
-    public $module;
-    public $loadjs;
-    public $member_cache;
+    public $uid; // 登录uid
+    public $admin; // 管理员属性
+    public $member; // 用户属性
+    public $module; // 模块属性
+    public $loadjs; // 预定义变量
+    public $member_cache; // 用户配置缓存
 
     public $site; // 网站id信息
     public $site_info; // 网站配置信息
@@ -32,11 +32,23 @@ abstract class Common extends \Frame\Controller {
     public $is_mobile; // 是否移动端
     public $temp = []; // 临时数据存储
 
-    public $content_model;
+    public $content_model; // 模块内容对象
 
     protected $is_module_init; // 防止模块重复初始化
     protected $cmf_version; // 版本信息
     protected $cmf_license; // 版本信息
+
+    /**
+     * 兼容动态属性
+     *
+    private array $properties = [];
+    public function __set(string $name, mixed $value) {
+        $this->properties[$name] = $value;
+    }
+    public function __get(string $name)
+    {
+        return $this->properties[$name];
+    }*/
 
     /**
      * 初始化共享控制器
