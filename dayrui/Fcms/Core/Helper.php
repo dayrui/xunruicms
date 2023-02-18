@@ -3518,7 +3518,7 @@ function dr_url_prefix($url, $domain = '', $siteid = SITE_ID, $is_mobile = '') {
 
         // 判断是否是模块，如果domain不是http开头
         if ($domain && !dr_is_url($url)) {
-            if (is_dir(APPSPATH.ucfirst($domain))) {
+            if (is_dir(dr_get_app_dir($domain))) {
                 $mod = \Phpcmf\Service::L('cache')->get('module-'.$siteid.'-'.$domain);
                 $domain = $mod && $mod['domain'] ? (\Phpcmf\Service::IS_MOBILE() && $mod['mobile_domain'] ? $mod['mobile_domain'] : $mod['domain']) : '';
             }

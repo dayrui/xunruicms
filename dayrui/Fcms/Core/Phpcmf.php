@@ -20,6 +20,7 @@ abstract class Common extends \Frame\Controller {
     public $admin; // 管理员属性
     public $member; // 用户属性
     public $module; // 模块属性
+    public $weixin; // 微信属性
     public $loadjs; // 预定义变量
     public $member_cache; // 用户配置缓存
 
