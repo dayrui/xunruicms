@@ -21,6 +21,7 @@ class Model {
     public $field;
     public $siteid;
     public $table;
+    public $mytable;
     public $stable; // join关联表
     public $sfield; // join关联表的字段
     public $db_temp; // 备份默认数据库
