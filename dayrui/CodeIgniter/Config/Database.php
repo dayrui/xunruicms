@@ -17,7 +17,7 @@ class Database extends Config
      * and Seeds directories.
      * @var string
      */
-    public $filesPath = WRITEPATH.'database/';
+    public string $filesPath = WRITEPATH.'database/';
 
     /**
      * Lets you choose which connection group to
@@ -25,14 +25,14 @@ class Database extends Config
      *
      * @var string
      */
-    public $defaultGroup = 'default';
+    public string $defaultGroup = 'default';
 
     /**
      * The default database connection.
      *
      * @var array
      */
-    public $default = [
+    public array $default = [
         'DSN'          => '',
         'hostname'     => 'localhost',
         'username'     => '',
@@ -75,7 +75,7 @@ class Database extends Config
 
         foreach ($this->default as $p => $t) {
             foreach ($db as $name => $v) {
-                $this->$name[$p] = isset($v[$p]) ? $v[$p] : $t;
+                isset($this->$name) && $this->$name[$p] = isset($v[$p]) ? $v[$p] : $t;
             }
         }
 

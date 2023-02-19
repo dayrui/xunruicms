@@ -20,8 +20,8 @@ use CodeIgniter\Format\XMLFormatter;
 use CodeIgniter\HTTP\DownloadResponse;
 use CodeIgniter\HTTP\IncomingRequest;
 use CodeIgniter\HTTP\RequestInterface;
-use CodeIgniter\HTTP\Response;
 use CodeIgniter\HTTP\ResponseInterface;
+use CodeIgniter\I18n\Time;
 use Config\Services;
 use Config\Toolbar as ToolbarConfig;
 use Kint\Kint;
@@ -71,12 +71,12 @@ class Toolbar
      *
      * @param float           $startTime App start time
      * @param IncomingRequest $request
-     * @param Response        $response
      *
      * @return string JSON encoded data
      */
     public function run(float $startTime, float $totalTime, RequestInterface $request, ResponseInterface $response): string
     {
+        $data = [];
         // Data items used within the view.
         $data['url']             = current_url();
         $data['method']          = strtoupper($request->getMethod());
@@ -163,9 +163,7 @@ class Toolbar
 
         $data['config'] = Config::display();
 
-        if ($response->CSP !== null) {
-            $response->CSP->addImageSrc('data:');
-        }
+        $response->getCSP()->addImageSrc('data:');
 
         return json_encode($data);
     }
@@ -355,7 +353,6 @@ class Toolbar
     {
         /**
          * @var IncomingRequest|null $request
-         * @var Response|null        $response
          */
         if (CI_DEBUG && ! is_cli()) {
             $app = Services::codeigniter();
@@ -373,7 +370,7 @@ class Toolbar
             $stats   = $app->getPerformanceStats();
             $data    = $toolbar->run(
                 $stats['startTime'],
-                $stats['totalTime'] ??  microtime(true),
+                $stats['totalTime'],
                 $request,
                 $response
             );
@@ -381,7 +378,7 @@ class Toolbar
             helper('filesystem');
 
             // Updated to microtime() so we can get history
-            $time = sprintf('%.6f', microtime(true));
+            $time = sprintf('%.6f', Time::now()->format('U.u'));
 
             if (! is_dir(WRITEPATH . 'debugbar')) {
                 mkdir(WRITEPATH . 'debugbar', 0777);
@@ -409,11 +406,11 @@ class Toolbar
             $kintScript         = ($kintScript === '0') ? '' : $kintScript;
 
             $script = PHP_EOL
-                . '<script type="text/javascript" ' . csp_script_nonce() . ' id="debugbar_loader" '
+                . '<script ' . csp_script_nonce() . ' id="debugbar_loader" '
                 . 'data-time="' . $time . '" '
                 . 'src="' . site_url() . '?debugbar"></script>'
-                . '<script type="text/javascript" ' . csp_script_nonce() . ' id="debugbar_dynamic_script"></script>'
-                . '<style type="text/css" ' . csp_style_nonce() . ' id="debugbar_dynamic_style"></style>'
+                . '<script ' . csp_script_nonce() . ' id="debugbar_dynamic_script"></script>'
+                . '<style ' . csp_style_nonce() . ' id="debugbar_dynamic_style"></style>'
                 . $kintScript
                 . PHP_EOL;
 

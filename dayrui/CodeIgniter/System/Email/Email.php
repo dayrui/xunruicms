@@ -12,6 +12,7 @@
 namespace CodeIgniter\Email;
 
 use CodeIgniter\Events\Events;
+use CodeIgniter\I18n\Time;
 use Config\Mimes;
 use ErrorException;
 
@@ -391,7 +392,7 @@ class Email
     protected static $func_overload;
 
     /**
-     * @param array|null $config
+     * @param array|\Config\Email|null $config
      */
     public function __construct($config = null)
     {
@@ -404,7 +405,7 @@ class Email
     /**
      * Initialize preferences
      *
-     * @param array|\Config\Email $config
+     * @param array|\Config\Email|null $config
      *
      * @return Email
      */
@@ -1538,7 +1539,11 @@ class Email
             $this->setReplyTo($this->headers['From']);
         }
 
-        if (empty($this->recipients) && ! isset($this->headers['To']) && empty($this->BCCArray) && ! isset($this->headers['Bcc']) && ! isset($this->headers['Cc'])) {
+        if (
+            empty($this->recipients) && ! isset($this->headers['To'])
+            && empty($this->BCCArray) && ! isset($this->headers['Bcc'])
+            && ! isset($this->headers['Cc'])
+        ) {
             $this->setErrorMessage(lang('Email.noRecipients'));
 
             return false;
@@ -2038,8 +2043,8 @@ class Email
             // See https://bugs.php.net/bug.php?id=39598 and http://php.net/manual/en/function.fwrite.php#96951
             if ($result === 0) {
                 if ($timestamp === 0) {
-                    $timestamp = time();
-                } elseif ($timestamp < (time() - $this->SMTPTimeout)) {
+                    $timestamp = Time::now()->getTimestamp();
+                } elseif ($timestamp < (Time::now()->getTimestamp() - $this->SMTPTimeout)) {
                     $result = false;
 
                     break;
@@ -2100,6 +2105,11 @@ class Email
             return '[' . $_SERVER['SERVER_ADDR'] . ']';
         }
 
+        $hostname = gethostname();
+        if ($hostname !== false) {
+            return $hostname;
+        }
+
         return '[127.0.0.1]';
     }
 
@@ -2146,7 +2156,7 @@ class Email
      */
     protected function setErrorMessage($msg)
     {
-        $this->debugMessage[]    = $msg . '<br />';
+        $this->debugMessage[]    = $msg . '<br>';
         $this->debugMessageRaw[] = $msg;
     }
 

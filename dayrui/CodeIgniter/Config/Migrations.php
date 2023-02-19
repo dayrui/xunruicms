@@ -1,9 +1,6 @@
-<?php namespace Config;
-/**
- * {{www.xunruicms.com}}
- * {{迅睿内容管理框架系统}}
- * 本文件是框架系统文件，二次开发时不可以修改本文件
- **/
+<?php
+
+namespace Config;
 
 use CodeIgniter\Config\BaseConfig;
 
@@ -18,10 +15,8 @@ class Migrations extends BaseConfig
      *
      * You should enable migrations whenever you intend to do a schema migration
      * and disable it back when you're done.
-     *
-     * @var boolean
      */
-    public $enabled = true;
+    public bool $enabled = true;
 
     /**
      * --------------------------------------------------------------------------
@@ -33,10 +28,8 @@ class Migrations extends BaseConfig
      * level the system is at. It then compares the migration level in this
      * table to the $config['migration_version'] if they are not the same it
      * will migrate up. This must be set.
-     *
-     * @var string
      */
-    public $table = 'migrations';
+    public string $table = 'migrations';
 
     /**
      * --------------------------------------------------------------------------
@@ -45,14 +38,15 @@ class Migrations extends BaseConfig
      *
      * This is the format that will be used when creating new migrations
      * using the CLI command:
-     *   > php spark migrate:create
+     *   > php spark make:migration
      *
-     * Typical formats:
+     * Note: if you set an unsupported format, migration runner will not find
+     *       your migration files.
+     *
+     * Supported formats:
      * - YmdHis_
      * - Y-m-d-His_
      * - Y_m_d_His_
-     *
-     * @var string
      */
-    public $timestampFormat = 'Y-m-d-His_';
+    public string $timestampFormat = 'Y-m-d-His_';
 }

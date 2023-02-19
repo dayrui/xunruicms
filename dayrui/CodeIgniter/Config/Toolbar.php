@@ -86,7 +86,7 @@ class Toolbar extends BaseConfig
      *
      * @var integer
      */
-    public $maxQueries = 100;
+    public int $maxQueries = 100;
 
     /**
      * --------------------------------------------------------------------------

@@ -1,12 +1,11 @@
-<?php namespace Config;
-/**
- * {{www.xunruicms.com}}
- * {{迅睿内容管理框架系统}}
- * 本文件是框架系统文件，二次开发时不可以修改本文件
- **/
+<?php
+
+namespace Config;
 
 use CodeIgniter\Config\BaseConfig;
 use CodeIgniter\Format\FormatterInterface;
+use CodeIgniter\Format\JSONFormatter;
+use CodeIgniter\Format\XMLFormatter;
 
 class Format extends BaseConfig
 {
@@ -25,7 +24,7 @@ class Format extends BaseConfig
      *
      * @var string[]
      */
-    public $supportedResponseFormats = [
+    public array $supportedResponseFormats = [
         'application/json',
         'application/xml', // machine-readable XML
         'text/xml', // human-readable XML
@@ -42,10 +41,10 @@ class Format extends BaseConfig
      *
      * @var array<string, string>
      */
-    public $formatters = [
-        'application/json' => 'CodeIgniter\Format\JSONFormatter',
-        'application/xml'  => 'CodeIgniter\Format\XMLFormatter',
-        'text/xml'         => 'CodeIgniter\Format\XMLFormatter',
+    public array $formatters = [
+        'application/json' => JSONFormatter::class,
+        'application/xml'  => XMLFormatter::class,
+        'text/xml'         => XMLFormatter::class,
     ];
 
     /**
@@ -58,18 +57,14 @@ class Format extends BaseConfig
      *
      * @var array<string, int>
      */
-    public $formatterOptions = [
+    public array $formatterOptions = [
         'application/json' => JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES,
         'application/xml'  => 0,
         'text/xml'         => 0,
     ];
 
-    //--------------------------------------------------------------------
-
     /**
      * A Factory method to return the appropriate formatter for the given mime type.
-     *
-     * @param string $mime
      *
      * @return FormatterInterface
      *

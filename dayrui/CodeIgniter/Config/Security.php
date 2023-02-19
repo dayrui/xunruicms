@@ -1,9 +1,6 @@
-<?php namespace Config;
-/**
- * {{www.xunruicms.com}}
- * {{迅睿内容管理框架系统}}
- * 本文件是框架系统文件，二次开发时不可以修改本文件
- **/
+<?php
+
+namespace Config;
 
 use CodeIgniter\Config\BaseConfig;
 
@@ -18,18 +15,7 @@ class Security extends BaseConfig
      *
      * @var string 'cookie' or 'session'
      */
-    public $csrfProtection = 'cookie';
-
-	/**
-	 * --------------------------------------------------------------------------
-	 * CSRF Token Name
-	 * --------------------------------------------------------------------------
-	 *
-	 * Token name for Cross Site Request Forgery protection cookie.
-	 *
-	 * @var string
-	 */
-	public $tokenName = 'csrf_test_name';
+    public string $csrfProtection = 'cookie';
 
     /**
      * --------------------------------------------------------------------------
@@ -37,81 +23,79 @@ class Security extends BaseConfig
      * --------------------------------------------------------------------------
      *
      * Randomize the CSRF Token for added security.
-     *
-     * @var bool
      */
-    public $tokenRandomize = false;
+    public bool $tokenRandomize = false;
 
-	/**
-	 * --------------------------------------------------------------------------
-	 * CSRF Header Name
-	 * --------------------------------------------------------------------------
-	 *
-	 * Token name for Cross Site Request Forgery protection cookie.
-	 *
-	 * @var string
-	 */
-	public $headerName = 'X-CSRF-TOKEN';
+    /**
+     * --------------------------------------------------------------------------
+     * CSRF Token Name
+     * --------------------------------------------------------------------------
+     *
+     * Token name for Cross Site Request Forgery protection.
+     */
+    public string $tokenName = 'csrf_test_name';
 
-	/**
-	 * --------------------------------------------------------------------------
-	 * CSRF Cookie Name
-	 * --------------------------------------------------------------------------
-	 *
-	 * Cookie name for Cross Site Request Forgery protection cookie.
-	 *
-	 * @var string
-	 */
-	 public $cookieName = 'csrf_cookie_name';
+    /**
+     * --------------------------------------------------------------------------
+     * CSRF Header Name
+     * --------------------------------------------------------------------------
+     *
+     * Header name for Cross Site Request Forgery protection.
+     */
+    public string $headerName = 'X-CSRF-TOKEN';
 
-	/**
-	 * --------------------------------------------------------------------------
-	 * CSRF Expires
-	 * --------------------------------------------------------------------------
-	 *
-	 * Expiration time for Cross Site Request Forgery protection cookie.
-	 *
-	 * Defaults to two hours (in seconds).
-	 *
-	 * @var integer
-	 */
-	public $expires = 7200;
+    /**
+     * --------------------------------------------------------------------------
+     * CSRF Cookie Name
+     * --------------------------------------------------------------------------
+     *
+     * Cookie name for Cross Site Request Forgery protection.
+     */
+    public string $cookieName = 'csrf_cookie_name';
 
-	/**
-	 * --------------------------------------------------------------------------
-	 * CSRF Regenerate
-	 * --------------------------------------------------------------------------
-	 *
-	 * Regenerate CSRF Token on every request.
-	 *
-	 * @var boolean
-	 */
-	public $regenerate = true;
+    /**
+     * --------------------------------------------------------------------------
+     * CSRF Expires
+     * --------------------------------------------------------------------------
+     *
+     * Expiration time for Cross Site Request Forgery protection cookie.
+     *
+     * Defaults to two hours (in seconds).
+     */
+    public int $expires = 7200;
 
-	/**
-	 * --------------------------------------------------------------------------
-	 * CSRF Redirect
-	 * --------------------------------------------------------------------------
-	 *
-	 * Redirect to previous page with error on failure.
-	 *
-	 * @var boolean
-	 */
-	public $redirect = true;
+    /**
+     * --------------------------------------------------------------------------
+     * CSRF Regenerate
+     * --------------------------------------------------------------------------
+     *
+     * Regenerate CSRF Token on every submission.
+     */
+    public bool $regenerate = true;
 
-	/**
-	 * --------------------------------------------------------------------------
-	 * CSRF SameSite
-	 * --------------------------------------------------------------------------
-	 *
-	 * Setting for CSRF SameSite cookie token.
-	 *
-	 * Allowed values are: None - Lax - Strict - ''.
-	 *
-	 * Defaults to `Lax` as recommended in this link:
-	 * @see https://portswigger.net/web-security/csrf/samesite-cookies
-	 *
-	 * @var string
-	 */
-	public $samesite = 'Lax';
+    /**
+     * --------------------------------------------------------------------------
+     * CSRF Redirect
+     * --------------------------------------------------------------------------
+     *
+     * Redirect to previous page with error on failure.
+     */
+    public bool $redirect = false;
+
+    /**
+     * --------------------------------------------------------------------------
+     * CSRF SameSite
+     * --------------------------------------------------------------------------
+     *
+     * Setting for CSRF SameSite cookie token.
+     *
+     * Allowed values are: None - Lax - Strict - ''.
+     *
+     * Defaults to `Lax` as recommended in this link:
+     *
+     * @see https://portswigger.net/web-security/csrf/samesite-cookies
+     *
+     * @deprecated `Config\Cookie` $samesite property is used.
+     */
+    public string $samesite = 'Lax';
 }

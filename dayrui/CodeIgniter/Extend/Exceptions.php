@@ -194,6 +194,10 @@ class Exceptions extends \CodeIgniter\Debug\Exceptions {
             $message.= '<br>数据库表'.$mt[1].'不存在，表丢失或者表没有创建成功';
         } elseif (preg_match("/Unknown column '(.+)' in 'field list'/", $message, $mt)) {
             $message.= '<br>表中没有字段'.$mt[1].'，字段没有被创建';
+        } elseif (preg_match("/Access level to (.+) must be protected \(as in class (.+)\) or weaker/U", $message, $mt)) {
+            $message.= '<br>'.$mt[1].'在类'.$mt[2].'中已经被定义过更高级别的权限，请删除本文件的定义代码';
+        } elseif (preg_match("/Creation of dynamic property (.+) is deprecated/", $message, $mt)) {
+            $message.= '<br>动态属性被废除'.$mt[1].'，请预先定义';
         } elseif (preg_match("/Failed opening required '(.+)'/", $message, $mt)) {
             $message.= '<br>文件'.$mt[1].'不存在，文件丢失或者文件没有创建成功';
         } elseif (preg_match("/syntax error, unexpected token (.+)/", $message, $mt)) {

@@ -1,18 +1,27 @@
-<?php namespace Config;
-/**
- * {{www.xunruicms.com}}
- * {{迅睿内容管理框架系统}}
- * 本文件是框架系统文件，二次开发时不可以修改本文件
- **/
+<?php
 
+namespace Config;
+
+/**
+ * Mimes
+ *
+ * This file contains an array of mime types.  It is used by the
+ * Upload class to help identify allowed file types.
+ *
+ * When more than one variation for an extension exist (like jpg, jpeg, etc)
+ * the most common one should be first in the array to aid the guess*
+ * methods. The same applies when more than one mime-type exists for a
+ * single extension.
+ *
+ * When working with mime types, please make sure you have the ´fileinfo´
+ * extension enabled to reliably detect the media types.
+ */
 class Mimes
 {
     /**
      * Map of extensions to mime types.
-     *
-     * @var array
      */
-    public static $mimes = [
+    public static array $mimes = [
         'hqx' => [
             'application/mac-binhex40',
             'application/mac-binhex',
@@ -91,8 +100,6 @@ class Mimes
         ],
         'pptx' => [
             'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-            'application/x-zip',
-            'application/zip',
         ],
         'wbxml' => 'application/wbxml',
         'wmlc'  => 'application/wmlc',
@@ -249,6 +256,7 @@ class Mimes
             'image/png',
             'image/x-png',
         ],
+        'webp' => 'image/webp',
         'tif'  => 'image/tiff',
         'tiff' => 'image/tiff',
         'css'  => [
@@ -500,20 +508,19 @@ class Mimes
 
         $proposedExtension = trim(strtolower($proposedExtension ?? ''));
 
-        if ($proposedExtension !== '') {
-            if (array_key_exists($proposedExtension, static::$mimes) && in_array($type, is_string(static::$mimes[$proposedExtension]) ? [static::$mimes[$proposedExtension]] : static::$mimes[$proposedExtension], true)) {
-                // The detected mime type matches with the proposed extension.
-                return $proposedExtension;
-            }
-
-            // An extension was proposed, but the media type does not match the mime type list.
-            return null;
+        if (
+            $proposedExtension !== ''
+            && array_key_exists($proposedExtension, static::$mimes)
+            && in_array($type, (array) static::$mimes[$proposedExtension], true)
+        ) {
+            // The detected mime type matches with the proposed extension.
+            return $proposedExtension;
         }
 
         // Reverse check the mime type list if no extension was proposed.
         // This search is order sensitive!
         foreach (static::$mimes as $ext => $types) {
-            if ((is_string($types) && $types === $type) || (is_array($types) && in_array($type, $types, true))) {
+            if (in_array($type, (array) $types, true)) {
                 return $ext;
             }
         }

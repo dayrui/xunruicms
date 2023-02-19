@@ -13,6 +13,7 @@ namespace CodeIgniter\Cookie;
 
 use ArrayAccess;
 use CodeIgniter\Cookie\Exceptions\CookieException;
+use CodeIgniter\I18n\Time;
 use Config\Cookie as CookieConfig;
 use DateTimeInterface;
 use InvalidArgumentException;
@@ -36,6 +37,8 @@ use ReturnTypeWillChange;
  * $cookie2 = $cookie->withName('prod_cookie');
  * $cookie2->getName(); // prod_cookie
  * ```
+ *
+ * @template-implements ArrayAccess<string, bool|int|string>
  */
 class Cookie implements ArrayAccess, CloneableCookieInterface
 {
@@ -206,7 +209,7 @@ class Cookie implements ArrayAccess, CloneableCookieInterface
 
         // If both `Expires` and `Max-Age` are set, `Max-Age` has precedence.
         if (isset($options['max-age']) && is_numeric($options['max-age'])) {
-            $options['expires'] = time() + (int) $options['max-age'];
+            $options['expires'] = Time::now()->getTimestamp() + (int) $options['max-age'];
             unset($options['max-age']);
         }
 
@@ -314,7 +317,7 @@ class Cookie implements ArrayAccess, CloneableCookieInterface
      */
     public function isExpired(): bool
     {
-        return $this->expires === 0 || $this->expires < time();
+        return $this->expires === 0 || $this->expires < Time::now()->getTimestamp();
     }
 
     /**
@@ -322,7 +325,7 @@ class Cookie implements ArrayAccess, CloneableCookieInterface
      */
     public function getMaxAge(): int
     {
-        $maxAge = $this->expires - time();
+        $maxAge = $this->expires - Time::now()->getTimestamp();
 
         return $maxAge >= 0 ? $maxAge : 0;
     }
@@ -466,7 +469,7 @@ class Cookie implements ArrayAccess, CloneableCookieInterface
     {
         $cookie = clone $this;
 
-        $cookie->expires = time() + 5 * YEAR;
+        $cookie->expires = Time::now()->getTimestamp() + 5 * YEAR;
 
         return $cookie;
     }
@@ -563,7 +566,7 @@ class Cookie implements ArrayAccess, CloneableCookieInterface
     /**
      * Whether an offset exists.
      *
-     * @param mixed $offset
+     * @param string $offset
      */
     public function offsetExists($offset): bool
     {
@@ -573,9 +576,9 @@ class Cookie implements ArrayAccess, CloneableCookieInterface
     /**
      * Offset to retrieve.
      *
-     * @param mixed $offset
+     * @param string $offset
      *
-     * @return mixed
+     * @return bool|int|string
      *
      * @throws InvalidArgumentException
      */
@@ -592,8 +595,8 @@ class Cookie implements ArrayAccess, CloneableCookieInterface
     /**
      * Offset to set.
      *
-     * @param mixed $offset
-     * @param mixed $value
+     * @param string $offset
+     * @param mixed  $value
      *
      * @throws LogicException
      */
@@ -605,7 +608,7 @@ class Cookie implements ArrayAccess, CloneableCookieInterface
     /**
      * Offset to unset.
      *
-     * @param mixed $offset
+     * @param string $offset
      *
      * @throws LogicException
      */

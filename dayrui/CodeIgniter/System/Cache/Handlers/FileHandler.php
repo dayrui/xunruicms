@@ -12,6 +12,7 @@
 namespace CodeIgniter\Cache\Handlers;
 
 use CodeIgniter\Cache\Exceptions\CacheException;
+use CodeIgniter\I18n\Time;
 use Config\Cache;
 use Throwable;
 
@@ -91,7 +92,7 @@ class FileHandler extends BaseHandler
         $key = static::validateKey($key, $this->prefix);
 
         $contents = [
-            'time' => time(),
+            'time' => Time::now()->getTimestamp(),
             'ttl'  => $ttl,
             'data' => $value,
         ];
@@ -228,7 +229,7 @@ class FileHandler extends BaseHandler
      * Does the heavy lifting of actually retrieving the file and
      * verifying it's age.
      *
-     * @return mixed
+     * @return array|bool|float|int|object|string|null
      */
     protected function getItem(string $filename)
     {
@@ -241,7 +242,7 @@ class FileHandler extends BaseHandler
             return false;
         }
 
-        if ($data['ttl'] > 0 && time() > $data['time'] + $data['ttl']) {
+        if ($data['ttl'] > 0 && Time::now()->getTimestamp() > $data['time'] + $data['ttl']) {
             // If the file is still there then try to remove it
             if (is_file($this->path . $filename)) {
                 @unlink($this->path . $filename);
@@ -365,8 +366,8 @@ class FileHandler extends BaseHandler
      * Options are: name, server_path, size, date, readable, writable, executable, fileperms
      * Returns FALSE if the file cannot be found.
      *
-     * @param string $file           Path to file
-     * @param mixed  $returnedValues Array or comma separated string of information returned
+     * @param string       $file           Path to file
+     * @param array|string $returnedValues Array or comma separated string of information returned
      *
      * @return array|false
      */

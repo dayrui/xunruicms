@@ -8,58 +8,61 @@
 namespace Config;
 
 use CodeIgniter\Config\BaseConfig;
+use CodeIgniter\Session\Handlers\FileHandler;
 
 class App extends BaseConfig
 {
 
-	public $baseURL = FC_NOW_HOST;
+	public string $baseURL = FC_NOW_HOST;
+    public array $allowedHostnames = [];
 
-	public $indexPage = SELF;
+	public string $indexPage = SELF;
 
-	public $uriProtocol = 'REQUEST_URI';
+	public string $uriProtocol = 'REQUEST_URI';
 
-	public $defaultLocale = 'zh-cn';
+	public string $defaultLocale = 'zh-cn';
 
-	public $negotiateLocale = false;
+    public bool $negotiateLocale = false;
 
-	public $supportedLocales = ['en'];
+	public array $supportedLocales = ['en'];
 
-	public $appTimezone = 'PRC';
+	public string $appTimezone = 'PRC';
 
-	public $charset = 'UTF-8';
+	public string $charset = 'UTF-8';
 
-	public $forceGlobalSecureRequests = false;
-
-
-	public $sessionDriver            = 'CodeIgniter\Session\Handlers\FileHandler';
-	public $sessionCookieName        = 'xunruicms';
-	public $sessionExpiration        = 7200;
-	public $sessionSavePath          = WRITEPATH . 'session';
-	public $sessionMatchIP           = false;
-	public $sessionTimeToUpdate      = 300;
-	public $sessionRegenerateDestroy = false;
+	public bool $forceGlobalSecureRequests = false;
 
 
-	public $cookiePrefix   = '';
-	public $cookieDomain   = '';
-	public $cookiePath     = '/';
-	public $cookieSecure   = false;
-	public $cookieHTTPOnly = true;
-    public $cookieSameSite = 'Lax';
+    public string $sessionDriver = FileHandler::class;
+
+	public string $sessionCookieName = 'xunruicms';
+    public int $sessionExpiration = 7200;
+    public string $sessionSavePath = WRITEPATH . 'session';
+    public bool $sessionMatchIP = false;
+    public int $sessionTimeToUpdate = 300;
+    public bool $sessionRegenerateDestroy = false;
+
+    public ?string $sessionDBGroup = null;
+
+    public string $cookiePrefix = '';
+    public string $cookieDomain = '';
+	public string $cookiePath     = '/';
+	public bool $cookieSecure   = false;
+	public bool $cookieHTTPOnly = true;
+    public ?string $cookieSameSite = 'Lax';
 
 
-	public $proxyIPs = '';
+    public array $proxyIPs = [];
 
-	public $CSRFTokenName  = 'csrf_test_name';
-	public $CSRFCookieName = 'csrf_cookie_name';
-	public $CSRFHeaderName = 'X-CSRF-TOKEN';
-	public $CSRFExpire     = 7200;
-	public $CSRFRegenerate = false;
-	public $CSRFRedirect   = true;
-    public $CSRFSameSite = 'Lax';
+    public string $CSRFTokenName = 'csrf_test_name';
+	public string $CSRFCookieName = 'csrf_cookie_name';
+	public string $CSRFHeaderName = 'X-CSRF-TOKEN';
+	public int $CSRFExpire = 7200;
+	public bool $CSRFRegenerate = false;
+	public bool $CSRFRedirect   = true;
+    public string $CSRFSameSite = 'Lax';
 
-	public $CSPEnabled = false;
-
+	public bool $CSPEnabled = false;
 
 	public $salt = SYS_KEY;
 

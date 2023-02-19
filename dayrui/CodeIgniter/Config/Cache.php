@@ -76,7 +76,7 @@ class Cache extends BaseConfig
 	| if you run multiple applications with the same cache engine.
 	|
 	*/
-	public $prefix = '';
+	public string $prefix = '';
 	
 	/**
 	 * --------------------------------------------------------------------------
@@ -91,7 +91,7 @@ class Cache extends BaseConfig
 	 *
 	 * @var integer
 	 */
-	public $ttl = 600;
+	public int $ttl = 600;
 
     /**
      * --------------------------------------------------------------------------
@@ -105,7 +105,21 @@ class Cache extends BaseConfig
      *
      * @var string
      */
-    public $reservedCharacters = '{}()/\@:';
+    public string $reservedCharacters = '{}()/\@:';
+
+    /**
+     * --------------------------------------------------------------------------
+     * File settings
+     * --------------------------------------------------------------------------
+     * Your file storage preferences can be specified below, if you are using
+     * the File driver.
+     *
+     * @var array<string, int|string|null>
+     */
+    public array $file = [
+        'storePath' => WRITEPATH . 'file/',
+        'mode'      => 0640,
+    ];
 
 	/*
 	| -------------------------------------------------------------------------
@@ -117,7 +131,7 @@ class Cache extends BaseConfig
 	|	See: https://codeigniter.com/user_guide/libraries/caching.html#memcached
 	|
 	*/
-	public $memcached = [
+	public array $memcached = [
 		'host'   => '127.0.0.1',
 		'port'   => 11211,
 		'weight' => 1,
@@ -132,7 +146,7 @@ class Cache extends BaseConfig
 	| the Redis or Predis drivers.
 	|
 	*/
-	public $redis = [
+	public array $redis = [
 		'host'     => '127.0.0.1',
 		'password' => null,
 		'port'     => 6379,
@@ -149,13 +163,13 @@ class Cache extends BaseConfig
 	| that are listed here are allowed to be used.
 	|
 	*/
-	public $validHandlers = [
-		'dummy'     => \CodeIgniter\Cache\Handlers\DummyHandler::class,
-		'file'      => \CodeIgniter\Cache\Handlers\FileHandler::class,
-		'memcached' => \CodeIgniter\Cache\Handlers\MemcachedHandler::class,
-		'predis'    => \CodeIgniter\Cache\Handlers\PredisHandler::class,
-		'redis'     => \CodeIgniter\Cache\Handlers\RedisHandler::class,
-		'wincache'  => \CodeIgniter\Cache\Handlers\WincacheHandler::class,
+	public array $validHandlers = [
+        'dummy'     => DummyHandler::class,
+        'file'      => FileHandler::class,
+        'memcached' => MemcachedHandler::class,
+        'predis'    => PredisHandler::class,
+        'redis'     => RedisHandler::class,
+        'wincache'  => WincacheHandler::class,
 	];
 
     public function __construct()

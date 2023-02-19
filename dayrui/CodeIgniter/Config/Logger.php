@@ -6,6 +6,7 @@
  **/
 
 use CodeIgniter\Config\BaseConfig;
+use CodeIgniter\Log\Handlers\FileHandler;
 
 class Logger extends BaseConfig
 {
@@ -52,7 +53,7 @@ class Logger extends BaseConfig
      *
      * @var string
      */
-    public $dateFormat = 'Y-m-d H:i:s';
+    public string $dateFormat = 'Y-m-d H:i:s';
 
     /**
      * --------------------------------------------------------------------------
@@ -79,19 +80,17 @@ class Logger extends BaseConfig
      *
      * @var array
      */
-    public $handlers = [
+    public array $handlers = [
 
         /*
          * --------------------------------------------------------------------
          * File Handler
          * --------------------------------------------------------------------
          */
-        'CodeIgniter\Log\Handlers\FileHandler' => [
+        FileHandler::class => [
 
-            /*
-             * The log levels that this handler will handle.
-             */
-            'handles'         => [
+            // The log levels that this handler will handle.
+            'handles' => [
                 'critical',
                 'alert',
                 'emergency',
@@ -109,7 +108,7 @@ class Logger extends BaseConfig
              *
              * Note: Leaving it blank will default to 'log'.
              */
-            'fileExtension'   => 'php',
+            'fileExtension' => '',
 
             /*
              * The file system permissions to be applied on newly created log files.

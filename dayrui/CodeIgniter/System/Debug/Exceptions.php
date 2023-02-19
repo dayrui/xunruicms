@@ -12,11 +12,13 @@
 namespace CodeIgniter\Debug;
 
 use CodeIgniter\API\ResponseTrait;
+use CodeIgniter\Exceptions\HasExitCodeInterface;
+use CodeIgniter\Exceptions\HTTPExceptionInterface;
 use CodeIgniter\Exceptions\PageNotFoundException;
 use CodeIgniter\HTTP\CLIRequest;
 use CodeIgniter\HTTP\Exceptions\HTTPException;
 use CodeIgniter\HTTP\IncomingRequest;
-use CodeIgniter\HTTP\Response;
+use CodeIgniter\HTTP\ResponseInterface;
 use Config\Exceptions as ExceptionsConfig;
 use Config\Paths;
 use ErrorException;
@@ -62,14 +64,16 @@ class Exceptions
     /**
      * The outgoing response.
      *
-     * @var Response
+     * @var ResponseInterface
      */
     protected $response;
+
+    private ?Throwable $exceptionCaughtByExceptionHandler = null;
 
     /**
      * @param CLIRequest|IncomingRequest $request
      */
-    public function __construct(ExceptionsConfig $config, $request, Response $response)
+    public function __construct(ExceptionsConfig $config, $request, ResponseInterface $response)
     {
         $this->ob_level = ob_get_level();
         $this->viewPath = rtrim($config->errorViewPath, '\\/ ') . DIRECTORY_SEPARATOR;
@@ -78,8 +82,14 @@ class Exceptions
         $this->response = $response;
 
         // workaround for upgraded users
+        // This causes "Deprecated: Creation of dynamic property" in PHP 8.2.
+        // @TODO remove this after dropping PHP 8.1 support.
         if (! isset($this->config->sensitiveDataInTrace)) {
             $this->config->sensitiveDataInTrace = [];
+        }
+        if (! isset($this->config->logDeprecations, $this->config->deprecationLogLevel)) {
+            $this->config->logDeprecations     = false;
+            $this->config->deprecationLogLevel = LogLevel::WARNING;
         }
     }
 
@@ -105,6 +115,8 @@ class Exceptions
      */
     public function exceptionHandler(Throwable $exception)
     {
+        $this->exceptionCaughtByExceptionHandler = $exception;
+
         [$statusCode, $exitCode] = $this->determineCodes($exception);
 
         if ($this->config->log === true && ! in_array($statusCode, $this->config->ignoreCodes, true)) {
@@ -152,45 +164,19 @@ class Exceptions
      */
     public function errorHandler(int $severity, string $message, ?string $file = null, ?int $line = null)
     {
-        if (error_reporting() & $severity) {
-            // @TODO Remove if Faker is fixed.
-            if ($this->isFakerDeprecationError($severity, $message, $file, $line)) {
-                // Ignore the error.
-                return true;
+        if ($this->isDeprecationError($severity)) {
+            if (! $this->config->logDeprecations || (bool) env('CODEIGNITER_SCREAM_DEPRECATIONS')) {
+                throw new ErrorException($message, 0, $severity, $file, $line);
             }
 
+            return $this->handleDeprecationError($message, $file, $line);
+        }
+
+        if (error_reporting() & $severity) {
             throw new ErrorException($message, 0, $severity, $file, $line);
         }
 
         return false; // return false to propagate the error to PHP standard error handler
-    }
-
-    /**
-     * Workaround for Faker deprecation errors in PHP 8.2.
-     *
-     * @see https://github.com/FakerPHP/Faker/issues/479
-     */
-    private function isFakerDeprecationError(int $severity, string $message, ?string $file = null, ?int $line = null)
-    {
-        if (
-            $severity === E_DEPRECATED
-            && strpos($file, VENDORPATH . 'fakerphp/faker/') !== false
-            && $message === 'Use of "static" in callables is deprecated'
-        ) {
-            log_message(
-                LogLevel::WARNING,
-                '[DEPRECATED] {message} in {errFile} on line {errLine}.',
-                [
-                    'message' => $message,
-                    'errFile' => clean_path($file ?? ''),
-                    'errLine' => $line ?? 0,
-                ]
-            );
-
-            return true;
-        }
-
-        return false;
     }
 
     /**
@@ -208,6 +194,13 @@ class Exceptions
         }
 
         ['type' => $type, 'message' => $message, 'file' => $file, 'line' => $line] = $error;
+
+        if ($this->exceptionCaughtByExceptionHandler) {
+            $message .= "\n【Previous Exception】\n"
+                . get_class($this->exceptionCaughtByExceptionHandler) . "\n"
+                . $this->exceptionCaughtByExceptionHandler->getMessage() . "\n"
+                . $this->exceptionCaughtByExceptionHandler->getTraceAsString();
+        }
 
         if (in_array($type, [E_ERROR, E_CORE_ERROR, E_COMPILE_ERROR, E_PARSE], true)) {
             $this->exceptionHandler(new ErrorException($message, 0, $type, $file, $line));
@@ -345,21 +338,47 @@ class Exceptions
      */
     protected function determineCodes(Throwable $exception): array
     {
-        $statusCode = abs($exception->getCode());
+        $statusCode = 500;
+        $exitStatus = EXIT_ERROR;
 
-        if ($statusCode < 100 || $statusCode > 599) {
-            $exitStatus = $statusCode + EXIT__AUTO_MIN;
+        if ($exception instanceof HTTPExceptionInterface) {
+            $statusCode = $exception->getCode();
+        }
 
-            if ($exitStatus > EXIT__AUTO_MAX) {
-                $exitStatus = EXIT_ERROR;
-            }
-
-            $statusCode = 500;
-        } else {
-            $exitStatus = EXIT_ERROR;
+        if ($exception instanceof HasExitCodeInterface) {
+            $exitStatus = $exception->getExitCode();
         }
 
         return [$statusCode, $exitStatus];
+    }
+
+    private function isDeprecationError(int $error): bool
+    {
+        $deprecations = E_DEPRECATED | E_USER_DEPRECATED;
+
+        return ($error & $deprecations) !== 0;
+    }
+
+    /**
+     * @return true
+     */
+    private function handleDeprecationError(string $message, ?string $file = null, ?int $line = null): bool
+    {
+        // Remove the trace of the error handler.
+        $trace = array_slice(debug_backtrace(), 2);
+
+        log_message(
+            $this->config->deprecationLogLevel,
+            "[DEPRECATED] {message} in {errFile} on line {errLine}.\n{trace}",
+            [
+                'message' => $message,
+                'errFile' => clean_path($file ?? ''),
+                'errLine' => $line ?? 0,
+                'trace'   => self::renderBacktrace($trace),
+            ]
+        );
+
+        return true;
     }
 
     // --------------------------------------------------------------------

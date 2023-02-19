@@ -69,8 +69,14 @@ final class ComposerScripts
     {
         self::recursiveDelete(self::$path);
 
-        foreach (self::$dependencies as $dependency) {
+        foreach (self::$dependencies as $key => $dependency) {
+            // Kint may be removed.
+            if (! is_dir($dependency['from']) && strpos($key, 'kint') === 0) {
+                continue;
+            }
+
             self::recursiveMirror($dependency['from'], $dependency['to']);
+
             if (isset($dependency['license'])) {
                 $license = basename($dependency['license']);
                 copy($dependency['license'], $dependency['to'] . '/' . $license);
@@ -87,7 +93,9 @@ final class ComposerScripts
     private static function recursiveDelete(string $directory): void
     {
         if (! is_dir($directory)) {
-            echo sprintf('Cannot recursively delete "%s" as it does not exist.', $directory);
+            echo sprintf('Cannot recursively delete "%s" as it does not exist.', $directory) . PHP_EOL;
+
+            return;
         }
 
         /** @var SplFileInfo $file */
@@ -126,7 +134,11 @@ final class ComposerScripts
             exit(1);
         }
 
-        @mkdir($targetDir, 0755, true);
+        if (! @mkdir($targetDir, 0755, true)) {
+            echo sprintf('Cannot create the target directory: "%s"', $targetDir) . PHP_EOL;
+
+            exit(1);
+        }
 
         $dirLen = strlen($originDir);
 

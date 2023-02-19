@@ -12,6 +12,7 @@
 namespace CodeIgniter\Throttle;
 
 use CodeIgniter\Cache\CacheInterface;
+use CodeIgniter\I18n\Time;
 
 /**
  * Class Throttler
@@ -138,7 +139,7 @@ class Throttler implements ThrottlerInterface
         // How many seconds till a new token is available.
         // We must have a minimum wait of 1 second for a new token.
         // Primarily stored to allow devs to report back to users.
-        $newTokenAvailable = (int) ($refresh - $elapsed - $refresh * $tokens);
+        $newTokenAvailable = (int) round((1 - $tokens) * $refresh);
         $this->tokenTime   = max(1, $newTokenAvailable);
 
         return false;
@@ -176,6 +177,6 @@ class Throttler implements ThrottlerInterface
      */
     public function time(): int
     {
-        return $this->testTime ?? time();
+        return $this->testTime ?? Time::now()->getTimestamp();
     }
 }

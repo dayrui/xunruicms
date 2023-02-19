@@ -10,6 +10,7 @@
  */
 
 use CodeIgniter\Cache\CacheInterface;
+use CodeIgniter\Config\BaseConfig;
 use CodeIgniter\Config\Factories;
 use CodeIgniter\Cookie\Cookie;
 use CodeIgniter\Cookie\CookieStore;
@@ -18,10 +19,12 @@ use CodeIgniter\Database\BaseConnection;
 use CodeIgniter\Database\ConnectionInterface;
 use CodeIgniter\Debug\Timer;
 use CodeIgniter\Files\Exceptions\FileNotFoundException;
+use CodeIgniter\HTTP\CLIRequest;
 use CodeIgniter\HTTP\Exceptions\HTTPException;
 use CodeIgniter\HTTP\IncomingRequest;
 use CodeIgniter\HTTP\RedirectResponse;
 use CodeIgniter\HTTP\RequestInterface;
+use CodeIgniter\HTTP\Response;
 use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\HTTP\URI;
 use CodeIgniter\Model;
@@ -29,6 +32,7 @@ use CodeIgniter\Session\Session;
 use CodeIgniter\Test\TestLogger;
 use Config\App;
 use Config\Database;
+use Config\DocTypes;
 use Config\Logger;
 use Config\Services;
 use Config\View;
@@ -45,7 +49,6 @@ if (! function_exists('app_timezone')) {
      */
     function app_timezone(): string
     {
-        /** @var App $config */
         $config = config(App::class);
 
         return $config->appTimezone;
@@ -63,6 +66,7 @@ if (! function_exists('cache')) {
      *    $foo = cache('bar');
      *
      * @return CacheInterface|mixed
+     * @phpstan-return ($key is null ? CacheInterface : mixed)
      */
     function cache(?string $key = null)
     {
@@ -87,7 +91,11 @@ if (! function_exists('clean_path')) {
     function clean_path(string $path): string
     {
         // Resolve relative paths
-        $path = realpath($path) ?: $path;
+        try {
+            $path = realpath($path) ?: $path;
+        } catch (ErrorException|ValueError $e) {
+            $path = 'error file path: ' . urlencode($path);
+        }
 
         switch (true) {
             case strpos($path, APPPATH) === 0:
@@ -196,7 +204,12 @@ if (! function_exists('config')) {
     /**
      * More simple way of getting config instances from Factories
      *
-     * @return mixed
+     * @template ConfigTemplate of BaseConfig
+     *
+     * @param class-string<ConfigTemplate>|string $name
+     *
+     * @return ConfigTemplate|null
+     * @phpstan-return ($name is class-string<ConfigTemplate> ? ConfigTemplate : object|null)
      */
     function config(string $name, bool $getShared = true)
     {
@@ -279,7 +292,7 @@ if (! function_exists('csrf_field')) {
      */
     function csrf_field(?string $id = null): string
     {
-        return '<input type="hidden"' . (! empty($id) ? ' id="' . esc($id, 'attr') . '"' : '') . ' name="' . csrf_token() . '" value="' . csrf_hash() . '" />';
+        return '<input type="hidden"' . (! empty($id) ? ' id="' . esc($id, 'attr') . '"' : '') . ' name="' . csrf_token() . '" value="' . csrf_hash() . '"' . _solidus() . '>';
     }
 }
 
@@ -289,7 +302,7 @@ if (! function_exists('csrf_meta')) {
      */
     function csrf_meta(?string $id = null): string
     {
-        return '<meta' . (! empty($id) ? ' id="' . esc($id, 'attr') . '"' : '') . ' name="' . csrf_header() . '" content="' . csrf_hash() . '" />';
+        return '<meta' . (! empty($id) ? ' id="' . esc($id, 'attr') . '"' : '') . ' name="' . csrf_header() . '" content="' . csrf_hash() . '"' . _solidus() . '>';
     }
 }
 
@@ -350,23 +363,6 @@ if (! function_exists('db_connect')) {
     }
 }
 
-if (! function_exists('dd')) {
-    /**
-     * Prints a Kint debug report and exits.
-     *
-     * @param array ...$vars
-     *
-     * @codeCoverageIgnore Can't be tested ... exits
-     */
-    function dd(...$vars)
-    {
-        Kint::$aliases[] = 'dd';
-        Kint::dump(...$vars);
-
-        exit;
-    }
-}
-
 if (! function_exists('env')) {
     /**
      * Allows user to retrieve values from the environment
@@ -376,7 +372,7 @@ if (! function_exists('env')) {
      *
      * @param string|null $default
      *
-     * @return mixed
+     * @return bool|string|null
      */
     function env(string $key, $default = null)
     {
@@ -486,12 +482,13 @@ if (! function_exists('force_https')) {
         if ($request === null) {
             $request = Services::request(null, true);
         }
-        if ($response === null) {
-            $response = Services::response(null, true);
-        }
 
         if (! $request instanceof IncomingRequest) {
             return;
+        }
+
+        if ($response === null) {
+            $response = Services::response(null, true);
         }
 
         if ((ENVIRONMENT !== 'testing' && (is_cli() || $request->isSecure())) || (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'test')) {
@@ -507,14 +504,16 @@ if (! function_exists('force_https')) {
         $baseURL = config(App::class)->baseURL;
 
         if (strpos($baseURL, 'https://') === 0) {
-            $baseURL = substr($baseURL, strlen('https://'));
+            $authority = substr($baseURL, strlen('https://'));
         } elseif (strpos($baseURL, 'http://') === 0) {
-            $baseURL = substr($baseURL, strlen('http://'));
+            $authority = substr($baseURL, strlen('http://'));
+        } else {
+            $authority = $baseURL;
         }
 
         $uri = URI::createURIString(
             'https',
-            $baseURL,
+            $authority,
             $request->getUri()->getPath(), // Absolute URIs should use a "/" for an empty path
             $request->getUri()->getQuery(),
             $request->getUri()->getFragment()
@@ -703,7 +702,7 @@ if (! function_exists('is_really_writable')) {
     function is_really_writable(string $file): bool
     {
         // If we're on a Unix server we call is_writable
-        if (DIRECTORY_SEPARATOR === '/') {
+        if (! is_windows()) {
             return is_writable($file);
         }
 
@@ -730,6 +729,26 @@ if (! function_exists('is_really_writable')) {
         fclose($fp);
 
         return true;
+    }
+}
+
+if (! function_exists('is_windows')) {
+    /**
+     * Detect if platform is running in Windows.
+     */
+    function is_windows(?bool $mock = null): bool
+    {
+        static $mocked;
+
+        if (func_num_args() === 1) {
+            $mocked = $mock;
+        }
+
+        if (isset($mocked)) {
+            return $mocked;
+        }
+
+        return DIRECTORY_SEPARATOR === '\\';
     }
 }
 
@@ -798,11 +817,12 @@ if (! function_exists('model')) {
     /**
      * More simple way of getting model instances from Factories
      *
-     * @template T of Model
+     * @template ModelTemplate of Model
      *
-     * @param class-string<T> $name
+     * @param class-string<ModelTemplate>|string $name
      *
-     * @return T
+     * @return ModelTemplate|null
+     * @phpstan-return ($name is class-string<ModelTemplate> ? ModelTemplate : object|null)
      */
     function model(string $name, bool $getShared = true, ?ConnectionInterface &$conn = null)
     {
@@ -850,7 +870,7 @@ if (! function_exists('redirect')) {
      *
      * If more control is needed, you must use $response->redirect explicitly.
      *
-     * @param string $route
+     * @param string|null $route Route name or Controller::method
      */
     function redirect(?string $route = null): RedirectResponse
     {
@@ -861,6 +881,22 @@ if (! function_exists('redirect')) {
         }
 
         return $response;
+    }
+}
+
+if (! function_exists('_solidus')) {
+    /**
+     * Generates the solidus character (`/`) depending on the HTML5 compatibility flag in `Config\DocTypes`
+     *
+     * @internal
+     */
+    function _solidus(): string
+    {
+        if (config(DocTypes::class)->html5 ?? false) {
+            return '';
+        }
+
+        return ' /';
     }
 }
 
@@ -892,19 +928,42 @@ if (! function_exists('remove_invisible_characters')) {
     }
 }
 
+if (! function_exists('request')) {
+    /**
+     * Returns the shared Request.
+     *
+     * @return CLIRequest|IncomingRequest
+     */
+    function request()
+    {
+        return Services::request();
+    }
+}
+
+if (! function_exists('response')) {
+    /**
+     * Returns the shared Response.
+     */
+    function response(): ResponseInterface
+    {
+        return Services::response();
+    }
+}
+
 if (! function_exists('route_to')) {
     /**
-     * Given a controller/method string and any params,
+     * Given a route name or controller/method string and any params,
      * will attempt to build the relative URL to the
      * matching route.
      *
      * NOTE: This requires the controller/method to
      * have a route defined in the routes Config file.
      *
-     * @param string     $method    Named route or Controller::method
-     * @param int|string ...$params One or more parameters to be passed to the route
+     * @param string     $method    Route name or Controller::method
+     * @param int|string ...$params One or more parameters to be passed to the route.
+     *                              The last parameter allows you to set the locale.
      *
-     * @return false|string
+     * @return false|string The route (URI path relative to baseURL) or false if not found.
      */
     function route_to(string $method, ...$params)
     {
@@ -920,8 +979,6 @@ if (! function_exists('session')) {
      * Examples:
      *    session()->set('foo', 'bar');
      *    $foo = session('bar');
-     *
-     * @param string $val
      *
      * @return array|bool|float|int|object|Session|string|null
      * @phpstan-return ($val is null ? Session : array|bool|float|int|object|string|null)
@@ -952,7 +1009,7 @@ if (! function_exists('service')) {
      *
      * @param mixed ...$params
      *
-     * @return mixed
+     * @return object
      */
     function service(string $name, ...$params)
     {
@@ -966,7 +1023,7 @@ if (! function_exists('single_service')) {
      *
      * @param mixed ...$params
      *
-     * @return mixed
+     * @return object|null
      */
     function single_service(string $name, ...$params)
     {
@@ -1073,12 +1130,14 @@ if (! function_exists('stringify_attributes')) {
 if (! function_exists('timer')) {
     /**
      * A convenience method for working with the timer.
-     * If no parameter is passed, it will return the timer instance,
-     * otherwise will start or stop the timer intelligently.
+     * If no parameter is passed, it will return the timer instance.
+     * If callable is passed, it measures time of callable and
+     * returns its return value if any.
+     * Otherwise will start or stop the timer intelligently.
      *
-     * @return mixed|Timer
+     * @return Timer
      */
-    function timer(?string $name = null)
+    function timer(?string $name = null, ?callable $callable = null)
     {
         $timer = Services::timer();
 
@@ -1086,22 +1145,15 @@ if (! function_exists('timer')) {
             return $timer;
         }
 
+        if ($callable !== null) {
+            return $timer->record($name, $callable);
+        }
+
         if ($timer->has($name)) {
             return $timer->stop($name);
         }
 
         return $timer->start($name);
-    }
-}
-
-if (! function_exists('trace')) {
-    /**
-     * Provides a backtrace to the current execution point, from Kint.
-     */
-    function trace()
-    {
-        Kint::$aliases[] = 'trace';
-        Kint::trace();
     }
 }
 
@@ -1119,10 +1171,8 @@ if (! function_exists('view')) {
      */
     function view(string $name, array $data = [], array $options = []): string
     {
-        /** @var CodeIgniter\View\View $renderer */
         $renderer = Services::renderer();
 
-        /** @var \CodeIgniter\Config\View $config */
         $config   = config(View::class);
         $saveData = $config->saveData;
 
