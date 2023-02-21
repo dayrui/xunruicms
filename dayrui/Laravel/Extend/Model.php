@@ -122,7 +122,14 @@ class db_mysql {
 
         if ($this->param['where']) {
             foreach ($this->param['where'] as $v) {
-                dr_count($v) == 2 ? $builder->where($v[0], $v[1]) : $builder->whereRaw($v);
+                if (dr_count($v) == 2) {
+                    if (strpos($v[0], $this->prefix) === 0) {
+                        $v[0] = substr($v[0], strlen($this->prefix));
+                    }
+                    $builder->where($v[0], $v[1]);
+                } else {
+                    $builder->whereRaw($v);
+                }
             }
         }
 

@@ -822,6 +822,11 @@ return [
                 $this->_copy_dir($cmspath.'dayrui', FCPATH);
                 dr_dir_delete($cmspath.'dayrui', 1);
             }
+            // public目录复制到主目录
+            if (is_dir($cmspath.'public')) {
+                $this->_copy_dir($cmspath.'public', ROOTPATH);
+                dr_dir_delete($cmspath.'public', 1);
+            }
             $this->_copy_dir($cmspath, ROOTPATH);
 
         } else {

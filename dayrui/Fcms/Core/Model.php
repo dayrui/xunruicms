@@ -837,7 +837,7 @@ class Model {
             foreach ($ids as $i) {
                 $id[] = (int)$i;
             }
-            dr_count($id) == 1 ? $select->where($table.'.'.$this->id, (int)$id[0]) : $select->whereIn($this->id, $id);
+            dr_count($id) == 1 ? $select->where($this->dbprefix($table).'.'.$this->id, (int)$id[0]) : $select->whereIn($this->id, $id);
             $param['keyword'] = htmlspecialchars($param['keyword']);
         } elseif (isset($field[$param['field']]['myfunc']) && $field[$param['field']]['myfunc']) {
             // 自定义的匹配模式
