@@ -44,6 +44,7 @@ class Table extends \Phpcmf\Common {
     protected $admin_tpl_path; // 后台模板指定目录
     protected $fix_admin_tpl_path; // 修正值的后台模板指定目录
 
+    protected $fix_table_list; //
     protected $is_ajax_list; // 是否作为ajax请求列表数据，不进行第一次查询
     protected $is_search; // 是否开启列表上方的搜索功能
 

@@ -1094,6 +1094,7 @@ abstract class Common extends \Frame\Controller {
 
         if ($data) {
             foreach ($data as $i => $t) {
+                $data[$i]['displayorder'] = $i + ($t['displayorder'] ? (int)$t['displayorder'] : 0);
                 if (IS_ADMIN) {
                     if (!$t['url']) {
                         unset($data[$i]); // 没有url
@@ -1113,6 +1114,12 @@ abstract class Common extends \Frame\Controller {
                     $data[$i]['url'] = urldecode($data[$i]['murl']);
                 }
             }
+            uasort($data, function($a, $b){
+                if($a['displayorder'] == $b['displayorder']){
+                    return 0;
+                }
+                return($a['displayorder']<$b['displayorder']) ? -1 : 1;
+            });
         }
 
         return $data;
@@ -1175,6 +1182,7 @@ abstract class Common extends \Frame\Controller {
 
         if ($data) {
             foreach ($data as $i => $t) {
+                $data[$i]['displayorder'] = $i + ($t['displayorder'] ? (int)$t['displayorder'] : 0);
                 if (IS_ADMIN) {
                     if (!$t['url']) {
                         unset($data[$i]); // 没有url
@@ -1194,6 +1202,12 @@ abstract class Common extends \Frame\Controller {
                     $data[$i]['url'] = urldecode($data[$i]['murl']);
                 }
             }
+            uasort($data, function($a, $b){
+                if($a['displayorder'] == $b['displayorder']){
+                    return 0;
+                }
+                return($a['displayorder']<$b['displayorder']) ? -1 : 1;
+            });
         }
 
         return $data;
