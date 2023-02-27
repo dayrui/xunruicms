@@ -167,6 +167,13 @@ class Linkages extends \Phpcmf\Library\A_Field {
         return '';
     }
 
+    /**
+     * 验证加载变量设置
+     */
+    public function set_load_js($name, $value) {
+        \Phpcmf\Service::C()->loadjs['Linkage'] = \Phpcmf\Service::C()->loadjs[$name] = $value;
+    }
+
 	/**
 	 * 字段表单输入
 	 *

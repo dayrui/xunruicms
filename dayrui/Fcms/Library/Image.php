@@ -1755,11 +1755,11 @@ class Image {
     // 图片剪切函数可继承
     protected function imageCropper($source_path, $new_path, $target_width, $target_height){
 
-        $source_width = $this->image_info[0];
+        $source_width = max(1, $this->image_info[0]);
         $source_height = $this->image_info[1];
         $source_mime  = $this->image_info['mime'];
-        $target_width = (int)$target_width;
-        $target_height = (int)$target_height;
+        $target_width = max((int)$target_width, 1);
+        $target_height = max((int)$target_height, 1);
         $source_ratio = ($source_height / $source_width);
         $target_ratio = ($target_height / $target_width);
         if ($source_ratio > $target_ratio) {
