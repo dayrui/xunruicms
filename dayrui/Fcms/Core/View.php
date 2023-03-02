@@ -811,7 +811,7 @@ class View {
 
         $sysadj = [
             'IN', 'BEWTEEN', 'BETWEEN', 'LIKE', 'NOT', 'BW',
-            'NOTLIKE', 'NOTJSON', 'NOTFIND', 'NOTIN',
+            'NOTLIKE', 'NOTJSON', 'NOTFIND', 'NOTIN', 'NOTNULL', 'NULL',
             'GT', 'EGT', 'LT', 'ELT',
             'DAY', 'MONTH', 'MAP', 'YEAR', 'SEASON', 'WEEK',
             'JSON', 'FIND'
@@ -1683,6 +1683,14 @@ class View {
                             $etime = $tp;
                         }
                         $string.= $join." ({$t['name']} BETWEEN ".$stime." AND ".$etime.")";
+                        break;
+
+                    case 'NOTNULL':
+                        $string.= $join." {$t['name']}<>''";
+                        break;
+
+                    case 'NULL':
+                        $string.= $join." ({$t['name']}='' or {$t['name']} IS NULL)";
                         break;
 
                     default:

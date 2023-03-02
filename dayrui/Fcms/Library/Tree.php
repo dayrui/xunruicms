@@ -199,7 +199,7 @@ class Tree {
         if (is_array($mychild)) {
 
             $total = count($mychild);
-            foreach ($mychild as $id => $a) {
+            foreach ($mychild as $id => $phpcmf_a) {
 
                 $j = $k = '';
                 if ($number == $total) {
@@ -211,14 +211,14 @@ class Tree {
 
                 $spacer = $this->_get_spacer($adds ? $adds.$j : '');
                 $selected = $this->_have($sid, $id) ? 'selected' : '';
-                extract($a);
+                extract($phpcmf_a);
 
                 eval("\$this->ret.= \"$str\";");
 
                 $number++;
 
                 // 如果有下级菜单就递归
-                $a['child'] && $this->_linkage_tree_result($id, $str, $sid, $adds.$k.$this->nbsp);
+                $phpcmf_a['child'] && $this->_linkage_tree_result($id, $str, $sid, $adds.$k.$this->nbsp);
             }
         }
 
@@ -432,7 +432,7 @@ class Tree {
         if (is_array($mychild)) {
 
             $mytotal = count($mychild);
-            foreach ($mychild as $id => $a) {
+            foreach ($mychild as $id => $phpcmf_a) {
 
                 $j = $k = '';
                 if ($number == $mytotal) {
@@ -445,7 +445,7 @@ class Tree {
                 $spacer = $this->_get_spacer($adds ? $adds.$j : '');
                 $selected = $this->_have($sid, $id) ? 'selected' : '';
                 $html_disabled = '';
-                extract($a);
+                extract($phpcmf_a);
 
                 //$now = $this->get_child($id);
                 // 如果没有子栏目且当前禁用就不再显示
@@ -460,7 +460,7 @@ class Tree {
                 $number++;
 
                 // 如果有下级菜单就递归
-                if ($a['child']) {
+                if ($phpcmf_a['child']) {
                     $this->_category_tree_result($id, $str, null, $sid, $adds.$k.$this->nbsp);
                 }
             }
@@ -491,7 +491,7 @@ class Tree {
         $mytotal = dr_count($mychild);
 
         if (is_array($mychild)) {
-            foreach ($mychild as $id => $value) {
+            foreach ($mychild as $id => $phpcmf_a) {
                 $j = $k = '';
                 if ($number == $mytotal) {
                     $j.= $this->icon[2];
@@ -502,11 +502,11 @@ class Tree {
 
                 $spacer = $this->_get_spacer($adds ? $adds.$j : '');
                 $selected = $id == $sid ? 'selected' : '';
-                $class = 'dr_catid_'.$value['id'];
-                $childs = isset($value['childids']) ? $value['childids'] : (implode(',', $value['catids']));
-                $parent = defined('SYS_CAT_ZSHOW') && SYS_CAT_ZSHOW ? (!$value['child'] ? '' : '<a href="javascript:void();" class="blue select-cat" childs="'.$childs.'" action="open" catid='.$id.'>[-]</a>&nbsp;') : '';
+                $class = 'dr_catid_'.$phpcmf_a['id'];
+                $childs = isset($phpcmf_a['childids']) ? $phpcmf_a['childids'] : (implode(',', $phpcmf_a['catids']));
+                $parent = defined('SYS_CAT_ZSHOW') && SYS_CAT_ZSHOW ? (!$phpcmf_a['child'] ? '' : '<a href="javascript:void();" class="blue select-cat" childs="'.$childs.'" action="open" catid='.$id.'>[-]</a>&nbsp;') : '';
 
-                extract($value);
+                extract($phpcmf_a);
 
                 $pid == 0 && $str_group ? eval("\$nstr = \"$str_group\";") : eval("\$nstr = \"$str\";");
                 $this->ret.= $nstr;
@@ -570,7 +570,7 @@ class Tree {
 
         if (is_array($mychild)) {
             $mytotal = count($mychild);
-            foreach ($mychild as $id => $a) {
+            foreach ($mychild as $id => $phpcmf_a) {
 
                 $j = $k = '';
                 if ($number == $mytotal) {
@@ -583,7 +583,7 @@ class Tree {
                 $spacer = $this->_get_spacer($adds ? $adds.$j : '');
                 $selected = $this->_have($sid, $id) ? 'selected' : '';
 
-                extract($a);
+                extract($phpcmf_a);
 
                 eval("\$nstr = \"$str\";");
                 $this->ret.= $nstr;
