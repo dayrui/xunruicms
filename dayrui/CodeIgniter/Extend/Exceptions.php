@@ -15,7 +15,7 @@ use Throwable;
 
 class Exceptions extends \CodeIgniter\Debug\Exceptions {
 
-    private $is_404 = 0;
+    private $_is_404 = 0;
 
     /**
      * 排除部分错误提示

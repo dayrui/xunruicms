@@ -23,6 +23,10 @@ return [
         'name' => '文本事件',
     ],
     [
+        'id' => 'Textselect',
+        'name' => '文本选择',
+    ],
+    [
         'id' => 'Textarea',
         'name' => '多行文本',
     ],

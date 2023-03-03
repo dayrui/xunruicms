@@ -92,7 +92,6 @@ if (is_file(CONFIGPATH.'database.php')) {
     }
 
 
-
 }
 
 return $config;
