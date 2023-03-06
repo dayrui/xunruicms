@@ -242,7 +242,7 @@ class Function_list {
                 if ($file) {
                     $value = $file['url'];
                 } else {
-                    $value = (string)$t;
+                    $value = (string)$t['file'];
                 }
                 $ext = trim(strtolower(strrchr($value, '.')), '.');
                 if (dr_is_image($ext)) {
