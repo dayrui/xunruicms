@@ -146,6 +146,8 @@ class Ftable extends \Phpcmf\Library\A_Field {
             3 => dr_lang('文件'),
             5 => dr_lang('日期'),
             6 => dr_lang('日期时间'),
+            7 => dr_lang('多行文本'),
+            //8 => dr_lang('富文本框'), 实验失败
         ];
 
         $html = '<select class="form-control" name="data[setting][option][field]['.$id.'][type]">';
@@ -201,9 +203,9 @@ class Ftable extends \Phpcmf\Library\A_Field {
             $html = '<label><input class="form-control2 form-control-file" type="hidden" name="data['.$cname.']['.$hang.']['.$lie.']" value="'.$value[$hang][$lie].'">';
             $html.= '<input class="form-control-link" type="hidden" value="'.$link.'">';
             $html.= '<input class="form-control-preview" type="hidden" value="'.$preview.'">';
-            $html.= '<a href="javascript:;" onclick="dr_ftable_myfileinput(this, \''.$url.'\')" class="ftable-fileinput btn green btn-sm">上传</a>';
-            $html.= '<a href="javascript:;" onclick="dr_ftable_myshow(this)" '.($value[$hang][$lie] ? '':'style="display:none"').' class="ftable-show btn blue btn-sm">预览</a>
-			<a href="javascript:;" onclick="dr_ftable_mydelete(this)" '.($value[$hang][$lie] ? '':'style="display:none"').' class="ftable-delete btn red btn-sm">删除</a> ';
+            $html.= '<a href="javascript:;" onclick="dr_ftable_myfileinput(this, \''.$url.'\')" class="ftable-fileinput btn green btn-sm">'.dr_lang('上传').'</a>';
+            $html.= '<a href="javascript:;" onclick="dr_ftable_myshow(this)" '.($value[$hang][$lie] ? '':'style="display:none"').' class="ftable-show btn blue btn-sm">'.dr_lang('预览').'</a>
+			<a href="javascript:;" onclick="dr_ftable_mydelete(this)" '.($value[$hang][$lie] ? '':'style="display:none"').' class="ftable-delete btn red btn-sm">'.dr_lang('删除').'</a> ';
             $html.= '</label>';
         } elseif ($config['type'] == 5) {
             // 日期
@@ -262,11 +264,16 @@ class Ftable extends \Phpcmf\Library\A_Field {
                 $html.= '<label class="mt-checkbox mt-checkbox-outline">'.$kj.' '.$name.' <span></span> </label>';
             }
             $html.= '</div></div>';
+        } elseif ($config['type'] == 7) {
+            $name = 'ftable_'.$cname.'_'.$hang.'_'.$lie;
+            $html = '<textarea style="display:none" id="'.$name.'" name="data['.$cname.']['.$hang.']['.$lie.']">'.$value[$hang][$lie].'</textarea>';
+            $html.= '<a href="javascript:;" onclick="dr_ftable_textareainput(\''.$name.'\')" class="ftable-fileinput btn green btn-sm">'.dr_lang('录入内容').'</a>';
+        } elseif ($config['type'] == 8) {
+
         }
 
         return $html;
     }
-
 
 
     /**

@@ -207,6 +207,35 @@ function dr_ftable_myshow(e){
     });
 }
 
+// 多行文本内容
+function dr_ftable_textareainput(id){
+
+    var val = $('#'+id).val();
+
+    var width = '50%';
+    var height = '50%';
+
+    if (is_mobile_cms == 1) {
+        width = height = '90%';
+    }
+
+    layer.open({
+        type: 1,
+        title: '<i class=\"fa fa-edit\"></i>',
+        fix:true,
+        scrollbar: false,
+        shadeClose: true,
+        shade: 0,
+        area: [width, height],
+        btn: [ dr_lang('确定') ],
+        yes: function(index, layero){
+            $('#'+id).val($('#form-'+id).val());
+            layer.close(index);
+        },
+        content: '<div style="padding:10px;height:100%;"><textarea style="height:100%;" id="form-'+id+'" class="form-control">'+val+'</textarea></div>'
+    });
+}
+
 // 显示视频
 function dr_preview_video(file) {
 
