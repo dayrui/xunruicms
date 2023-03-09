@@ -49,7 +49,7 @@ class Seo {
             }
         }
 
-        return $seo;
+        return $this->get_seo_value([], $seo);
     }
 
 
