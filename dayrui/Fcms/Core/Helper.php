@@ -3633,6 +3633,19 @@ function dr_text_rel($text, $prefix = '') {
 }
 
 /**
+ * 内容中的转为完整路径
+ */
+function dr_text_full($text, $url = SITE_URL) {
+
+    $text = str_replace('href="/', 'href="'.$url, $text);
+    $text = str_replace('href="/', 'href=\''.$url, $text);
+    $text = str_replace('src="/', 'src="'.$url, $text);
+    $text = str_replace('src="/', 'src=\''.$url, $text);
+
+    return $text;
+}
+
+/**
  * 计算用户组到期时间
  * @param $days  天数
  * @param $dtype  到期换算单位
