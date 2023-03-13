@@ -28,7 +28,7 @@
         {loop $data $t}
         <tr class="odd gradeX" id="dr_row_{$t.id}">
             {if $ci->_is_admin_auth('del')}
-            <td>
+            <td class="myselect">
                 <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
                     <input type="checkbox" {if $t.id==1}disabled{/if} class="checkboxes" name="ids[]" value="{$t.id}" />
                     <span></span>
