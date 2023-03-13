@@ -35,21 +35,21 @@ class Run extends \Phpcmf\Common
                 } else {
                     // url模式
                     if (SYS_CRON_AUTH == 'cli') {
-                        exit('限制CLI模式执行');
+                        exit('限制CLI模式执行任务');
                     }
                     $ip = \Phpcmf\Service::L('input')->ip_address();
                     if (!$ip) {
                         if (CI_DEBUG) {
                             log_message('error', '任务执行失败：无法获取执行客户端的IP地址');
                         }
-                        exit('无权限执行');
+                        exit('无权限执行任务');
                         return;
                     }
                     if (SYS_CRON_AUTH != $ip) {
                         if (CI_DEBUG) {
                             log_message('error', '任务执行失败：后台设置的服务端ip（'.SYS_CRON_AUTH.'）与客户端ip（'.$ip.'）不一致');
                         }
-                        exit('限制固定IP执行');
+                        exit('限制固定IP执行任务');
                         return;
                     }
                 }
@@ -58,7 +58,7 @@ class Run extends \Phpcmf\Common
             if (is_file(WRITEPATH.'config/cron_run_time.php')) {
                 $run_time = file_get_contents(WRITEPATH.'config/cron_run_time.php');
                 if ($run_time && SYS_TIME - $run_time < 100) {
-                    exit('未到执行时间');
+                    exit('未到任务执行时间');
                 }
             } else {
                 file_put_contents(WRITEPATH.'config/cron_run_time.php', SYS_TIME);
@@ -70,7 +70,7 @@ class Run extends \Phpcmf\Common
                 file_put_contents(WRITEPATH.'config/cron_run_time.php', SYS_TIME);
             } else {
                 fclose( $fp );
-                exit('正在执行中');
+                exit('任务正在执行中');
             }
 
             if (isset($_GET['is_ajax'])) {
