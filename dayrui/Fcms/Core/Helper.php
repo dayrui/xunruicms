@@ -3603,7 +3603,7 @@ function dr_url_rel($url, $prefix = '') {
 /**
  * 内容中的转为相对路径
  */
-function dr_text_rel($text, $prefix = '') {
+function dr_text_rel($text, $prefix = '', $attr = ['href', 'src']) {
 
     if ((IS_API_HTTP && (!defined('SYS_API_REL') || !SYS_API_REL)) || IS_ADMIN) {
         return $text;
@@ -3616,16 +3616,16 @@ function dr_text_rel($text, $prefix = '') {
             // 静态生成，移动端域名模式下
             $surl = SITE_MURL;
         }
-        $text = str_replace('href="'.$surl, 'href="/', $text);
-        $text = str_replace('href=\''.$surl, 'href="/', $text);
-        $text = str_replace('src="'.$surl, 'src="/', $text);
-        $text = str_replace('src=\''.$surl, 'src="/', $text);
+        foreach ($attr as $a) {
+            $text = str_replace($a.'="'.$surl, $a.'="/', $text);
+            $text = str_replace($a.'=\''.$surl, $a.'="/', $text);
+        }
         if ($prefix) {
             $surl = $prefix;
-            $text = str_replace('href="'.$surl, 'href="/', $text);
-            $text = str_replace('href=\''.$surl, 'href="/', $text);
-            $text = str_replace('src="'.$surl, 'src="/', $text);
-            $text = str_replace('src=\''.$surl, 'src="/', $text);
+            foreach ($attr as $a) {
+                $text = str_replace($a.'="'.$surl, $a.'="/', $text);
+                $text = str_replace($a.'=\''.$surl, $a.'="/', $text);
+            }
         }
     }
 
@@ -3635,12 +3635,12 @@ function dr_text_rel($text, $prefix = '') {
 /**
  * 内容中的转为完整路径
  */
-function dr_text_full($text, $url = SITE_URL) {
+function dr_text_full($text, $url = SITE_URL, $attr = ['href', 'src']) {
 
-    $text = str_replace('href="/', 'href="'.$url, $text);
-    $text = str_replace('href="/', 'href=\''.$url, $text);
-    $text = str_replace('src="/', 'src="'.$url, $text);
-    $text = str_replace('src="/', 'src=\''.$url, $text);
+    foreach ($attr as $a) {
+        $text = str_replace($a.'="/', $a.'="'.$url, $text);
+        $text = str_replace($a.'="/', $a.'=\''.$url, $text);
+    }
 
     return $text;
 }
