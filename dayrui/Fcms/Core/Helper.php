@@ -1276,8 +1276,8 @@ function dr_thumb($img, $width = 0, $height = 0, $water = 0, $mode = 'auto', $we
         return dr_url_rel(ROOT_THEME_PATH.'assets/images/nopic.gif');
     } elseif (is_array($img)) {
         return IS_DEV ? '文件参数不能是数组' : dr_url_rel(ROOT_THEME_PATH.'assets/images/nopic.gif');
-    } elseif (!$width || !$height) {
-        return dr_get_file($img);
+    } elseif (!$width && !$height && !$water) {
+        return dr_get_file($img).(IS_DEV ? '#没有设置高宽参数，将以原图输出' : '');
     } elseif (is_numeric($img) || $webimg) {
 
         list($cache_path, $cache_url) = dr_thumb_path();
@@ -1299,7 +1299,9 @@ function dr_thumb($img, $width = 0, $height = 0, $water = 0, $mode = 'auto', $we
     }
 
     $file = dr_file($img);
-    CI_DEBUG && log_message('debug', '图片['.$img.']不是数字id号，dr_thumb函数无法进行缩略图处理');
+    if ($file && CI_DEBUG && !is_numeric($img)) {
+        $file.= '#图片不是数字id号，dr_thumb函数无法进行缩略图处理';
+    }
 
     return $file ? $file : dr_url_rel(ROOT_THEME_PATH.'assets/images/nopic.gif');
 }

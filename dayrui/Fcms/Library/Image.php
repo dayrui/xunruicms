@@ -272,6 +272,10 @@ class Image {
     protected $cache_size = 0;
 
 
+    protected $image_info;
+    protected $dest_image;
+
+
     /**
      * Initialize image properties
      *
@@ -1603,10 +1607,10 @@ class Image {
             $attach = \Phpcmf\Service::C()->get_attachment($img);
             if (!$attach) {
                 CI_DEBUG && log_message('debug', '图片[id#'.$img.']不存在，dr_thumb函数无法调用');
-                return ROOT_THEME_PATH.'assets/images/nopic.gif';
+                return ROOT_THEME_PATH.'assets/images/nopic.gif'.(CI_DEBUG ? '#图片[id#'.$img.']不存在，dr_thumb函数无法调用' : '');
             } elseif (!in_array($attach['fileext'], ['png', 'jpeg', 'jpg', 'webp'])) {
                 CI_DEBUG && log_message('debug', '图片[id#'.$img.']扩展名不符合条件，dr_thumb函数无法调用');
-                return ROOT_THEME_PATH.'assets/images/nopic.gif';
+                return ROOT_THEME_PATH.'assets/images/nopic.gif'.(CI_DEBUG ? '#图片[id#'.$img.']扩展名不符合条件，dr_thumb函数无法调用，dr_thumb函数无法调用' : '');
             }
         } else {
             $attach = [
@@ -1627,12 +1631,12 @@ class Image {
                 $data = dr_catcher_data($attach['url'], 10);
                 if (!$data) {
                     CI_DEBUG && log_message('debug', '图片[id#'.$attach['id'].']的URL['.$attach['url'].']无法获取远程附件数据，dr_thumb函数无法调用');
-                    return $attach['url'];
+                    return $attach['url'].(CI_DEBUG ? '#用' : '');
                 }
                 $file = WRITEPATH.'attach/'.$attach['id'].'.'.$attach['fileext'];
                 if (!file_put_contents($file, $data)) {
                     CI_DEBUG && log_message('debug', '图片[id#'.$attach['id'].']的URL['.$attach['url'].']无法写入附件缓存目录，dr_thumb函数无法调用');
-                    return $attach['url'];
+                    return $attach['url'].(CI_DEBUG ? '#URL['.$attach['url'].']无法写入附件缓存目录，dr_thumb函数无法调用' : '');
                 }
             } else {
                 // 远程图片进行带规则的缩略图处理
@@ -1652,17 +1656,17 @@ class Image {
         } elseif (!is_file($file)) {
             // 本地图片不存在
             CI_DEBUG && log_message('debug', '图片[id#'.$attach['id'].']的文件['.$attach['file'].']无法写入附件缓存目录，dr_thumb函数无法调用');
-            return ROOT_THEME_PATH.'assets/images/nopic.gif';
+            return ROOT_THEME_PATH.'assets/images/nopic.gif'.(CI_DEBUG ? '#文件['.$attach['file'].']无法写入附件缓存目录，dr_thumb函数无法调用' : '');
         }
 
         if ($width == 0 && $height == 0 && $water == 0) {
-            return $attach['url']; // 原样输出
+            return $attach['url'].(CI_DEBUG ? '#参数为空，将原样输出' : ''); // 原样输出
         }
 
         $this->image_info = getimagesize($file);
         if ($this->memory_limit($this->image_info)) {
             CI_DEBUG && log_message('debug', '图片[id#'.$attach['id'].']的URL['.$attach['url'].']分辨率太大导致服务器内存溢出，无法进行缩略图处理，已按原图显示');
-            return $attach['url']; // 原样输出
+            return $attach['url'].(CI_DEBUG ? '#分辨率太大导致服务器内存溢出，无法进行缩略图处理，已按原图显示' : ''); // 原样输出
         }
 
         // 创建缓存目录
@@ -1692,7 +1696,7 @@ class Image {
 
         if (!is_file($cache_path.$cache_file)) {
             CI_DEBUG && log_message('debug', '图片[id#'.$attach['id'].']的URL['.$attach['url'].']生成失败['.$cache_file.']原样输出');
-            return $attach['url']; // 原样输出
+            return $attach['url'].(CI_DEBUG ? '#生成失败['.$cache_file.']原样输出' : ''); // 原样输出
         }
 
         // 水印处理
