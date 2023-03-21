@@ -185,6 +185,7 @@ class Cloud extends \Phpcmf\Common {
                         'author' => $cfg['author'],
                         'menu' => $menu,
                         'version' => $vsn['version'],
+                        'vip' => $vsn['vip'],
                         'install' => $install,
                     ];
                 }
@@ -563,6 +564,7 @@ return [
                         'tname' => $this->cmf_license['oem'] ? '应用' : '<a href="javascript:dr_help(540);">应用</a>',
                         'version' => $vsn['version'],
                         'license' => $vsn['license'],
+                        'vip' => $vsn['vip'],
                         'updatetime' => $vsn['updatetime'],
                         'backup' => $this->_is_backup_file($path),
                         'backup_tpl' => $data['phpcmf']['backup_tpl'],
