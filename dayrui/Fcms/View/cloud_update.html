@@ -34,12 +34,20 @@
                 <td style="text-align: center">{$t.tname}</td>
                 <td>{$t.name}{if $t.type == 'app'} / {$dir}{/if}</td>
                 <td> {$t.updatetime} </td>
-                <td>{if !$is_oem}<a href="javascript:dr_show_log('{$t.id}', '{$t.version}');">{$t.version}</a>{else}{$t.version}{/if}</td>
+                <td>{if !$is_oem}
+                    <a href="javascript:dr_show_log('{$t.id}', '{$t.version}');">{$t.version}</a>
+                    {if $t.vip}
+                    <span class="label label-danger"> VIP </span>
+                    {/if}
+                    {else}
+                    {$t.version}
+                    {/if}
+                </td>
                 <td  style="text-align: center">
 					{if $t.backup}
                     <a href="javascript:dr_show_info('<p>文件备份时间：{$t.backup_time}</p><p>程序备份目录：{$t.backup}</p><p>模板备份目录：{if $t.backup_tpl}{$t.backup_tpl}{else}未备份{/if}</p>');" class="label label-success"> 已备份 </a>
                     {else}
-                    <span class="label label-danger"> 未备份 </span>
+                    <span class="label label-warning"> 未备份 </span>
                     {/if}
                 </td>
                 <td>

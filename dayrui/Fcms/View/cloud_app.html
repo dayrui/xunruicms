@@ -13,7 +13,7 @@
                 {if !$is_oem}
                 <th width="150"> {dr_lang('开发者')} </th>
                 {/if}
-                <th width="80"> {dr_lang('版本')} </th>
+                <th width="100"> {dr_lang('版本')} </th>
                 <th> {dr_lang('操作')} </th>
             </tr>
             </thead>
@@ -28,7 +28,14 @@
                 {if !$is_oem}
                 <td>{if $t.store}<a href="{$t.store}" target="_blank">{$t.author}</a>{else}{$t.author}{/if}</td>
                 {/if}
-                <td> {if $is_oem}{$t.version}{else}<a href="javascript:dr_show_log('app-{$t.id}', '{$t.version}');">{$t.version}</a>{/if}</td>
+                <td> {if $is_oem}
+                    {$t.version}
+                    {else}
+                    <a href="javascript:dr_show_log('app-{$t.id}', '{$t.version}');">{$t.version}</a>
+                    {if $t.vip}
+                    <span class="label label-danger"> VIP </span>
+                    {/if}
+                    {/if}</td>
                 <td style="overflow: auto">
                     {if $t.install}
                     {if $t.menu}
