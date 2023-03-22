@@ -718,7 +718,7 @@ class Model {
                                     $where[] = '`'.$table.'`.`'.$name.'` LIKE "%\"'.intval($id).'\"%"';
                                 } else {
                                     // 高版本写法
-                                    $where[] = "(`{$table}`.`{$name}`<>'' AND JSON_CONTAINS (`{$table}`.`{$name}`->'$[*]', '\"".intval($id)."\"', '$'))";
+                                    $where[] = "(CASE WHEN JSON_VALID(`{$table}`.`{$name}`) THEN JSON_CONTAINS (`{$table}`.`{$name}`->'$[*]', '\"".intval($id)."\"', '$') ELSE null END)";
                                 }
                             }
                         }
@@ -728,7 +728,7 @@ class Model {
                             $where[] = '`'.$table.'`.`'.$name.'` LIKE "%\"'.intval($data['ii']).'\"%"';
                         } else {
                             // 高版本写法
-                            $where[] = "(`{$table}`.`{$name}`<>'' AND  JSON_CONTAINS (`{$table}`.`{$name}`->'$[*]', '\"".intval($data['ii'])."\"', '$'))";
+                            $where[] = "(CASE WHEN JSON_VALID(`{$table}`.`{$name}`) THEN JSON_CONTAINS (`{$table}`.`{$name}`->'$[*]', '\"".intval($data['ii'])."\"', '$') ELSE null END)";
                         }
                     }
                 }
@@ -763,7 +763,7 @@ class Model {
                         $where[] = '`'.$table.'`.`'.$name.'` LIKE "%\"'.$this->db->escapeString(dr_safe_replace($value), true).'\"%"';
                     } else {
                         // 高版本写法
-                        $where[] = "(`{$table}`.`{$name}`<>'' AND  JSON_CONTAINS (`{$table}`.`{$name}`->'$[*]', '\"".$this->db->escapeString(dr_safe_replace($value), true)."\"', '$'))";
+                        $where[] = "(CASE WHEN JSON_VALID(`{$table}`.`{$name}`) THEN JSON_CONTAINS (`{$table}`.`{$name}`->'$[*]', '\"".$this->db->escapeString(dr_safe_replace($value), true)."\"', '$') ELSE null END)";
                     }
                 }
             }

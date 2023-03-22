@@ -1443,7 +1443,7 @@ class View {
                                             $vals[] = "{$t['name']} LIKE \"%\\\"".\Phpcmf\Service::M()->db->escapeString(dr_safe_replace($value), true)."\\\"%\"";
                                         } else {
                                             // 高版本写法
-                                            $vals[] = "JSON_CONTAINS ({$t['name']}->'$[*]', '\"".dr_safe_replace($value)."\"', '$')";
+                                            $vals[] = "(CASE WHEN JSON_VALID({$t['name']}) THEN JSON_CONTAINS ({$t['name']}->'$[*]', '\"".dr_safe_replace($value)."\"', '$') ELSE null END)";
                                         }
                                     }
                                 }
