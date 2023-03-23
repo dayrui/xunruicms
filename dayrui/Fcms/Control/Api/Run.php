@@ -160,8 +160,8 @@ class Run extends \Phpcmf\Common
             flock ( $fp ,LOCK_UN);
             fclose( $fp );
         }
-		
-        exit('任务执行成功：Run '.$i);
+
+        exit('任务执行成功：Run '.($i ? $i : 'Ok'));
 	}
 
 

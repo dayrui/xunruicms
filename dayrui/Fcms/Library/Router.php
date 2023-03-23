@@ -106,24 +106,28 @@ class Router {
         }
 
         // 跳转
-        $this->redirect($url);
+        $this->redirect($url, true);
     }
 
     // 执行跳转动作
-    public function redirect($url) {
+    public function redirect($url, $auto = false) {
 
         // 跳转
         if ($url != FC_NOW_URL) {
-            if (IS_DEV) {
-                if (defined('SYS_URL_ONLY') && SYS_URL_ONLY) {
-                    \Phpcmf\Service::C()->_admin_msg(0, '当前URL['.dr_now_url().']<br>与其本身地址['.$url.']不符<br>关闭开发者模式时本页面将成为404');
+            if (!$auto) {
+                if (IS_DEV) {
+                    if (defined('SYS_URL_ONLY') && SYS_URL_ONLY) {
+                        \Phpcmf\Service::C()->_admin_msg(0, '当前URL['.dr_now_url().']<br>与其本身地址['.$url.']不符<br>关闭开发者模式时本页面将成为404');
+                    }
+                    \Phpcmf\Service::C()->_admin_msg(1, '开发者模式：<br>当前URL['.dr_now_url().']<br>与其本身地址['.$url.']不符<br>正在自动跳转本身地址（关闭开发者模式时即可自动跳转）', $url, 9);
+                } elseif (defined('SYS_URL_ONLY') && SYS_URL_ONLY) {
+                    \Phpcmf\Service::C()->goto_404_page('匹配地址与实际地址不符');
                 }
-                \Phpcmf\Service::C()->_admin_msg(1, '开发者模式：<br>当前URL['.dr_now_url().']<br>与其本身地址['.$url.']不符<br>正在自动跳转本身地址（关闭开发者模式时即可自动跳转）', $url, 9);
-            } elseif (defined('SYS_URL_ONLY') && SYS_URL_ONLY) {
-                \Phpcmf\Service::C()->goto_404_page('匹配地址与实际地址不符');
             } else {
-                dr_redirect($url, 'location', '301');
+                // 自动识别
+                \Phpcmf\Service::C()->_admin_msg(1, '开发者模式：<br>当前URL['.dr_now_url().']<br>自动识别为['.$url.']<br>若不需要识别功能可在后台-设置-手机设置-关闭自动识别<br>正在自动跳转本身地址（关闭开发者模式时即可自动跳转）', $url, 9);
             }
+            dr_redirect($url, 'location', '301');
         }
     }
 
