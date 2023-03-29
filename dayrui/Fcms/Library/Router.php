@@ -123,7 +123,7 @@ class Router {
                 } elseif (defined('SYS_URL_ONLY') && SYS_URL_ONLY) {
                     \Phpcmf\Service::C()->goto_404_page('匹配地址与实际地址不符');
                 }
-            } else {
+            } elseif (IS_DEV) {
                 // 自动识别
                 \Phpcmf\Service::C()->_admin_msg(1, '开发者模式：<br>当前URL['.dr_now_url().']<br>自动识别为['.$url.']<br>若不需要识别功能可在后台-设置-手机设置-关闭自动识别<br>正在自动跳转本身地址（关闭开发者模式时即可自动跳转）', $url, 9);
             }
