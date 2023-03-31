@@ -48,11 +48,11 @@
                 {loop $mtotal $dir $t}
                 <tr>
                     <td>{$t.name}</td>
-                    <td style="text-align: center"><a class="drlabel drlabel-success" href="{$t.all}" id="{$dir}_all"><img src="{THEME_PATH}assets/images/mloading.gif"></a></td>
-                    <td style="text-align: center"><a class="drlabel drlabel-success" href="{$t.today}" id="{$dir}_today"><img src="{THEME_PATH}assets/images/mloading.gif"></a></td>
-                    {if IS_USE_MEMBER}<td style="text-align: center"><a class="drlabel drlabel-important" href="{$t.verify}" id="{$dir}_verify"><img src="{THEME_PATH}assets/images/mloading.gif"></a></td>{/if}
-                    <td style="text-align: center"><a class="drlabel drlabel-important" href="{$t.timing}" id="{$dir}_timing"><img src="{THEME_PATH}assets/images/mloading.gif"></a></td>
-                    <td style="text-align: center"><a class="drlabel drlabel-important" href="{$t.recycle}" id="{$dir}_recycle"><img src="{THEME_PATH}assets/images/mloading.gif"></a></td>
+                    <td style="text-align: center"><a class="drlabel drlabel-success tooltips" data-container="body" data-placement="top" data-original-title="{dr_lang('数据量不一定是精确的，仅供参考')}" href="{$t.all}" id="{$dir}_all"><img src="{THEME_PATH}assets/images/mloading.gif"></a></td>
+                    <td style="text-align: center"><a class="drlabel drlabel-success tooltips" data-container="body" data-placement="top" data-original-title="{dr_lang('数据量不一定是精确的，仅供参考')}" href="{$t.today}" id="{$dir}_today"><img src="{THEME_PATH}assets/images/mloading.gif"></a></td>
+                    {if IS_USE_MEMBER}<td style="text-align: center"><a class="drlabel drlabel-important tooltips" data-container="body" data-placement="top" data-original-title="{dr_lang('数据量不一定是精确的，仅供参考')}" href="{$t.verify}" id="{$dir}_verify"><img src="{THEME_PATH}assets/images/mloading.gif"></a></td>{/if}
+                    <td style="text-align: center"><a class="drlabel drlabel-important tooltips" data-container="body" data-placement="top" data-original-title="{dr_lang('数据量不一定是精确的，仅供参考')}" href="{$t.timing}" id="{$dir}_timing"><img src="{THEME_PATH}assets/images/mloading.gif"></a></td>
+                    <td style="text-align: center"><a class="drlabel drlabel-important tooltips" data-container="body" data-placement="top" data-original-title="{dr_lang('数据量不一定是精确的，仅供参考')}" href="{$t.recycle}" id="{$dir}_recycle"><img src="{THEME_PATH}assets/images/mloading.gif"></a></td>
                     <td>
                         {if strpos($t.list, 'javascript:') !== false}<a class="btn btn-xs dark" href="{$t.list}" >{dr_lang('管理')}</a>{/if}
                         {if $ci->_is_admin_auth($dir.'/home/add')}<a class="btn btn-xs blue" href="{$t.post}" >{dr_lang('发布')}</a>{/if}

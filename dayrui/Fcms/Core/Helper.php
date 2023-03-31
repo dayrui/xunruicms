@@ -8,7 +8,8 @@
 
 
 /**
- * 是否为空白
+ * 判断是否为空白
+ * @param $value
  * @return 是否空白
  */
 function dr_is_empty($value) {
@@ -342,7 +343,7 @@ if (!function_exists('dr_is_mobile')) {
 
 /**
  * 后台搜索字段过滤函数
- * @param $array 单个字段数组
+ * @param $t 单个字段数组
  * @return 是否被搜索时可用
  */
 function dr_is_admin_search_field($t) {
@@ -422,7 +423,7 @@ function dr_get_ftable($id, $value, $class = '') {
  * ftable字段数组
  * @param $id 字段id
  * @param $value 存储值
- * @return 表格
+ * @return 表格输出
  */
 function dr_get_ftable_array($id, $value) {
 
@@ -529,6 +530,9 @@ function dr_rp($str, $o, $t) {
 
 /**
  * 替换模板参数特殊字符
+ * @param $str 指定字符串
+ * @param $rt 正向或者反向
+ * @return 特殊字符替换
  */
 function dr_rp_view($str, $rt = 0) {
 
@@ -563,6 +567,7 @@ function dr_qrcode($text, $thumb = '', $level = 'H', $size = 5) {
  */
 function dr_sec2time($times){
 
+    $times = intval($times);
     $result = '00:00:00';
 
     if ($times > 0) {
@@ -914,6 +919,14 @@ function dr_member_info($uid, $name = '', $cache = -1) {
     return $name ? $data[$name] : $data;
 }
 
+/**
+ * 调用会员详细信息（自定义字段需要手动格式化）
+ *
+ * @param   $username   会员账号
+ * @param   $name   输出字段
+ * @param   $cache  缓存时间
+ * @return  用户详情数组
+ */
 function dr_member_username_info($username, $name = '', $cache = -1) {
 
     $data = \Phpcmf\Service::L('cache')->get_data('member-info-name-'.$username);
@@ -1503,6 +1516,9 @@ function dr_member_auth_id($authid, $postid) {
 
 /**
  * 获取折扣价格值
+ * @param $value 价格值
+ * @param $zhe 折扣值
+ * @return 折扣计算后的值
  */
 function dr_zhe_price($value, $zhe) {
 
@@ -1510,11 +1526,14 @@ function dr_zhe_price($value, $zhe) {
         return 0;
     }
 
-    return (float)max(0, $value * ($zhe/100));
+    return (float)max(0, (int)$value * ($zhe/100));
 }
 
 /**
  * 获取价格值
+ * @param $value 价格值
+ * @param $num 小数位
+ * @return 计算后的值
  */
 function dr_price_value($value, $num = 2) {
     return $value ? number_format(floatval($value), (int)$num) : 0;
@@ -1522,6 +1541,10 @@ function dr_price_value($value, $num = 2) {
 
 /**
  * sku 获取属性值名称
+ * @param $value 字段值
+ * @param $sku sku数组
+ * @param $name 属性key
+ * @return 属性名称
  */
 function dr_sku_value_name($value, $sku, $name) {
 
@@ -1543,8 +1566,14 @@ function dr_sku_value_name($value, $sku, $name) {
     return $value['value'][$sku][$name];
 }
 
+
 /**
  * sku 价格信息
+ * @param $value 字段值
+ * @param $number 小数位
+ * @param $join 连接符号
+ * @param $zhe 折扣值
+ * @return 最终计算值
  */
 function dr_sku_price($value, $number = 2, $join = ' - ', $zhe = 0) {
 
@@ -1573,8 +1602,13 @@ function dr_sku_price($value, $number = 2, $join = ' - ', $zhe = 0) {
     }
 }
 
+
 /**
- * sku获取名称
+ * sku 获取名称
+ * @param $key sku字符串
+ * @param $data 主题数组
+ * @param $type 默认
+ * @return 属性名称
  */
 function dr_sku_name($key, $data, $type = 0) {
 
@@ -1607,6 +1641,9 @@ function dr_sku_name($key, $data, $type = 0) {
 
 /**
  * 下一个升级值
+ * @param $array 用户组数组
+ * @param $id 组id号
+ * @return 下一个升级值
  */
 function dr_level_next_value($array, $id) {
 
@@ -1638,7 +1675,8 @@ function dr_level_next_value($array, $id) {
 
 /**
  * 静态生成时权限认证字符(加密)
- * ip 运行者ip地址
+ * @param $ip 运行者ip地址
+ * @return 返回逻辑值
  */
 function dr_html_auth($ip = 0) {
 
@@ -1658,13 +1696,17 @@ function dr_html_auth($ip = 0) {
 
 /**
  * 付款方式显示
+ * @param $name 支付名
+ * @return 返回数组
  */
 function dr_pay_type_html($name) {
     return dr_pay_name($name);
 }
 
 /**
- * 付款名称
+ * 付款方式显示
+ * @param $name 支付名
+ * @return 返回数组
  */
 function dr_pay_name($name) {
     if (!dr_is_app('pay')) {
@@ -1675,6 +1717,8 @@ function dr_pay_name($name) {
 
 /**
  * 付款方式的名称
+ * @param $name 支付名
+ * @return 返回数组
  */
 function dr_pay_type($name) {
     if (!dr_is_app('pay')) {
@@ -1685,6 +1729,8 @@ function dr_pay_type($name) {
 
 /**
  * 付款状态的名称
+ * @param $data 支付记录数据
+ * @return 返回状态
  */
 function dr_pay_status($data) {
     if (!dr_is_app('pay')) {
@@ -1695,6 +1741,9 @@ function dr_pay_status($data) {
 
 /**
  * 付款金额显示
+ * @param $data 价格值
+ * @param $v 小数位
+ * @return 返回带html的金额值标签
  */
 function dr_pay_money_html($data, $v = 2) {
 
@@ -1714,6 +1763,8 @@ function dr_pay_money_html($data, $v = 2) {
 
 /**
  * 清除空白字符
+ * @param $value 字符串
+ * @return 返回字符串
  */
 function dr_clear_empty($value) {
 
@@ -1726,6 +1777,8 @@ function dr_clear_empty($value) {
 
 /**
  * 列表字段进行排序筛选
+ * @param $field 字段列表数组
+ * @return 返回过滤后的数组
  */
 function dr_list_field_order($field) {
 
@@ -1768,6 +1821,9 @@ function dr_list_field_value($value, $sys_field, $field) {
 
 /**
  * 两数组追加合并
+ * @param $a1 数组1
+ * @param $a2 数组2
+ * @return 返回合并后的数组
  */
 function dr_array2array($a1, $a2) {
 
@@ -1783,7 +1839,10 @@ function dr_array2array($a1, $a2) {
 }
 
 /**
- * 两数组覆盖合并，1是老数据，2是新数据
+ * 两数组覆盖合并
+ * @param $a1 1是老数据
+ * @param $a2 2是新数据
+ * @return 返回处理后的数组
  */
 function dr_array22array($a1, $a2) {
 
@@ -1816,6 +1875,9 @@ function dr_is_use_module() {
 
 /**
  * 站点表前缀
+ * @param $table 表名
+ * @param $siteid 站点id
+ * @return 返回当前站点对应的表名称
  */
 function dr_site_table_prefix($table, $siteid = SITE_ID) {
     return $siteid.'_'.$table;
@@ -1823,6 +1885,9 @@ function dr_site_table_prefix($table, $siteid = SITE_ID) {
 
 /**
  * 模块表前缀
+ * @param $dir 模块目录
+ * @param $siteid 站点id
+ * @return 返回当前站点对应的表名称
  */
 function dr_module_table_prefix($dir, $siteid = SITE_ID) {
     return $siteid.'_'.$dir;
@@ -1830,6 +1895,10 @@ function dr_module_table_prefix($dir, $siteid = SITE_ID) {
 
 /**
  * 模块表单前缀
+ * @param $dir 模块目录
+ * @param $table 表名
+ * @param $siteid 站点id
+ * @return 返回当前站点对应的表名称
  */
 function dr_mform_table_prefix($dir, $table, $siteid = SITE_ID) {
     return $siteid.'_'.$dir.'_form_'.$table;
@@ -1837,6 +1906,9 @@ function dr_mform_table_prefix($dir, $table, $siteid = SITE_ID) {
 
 /**
  * 网站表单表前缀
+ * @param $dir 表单名
+ * @param $siteid 站点id
+ * @return 返回当前站点对应的表名称
  */
 function dr_form_table_prefix($dir, $siteid = SITE_ID) {
     return $siteid.'_form_'.$dir;
@@ -1844,13 +1916,18 @@ function dr_form_table_prefix($dir, $siteid = SITE_ID) {
 
 /**
  * 返回图标
+ * @param $value 原定的图标
+ * @return 如没有原地图标就返回默认图标
  */
 function dr_icon($value) {
     return $value ? $value : 'fa fa-table';
 }
 
 /**
- * 完整的文件路径
+ * 完整的文件URL
+ * @param $url 文件参数
+ * @param $full 是否补全绝对域名
+ * @return 返回文件的完整url地址
  */
 function dr_file($url, $full = 0) {
 
@@ -1869,6 +1946,9 @@ function dr_file($url, $full = 0) {
 
 /**
  * 根据文件扩展名获取文件预览信息
+ * @param $value 文件路径参数
+ * @param $id 文件id值
+ * @return 返回文件可预览的img标签
  */
 function dr_file_preview_html($value, $id = 0) {
 
@@ -1916,7 +1996,11 @@ function dr_file_list_preview_html($t) {
 }
 
 if (! function_exists('dr_is_image')) {
-    // 文件是否是图片
+    /**
+     * 文件是否是图片
+     * @param $value 文件路径参数
+     * @return 判断这个是否是一张图片
+     */
     function dr_is_image($value)
     {
         if (!$value) {
@@ -1931,7 +2015,9 @@ if (! function_exists('dr_is_image')) {
 }
 
 /**
- * 格式化复选框\单选框\选项值 字符串转换为数组
+ * 格式化复选框\单选框\选项值
+ * @param $value 参数
+ * @return 字符串转换为数组
  */
 function dr_format_option_array($value) {
 
@@ -1959,25 +2045,20 @@ function dr_format_option_array($value) {
     return $data;
 }
 
-
 /**
- * 字段输出表单
- *
- * @param   string  $username
- * @return  intval
+ * 字段输出表单（废弃）
  */
 function dr_field_input($name, $type, $option, $value = '', $id = 0) {
     return '';
 }
 
 /**
- * 目录扫描
+ * 目录列表获取
  *
- * @param   string  $source_dir     Path to source
- * @param   int $directory_depth    Depth of directories to traverse
- *                      (0 = fully recursive, 1 = current dir, etc)
- * @param   bool    $hidden         Whether to show hidden files
- * @return  array
+ * @param   $source_dir  源目录
+ * @param   $directory_depth 目录纵深 0全目录 1当前目录
+ * @param   $hidden    是否包含隐藏目录
+ * @return  整个目录名的数组格式
  */
 function dr_dir_map($source_dir, $directory_depth = 0, $hidden = FALSE) {
 
@@ -2008,13 +2089,12 @@ function dr_dir_map($source_dir, $directory_depth = 0, $hidden = FALSE) {
 }
 
 /**
- * 文件扫描
+ * 文件列表获取
  *
- * @param   string  $source_dir     Path to source
- * @param   int $directory_depth    Depth of directories to traverse
- *                      (0 = fully recursive, 1 = current dir, etc)
- * @param   bool    $hidden         Whether to show hidden files
- * @return  array
+ * @param   $source_dir  源目录
+ * @param   $directory_depth 目录纵深 0全目录 1当前目录
+ * @param   $hidden    是否包含隐藏目录
+ * @return  整个文件名的数组格式
  */
 function dr_file_map($source_dir) {
 
@@ -2040,6 +2120,10 @@ function dr_file_map($source_dir) {
 
 /**
  * 数据返回统一格式
+ * @param $code 状态码 0失败 >1表示成功
+ * @param $msg 提示文字
+ * @param $data 传输数组
+ * @return 返回统一的数组格式
  */
 function dr_return_data($code, $msg = '', $data = []) {
     return [
@@ -2051,6 +2135,8 @@ function dr_return_data($code, $msg = '', $data = []) {
 
 /**
  * 提交表单默认隐藏域
+ * @param $data 可填充的隐藏域数组格式
+ * @return 表单隐藏域控件代码
  */
 function dr_form_hidden($data = []) {
 
@@ -2067,7 +2153,9 @@ function dr_form_hidden($data = []) {
     return $form;
 }
 
-// 验证字符串
+/**
+ * 验证csrf字符串
+ */
 function dr_get_csrf_token() {
 
     $code = \Phpcmf\Service::C()->session()->get('auth_csrf_token');
@@ -2082,6 +2170,8 @@ function dr_get_csrf_token() {
 
 /**
  * 搜索表单隐藏域
+ * @param $p 可填充的隐藏域数组格式
+ * @return 表单隐藏域控件代码
  */
 function dr_form_search_hidden($p = []) {
 
@@ -2108,8 +2198,8 @@ function dr_form_search_hidden($p = []) {
 /**
  * Base64加密
  *
- * @param   string  $string
- * @return  string
+ * @param   $string 参数
+ * @return  加密后的字符串
  */
 function dr_base64_encode($string) {
 
@@ -2126,8 +2216,8 @@ function dr_base64_encode($string) {
 /**
  * Base64解密
  *
- * @param   string  $string
- * @return  string
+ * @param   $string 参数
+ * @return  解密后的值
  */
 function dr_base64_decode($string) {
 
@@ -2145,7 +2235,7 @@ function dr_base64_decode($string) {
 /**
  * 网站风格目录
  *
- * @return  string|NULL
+ * @return  网站风格目录数组
  */
 function dr_get_theme() {
 
@@ -2166,11 +2256,10 @@ function dr_randcode() {
 /**
  * 删除目录及目录下面的所有文件
  *
- * @param   string  $dir        路径
- * @param   string  $is_all     包括删除当前目录
- * @return  bool    如果成功则返回 TRUE，失败则返回 FALSE
+ * @param    $dir        路径
+ * @param   $is_all     包括删除当前目录
+ * @return  如果成功则返回 TRUE，失败则返回 FALSE
  */
-
 function dr_dir_delete($path, $del_dir = FALSE, $htdocs = FALSE, $_level = 0)
 {
 
@@ -2210,6 +2299,9 @@ function dr_dir_delete($path, $del_dir = FALSE, $htdocs = FALSE, $_level = 0)
 
 /**
  * 基于本地存储的加解密算法
+ * @param $string 传入字符串
+ * @param $operation DECODE是解密，否则是加密
+ * @return 返回加解密后的值
  */
 function dr_authcode($string, $operation = 'DECODE') {
 
@@ -2230,7 +2322,7 @@ function dr_authcode($string, $operation = 'DECODE') {
 }
 
 /**
- * 当前URL
+ * 当前浏览器的URL
  */
 function dr_now_url() {
     return \Phpcmf\Service::L('input')->xss_clean(IS_ADMIN ? str_replace(FC_NOW_HOST, '/', FC_NOW_URL) : FC_NOW_URL);
@@ -2238,6 +2330,10 @@ function dr_now_url() {
 
 /**
  * 验证码图片获取
+ * @param $width 宽度
+ * @param $height 高度
+ * @param $url 废弃
+ * @return 返回验证码img标签的格式
  */
 function dr_code($width, $height, $url = '') {
     $url = dr_web_prefix('index.php?s=api&c=api&m=captcha&width='.$width.'&height='.$height);
@@ -2245,7 +2341,9 @@ function dr_code($width, $height, $url = '') {
 }
 
 /**
- * 排序操作
+ * 排序字符串转换操作
+ * @param $name 字段名称
+ * @return 根据浏览器order参数返回对应的字符串
  */
 function dr_sorting($name) {
 
@@ -2265,6 +2363,8 @@ function dr_sorting($name) {
 
 /**
  * 移除order字符串
+ * @param $url 指定url地址
+ * @return 把url中的order参数移除
  */
 function dr_member_order($url) {
 
@@ -2288,11 +2388,11 @@ function dr_member_order($url) {
 
 
 /**
- * 显示星星
+ * 用户等级 显示星星
  *
- * @param   intval  $num
- * @param   intval  $starthreshold  星星数在达到此阈值(设为 N)时，N 个星星显示为 1 个月亮、N 个月亮显示为 1 个太阳。
- * @return  string
+ * @param    $num
+ * @param   $starthreshold  星星数在达到此阈值(设为 N)时，N 个星星显示为 1 个月亮、N 个月亮显示为 1 个太阳。
+ * @return  img标签值
  */
 function dr_show_stars($num, $starthreshold = 4) {
 
@@ -2312,13 +2412,22 @@ function dr_show_stars($num, $starthreshold = 4) {
 
 /**
  * 动态调用模板
+ * @param $id div控件的ID名
+ * @param $filename 模板文件名
+ * @param $param_str 附加URL参数
+ * @return 返回ajax调用代码
  */
 function dr_ajax_template($id, $filename, $param_str = '') {
     $error = IS_DEV && !defined('SC_HTML_FILE') ? ', error: function(HttpRequest, ajaxOptions, thrownError) {  var msg = HttpRequest.responseText;layer.open({ type: 1, title: "'.dr_lang('系统故障').'", fix:true, shadeClose: true, shade: 0, area: [\'50%\', \'50%\'],  content: "<div style=\"padding:10px;\">"+msg+"</div>"  }); } ' : '';
     return "<script type=\"text/javascript\"> $.ajax({ type: \"GET\", url:\"".dr_web_prefix("index.php?s=api&c=api&m=template&format=jsonp&name={$filename}&".$param_str)."\", dataType: \"jsonp\", success: function(data){ $(\"#{$id}\").html(data.msg); } {$error} });</script>";
 }
 
-// https进行post数据
+/**
+ * https进行post数据
+ * @param $url 请求地址
+ * @param $param 请求参数数组
+ * @return 返回信息
+ */
 function dr_post_json_data($url, $param = []) {
 
     if (!$url) {
@@ -2350,11 +2459,13 @@ function dr_post_json_data($url, $param = []) {
 }
 
 /**
- * 调用远程数据
+ * 调用远程数据 curl获取
  *
- * @param   string  $url
- * @param   intval  $timeout 超时时间，0不超时
- * @return  string
+ * @param   $url
+ * @param   $timeout 超时时间，0不超时
+ * @param   $is_log 0表示请求失败不记录到系统日志中
+ * @param   $ct 0表示不尝试重试，1表示重试一次
+ * @return  请求结果值
  */
 function dr_catcher_data($url, $timeout = 0, $is_log = true, $ct = 0) {
 
@@ -2447,8 +2558,8 @@ function dr_catcher_data($url, $timeout = 0, $is_log = true, $ct = 0) {
 /**
  * 伪静态代码处理
  *
- * @param   array   $params 参数数组
- * @param   array   $search 搜索配置
+ * @param   $params 参数数组
+ * @param   $search 搜索配置
  * @return  string
  */
 function dr_search_rewrite_encode($params, $search) {
@@ -2481,8 +2592,8 @@ function dr_search_rewrite_encode($params, $search) {
 /**
  * 伪静态代码转换为数组
  *
- * @param   string  $params 参数字符串
- * @return  array
+ * @param   $params 参数字符串
+ * @return  参数数组
  */
 function dr_search_rewrite_decode($params, $search) {
 
@@ -2514,8 +2625,8 @@ function dr_search_rewrite_decode($params, $search) {
 /**
  * 伪静态代码处理
  *
- * @param   array   $params 参数数组
- * @return  string
+ * @param   $params 参数数组
+ * @return  组合后的字符串
  */
 function dr_rewrite_encode($params, $join = '-', $field = []) {
 
@@ -2537,8 +2648,8 @@ function dr_rewrite_encode($params, $join = '-', $field = []) {
 /**
  * 伪静态代码转换为数组
  *
- * @param   string  $params 参数字符串
- * @return  array
+ * @param   $params 参数字符串
+ * @return  数组参数
  */
 function dr_rewrite_decode($params, $join = '-', $field = []) {
 
@@ -2566,11 +2677,18 @@ function dr_rewrite_decode($params, $join = '-', $field = []) {
 
 /**
  * 安全过滤格式化搜索关键词参数
+ * @param $s 参数
+ * @return 处理后的值
  */
 function dr_get_keyword($s) {
     return dr_safe_keyword($s);
 }
 if (!function_exists('dr_safe_keyword')) {
+    /**
+     * 安全过滤格式化搜索关键词参数
+     * @param $s 参数
+     * @return 处理后的值
+     */
     function dr_safe_keyword($s) {
 
         if (dr_is_empty($s)) {
@@ -2583,6 +2701,9 @@ if (!function_exists('dr_safe_keyword')) {
 
 /**
  * 安全过滤函数
+ * @param $string 参数
+ * @param $diy 自定义过滤数组配置
+ * @return 处理后的值
  */
 function dr_safe_replace($string, $diy = []) {
 
@@ -2599,6 +2720,8 @@ function dr_safe_replace($string, $diy = []) {
 
 /**
  * 安全过滤文件及目录名称函数
+ * @param $string 参数
+ * @return 处理后的值
  */
 function dr_safe_filename($string) {
 
@@ -2615,6 +2738,8 @@ function dr_safe_filename($string) {
 
 /**
  * 安全过滤用户名函数
+ * @param $string 参数
+ * @return 处理后的值
  */
 function dr_safe_username($string) {
 
@@ -2631,6 +2756,8 @@ function dr_safe_username($string) {
 
 /**
  * 安全过滤密码函数
+ * @param $string 参数
+ * @return 处理后的值
  */
 function dr_safe_password($string) {
 
@@ -2643,6 +2770,8 @@ function dr_safe_password($string) {
 
 /**
  * 后台移除http和https协议
+ * @param $url 地址
+ * @return 处理后的值
  */
 function dr_rm_http($url) {
 
@@ -2655,6 +2784,8 @@ function dr_rm_http($url) {
 
 /**
  * 将路径进行安全转换变量模式
+ * @param $path 目录名
+ * @return 处理后的值
  */
 function dr_safe_replace_path($path) {
 
@@ -2685,6 +2816,10 @@ function dr_safe_replace_path($path) {
 
 /**
  * 字符截取
+ * @param $string 字符串
+ * @param $limit 长度限制
+ * @param $dot 超出的填充字符串
+ * @return 处理后的值
  */
 function dr_strcut($string, $limit = '100', $dot = '...') {
 
@@ -2757,6 +2892,10 @@ function dr_strcut($string, $limit = '100', $dot = '...') {
 
 /**
  * 单词截取
+ * @param $string 字符串
+ * @param $maxchar 长度限制
+ * @param $end 超出的填充字符串
+ * @return 处理后的值
  */
 function dr_wordcut($text, $maxchar, $end = '...') {
 
@@ -2787,8 +2926,7 @@ function dr_wordcut($text, $maxchar, $end = '...') {
 
 /**
  * 随机颜色
- *
- * @return  string
+ * @return  随机后的颜色值
  */
 function dr_random_color() {
 
@@ -2818,7 +2956,8 @@ function dr_random_color() {
 /**
  * 友好时间显示函数
  *
- * @param   int     $time   时间戳
+ * @param   $time   时间戳
+ * @param  $formt 时间太长时的格式输出
  * @return  string
  */
 function dr_fdate($sTime, $formt = 'Y-m-d') {
@@ -2865,9 +3004,9 @@ function dr_fdate($sTime, $formt = 'Y-m-d') {
 /**
  * 时间显示函数
  *
- * @param   int     $time   时间戳
- * @param   string  $format 格式与date函数一致
- * @param   string  $color  当天显示颜色
+ * @param   $time   时间戳
+ * @param   $format 格式与date函数一致
+ * @param   $color  当天显示颜色
  * @return  string
  */
 function dr_date($time = '', $format = SITE_TIME_FORMAT, $color = '') {
@@ -2902,7 +3041,7 @@ function dr_date($time = '', $format = SITE_TIME_FORMAT, $color = '') {
 /**
  * 将对象转换为数组
  *
- * @param   object  $obj    数组对象
+ * @param   $obj    数组对象
  * @return  array
  */
 function dr_object2array($obj) {
@@ -2924,6 +3063,9 @@ function dr_object2array($obj) {
 
 /**
  * 数组截取
+ * @param $arr 数组值
+ * @param $limit 长度限制
+ * @return 处理后的数组
  */
 function dr_arraycut($arr, $limit) {
 
@@ -2947,7 +3089,7 @@ function dr_arraycut($arr, $limit) {
 /**
  * 将字符串转换为数组
  *
- * @param   string  $data   字符串
+ * @param   $data   字符串
  * @return  array
  */
 function dr_string2array($data, $limit = '') {
@@ -2973,7 +3115,7 @@ function dr_string2array($data, $limit = '') {
 /**
  * 将数组转换为字符串
  *
- * @param   array   $data   数组
+ * @param   $data   数组
  * @return  string
  */
 function dr_array2string($data) {
@@ -2983,7 +3125,7 @@ function dr_array2string($data) {
 /**
  * 递归创建目录
  *
- * @param   string  $dir    目录名称
+ * @param   $dir    目录名称
  * @return  bool|void
  */
 function dr_mkdirs($dir, $null = true) {
@@ -3003,8 +3145,8 @@ function dr_mkdirs($dir, $null = true) {
 /**
  * 格式化输出文件大小
  *
- * @param   int $fileSize   大小
- * @param   int $round      保留小数位
+ * @param   $fileSize   大小
+ * @param   $round      保留小数位
  * @return  string
  */
 function dr_format_file_size($fileSize, $round = 2) {
@@ -3068,10 +3210,10 @@ function dollar($value, $include_cents = TRUE) {
 }
 
 /**
- *
  * 正则替换和过滤内容
  *
  * @param   $html
+ * @return 过滤后的字符串
  */
 function dr_preg_html($html){
 
@@ -3090,20 +3232,30 @@ function dr_preg_html($html){
 }
 
 /**
- * 格式化微博内容中url内容的长度
- * @param   string  $match 匹配后的字符串
- * @return  string  格式化后的字符串
+ * 格式化微博内容中url内容的长度（废弃）
  */
 function _format_feed_content_url_length($match) {
     return '<a href="'.$match[1].'" target="_blank">'.$match[1].'</a>';
 }
 
-// 二维码
+/**
+ * 二维码地址生成
+ * @param $text 二维码的文字
+ * @param $uid 中间用户头像的uid
+ * @param $level 码块的大小等级
+ * @param $size 二维码的大小
+ * @return 返回二维码地址
+ */
 function dr_qrcode_url($text, $uid = 0, $level = 'L', $size = 5) {
     return ROOT_URL.'index.php?s=api&c=api&m=qrcode&uid='.urlencode($uid).'&text='.urlencode($text).'&size='.$size.'&level='.$level;
 }
 
-// 过滤非法字段
+/**
+ * 过滤非排序参数的法字段
+ * @param $str 字符串
+ * @param $order 排序方式
+ * @return 过滤后的值
+ */
 function dr_get_order_string($str, $order) {
 
     if ($str && (substr_count($str, ' ') >= 2
@@ -3117,7 +3269,12 @@ function dr_get_order_string($str, $order) {
 
 }
 
-// 两数折扣
+/**
+ * 两价格的折扣值
+ * @param $price 当前价格
+ * @param $nowprice 以前的价格
+ * @return 计算后的值
+ */
 function dr_discount($price, $nowprice) {
 
     if ($nowprice <= 0) {
@@ -3128,10 +3285,11 @@ function dr_discount($price, $nowprice) {
 }
 
 /**
- *  @desc 根据两点间的经纬度计算距离
- *  @param 当前坐标
- *  @param 目标坐标
- *  @param 单位
+ * 根据两点间的经纬度计算距离
+ * @param $new 当前坐标
+ * @param $to 目标坐标
+ * @param $mark 单位
+ * @return 返回距离
  */
 function dr_distance($new, $to, $mark = '米,千米') {
 
@@ -3175,9 +3333,9 @@ function dr_distance($new, $to, $mark = '米,千米') {
 /**
  *计算某个经纬度的周围某段距离的正方形的四个点
  *
- *@param lng float 经度
- *@param lat float 纬度
- *@param distance float 该点所在圆的半径，该圆与此正方形内切，默认值为0.5千米
+ *@param $lng float 经度
+ *@param $lat float 纬度
+ *@param $distance float 该点所在圆的半径，该圆与此正方形内切，默认值为0.5千米
  *@return array 正方形的四个点的经纬度坐标
  */
 function dr_square_point($lng, $lat, $distance = 0.5){
@@ -3198,7 +3356,9 @@ function dr_square_point($lng, $lat, $distance = 0.5){
     );
 }
 
-// 获取当前模板目录
+/**
+ * 获取当前模板目录
+ */
 function dr_tpl_path($is_member = IS_MEMBER) {
 
     $tpl = dr_get_app_tpl(APP_DIR && APP_DIR != 'member' ? APP_DIR : '');
@@ -3209,7 +3369,12 @@ function dr_tpl_path($is_member = IS_MEMBER) {
     return $path;
 }
 
-// 数组随机排序，并截取数组
+/**
+ * 数组随机排序，并截取数组
+ * @param $arr
+ * @param $num 数量
+ * @return 新数组
+ */
 function dr_array_rand($arr, $num = 0) {
 
     if (!$arr or !is_array($arr)) {
@@ -3221,7 +3386,13 @@ function dr_array_rand($arr, $num = 0) {
     return $num ? dr_arraycut($arr, $num) : $arr;
 }
 
-// 数组的指定元素大小排序
+/**
+ * 数组的指定元素大小排序
+ * @param $arr
+ * @param $key KEY键名
+ * @param $type 排序方式 asc desc
+ * @return 新数组
+ */
 function dr_array_sort($arr, $key, $type = 'asc') {
 
     if (!is_array($arr)) {
@@ -3244,7 +3415,10 @@ function dr_array_sort($arr, $key, $type = 'asc') {
     return $arr;
 }
 
-// 获取网站表单发布页面需要的变量值
+
+/**
+ * 获取网站表单发布页面需要的变量值
+ */
 function dr_get_form_post_value($table, $siteid = SITE_ID) {
 
     $rt = [
@@ -3317,7 +3491,10 @@ function dr_get_form_post_value($table, $siteid = SITE_ID) {
     return $rt;
 }
 
-// 获取模块表单发布页面需要的变量值
+
+/**
+ * 获取模块表单发布页面需要的变量值
+ */
 function dr_get_mform_post_value($mid, $table, $cid, $siteid = SITE_ID) {
 
     $rt = [
@@ -3376,8 +3553,9 @@ function dr_get_mform_post_value($mid, $table, $cid, $siteid = SITE_ID) {
     return $rt;
 }
 
-
-// 获取用户注册页面需要的变量值
+/**
+ * 获取用户注册页面需要的变量值
+ */
 function dr_get_register_value($groupid = 0, $url = '') {
 
     $rt = [
@@ -3435,22 +3613,37 @@ function dr_get_register_value($groupid = 0, $url = '') {
     return $rt;
 }
 
-// 获取当前模板文件路径
+/**
+ * 获取当前模板文件路径
+ * @param $file 模板名
+ * @return 返回完整名
+ */
 function dr_tpl_file($file) {
     return dr_tpl_path().$file;
 }
 
-// 兼容统计
+/**
+ * 兼容统计count函数
+ */
 function dr_count($array_or_countable, $mode = COUNT_NORMAL){
     return is_array($array_or_countable) || is_object($array_or_countable) ? count($array_or_countable, $mode) : 0;
 }
 
-// http模式
+/**
+ * 给地址补全https或者http前缀
+ */
 function dr_http_prefix($url) {
     return (defined('SYS_HTTPS') && SYS_HTTPS ? 'https://' : 'http://').$url;
 }
 
-// 转换url
+
+/**
+ * 转换url
+ * @param $Url 指定地址
+ * @param $domian 指定域名 或者 模块目录
+ * @param int|string $siteid 站点id号
+ * @return 新的url
+ */
 function dr_to_url($url, $domian = '', $siteid = SITE_ID) {
 
     $url = dr_url_prefix($url, '', $siteid, 1);
@@ -3463,7 +3656,8 @@ function dr_to_url($url, $domian = '', $siteid = SITE_ID) {
 
 /**
  * 获取对应的手机端地址
- * $url 任意域名
+ * @param $url 任意域名
+ * @return 新的url
  */
 function dr_mobile_url($url = SITE_MURL) {
 
@@ -3480,7 +3674,11 @@ function dr_mobile_url($url = SITE_MURL) {
     return dr_url_prefix(str_replace($host, $domain[$host], $url));
 }
 
-// 是否是完整的url
+/**
+ * 是否是完整的url
+ * @param $url
+ * @return boolean
+ */
 function dr_is_url($url) {
 
     if (!$url) {
@@ -3500,6 +3698,7 @@ function dr_is_url($url) {
  * @param string $domain   指定域名或者模块目录
  * @param int|string $siteid    站点ID
  * @param string $is_mobile  是否指定为移动端
+ * @return 新的url
  */
 function dr_url_prefix($url, $domain = '', $siteid = SITE_ID, $is_mobile = '') {
 
@@ -3567,6 +3766,8 @@ function dr_url_prefix($url, $domain = '', $siteid = SITE_ID, $is_mobile = '') {
 
 /**
  * 补全相对路径
+ * @param $url
+ * @return 新的url
  */
 function dr_web_prefix($url) {
     if ($url && dr_is_url($url)) {
@@ -3578,6 +3779,9 @@ function dr_web_prefix($url) {
 
 /**
  * url转为相对路径
+ * @param $url
+ * @param $prefix 将指定字符串替换成/
+ * @return 新的url
  */
 function dr_url_rel($url, $prefix = '') {
 
@@ -3604,6 +3808,10 @@ function dr_url_rel($url, $prefix = '') {
 
 /**
  * 内容中的转为相对路径
+ * @param $text
+ * @param $prefix 将指定字符串替换成/
+ * @param $attr 将指定替换哪些标签 ['href', 'src']
+ * @return 新的内容
  */
 function dr_text_rel($text, $prefix = '', $attr = ['href', 'src']) {
 
@@ -3636,6 +3844,10 @@ function dr_text_rel($text, $prefix = '', $attr = ['href', 'src']) {
 
 /**
  * 内容中的转为完整路径
+ * @param $text
+ * @param $url 将/替换成哪个地址
+ * @param $attr 将指定替换哪些标签 ['href', 'src']
+ * @return 新的内容
  */
 function dr_text_full($text, $url = SITE_URL, $attr = ['href', 'src']) {
 
@@ -3652,6 +3864,7 @@ function dr_text_full($text, $url = SITE_URL, $attr = ['href', 'src']) {
  * @param $days  天数
  * @param $dtype  到期换算单位
  * @param $ntime  时间基数，默认为当前时间
+ * @return 是否到期
  */
 function dr_member_group_etime($days, $dtype, $ntime = 0) {
 
@@ -3675,6 +3888,7 @@ function dr_member_group_etime($days, $dtype, $ntime = 0) {
 /**
  * 用户组到期时间单位
  * @param $dtype  到期换算单位
+ * @return 单位
  */
 function dr_member_group_dtype($dtype) {
 
@@ -3690,6 +3904,7 @@ function dr_member_group_dtype($dtype) {
 /**
  * 处理带Emoji的数据，HTML转为emoji码
  * @param $msg  转换字符串
+ * @return 新的字符串
  */
 function dr_html2emoji($msg){
 
@@ -3711,9 +3926,7 @@ function dr_html2emoji($msg){
 }
 
 /**
- * 处理带Emoji的数据，写入数据库前的emoji转为HTML
- * @param type $msg
- * @return type
+ * 处理带Emoji的数据，写入数据库前的emoji转为HTML（废除）
  */
 function dr_emoji2html($msg) {
     return $msg; // utf8mb4模式下原样输出
@@ -3722,7 +3935,7 @@ function dr_emoji2html($msg) {
 /**
  * 过滤emoji表情
  * @param type $str
- * @return type
+ * @return 新的字符串
  */
 function dr_clear_emoji($str){
 
@@ -3735,8 +3948,8 @@ function dr_clear_emoji($str){
 
 
 /**
- * 将同步代码转为数组
- * string 同步代码字符串
+ * 将同步代码转为数组（废除）
+ * @param string 同步代码字符串
  */
 function dr_member_sync_url($string) {
 
@@ -3753,6 +3966,8 @@ function dr_member_sync_url($string) {
 
 /**
  * 文字转换拼音
+ * @param $str
+ * @return 新的字符串
  */
 function dr_text2py($str) {
     return \Phpcmf\Service::L('pinyin')->result((string)$str);
@@ -3760,8 +3975,9 @@ function dr_text2py($str) {
 
 /**
  * 将html转化为纯文字
- * html 文字提取
- * cn 是否纯中文
+ * @param $str
+ * @param $cn 是否纯中文
+ * @return 新的字符串
  */
 function dr_html2text($str, $cn = false) {
 
@@ -3824,7 +4040,8 @@ function dr_is_root_path() {
 
 /**
  * 检查目录权限
- * $dir 目录地址
+ * @param $dir 目录地址
+ * @return 逻辑值
  */
 function dr_check_put_path($dir) {
 
@@ -3845,8 +4062,9 @@ function dr_check_put_path($dir) {
 
 /**
  * 存储调试信息
- * file 存储文件
- * data 打印变量
+ * @param file 存储文件
+ * @param data 打印变量
+ * @return 无
  */
 function dr_debug($file, $data) {
     dr_mkdirs(WRITEPATH.'debuglog/');
@@ -3927,7 +4145,7 @@ class php5replace {
 
 /**
  * 转为utf8编码格式
- * $str 来源字符串
+ * @param $str 来源字符串
  */
 function dr_code2utf8($str) {
 
