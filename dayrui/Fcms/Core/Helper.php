@@ -204,12 +204,6 @@ function dr_move_uploaded_file($tempfile, $fullname) {
         $temp_file = dirname($fullname).'/'.md5($_SERVER['HTTP_CONTENT_DISPOSITION']);
         if ($total - $max < 1024) {
             // 减去误差表示分段上传完毕
-            /*
-            if (!move_uploaded_file($tempfile, $temp_file)) {
-                // 移动失败
-                unlink($temp_file);
-                return false;
-            }*/
             if (!file_put_contents($temp_file, file_get_contents($tempfile), FILE_APPEND)) {
                 unlink($temp_file);
                 return false;
@@ -223,12 +217,6 @@ function dr_move_uploaded_file($tempfile, $fullname) {
             return true;
         } else {
             // 正在分段上传
-            /*
-            if (!move_uploaded_file($data, $temp_file)) {
-                // 移动失败
-                unlink($temp_file);
-                return false;
-            }*/
             echo file_put_contents($temp_file, file_get_contents($tempfile), FILE_APPEND);exit;
         }
     } else {
@@ -3331,12 +3319,11 @@ function dr_distance($new, $to, $mark = '米,千米') {
 
 
 /**
- *计算某个经纬度的周围某段距离的正方形的四个点
- *
- *@param $lng float 经度
- *@param $lat float 纬度
- *@param $distance float 该点所在圆的半径，该圆与此正方形内切，默认值为0.5千米
- *@return array 正方形的四个点的经纬度坐标
+ * 计算某个经纬度的周围某段距离的正方形的四个点
+ * @param $lng float 经度
+ * @param $lat float 纬度
+ * @param $distance float 该点所在圆的半径，该圆与此正方形内切，默认值为0.5千米
+ * @return array 正方形的四个点的经纬度坐标
  */
 function dr_square_point($lng, $lat, $distance = 0.5){
 
@@ -4070,13 +4057,13 @@ function dr_debug($file, $data) {
     dr_mkdirs(WRITEPATH.'debuglog/');
     $debug = debug_backtrace();
     file_put_contents(WRITEPATH.'debuglog/'.dr_safe_filename($file).'.txt', var_export([
-        '时间' => dr_date(SYS_TIME, 'Y-m-d H:i:s'),
-        '终端' => (string)$_SERVER['HTTP_USER_AGENT'],
-        '文件' => $debug[0]['file'],
-        '行号' => $debug[0]['line'],
-        '地址' => FC_NOW_URL,
-        '变量' => $data,
-    ], true).PHP_EOL.'=========================================================='.PHP_EOL, FILE_APPEND);
+            '时间' => dr_date(SYS_TIME, 'Y-m-d H:i:s'),
+            '终端' => (string)$_SERVER['HTTP_USER_AGENT'],
+            '文件' => $debug[0]['file'],
+            '行号' => $debug[0]['line'],
+            '地址' => FC_NOW_URL,
+            '变量' => $data,
+        ], true).PHP_EOL.'=========================================================='.PHP_EOL, FILE_APPEND);
 }
 
 // 正则替换方法
@@ -4326,61 +4313,22 @@ if (! function_exists('dr_redirect_safe_check'))
 if ( ! function_exists('dr_directory_map'))
 {
     /**
-     * Create a Directory Map
-     *
-     * Reads the specified directory and builds an array
-     * representation of it. Sub-folders contained with the
-     * directory will be mapped as well.
-     *
-     * @param   string  $source_dir     Path to source
-     * @param   int $directory_depth    Depth of directories to traverse
-     *                      (0 = fully recursive, 1 = current dir, etc)
-     * @param   bool    $hidden         Whether to show hidden files
-     * @return  array
+     * 目录列表获取（废除）
+     * @param   $source_dir  源目录
+     * @param   $directory_depth 目录纵深 0全目录 1当前目录
+     * @param   $hidden    是否包含隐藏目录
+     * @return  整个目录名的数组格式
      */
     function dr_directory_map($source_dir, $directory_depth = 0, $hidden = FALSE)
     {
-        if ($fp = opendir($source_dir))
-        {
-            $filedata   = [];
-            $new_depth  = $directory_depth - 1;
-            $source_dir = rtrim($source_dir, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
-
-            while (FALSE !== ($file = readdir($fp)))
-            {
-                // Remove '.', '..', and hidden files [optional]
-                if ($file === '.' OR $file === '..' OR ($hidden === FALSE && $file[0] === '.'))
-                {
-                    continue;
-                }
-
-                is_dir($source_dir.$file) && $file .= DIRECTORY_SEPARATOR;
-
-                if (($directory_depth < 1 OR $new_depth > 0) && is_dir($source_dir.$file))
-                {
-                    $filedata[$file] = directory_map($source_dir.$file, $new_depth, $hidden);
-                }
-                else
-                {
-                    $filedata[] = $file;
-                }
-            }
-
-            closedir($fp);
-            return $filedata;
-        }
-
-        return FALSE;
+        return dr_dir_map($source_dir, $directory_depth, $hidden);
     }
 }
 
 
 if (! function_exists('remove_invisible_characters')) {
     /**
-     * Remove Invisible Characters
-     *
-     * This prevents sandwiching null characters
-     * between ascii characters, like Java\0script.
+     * 移除不规则的字符串
      */
     function remove_invisible_characters($str, $urlEncoded = true)
     {

@@ -737,7 +737,7 @@ class Model {
                 //$where = array_slice($where, 0, 20);
             //}
             return $where ? '('.implode(strpos($value,  '||') !== false ? ' AND ' : ' OR ', $where).')' : '`'.$table.'`.`id` = 0';
-        } elseif (isset($field['fieldtype']) && ($field['fieldtype'] == 'Selects' || $field['fieldtype'] == 'Checkbox')) {
+        } elseif (isset($field['fieldtype']) && in_array($field['fieldtype'], ['Selects' , 'Checkbox'])) {
             // 复选字段
             $arr = explode('|', $value);
             $where = [];
@@ -768,7 +768,7 @@ class Model {
                 }
             }
             return $where ? '('.implode(strpos($value,  '||') !== false ? ' AND ' : ' OR ', $where).')' : '`'.$table.'`.`id` = 0';
-        } elseif (isset($field['fieldtype']) && in_array($field['fieldtype'], ['Members', 'Related'])) {
+        } elseif (isset($field['fieldtype']) && in_array($field['fieldtype'], ['Members', 'Related', 'Cats'])) {
             $where[] = ' FIND_IN_SET ('.intval($value).',`'.$table.'`.`'.$name.'`)';
         } elseif (isset($field['fieldtype']) && in_array($field['fieldtype'], ['Radio', 'Select'])) {
             // 单选字段
