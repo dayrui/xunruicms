@@ -737,7 +737,7 @@ class Model {
                 //$where = array_slice($where, 0, 20);
             //}
             return $where ? '('.implode(strpos($value,  '||') !== false ? ' AND ' : ' OR ', $where).')' : '`'.$table.'`.`id` = 0';
-        } elseif (isset($field['fieldtype']) && in_array($field['fieldtype'], ['Selects' , 'Checkbox'])) {
+        } elseif (isset($field['fieldtype']) && in_array($field['fieldtype'], ['Selects' , 'Checkbox', 'Cats'])) {
             // 复选字段
             $arr = explode('|', $value);
             $where = [];
@@ -755,7 +755,6 @@ class Model {
                     }
                 }
             }
-
             foreach ($arr as $value) {
                 if ($value) {
                     if (version_compare(\Phpcmf\Service::M()->db->getVersion(), '5.7.0') < 0) {
@@ -768,7 +767,7 @@ class Model {
                 }
             }
             return $where ? '('.implode(strpos($value,  '||') !== false ? ' AND ' : ' OR ', $where).')' : '`'.$table.'`.`id` = 0';
-        } elseif (isset($field['fieldtype']) && in_array($field['fieldtype'], ['Members', 'Related', 'Cats'])) {
+        } elseif (isset($field['fieldtype']) && in_array($field['fieldtype'], ['Members', 'Related'])) {
             $where[] = ' FIND_IN_SET ('.intval($value).',`'.$table.'`.`'.$name.'`)';
         } elseif (isset($field['fieldtype']) && in_array($field['fieldtype'], ['Radio', 'Select'])) {
             // 单选字段

@@ -572,9 +572,9 @@ class File extends \Phpcmf\Common
         if (is_file(\Phpcmf\Service::V()->get_dir().'down_file_msg.html')) {
             \Phpcmf\Service::V()->assign('url', $url);
             \Phpcmf\Service::V()->display('down_file_msg.html');
+        } else {
+            $this->_msg(1, dr_lang('正在为你下载附件'), $url);
         }
-
-        $this->_msg(1, dr_lang('正在为你下载附件'), $url);
     }
 
     /**
