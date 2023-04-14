@@ -352,6 +352,7 @@ class Cache extends \Phpcmf\Model {
                     $rt = $this->update_webpath('Web', $t['setting']['webpath'], [
                         'SITE_ID' => $t['id'],
                         'FIX_WEB_DIR' => strpos($t['setting']['webpath'], '/') === false && strpos($t['domain'], $t['setting']['webpath']) !== false ? $t['setting']['webpath'] : '',
+                        'MOBILE_DIR' => $t['setting']['mobile']['mode'] == 1 ? $t['setting']['mobile']['dirname'] : '',
                     ]);
                     if ($rt) {
                         $this->_error_msg('项目['.$t['domain'].']: '.$rt);
@@ -455,14 +456,18 @@ class Cache extends \Phpcmf\Model {
                     $dst = $path.$file;
                 }
                 $fix_web_dir = isset($value['FIX_WEB_DIR']) && $value['FIX_WEB_DIR'] ? $value['FIX_WEB_DIR'] : '';
-                if (isset($value['SITE_ID']) && $value['SITE_ID'] > 1 && $fix_web_dir) {
-                    // 移动端加二级
-                    if (strpos($file, 'mobile/') !== false) {
-                        $fix_web_dir.= '/mobile';
-                    }
-                    // 终端加二级
-                    if ($name == 'Client') {
-                        $fix_web_dir= (isset($value['SITE_FIX_WEB_DIR']) && $value['SITE_FIX_WEB_DIR'] ? $value['SITE_FIX_WEB_DIR'].'/' : '').$fix_web_dir;
+                if (isset($value['SITE_ID']) && $value['SITE_ID'] > 1) {
+                    if (isset($value['MOBILE_DIR']) && $value['MOBILE_DIR']) {
+                        $fix_web_dir.= '/'.$value['MOBILE_DIR'];
+                    } elseif ($fix_web_dir) {
+                        // 移动端加二级
+                        if (strpos($file, 'mobile/') !== false) {
+                            $fix_web_dir.= '/mobile';
+                        }
+                        // 终端加二级
+                        if ( $name == 'Client') {
+                            $fix_web_dir= (isset($value['SITE_FIX_WEB_DIR']) && $value['SITE_FIX_WEB_DIR'] ? $value['SITE_FIX_WEB_DIR'].'/' : '').$fix_web_dir;
+                        }
                     }
                 }
                 dr_mkdirs(dirname($dst));
@@ -477,7 +482,7 @@ class Cache extends \Phpcmf\Model {
                     ROOTPATH,
                     $value['MOD_DIR'],
                     $value['SITE_ID'],
-                    $fix_web_dir
+                    trim($fix_web_dir, '/')
                 ], file_get_contents($root.$name.'/'.$file)));
                 if (!$size) {
                     return '文件['.$dst.']无法写入';

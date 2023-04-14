@@ -3830,7 +3830,7 @@ function dr_text_rel($text, $prefix = '', $attr = ['href', 'src']) {
 }
 
 /**
- * 内容中的转为完整路径
+ * 内容中的转为完整路径,地址补全绝对路径
  * @param $text
  * @param $url 将/替换成哪个地址
  * @param $attr 将指定替换哪些标签 ['href', 'src']

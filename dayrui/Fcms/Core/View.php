@@ -233,6 +233,9 @@ class View {
             $this->_options['member'] = [];
         }
 
+        // 挂钩点 模板加载之前
+        \Phpcmf\Hooks::trigger('cms_view_display', $this->_options, $phpcmf_name, $phpcmf_dir);
+
         extract($this->_options, EXTR_SKIP);
 
         $ci = \Phpcmf\Service::C(); // 控制器对象简写
