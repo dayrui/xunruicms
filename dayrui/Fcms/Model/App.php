@@ -17,6 +17,32 @@ class App extends \Phpcmf\Model {
             'module', 'form', 'all', 'admin', 'weixin']);
     }
 
+    // 安装模板到站点
+    public function install_tpl($dir, $cloud_id = 0) {
+
+        \Phpcmf\Service::M('Site')->set_theme($dir, SITE_ID);
+        \Phpcmf\Service::M('Site')->set_template($dir, SITE_ID);
+
+        // 运行安装脚本
+        if (is_file(WRITEPATH.'cloud/run-'.$cloud_id.'.php')) {
+            require WRITEPATH.'cloud/run-'.$cloud_id.'.php';
+        }
+
+        // 判断public
+        if (defined('IS_VERSION') && IS_VERSION) {
+
+        } else {
+            // 传统结构时复制目录到根目录去
+            $path = ROOTPATH.'public/';
+            if (is_dir($path)) {
+                \Phpcmf\Service::L('file')->copy_dir($path, $path, ROOTPATH);
+                dr_dir_delete($path, true);
+            }
+        }
+
+        \Phpcmf\Service::M('cache')->sync_cache('');
+    }
+
     // 开始安装app
     public function install($dir, $type = 0) {
 
