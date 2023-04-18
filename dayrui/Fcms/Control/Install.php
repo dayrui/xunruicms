@@ -378,8 +378,15 @@ $db[\'default\']	= [
                                 $sql.= PHP_EOL.str_replace('{dbprefix}', $data['db_prefix'].'1_', $s);
                             }
                             $this->query($sql);
+
+                            // 运行自定义安装脚本
                             if (is_file(MYPATH.'Config/Install.php')) {
                                 require MYPATH.'Config/Install.php';
+                            }
+
+                            // 运行自定义安装脚本②
+                            if (is_file(MYPATH.'Config/Install_tpl.php')) {
+                                require MYPATH.'Config/Install_tpl.php';
                             }
 
                             $errorlog = file_get_contents(WRITEPATH.'install.error');
