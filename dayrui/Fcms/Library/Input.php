@@ -79,9 +79,13 @@ class Input {
         } else {
             $client_ip = $_SERVER['REMOTE_ADDR'];
         }
-        
+
+        if ($client_ip && strpos($client_ip, ',') !== false) {
+            $client_ip = trim(explode(',', $client_ip)[0]);
+        }
+
         // 验证规范
-        if ($client_ip && !preg_match('/^(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)(?:[.](?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)){3}$/', $client_ip)) {
+        if (!$this->is_ip($client_ip)) {
             $client_ip = '';
         }
 
@@ -90,6 +94,26 @@ class Input {
         $this->ip_address = trim($this->ip_address);
 
         return $this->ip_address;
+    }
+
+    /**
+     * 检测是否是合法的IP地址
+     */
+    public function is_ip($ip, $type = '') {
+
+        switch (strtolower($type)) {
+            case 'ipv4':
+                $flag = FILTER_FLAG_IPV4;
+                break;
+            case 'ipv6':
+                $flag = FILTER_FLAG_IPV6;
+                break;
+            default:
+                $flag = 0;
+                break;
+        }
+
+        return boolval(filter_var($ip, FILTER_VALIDATE_IP, $flag));
     }
     
     // ip转为实际地址
