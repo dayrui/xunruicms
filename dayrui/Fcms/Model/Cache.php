@@ -224,8 +224,10 @@ class Cache extends \Phpcmf\Model {
             \Phpcmf\Service::M('table')->cache($t['id'], $module_cache);
             dr_is_use_module() && \Phpcmf\Service::M('module')->cache($t['id'], $module_cache);
 
-            foreach ($cache as $m => $namespace) {
-                \Phpcmf\Service::M($m, $namespace)->cache($t['id']);
+            if ($cache) {
+                foreach ($cache as $m => $namespace) {
+                    \Phpcmf\Service::M($m, $namespace)->cache($t['id']);
+                }
             }
 
             // 插件缓存
