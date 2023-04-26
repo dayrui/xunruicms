@@ -24,11 +24,16 @@ class System_cache extends \Phpcmf\Common
             $this->_json(1, dr_lang('操作成功'));
         }
 
+        $data = is_file($file) ? require $file : [];
+        if (!isset($data['SYS_CACHE_CRON']) or empty($data['SYS_CACHE_CRON'])) {
+            $data['SYS_CACHE_CRON'] = 3;
+        }
         $page = intval(\Phpcmf\Service::L('input')->get('page'));
+
         \Phpcmf\Service::V()->assign([
             'page' => $page,
             'form' => dr_form_hidden(['page' => $page]),
-            'data' => is_file($file) ? require $file : [],
+            'data' => $data,
             'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
                 [
                     '缓存设置' => [\Phpcmf\Service::L('Router')->class.'/index', 'fa fa-clock-o'],

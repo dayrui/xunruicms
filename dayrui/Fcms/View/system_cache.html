@@ -28,6 +28,16 @@
                                 <span class="help-block">{dr_lang('推荐开启缓存功能，可以大大提高系统运行效率')}</span>
                             </div>
                         </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('清理方式')}</label>
+                            <div class="col-md-9">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_CACHE_CLEAR]" value="0" {if empty($data['SYS_CACHE_CLEAR'])}checked{/if} /> {dr_lang('自动')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_CACHE_CLEAR]" value="1" {if $data['SYS_CACHE_CLEAR']}checked{/if} /> {dr_lang('手动')} <span></span></label>
+                                </div>
+                                <span class="help-block">{dr_lang('自动表示后台操作时会自动清理缓存数据')}</span>
+                            </div>
+                        </div>
 
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('缓存方式')}</label>
@@ -40,6 +50,7 @@
                             </div>
                         </div>
 
+
                         <input type="hidden" name="data[SYS_CACHE_SMS]" value="{intval($data['SYS_CACHE_SMS'])}">
 
                         {loop $cache_var $value $name}
@@ -50,14 +61,29 @@
                                     <div class="input-group">
                                         <input type="text" name="data[SYS_CACHE_{$value}]" value="{floatval($data['SYS_CACHE_'.$value])}" class="form-control">
                                         <span class="input-group-addon">
-                                            <i class="fa fa-clock-o"></i>
+                                            {dr_lang('小时')}
                                         </span>
                                     </div>
                                 </div>
-                                <span class="help-inline"> {dr_lang('单位小时，0表示不缓存')} </span>
+                                <span class="help-inline"> {dr_lang('0表示不缓存')} </span>
                             </div>
                         </div>
                         {/loop}
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('任务自动清理')}</label>
+                            <div class="col-md-9">
+                                <div class="input-inline input-medium">
+                                    <div class="input-group">
+                                        <input type="text" name="data[SYS_CACHE_CRON]" value="{intval($data['SYS_CACHE_CRON'])}" class="form-control">
+                                        <span class="input-group-addon">
+                                            {dr_lang('天')}
+                                        </span>
+                                    </div>
+                                </div>
+                                <span class="help-inline"> {dr_lang('缓存最大储存的时间，过期后将被任务队列清理缓存')} </span>
+                            </div>
+                        </div>
 
 
                     </div>

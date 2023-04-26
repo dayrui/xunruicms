@@ -183,7 +183,7 @@ $top = $menu_top;
                         <li><a href="javascript:dr_go_url('{dr_url('check/index')}');"><i class="fa fa-wrench"></i> {dr_lang('系统体检')}</a></li>
                         {/if}
                         <li><a href="javascript:dr_update_cache_all();"><i class="fa fa-refresh"></i> {dr_lang('更新缓存')}</a></li>
-                        <li><a href="javascript:dr_update_cache_data();"><i class="fa fa-trash"></i> {dr_lang('更新数据')}</a></li>
+                        <li><a href="javascript:dr_update_cache_data(1);"><i class="fa fa-trash"></i> {dr_lang('更新数据')}</a></li>
                         {if $admin.adminid==1}
                         <li class="divider"> </li>
                         <li><a href="javascript:dr_go_url('{dr_url('error/index')}');"><i class="fa fa-shield"></i> {dr_lang('系统日志')}</a></li>

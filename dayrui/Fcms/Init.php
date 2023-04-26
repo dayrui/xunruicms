@@ -146,8 +146,10 @@ foreach ([
              'SYS_CACHE_LIST',
              'SYS_CACHE_SEARCH',
              'SYS_CACHE_SMS',
+             'SYS_CACHE_CRON',
+             'SYS_CACHE_CLEAR',
          ] as $name) {
-    define($name, floatval($cache[$name]));
+    define($name, isset($cache[$name]) ? floatval($cache[$name]) : 0);
 }
 unset($cache);
 

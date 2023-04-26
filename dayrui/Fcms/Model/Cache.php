@@ -274,34 +274,39 @@ class Cache extends \Phpcmf\Model {
     }
 
     // 更新数据
-    public function update_data_cache() {
+    public function update_data_cache($all = 0) {
 
-        // 清空系统缓存
-        \Phpcmf\Service::L('cache')->init()->clean();
+        if ($all == 1 or !SYS_CACHE_CLEAR) {
 
-        // 清空文件缓存
-        \Phpcmf\Service::L('cache')->init('file')->clean();
+            // 清空系统缓存
+            \Phpcmf\Service::L('cache')->init()->clean();
 
-        // 递归删除文件
-        $path = [
-            WRITEPATH.'file',
-            WRITEPATH.'template',
-            WRITEPATH.'debugbar',
-        ];
-        // 默认文件内容
-        $cache_index = '<IfModule authz_core_module>
+            // 清空文件缓存
+            \Phpcmf\Service::L('cache')->init('file')->clean();
+
+            // 递归删除文件
+            $path = [
+                WRITEPATH.'file',
+                WRITEPATH.'template',
+                WRITEPATH.'debugbar',
+            ];
+            // 默认文件内容
+            $cache_index = '<IfModule authz_core_module>
 	Require all denied
 </IfModule>
 <IfModule !authz_core_module>
 	Deny from all
 </IfModule>
 ';
-        // 开始删除目录数据
-        foreach ($path as $p) {
-            dr_dir_delete($p);
-            mkdir($p, 0777);
-            file_put_contents($p.'/.htaccess', $cache_index);
+            // 开始删除目录数据
+            foreach ($path as $p) {
+                dr_dir_delete($p);
+                mkdir($p, 0777);
+                file_put_contents($p.'/.htaccess', $cache_index);
+            }
         }
+
+
 
         // 删除缓存保留24小时内的文件
         $path = [

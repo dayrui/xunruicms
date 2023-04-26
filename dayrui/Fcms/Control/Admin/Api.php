@@ -423,7 +423,8 @@ class Api extends \Phpcmf\Common {
 	// 执行清空缓存数据
 	public function cache_clear() {
 
-        \Phpcmf\Service::M('cache')->update_data_cache();
+        $all = intval($_GET['all']);
+        \Phpcmf\Service::M('cache')->update_data_cache($all);
         $this->_json(1, dr_lang('前台数据缓存已被更新'));
 	}
 

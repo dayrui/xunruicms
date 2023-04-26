@@ -50,7 +50,7 @@
                 }
             });
         }
-        function dr_update_cache_data() {
+        function dr_update_cache_data(all = 0) {
             {if $is_min && $is_mobile}
             $('.page-header .responsive-toggler').click();
             $(".nav-item").removeClass("active open");
@@ -59,7 +59,7 @@
                 shade: [0.3,'#fff'], //0.1透明度的白色背景
                 time: 10000
             });
-            $.ajax({type: "GET",dataType:"json", url: admin_file+"?c=api&m=cache_clear",
+            $.ajax({type: "GET",dataType:"json", url: admin_file+"?c=api&m=cache_clear&all="+all,
                 success: function(json) {
                     layer.close(index);
                     dr_tips(1, "{dr_lang('前端数据缓存更新完成')}");
