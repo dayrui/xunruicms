@@ -273,10 +273,10 @@ class Cache extends \Phpcmf\Model {
         }
     }
 
-    // 更新数据
-    public function update_data_cache($all = 0) {
+    // 更新数据 $all表示是否强制更新缓存
+    public function update_data_cache($all = false) {
 
-        if ($all == 1 or !SYS_CACHE_CLEAR) {
+        if ($all or !SYS_CACHE_CLEAR) {
 
             // 清空系统缓存
             \Phpcmf\Service::L('cache')->init()->clean();

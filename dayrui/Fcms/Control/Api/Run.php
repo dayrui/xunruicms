@@ -116,10 +116,11 @@ class Run extends \Phpcmf\Common
             $time = file_get_contents(WRITEPATH.'config/run_auto_cache_time.php');
         }
 
-        // 3天清理一次系统缓存
-        if (SYS_TIME - $time > 3600 * 24 * 3) {
+        // 多少天清理一次系统缓存
+        $day = max(3, SYS_CACHE_CRON);
+        if (SYS_TIME - $time > 3600 * 24 * $day) {
             // 缓存清理
-            \Phpcmf\Service::M('cache')->update_data_cache();
+            \Phpcmf\Service::M('cache')->update_data_cache(true);
             file_put_contents(WRITEPATH.'config/run_auto_cache_time.php', SYS_TIME);
             // 清理日志
             $map = dr_file_map(WRITEPATH.'error/');
