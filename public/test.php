@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 环境监测程序
+ * 环境监测程序（正式上线后可删除本文件）
  */
 
 header('Content-Type: text/html; charset=utf-8');
