@@ -468,6 +468,9 @@ class Menu extends \Phpcmf\Model {
                 // 插入链接菜单
                 if ($top_id) {
                     foreach ($top['link'] as $mark2 => $link) {
+                        if (is_numeric($mark2)) {
+                            $mark2 = $top_id.'-'.$mark2;
+                        }
                         $this->_add('admin_min', $top_id, $link, $mark2);
                     }
                 }
@@ -497,6 +500,9 @@ class Menu extends \Phpcmf\Model {
                 // 插入链接菜单
                 if ($top_id) {
                     foreach ($top['link'] as $mark2 => $link) {
+                        if (is_numeric($mark2)) {
+                            $mark2 = $top_id.'-'.$mark2;
+                        }
                         $link['site'] = $this->_get_old_value($site, $link);
                         $link['group'] = $this->_get_old_value($group, $link);
                         $link['client'] = $this->_get_old_value($client, $link);

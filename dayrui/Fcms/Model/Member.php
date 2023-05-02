@@ -641,6 +641,11 @@ class Member extends \Phpcmf\Model {
         $member['regtime'] = SYS_TIME;
         $member['randcode'] = \Phpcmf\Service::L('form')->get_rand_value();
 
+        // 防止重复账号
+        if ($member['username'] && $this->db->table('member')->where('username', $member['username'])->countAllResults()) {
+            $member['username'] = '';
+        }
+
         $rt = $this->table('member')->insert($member);
         if (!$rt['code']) {
             return dr_return_data(0, $rt['msg']);

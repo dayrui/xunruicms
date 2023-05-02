@@ -1,5 +1,12 @@
 {template "header.html"}
 
+<p>
+    {if $run_time}
+    <font color="green">{dr_lang('最近自动执行时间为：%s', $run_time)}</font>
+    {else}
+    <font color="red">{dr_lang('当前服务器没有设置自动任务脚本')}</font>
+    {/if}
+</p>
 
 <form action="" class="form-horizontal" method="post" name="myform" id="myform">
     {$form}

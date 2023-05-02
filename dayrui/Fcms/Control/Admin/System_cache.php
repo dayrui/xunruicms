@@ -30,6 +30,11 @@ class System_cache extends \Phpcmf\Common
         }
         $page = intval(\Phpcmf\Service::L('input')->get('page'));
 
+        $run_time = '';
+        if (is_file(WRITEPATH.'config/run_time.php')) {
+            $run_time = file_get_contents(WRITEPATH.'config/run_time.php');
+        }
+
         \Phpcmf\Service::V()->assign([
             'page' => $page,
             'form' => dr_form_hidden(['page' => $page]),
@@ -46,6 +51,7 @@ class System_cache extends \Phpcmf\Common
                 //'LIST' => '查询缓存',
                 //'SEARCH' => '搜索缓存',
             ],
+            'run_time' => $run_time,
         ]);
         \Phpcmf\Service::V()->display('system_cache.html');
     }
