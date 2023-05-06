@@ -1797,7 +1797,11 @@ class Image {
                 $source_image = imagecreatefrompng($source_path);
                 break;
             case 'image/webp':
-                $source_image = imagecreatefromwebp($source_path);
+                if (!function_exists('imagecreatefromwebp')) {
+                    $source_image = imagecreatefromjpeg($source_path);
+                } else {
+                    $source_image = imagecreatefromwebp($source_path);
+                }
                 break;
             default:
                 return ;
@@ -1872,7 +1876,11 @@ class Image {
                 case 18:
                     header('Content-Type:image/webp');
                     $image_wp = imagecreatetruecolor($new_width, $new_height);
-                    $image = imagecreatefromwebp($imgsrc);
+                    if (!function_exists('imagecreatefromwebp')) {
+                        $image = imagecreatefromjpeg($imgsrc);
+                    } else {
+                        $image = imagecreatefromwebp($imgsrc);
+                    }
                     imagecopyresampled($image_wp, $image, 0, 0, 0, 0, $new_width, $new_height, $width, $height);
                     //90代表的是质量、压缩图片容量大小
                     imagewebp($image_wp, $imgsrc, 100);
