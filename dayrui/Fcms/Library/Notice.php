@@ -81,7 +81,7 @@ class Notice {
         }
         // 立即发送
         if ($is_send) {
-            \Phpcmf\Service::L('thread')->cron(['action' => 'cron', 'id' => $rt['code'] ]);
+            \Phpcmf\Service::M('cron')->do_cron_id($rt['code']);
         }
 
         return $rt;
