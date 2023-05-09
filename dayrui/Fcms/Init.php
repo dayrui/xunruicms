@@ -10,7 +10,7 @@
  * file that was distributed with this source code.
  **/
 
-// 框架目录
+// CMS框架目录
 if (!defined('FRAMEPATH')) {
     if (is_file(WRITEPATH.'frame.lock')) {
         $frame = (string)file_get_contents(WRITEPATH.'frame.lock');
