@@ -76,17 +76,10 @@ class Linkage extends \Phpcmf\Common {
 	public function export_down() {
 
         $key = (int)\Phpcmf\Service::L('input')->get('key');
-        $path = WRITEPATH.'temp/linkage/export-file-'.$this->uid.'-'.$key.'/';
-        $file = WRITEPATH.'temp/linkage/export-file-'.$this->uid.'-'.$key.'.zip';
+        $file = WRITEPATH.'temp/linkage-export-file-'.$this->uid.'-'.$key.'.json';
 
-        if (!is_dir($path)) {
-            $this->_html_msg(0, dr_lang('导出文件目录不存在'));
-        }
-
-        // 压缩文件夹
-        $rt = \Phpcmf\Service::L('file')->zip($file, $path);
-        if ($rt) {
-            $this->_html_msg(0, '目录压缩失败（'.$rt.'）');
+        if (!is_file($file)) {
+            $this->_html_msg(0, dr_lang('导出文件不存在'));
         }
 
         set_time_limit(0);
@@ -100,7 +93,7 @@ class Linkage extends \Phpcmf\Common {
         header('Content-Type: application/octet-stream');
         header("Accept-Ranges:bytes");
         header("Accept-Length:".$filesize);
-        header("Content-Disposition: attachment; filename=".urlencode($link['name'].'.zip'));
+        header("Content-Disposition: attachment; filename=".urlencode($link['name'].'.json'));
 
         while (!feof($handle)) {
             $contents = fread($handle, 4096);
@@ -117,35 +110,28 @@ class Linkage extends \Phpcmf\Common {
 
 		$key = (int)\Phpcmf\Service::L('input')->get('key');
         $page = (int)\Phpcmf\Service::L('input')->get('page');
-        $tpage = (int)\Phpcmf\Service::L('input')->get('tpage');
-        $psize = 500;
-        $path = WRITEPATH.'temp/linkage/export-file-'.$this->uid.'-'.$key.'/';
+        $file = WRITEPATH.'temp/linkage-export-file-'.$this->uid.'-'.$key.'.json';
 
         if (!$page) {
             $nums = \Phpcmf\Service::M()->table('linkage_data_'.$key)->counts();
             if (!$nums) {
                 $this->_json(0, dr_lang('数据为空，无法导出'));
             }
-            $tpage = ceil($nums / $psize); // 总页数
-            if (is_dir($path)) {
-                dr_dir_delete($path);
-            }
-            dr_mkdirs($path);
-            $this->_html_msg(1, dr_lang('正在准备导出数据'), dr_url('linkage/export', ['key'=>$key, 'page' => 1, 'tpage' => $tpage]));
-        }
 
-        $data = \Phpcmf\Service::M()->db->table('linkage_data_'.$key)->limit($psize, $psize * ($page - 1))->orderBy('id DESC')->get()->getResultArray();
-        if (!$data) {
+            $this->_html_msg(1, dr_lang('正在准备导出数据'), dr_url('linkage/export', ['key'=>$key, 'page' => 1]));
+        } elseif ($page == 2) {
             $nums = \Phpcmf\Service::M()->table('linkage_data_'.$key)->counts();
             $this->_html_msg(1, dr_lang('导出完毕，共计%s条数据', $nums), dr_url('linkage/export_down', ['key'=>$key]), dr_lang('请关闭本窗口'));
         }
 
-        $rt = file_put_contents($path.$page.'.json', dr_array2string($data));
+        $data = \Phpcmf\Service::M()->db->table('linkage_data_'.$key)->orderBy('id DESC')->get()->getResultArray();
+
+        $rt = file_put_contents($file, dr_array2string($data));
         if (!$rt) {
             $this->_html_msg(0, '文件写入失败');
         }
 
-        $this->_html_msg(1, dr_lang('正在整理数据【%s】...', "$tpage/$page"),  dr_url('linkage/export', ['key'=>$key, 'page' => ($page+1), 'tpage' => $tpage]));
+        $this->_html_msg(1, dr_lang('正在整理数据...'),  dr_url('linkage/export', ['key'=>$key, 'page' => 2]));
 
 	}
 
@@ -153,57 +139,25 @@ class Linkage extends \Phpcmf\Common {
 
         $key = (int)\Phpcmf\Service::L('input')->get('key');
         $page = (int)\Phpcmf\Service::L('input')->get('page');
-        $tpage = (int)\Phpcmf\Service::L('input')->get('tpage');
-
-        $file = WRITEPATH.'temp/linkage/import-file-'.$this->uid.'-'.$key.'.zip';
-        $path = WRITEPATH.'temp/linkage/import-file-'.$this->uid.'-'.$key.'/';
-        if (!is_file($file)) {
-            $this->_html_msg(0, dr_lang('导入文件不存在'));
-        }
-
+        $file = WRITEPATH.'temp/linkage-import-file-'.$this->uid.'-'.$key.'.json';
         $table = 'linkage_data_'.$key;
 
         if (!$page) {
-            // 解压
-            if (!\Phpcmf\Service::L('file')->unzip($file, $path)) {
-                $this->_html_msg(0, dr_lang('文件解压失败'));
+            if (!is_file($file)) {
+                $this->_html_msg(0, dr_lang('导入文件不存在'));
             }
-
-            $files = [];
-            if ($fp = opendir($path)) {
-                while (FALSE !== ($file = readdir($fp))) {
-                    if ($file === '.' OR $file === '..'
-                        OR $file[0] === '.') {
-                        continue;
-                    }
-                    if (is_dir($path.$file)) {
-                        dr_dir_delete($path);
-                        $this->_html_msg(0, dr_lang('文件验证失败'));
-                    }
-                    if (stripos($file, '.php')) {
-                        @unlink($path.$file);
-                    }
-                    $files[] = $file;
-                }
-                closedir($fp);
-            }
-            if (!$files) {
-                dr_dir_delete($path);
-                $this->_html_msg(0, dr_lang('文件分析失败'));
-            }
-
             \Phpcmf\Service::M('Linkage')->query('TRUNCATE `'.\Phpcmf\Service::M('Linkage')->dbprefix($table).'`');
-            $this->_html_msg(1, dr_lang('正在准备导入数据'), dr_url('linkage/import_add', ['key'=>$key, 'page' => 1, 'tpage' => dr_count($files)]));
+            $this->_html_msg(1, dr_lang('正在准备导入数据'), dr_url('linkage/import_add', ['key'=>$key, 'page' => 1]));
         }
 
-        if (!is_file($path.$page.'.json')) {
+        if (!is_file($file)) {
             $nums = \Phpcmf\Service::M()->table('linkage_data_'.$key)->counts();
             \Phpcmf\Service::M('cache')->sync_cache('linkage', '', 1); // 自动更新缓存
             $this->_html_msg(1, dr_lang('导入完毕，共计%s条数据', $nums), '', dr_lang('请关闭本窗口'));
         }
 
         // 开始导入
-        $data = dr_string2array(file_get_contents($path.$page.'.json'));
+        $data = dr_string2array(file_get_contents($file));
         if (!is_array($data)) {
             $this->_html_msg(0, dr_lang('导入信息验证失败'));
         }
@@ -219,7 +173,9 @@ class Linkage extends \Phpcmf\Common {
             }
         }
 
-        $this->_html_msg(1, dr_lang('正在导入数据【%s】...', "$tpage/$page"),  dr_url('linkage/import_add', ['key'=>$key, 'page' => ($page+1), 'tpage' => $tpage]));
+        unlink($file);
+
+        $this->_html_msg(1, dr_lang('正在导入数据...'),  dr_url('linkage/import_add', ['key'=>$key, 'page' => 2]));
 
     }
 
@@ -239,12 +195,12 @@ class Linkage extends \Phpcmf\Common {
     function import_upload() {
 
         $key = (int)\Phpcmf\Service::L('input')->get('key');
-        $file = WRITEPATH.'temp/linkage/import-file-'.$this->uid.'-'.$key.'.zip';
+        $file = WRITEPATH.'temp/linkage-import-file-'.$this->uid.'-'.$key.'.json';
         $rt = \Phpcmf\Service::L('upload')->upload_file([
             'save_file' => $file, // 上传的固定文件路径
             'form_name' => 'file_data', // 固定格式
-            'file_exts' => ['zip'], // 上传的扩展名
-            'file_size' => 100 * 1024 * 1024, // 上传的大小限制
+            'file_exts' => ['json'], // 上传的扩展名
+            'file_size' => 2 * 1024 * 1024, // 上传的大小限制
             'attachment' => \Phpcmf\Service::M('Attachment')->get_attach_info('null'), // 固定文件时必须这样写
         ]);
         if (!$rt['code']) {
