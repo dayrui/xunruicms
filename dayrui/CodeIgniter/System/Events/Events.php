@@ -91,7 +91,7 @@ class Events
         static::$files = array_unique(array_merge($files, [$events]));
 
         foreach (static::$files as $file) {
-            include $file;
+            is_file($file) && include $file;
         }
 
         static::$initialized = true;

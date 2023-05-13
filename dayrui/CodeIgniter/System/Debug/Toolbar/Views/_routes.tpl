@@ -19,12 +19,12 @@
             <td>Params:</td>
             <td>{paramCount} / {truePCount}</td>
         </tr>
-        {params}
-            <tr class="route-params-item">
-                <td>{name}</td>
-                <td>{value}</td>
-            </tr>
-        {/params}
+    {params}
+        <tr class="route-params-item">
+            <td>{name}</td>
+            <td>{value}</td>
+        </tr>
+    {/params}
     {/matchedRoute}
     </tbody>
 </table>
@@ -34,11 +34,11 @@
 
 <table>
     <thead>
-        <tr>
-            <th>Method</th>
-            <th>Route</th>
-            <th>Handler</th>
-        </tr>
+    <tr>
+        <th>Method</th>
+        <th>Route</th>
+        <th>Handler</th>
+    </tr>
     </thead>
     <tbody>
     {routes}

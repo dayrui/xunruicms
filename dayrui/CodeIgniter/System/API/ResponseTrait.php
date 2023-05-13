@@ -13,6 +13,7 @@ namespace CodeIgniter\API;
 
 use CodeIgniter\Format\FormatterInterface;
 use CodeIgniter\HTTP\IncomingRequest;
+use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use Config\Services;
 
@@ -21,7 +22,7 @@ use Config\Services;
  * consistent HTTP responses under a variety of common
  * situations when working as an API.
  *
- * @property IncomingRequest   $request
+ * @property RequestInterface  $request
  * @property ResponseInterface $response
  */
 trait ResponseTrait
@@ -92,8 +93,10 @@ trait ResponseTrait
         if ($data === null && $status === null) {
             $status = 404;
             $output = null;
+            $this->format($data);
         } elseif ($data === null && is_numeric($status)) {
             $output = null;
+            $this->format($data);
         } else {
             $status = empty($status) ? 200 : $status;
             $output = $this->format($data);
