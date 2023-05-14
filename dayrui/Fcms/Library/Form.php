@@ -459,6 +459,8 @@ class Form {
         } elseif (\Phpcmf\Service::C()->member_cache['config']['pwdlen']
             && mb_strlen($value) < \Phpcmf\Service::C()->member_cache['config']['pwdlen']) {
             return dr_return_data(0, dr_lang('密码长度不能小于%s位，当前%s位', \Phpcmf\Service::C()->member_cache['config']['pwdlen'], mb_strlen($value)), ['field' => 'password']);
+        } elseif (mb_strlen($value) > 100) {
+            return dr_return_data(0, dr_lang('密码长度不能过长'), ['field' => 'password']);
         }
 
         return dr_return_data(1, 'ok');

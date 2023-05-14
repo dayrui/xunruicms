@@ -2751,6 +2751,8 @@ function dr_safe_password($string) {
 
     if (dr_is_empty($string)) {
         return '';
+    } elseif (strlen($string) > 100) {
+        return substr($string, 0, 100);
     }
 
     return trim($string);
