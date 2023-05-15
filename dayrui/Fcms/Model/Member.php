@@ -663,7 +663,7 @@ class Member extends \Phpcmf\Model {
                 $member['username'] = strtolower(trim((string)\Phpcmf\Service::C()->member_cache['register']['unprefix']));
             }
             $member['username'].= intval($rt['code']+date('Ymd'));
-            $update['name'] = $member['username'];
+            $update['username'] = $member['username'];
         }
         // 更新操作
         $update && $this->table('member')->update($rt['code'], $update);
