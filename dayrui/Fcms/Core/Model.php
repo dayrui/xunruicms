@@ -56,6 +56,7 @@ class Model {
         isset($data['date_field']) && $this->date_field = $data['date_field'];
 
         isset($data['order_by']) && $this->param['order_list'] = $data['order_by'];
+        isset($data['group_by']) && $this->param['group_list'] = $data['group_by'];
         isset($data['order_list']) && $this->param['order_list'] = $data['order_list'];
         isset($data['where_list']) && $this->param['where_list'] = $data['where_list'];
         isset($data['is_diy_where_list']) && $this->param['is_diy_where_list'] = $data['is_diy_where_list'];
@@ -969,7 +970,12 @@ class Model {
         }
 
         if ($size > 0 && !$total) {
-            $select	= $this->db->table($this->table)->select('count(*) as total');
+            $select	= $this->db->table($this->table);
+            if ($this->param['group_list']) {
+                $select->select('count(DISTINCT '.$this->param['group_list'].') as total');
+            } else {
+                $select->select('count(*) as total');
+            }
             $where && $select->where($where);
             $param = $this->_limit_page_where($select, $param);
             $query = $select->get();
@@ -996,6 +1002,8 @@ class Model {
         if ($size > 0) {
             $select->limit($size, intval($size * ($page - 1)));
         }
+
+        $this->param['group_list'] && $select->groupBy($this->param['group_list']);
 
         //分析参数合法性
         $order = isset($param['order']) && $param['order'] ? urldecode($param['order']) : ''; // 获取的排序参数
