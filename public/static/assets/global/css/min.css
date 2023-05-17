@@ -161,6 +161,10 @@ Page Header
     /* Quick Sidebar */
     /* Language */
     /* Dark version */ }
+
+.page-header.navbar .top-menu .navbar-nav:last-child {
+    margin-right: 0px;
+}
 .page-header.navbar .top-menu .navbar-nav > li.dropdown {
     margin: 0px;
     padding: 0px;
