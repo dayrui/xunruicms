@@ -5,6 +5,7 @@
 </form>
 <script type="text/javascript">
     var table_name = '{$mytable_name}';
+    var is_foot = $('#toolbar label').hasClass('table_select_all') == true ? false : true;
     var table_ignoreColumn = {php echo dr_count($list_field)+1;};
     var page_id = {max(1,intval($_GET['page']))};
     var post_token = {{csrf_token()}: "{csrf_hash()}"};
@@ -13,12 +14,13 @@
         var field_columns = [{
             checkbox: true,
             footerFormatter: function stockNumFormatter(data) {
-                return mytable.foot_tpl;
+                return is_foot ? mytable.foot_tpl : '';
             }
         }];
     } else {
         var field_columns = [];
     }
+
     // 按自定义字段显示
     {loop $list_field $i $tt}
     field_columns.push({
@@ -27,23 +29,23 @@
         align: '{if $tt.center}center{else}left{/if}',
         switchable: true,
         sortable: true,
-        {if $tt.width}width: '{$tt.width}px',{/if}
-        visible: true
+    {if $tt.width}width: '{$tt.width}px',{/if}
+    visible: true
     });
     {/list}
-    // 记录右侧操作按钮
-    if (mytable.link_tpl) {
-        field_columns.push({
-            field: 'operation',
-            title: '操作',
-            formatter: function formatter (value, row, index) {
-                var html = mytable.link_tpl;
-                eval(mytable.link_var);
-                return html;
-            },
-            visible: true
-        });
-    }
+        // 记录右侧操作按钮
+        if (mytable.link_tpl) {
+            field_columns.push({
+                field: 'operation',
+                title: '操作',
+                formatter: function formatter (value, row, index) {
+                    var html = mytable.link_tpl;
+                    eval(mytable.link_var);
+                    return html;
+                },
+                visible: true
+            });
+        }
 </script>
 <script src="{THEME_PATH}assets/global/plugins/bootstrap-table/bootstrap-table{if !IS_XRDEV}.min{/if}.js" type="text/javascript"></script>
 <script src="{THEME_PATH}assets/global/plugins/bootstrap-table/tableExport{if !IS_XRDEV}.min{/if}.js" type="text/javascript"></script>
@@ -54,77 +56,78 @@
 <script type="text/javascript" src="{ROOT_URL}api/pdfmake/FileSaver.min.js"></script>
 {/if}
 <script type="text/javascript">
-    $(function (){
-        $('#mytable').bootstrapTable({
-            url : "{dr_now_url()}&is_ajax=1",
-            method: 'get',
-            striped: true,
-            toolbar:"#toolbar",
-            totalField:"msg",
-            dataField:"data",
-            selectItemName:"ids[]",
-            idField:"id",
-            cache: false,
-            classes: "table table-striped table-bordered table-hover table-checkable dataTable ",
-            queryParamsType: 'my',
-            sidePagination: 'server',
-            silent: true,
-            showRefresh: {if $is_search}true{else}false{/if},
-            showColumns: {if $is_search}true{else}false{/if},
-            showExport: {if $is_search}true{else}false{/if},
-            uniqueid: "id",
-            singleSelect: false,
-            clickToSelect:false,
-            sortName: "",
-            sortOrder: "",
-            pageSize: {$mytable_pagesize},
-            pageNumber: page_id,
-            pageList: "[{php echo $mytable_pagelist ? $mytable_pagelist : '10, 25, 50, 100, 200, 300'}]",
-            {if !\Phpcmf\Service::IS_PC_USER()}
-            paginationHAlign: 'center',
-            paginationDetailHAlign: 'center',
-            paginationSuccessivelySize: 0,
-            paginationPagesBySide: 0,{/if}
-            search: false,
-            pagination: true,
-            paginationShowPageGo: true,
-            showFooter:true ,
-            exportTypes:['csv', 'txt', 'doc', 'excel'{if is_file(ROOTPATH.'api/pdfmake/pdfmake.min.js')}, 'pdf'{/if}],
-            onPostBody:function () {
-                //合并页脚
-                if (mytable.foot_tpl) {
-                    var footer_tbody = $('.fixed-table-body table tfoot');
-                    var footer_tr = footer_tbody.find('>tr');
-                    var footer_td = footer_tr.find('>th');
-                    var footer_td_1 = footer_td.eq(0);
-                    for(var i=1;i<footer_td.length;i++) {
-                        footer_td.eq(i).remove();
-                    }
-                    footer_td_1.attr('colspan', footer_td.length).show();
-                } else {
-                    $('.fixed-table-body table tfoot').remove();
-                }
-            },
-            onLoadSuccess: function onLoadSuccess(data) {
-                if (mytable.foot_tpl) {
-                    var td_size = $('.fixed-table-body table tbody tr').length;
-                    var dp_size = $('.fixed-table-body table tfoot .dropdown-menu li').length;
-                    if (dp_size > td_size) {
-                        $('.fixed-table-body table tfoot .dropdown-menu').attr("style", "max-height: "+(40*td_size)+"px;overflow-y: scroll;");
-                    }
-                }
-                return false;
-            },
-            columns: field_columns,
-            queryParams: function queryParams(params) {
-                var temp = {
-                    page : params.pageNumber,
-                    pagesize : params.pageSize,
-                    order : params.sortName+' '+params.sortOrder,
-                };
-                return temp;
-            }
-        });
 
+$(function (){
+    $('#mytable').bootstrapTable({
+        url : "{dr_now_url()}&is_ajax=1",
+        method: 'get',
+        striped: true,
+        toolbar:"#toolbar",
+        totalField:"msg",
+        dataField:"data",
+        selectItemName:"ids[]",
+        idField:"id",
+        cache: false,
+        classes: "table table-striped table-bordered table-hover table-checkable dataTable ",
+        queryParamsType: 'my',
+        sidePagination: 'server',
+        silent: true,
+        showRefresh: {if $is_search}true{else}false{/if},
+        showColumns: {if $is_search}true{else}false{/if},
+        showExport: {if $is_search}true{else}false{/if},
+        uniqueid: "id",
+        singleSelect: false,
+        clickToSelect:false,
+        sortName: "",
+        sortOrder: "",
+        pageSize: {$mytable_pagesize},
+        pageNumber: page_id,
+        pageList: "[{php echo $mytable_pagelist ? $mytable_pagelist : '10, 25, 50, 100, 200, 300'}]",
+        {if !\Phpcmf\Service::IS_PC_USER()}
+        paginationHAlign: 'center',
+        paginationDetailHAlign: 'center',
+        paginationSuccessivelySize: 0,
+        paginationPagesBySide: 0,{/if}
+        search: false,
+        pagination: true,
+        paginationShowPageGo: true,
+        showFooter:is_foot ,
+        exportTypes:['csv', 'txt', 'doc', 'excel'{if is_file(ROOTPATH.'api/pdfmake/pdfmake.min.js')}, 'pdf'{/if}],
+        onPostBody:function () {
+            //合并页脚
+            if (is_foot && mytable.foot_tpl) {
+                var footer_tbody = $('.fixed-table-body table tfoot');
+                var footer_tr = footer_tbody.find('>tr');
+                var footer_td = footer_tr.find('>th');
+                var footer_td_1 = footer_td.eq(0);
+                for(var i=1;i<footer_td.length;i++) {
+                    footer_td.eq(i).remove();
+                }
+                footer_td_1.attr('colspan', footer_td.length).show();
+            } else {
+                $('.fixed-table-body table tfoot').remove();
+            }
+        },
+        onLoadSuccess: function onLoadSuccess(data) {
+            if (is_foot && mytable.foot_tpl) {
+                var td_size = $('.fixed-table-body table tbody tr').length;
+                var dp_size = $('.fixed-table-body table tfoot .dropdown-menu li').length;
+                if (dp_size > td_size) {
+                    $('.fixed-table-body table tfoot .dropdown-menu').attr("style", "max-height: "+(40*td_size)+"px;overflow-y: scroll;");
+                }
+            }
+            return false;
+        },
+        columns: field_columns,
+            queryParams: function queryParams(params) {
+            var temp = {
+                page : params.pageNumber,
+                pagesize : params.pageSize,
+                order : params.sortName+' '+params.sortOrder,
+            };
+            return temp;
+        }
     });
+
+});
 </script>

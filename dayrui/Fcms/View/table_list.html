@@ -4,49 +4,53 @@
 {template "api_list_date_search.html", "admin"}
 {/if}
 
-<div class="right-card-box">
-    {if $is_search}
-    <div id="toolbar" class="toolbar">
-        <div class="row table-search-tool">
-            <form action="{SELF}" method="get">
-                {dr_form_search_hidden($extend_param)}
-                {if $extend_search}
-                {$extend_search}
-                {/if}
-                <div class="col-md-12 col-sm-12">
-                    <label>
-                        <select name="field" class="form-control">
-                            <option value="id"> Id </option>
-                            {loop $field $t}
-                            <option value="{$t.fieldname}" {if $param.field==$t.fieldname}selected{/if}>{$t.name}</option>
-                            {/loop}
-                        </select>
-                    </label>
-                </div>
-                <div class="col-md-12 col-sm-12">
-                    <label><input type="text" class="form-control" placeholder="" value="{$param['keyword']}" name="keyword" /></label>
-                </div>
-                {if $is_time_where}
-                <div class="col-md-12 col-sm-12">
-                    <label>
-                        <div class="input-group input-medium date-picker input-daterange" data-date="" data-date-format="yyyy-mm-dd">
-                            <input type="text" class="form-control" value="{$param.date_form}" name="date_form">
-                            <span class="input-group-addon"> {dr_lang('到')} </span>
-                            <input type="text" class="form-control" value="{$param.date_to}" name="date_to">
-                        </div>
-                    </label>
-                </div>
-                {/if}
-                <div class="col-md-12 col-sm-12">
-                    <label><button type="submit" class="btn blue btn-sm onloading" name="submit" > <i class="fa fa-search"></i> {dr_lang('搜索')}</button></label>
-                </div>
-                {if $extend_end}
-                {$extend_end}
-                {/if}
-            </form>
-        </div>
+{if $is_search}
+<div class="note note-danger">
+    <div class="row table-search-tool">
+        <form action="{SELF}" method="get">
+            {dr_form_search_hidden($extend_param)}
+            {if $extend_search}
+            {$extend_search}
+            {/if}
+            <div class="col-md-12 col-sm-12">
+                <label>
+                    <select name="field" class="form-control">
+                        <option value="id"> Id </option>
+                        {loop $field $t}
+                        <option value="{$t.fieldname}" {if $param.field==$t.fieldname}selected{/if}>{$t.name}</option>
+                        {/loop}
+                    </select>
+                </label>
+            </div>
+            <div class="col-md-12 col-sm-12">
+                <label><input type="text" class="form-control" placeholder="" value="{$param['keyword']}" name="keyword" /></label>
+            </div>
+            {if $is_time_where}
+            <div class="col-md-12 col-sm-12">
+                <label>
+                    <div class="input-group input-medium date-picker input-daterange" data-date="" data-date-format="yyyy-mm-dd">
+                        <input type="text" class="form-control" value="{$param.date_form}" name="date_form">
+                        <span class="input-group-addon"> {dr_lang('到')} </span>
+                        <input type="text" class="form-control" value="{$param.date_to}" name="date_to">
+                    </div>
+                </label>
+            </div>
+            {/if}
+            <div class="col-md-12 col-sm-12">
+                <label><button type="submit" class="btn blue btn-sm onloading" name="submit" > <i class="fa fa-search"></i> {dr_lang('搜索')}</button></label>
+            </div>
+            {if $extend_end}
+            {$extend_end}
+            {/if}
+        </form>
     </div>
-    {/if}
+</div>
+{/if}
+
+<div class="right-card-box">
+    <div id="toolbar" class="toolbar">
+        {$mytable.foot_tpl}
+    </div>
     {template "mytable.html", "admin"}
 </div>
 
