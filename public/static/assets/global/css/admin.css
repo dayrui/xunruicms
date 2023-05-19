@@ -1541,7 +1541,7 @@ output {
     height: 34px;
     padding: 6px 12px;
     background-color: #fff;
-    border: 1px solid #efefef;
+    border: 1px solid #d3cfcf;
     color: #3F4254;
     background-clip: padding-box;
     border-radius: 4px;
@@ -1963,7 +1963,7 @@ a.btn.disabled,fieldset[disabled] a.btn {
 .btn-default {
     color: #949494;
     background-color: #fff;
-    border-color: #efefef
+    border-color: #d3cfcf
 }
 
 .btn-default.focus,.btn-default:focus {
@@ -2299,12 +2299,13 @@ tbody.collapse.in {
 
 .btn-group>.btn-group:first-child:not(:last-child)>.btn:last-child,.btn-group>.btn-group:first-child:not(:last-child)>.dropdown-toggle,.btn-group>.btn:first-child:not(:last-child):not(.dropdown-toggle) {
     border-bottom-right-radius: 0;
-    border-top-right-radius: 0
+    border-top-right-radius: 0;
 }
 
 .btn-group>.btn-group:last-child:not(:first-child)>.btn:first-child,.btn-group>.btn:last-child:not(:first-child),.btn-group>.dropdown-toggle:not(:first-child) {
     border-bottom-left-radius: 0;
-    border-top-left-radius: 0
+    border-top-left-radius: 0;
+    border-left: 0;
 }
 
 .btn-group-vertical>.btn:not(:first-child):not(:last-child),.btn-group>.btn-group:not(:first-child):not(:last-child)>.btn,.btn-group>.btn:not(:first-child):not(:last-child):not(.dropdown-toggle) {
@@ -3142,14 +3143,14 @@ tbody.collapse.in {
     text-decoration: none;
     color: #7E8299;
     background-color: #fff;
-    border: 1px solid #efefef;
+    border: 1px solid #d3cfcf;
     border-radius: .42rem;
     margin-left: .4rem
 }
 .pagination .input-page input {
     width:60px;
     text-align: center;
-    border: 1px solid #efefef;
+    border: 1px solid #d3cfcf;
     border-radius: 4px 0  0 4px;
 }
 .pagination>.input-page .btn {
@@ -3186,7 +3187,7 @@ tbody.collapse.in {
 .pagination>.disabled>a,.pagination>.disabled>a:focus,.pagination>.disabled>a:hover,.pagination>.disabled>span,.pagination>.disabled>span:focus,.pagination>.disabled>span:hover {
     color: #777;
     background-color: #fff;
-    border-color: #efefef;
+    border-color: #d3cfcf;
     cursor: not-allowed
 }
 
@@ -4012,7 +4013,7 @@ button.close {
 
 
 .bootstrap-select .btn {
-    border-color: #E4E6EF
+    border-color: #d3cfcf
 }
 
 .has-error .bootstrap-select .btn {
@@ -5898,16 +5899,18 @@ li [class*=" fa-"].icon-large,li [class*=" glyphicon-"].icon-large,li [class*=" 
 .btn.default:not(.btn-outline) {
     color: #666;
     background-color: #efefef;
-    border-color: #efefef
+    border-color: #d3cfcf
 }
-
+.input-group .form-control {
+    height: 33px;
+}
 .btn.default:not(.btn-outline) .badge {
     color: #e1e5ec;
     background-color: #666
 }
 
 .btn.btn-outline.default {
-    border-color: #e1e5ec;
+    border-color: #d3cfcf;
     color: #e1e5ec;
     background: 0 0
 }
@@ -7045,7 +7048,7 @@ td>.mt-checkbox.mt-checkbox-single,td>.mt-radio.mt-radio-single,th>.mt-checkbox.
 }
 
 .input-medium {
-    width: 240px!important
+    width: 250px!important
 }
 
 .input-large {
@@ -8594,7 +8597,12 @@ body[ng-controller] .modal {
 }
 
 
-
+.bootstrap-table .toolbar .table_select_all{
+    display: none;
+}
+.bootstrap-table .toolbar label{
+    margin-right: 12px;
+}
 .table-toolbar {
     margin-bottom: 20px
 }
@@ -9705,7 +9713,7 @@ body .ui-tooltip {
 
 .bootstrap-tagsinput {
     background-color: #fff;
-    border: 1px solid #E4E6EF;
+    border: 1px solid #d3cfcf;
     display: inline-block;
     padding: 4px 6px;
     margin-bottom: 10px;
@@ -9967,7 +9975,7 @@ body .ui-tooltip {
 .table tr {
     border-bottom-width: 1px;
     border-bottom-style: dashed;
-    border-bottom-color: #eff2f5;
+    border-bottom-color: #dfe2e5;
 }
 .table td:first-child, .table th:first-child, .table tr:first-child {
     padding-left: 0;
@@ -13725,7 +13733,6 @@ form .portlet.light .portlet-body {
 }
 
 select.form-control {
-    border-color: #eff2f5;
     color: #5e6278;
     transition: color .2s ease,background-color .2s ease;
 }
