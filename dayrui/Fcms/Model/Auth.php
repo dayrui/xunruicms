@@ -430,6 +430,10 @@ class Auth extends \Phpcmf\Model {
     // 账号是否强制了简化模式
     public function is_admin_min_mode() {
 
+        if (defined('IS_ADMIN_MIN') && IS_ADMIN_MIN) {
+            return 1; // 强制简化模式
+        }
+
         if ($this->_is_admin_min_mode >= 0) {
             return $this->_is_admin_min_mode;
         }

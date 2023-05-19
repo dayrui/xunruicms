@@ -57,6 +57,8 @@
         <div class="form-actions">
             <button type="button" onclick="dr_submit()" class="btn blue btn-block"> {dr_lang('登录后台')} </button>
         </div>
+        {if defined('IS_ADMIN_MIN') && IS_ADMIN_MIN}
+        {else}
         {if !SYS_ADMIN_MODE}
         <div class="form-group text-center" style="margin-bottom: -10px;">
             <div class="input-icon">
@@ -72,6 +74,7 @@
                 </div>
             </div>
         </div>
+        {/if}
         {/if}
         {if SYS_ADMIN_OAUTH && $oauth}
         <link href="{$THEME_PATH}assets/icon/css/icon.css?v={CMF_UPDATE_TIME}" rel="stylesheet" type="text/css" />
