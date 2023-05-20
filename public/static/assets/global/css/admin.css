@@ -8603,9 +8603,14 @@ body[ng-controller] .modal {
 .bootstrap-table .toolbar label{
     margin-right: 12px;
 }
-.table-toolbar {
-    margin-bottom: 20px
+.bootstrap-table2 .toolbar {
+    margin-bottom: 10px;
+    margin-top: 10px;
 }
+.table-toolbar {
+    margin-bottom: 20px;
+}
+.table-noborder tbody tr:last-child { border: none; }
 
 .table-toolbar:after,.table-toolbar:before {
     content: " ";

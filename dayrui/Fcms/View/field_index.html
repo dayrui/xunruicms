@@ -4,9 +4,16 @@
 <div class="right-card-box">
 <form class="form-horizontal" role="form" id="myform">
     {dr_form_hidden()}
+    <div class="bootstrap-table bootstrap-table2">
+        <div id="toolbar" class="toolbar">
+        <label><button type="button" onclick="dr_ajax_option('{dr_url('field/del', ['rname' => $rname, 'rid' => $rid])}', '{dr_lang('你确定要删除它们吗？')}', 1)" class="btn red btn-sm"> <i class="fa fa-trash"></i> {dr_lang('删除')}</button></label>
+            <label><button type="button" onclick="javascript:dr_dcall();" class="btn blue btn-sm"> <i class="fa fa-sign-out"></i> {dr_lang('导出')}</button></label>
+        </div>
+    </div>
+
     <div class="table-scrollable">
 
-        <table class="table table-fc-upload table-striped table-bordered table-hover table-checkable dataTable">
+        <table class="table table-noborder table-fc-upload table-striped table-bordered table-hover table-checkable dataTable">
             <thead>
             <tr class="heading">
             {if $ci->_is_admin_auth('del')}
@@ -69,16 +76,7 @@
     </table>
     </div>
 
-    <div class="row fc-list-footer table-checkable ">
-        <div class="col-md-5 fc-list-select">
-                <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
-                    <input type="checkbox" class="group-checkable" data-set=".checkboxes" />
-                    <span></span>
-                </label>
-            <label><button type="button" onclick="dr_ajax_option('{dr_url('field/del', ['rname' => $rname, 'rid' => $rid])}', '{dr_lang('你确定要删除它们吗？')}', 1)" class="btn red btn-sm"> <i class="fa fa-trash"></i> {dr_lang('删除')}</button></label>
-                <label><button type="button" onclick="javascript:dr_dcall();" class="btn blue btn-sm"> <i class="fa fa-sign-out"></i> {dr_lang('导出')}</button></label>
-        </div>
-    </div>
+
 </form>
 </div>
 <script>

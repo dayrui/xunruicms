@@ -2,7 +2,7 @@
 
 {template "api_list_date_search.html"}
 
-<div class="right-card-box">
+    <div class="note note-danger">
 <div class="row table-search-tool">
     <form action="{SELF}" method="get">
         {dr_form_search_hidden()}
@@ -32,10 +32,17 @@
             <button type="submit" class="btn blue btn-sm onloading" name="submit" > <i class="fa fa-search"></i> {dr_lang('搜索')}</button>
         </div>
     </form>
-</div>
+</div></div>
 
+        <div class="right-card-box">
+    {if $ci->_is_admin_auth('del')}
+    <div class="bootstrap-table2">
+        <div id="toolbar" class="toolbar">
+            <button type="button" onclick="dr_ajax_option('{dr_url('notice/del')}', '{dr_lang('你确定要删除它们吗？')}', 1)" class="btn red btn-sm"> <i class="fa fa-trash"></i> {dr_lang('删除')}</button>
 
-
+        </div>
+    </div>
+   {/if}
 <form class="form-horizontal" role="form" id="myform">
     {dr_form_hidden()}
         <div class="table-scrollable">
@@ -116,16 +123,8 @@
         </tbody>
     </table></div>
     <div class="row fc-list-footer table-checkable ">
-        <div class="col-md-5 fc-list-select">
-            {if $ci->_is_admin_auth('del')}
-            <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
-                <input type="checkbox" class="group-checkable" data-set=".checkboxes" />
-                <span></span>
-            </label>
-            <button type="button" onclick="dr_ajax_option('{dr_url('notice/del')}', '{dr_lang('你确定要删除它们吗？')}', 1)" class="btn red btn-sm"> <i class="fa fa-trash"></i> {dr_lang('删除')}</button>
-            {/if}
-        </div>
-        <div class="col-md-7 fc-list-page">
+
+        <div class="col-md-12 fc-list-page">
             {$mypages}
         </div>
     </div>
