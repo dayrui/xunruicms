@@ -8610,8 +8610,17 @@ body[ng-controller] .modal {
 .table-toolbar {
     margin-bottom: 20px;
 }
-.table-noborder tbody tr:last-child { border: none; }
+.table tbody tr:last-child { border: none; }
+.table tfoot tr { border-top: 1px dashed rgb(223, 226, 229); }
 
+.fixed-table-pagination, .fc-list-footer {
+    border-top: 1px dashed rgb(223, 226, 229);
+    padding-top:10px;
+}
+.fc-list-footer{
+    padding-top: 20px;
+    margin: 0;
+}
 .table-toolbar:after,.table-toolbar:before {
     content: " ";
     display: table
@@ -10050,10 +10059,6 @@ code.form-control-static {
     padding-left: 7px!important
 }
 
-.fc-list-footer {
-    margin-top: 20px
-}
-
 .fc-list-select .btn-sm {
     margin-right: 8px
 }
@@ -10064,12 +10069,13 @@ code.form-control-static {
 }
 
 .fc-list-select {
-    padding-left: 22px
+    padding-left:7px;
 }
 
-.right-card-box .fc-list-select {
-    padding-left: 23px
+.fc-list-select .mt-checkbox{
+
 }
+
 
 .fc-list-page {
     text-align: right
