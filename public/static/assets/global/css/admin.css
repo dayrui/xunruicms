@@ -2263,7 +2263,7 @@ tbody.collapse.in {
     width: 0;
     height: 0;
     margin-left: 2px;
-    border-top: 4px dashed;
+    border-top: 4px dotted;
     border-top: 4px solid\9;
     border-right: 4px solid transparent;
     border-left: 4px solid transparent
@@ -2377,7 +2377,7 @@ tbody.collapse.in {
 
 .dropup .caret,.navbar-fixed-bottom .dropdown .caret {
     border-top: 0;
-    border-bottom: 4px dashed;
+    border-bottom: 4px dotted;
     border-bottom: 4px solid\9;
     content: ""
 }
@@ -4451,7 +4451,7 @@ table.dataTable>tbody>tr.child ul li {
 }
 
 .dropzone-file-area {
-    border: 2px dashed #e7ecf1;
+    border: 2px dotted #e7ecf1;
     background: #fff;
     padding: 20px;
     text-align: center
@@ -5683,7 +5683,7 @@ code {
 
 
 .file-drop-zone {
-    border: 2px dashed #ddd;
+    border: 2px dotted #ddd;
     padding: 30px;
     text-align: center
 }
@@ -5901,9 +5901,7 @@ li [class*=" fa-"].icon-large,li [class*=" glyphicon-"].icon-large,li [class*=" 
     background-color: #efefef;
     border-color: #d3cfcf
 }
-.input-group .form-control {
-    height: 33px;
-}
+
 .btn.default:not(.btn-outline) .badge {
     color: #e1e5ec;
     background-color: #666
@@ -8228,7 +8226,7 @@ body[ng-controller] .modal {
 }
 
 .portlet-sortable-placeholder {
-    border: 2px dashed #eee;
+    border: 2px dotted #eee;
     margin-bottom: 25px
 }
 
@@ -8611,10 +8609,12 @@ body[ng-controller] .modal {
     margin-bottom: 20px;
 }
 .table tbody tr:last-child { border: none; }
-.table tfoot tr { border-top: 1px dashed rgb(223, 226, 229); }
+.table tfoot tr {
+    border-top: 1px dotted rgb(223, 226, 229);border-bottom: 0;
+}
 
 .fixed-table-pagination, .fc-list-footer {
-    border-top: 1px dashed rgb(223, 226, 229);
+    border-top: 1px dotted rgb(223, 226, 229);
     padding-top:10px;
 }
 .fc-list-footer{
@@ -9988,7 +9988,7 @@ body .ui-tooltip {
 
 .table tr {
     border-bottom-width: 1px;
-    border-bottom-style: dashed;
+    border-bottom-style: dotted;
     border-bottom-color: #dfe2e5;
 }
 .table td:first-child, .table th:first-child, .table tr:first-child {
@@ -11825,14 +11825,14 @@ code.form-control-static {
     margin: 10px;
 }
 #sortable_portlets .sortable , #sortable_portlets .sortable2{
-    border: 2px dashed #e7ecf1;
+    border: 2px dotted #e7ecf1;
     min-height: 150px;
     background: white;
     margin: 10px 0;
     padding: 0;
 }
 #sortable_portlets .sortable2 {
-    border: 2px dashed #40aae3;
+    border: 2px dotted #40aae3;
 }
 .fc-cat-table tr>td:first-child {
     text-align: left!important;

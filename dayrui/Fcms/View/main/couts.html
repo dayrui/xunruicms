@@ -57,12 +57,12 @@
                         {if strpos($t.list, 'javascript:') !== false}<a class="btn btn-xs dark" href="{$t.list}" >{dr_lang('管理')}</a>{/if}
                         {if $ci->_is_admin_auth($dir.'/home/add')}<a class="btn btn-xs blue" href="{$t.post}" >{dr_lang('发布')}</a>{/if}
                     </td>
+                    <script type="text/javascript">
+                        $(function(){
+                            $.getScript("{dr_url('module/api/mtotal')}&dir={$dir}");
+                        });
+                    </script>
                 </tr>
-                <script type="text/javascript">
-                    $(function(){
-                        $.getScript("{dr_url('module/api/mtotal')}&dir={$dir}");
-                    });
-                </script>
                 {/loop}
                 </tbody>
             </table>
