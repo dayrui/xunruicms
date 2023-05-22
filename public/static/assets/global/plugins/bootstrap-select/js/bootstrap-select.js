@@ -2037,20 +2037,13 @@
           maxHeight = menuHeight + headerHeight + searchHeight + actionsHeight + doneButtonHeight;
           minHeight = menuInnerMinHeight = '';
         }
-        if ($('.fixed-table-container').length) {
-          var tableHeight = $('.fixed-table-container').height();
-          if (maxHeight > tableHeight) {
-            menuInnerHeight = maxHeight = tableHeight - 100;
-            $('.bootstrap-select .inner').attr("style", "max-height:"+(maxHeight - 140)+"px");
-          }
-        }
-
 
         this.$menu.css({
           'max-height': maxHeight + 'px',
           'overflow': 'hidden',
           'min-height': minHeight + 'px'
         });
+
 
         this.$menuInner.css({
           'max-height': menuInnerHeight + 'px',
