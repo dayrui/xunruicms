@@ -8577,12 +8577,6 @@ body[ng-controller] .modal {
     }
 }
 
-.table-scrollable {
-    width: 100%;
-    overflow-x: auto;
-    overflow-y: hidden;
-}
-
 .table-scrollable>.table {
     width: 100%!important;
     margin: 0!important;
@@ -8598,13 +8592,27 @@ body[ng-controller] .modal {
 .bootstrap-table .toolbar .table_select_all{
     display: none;
 }
+.bootstrap-table .toolbar label select{
+    height:30px;
+    padding: 3px 12px;
+}
 .bootstrap-table .toolbar label{
     margin-right: 12px;
+    float: left;
 }
 .bootstrap-table2 .toolbar {
     margin-bottom: 10px;
     margin-top: 10px;
+    margin: 0px auto;
+    display: flex;
+    align-items: center;
+    float:left;
 }
+.fixed-table-toolbar .toolbar {
+    display: flex;
+    align-items: center;
+}
+
 .table-toolbar {
     margin-bottom: 20px;
 }
@@ -12876,7 +12884,7 @@ td>.mt-table.mt-checkbox-single,th>.mt-table.mt-checkbox-single {
 
 .files_row_preview {
     margin-right: 10px;
-    border: 1px solid #efefef;
+    border: 1px solid #d3cfcf;
     padding: 10px;
     width: 80px;
     height: 70px;
@@ -13679,7 +13687,24 @@ body{background-color:#f5f6f8}
     color: #888;
 }
 .table-scrollable {
-    border-radius: 4px;
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+.table-clearfix {
+    clear: both;
+    padding-top: 10px;
+    margin-top: 10px;
+    border-top: 1px solid #e6e6e6;
+}
+.fixed-table-container .table-scrollable{
+    padding-top: 10px;
+    margin-top: 10px;
+    border-top: 1px solid #eee;
+}
+.fixed-table-container .table>thead>tr>th {
+    padding-top: 0 ;
+     padding-bottom: 0;
 }
 form .portlet.light .portlet-body {
     padding-top: 20px;
@@ -13725,11 +13750,48 @@ form .portlet.light .portlet-body {
     background-color: #40aae3 !important;
 }
 
+.fixed-table-toolbar .columns .btn{
+    margin-right: 5px;
+    border-left: 1px solid #d3cfcf !important;
+    border-radius: 3px !important;
+}
+
+
+.fixed-table-toolbar .btn-group>.btn-group:not(:first-child):not(:last-child)>.btn,
+.fixed-table-toolbar .btn-group>.btn:not(:first-child):not(:last-child):not(.dropdown-toggle) {
+    border-left: 1px solid #adadad !important;
+}
 @media (max-width:780px) {
     .page-404-full-page {
         margin-top: 0px;
         background: none;
         border:none;
+    }
+    .fixed-table-pagination, .fc-list-footer {;
+        text-align: center;
+    }
+    .bootstrap-table .toolbar label select {
+        height: 24px;
+        padding: 3px 12px;
+    }
+    .fixed-table-toolbar .btn,.bootstrap-table2 .btn,
+    .fixed-table-toolbar .btn,
+    .pagination-detail .btn, .pagination>li>a, .pagination>li>span {
+        padding: 2px 5px !important;
+        font-size: 12px !important;
+        line-height: 1.5 !important;
+        border-radius: 3px !important;
+    }
+    .pagination>.input-page .btn {
+        padding: 2px 5px !important;
+        font-size: 12px !important;
+        line-height: 1.5 !important;
+    }
+    .pagination .input-page input, .bootstrap-table2 .form-control, .fixed-table-toolbar .form-control {
+        height:24px;
+        font-size: 12px !important;
+        line-height: 1.5 !important;
+        padding: 2px 5px !important;
     }
 }
 @media (max-width:480px) {

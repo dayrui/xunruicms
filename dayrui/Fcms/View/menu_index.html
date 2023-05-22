@@ -2,28 +2,31 @@
 
 {php echo \Phpcmf\Service::L('Field')->get('select')->get_select_search_code();}
 <div class="right-card-box">
-    <div class="bootstrap-table2">
-        <div id="toolbar" class="toolbar">
-            {if $ci->_is_admin_auth('del')}
-            <button type="button" onclick="dr_ajax_option('{dr_url('menu/del')}', '{dr_lang('你确定要删除它们吗？')}', 1)" class="btn red btn-sm"> <i class="fa fa-trash"></i> {dr_lang('删除')}</button>
-            {/if}
-            {if $ci->_is_admin_auth('edit') && dr_count($ci->site_info) > 1}
-            <label style="margin-left: 20px;"><button type="button" onclick="dr_ajax_option('{dr_url('menu/site_add')}', '{dr_lang('你确定要这样操作吗？')}', 1)" class="btn blue btn-sm"> <i class="fa fa-edit"></i> {dr_lang('批量划分项目权限')}</button></label>
-            <label style="min-width: 200px;">
-                <select name="siteid[]" class="bs-select form-control"  multiple="multiple"  data-actions-box="true">
-                    {loop $ci->site_info $sid $t}
-                    {if $sid > 1}
-                    <option value="{$t.SITE_ID}">{$t.SITE_NAME}</option>
-                    {/if}
-                    {/loop}
-                </select>
-            </label>
-            {/if}
-        </div>
-    </div>
+
     <form class="form-horizontal" role="form" id="myform">
         {dr_form_hidden()}
-        <div class="table-scrollable">
+        <div class="bootstrap-table2">
+            <div id="toolbar" class="toolbar">
+                {if $ci->_is_admin_auth('del')}
+                <label><button type="button" onclick="dr_ajax_option('{dr_url('menu/del')}', '{dr_lang('你确定要删除它们吗？')}', 1)" class="btn red btn-sm"> <i class="fa fa-trash"></i> {dr_lang('删除')}</button>
+                </label>
+                {/if}
+                {if $ci->_is_admin_auth('edit') && dr_count($ci->site_info) > 1}
+                <label style="margin-left: 20px; margin-right: 5px;"><button type="button" onclick="dr_ajax_option('{dr_url('menu/site_add')}', '{dr_lang('你确定要这样操作吗？')}', 1)" class="btn blue btn-sm"> <i class="fa fa-edit"></i> {dr_lang('批量划分项目权限')}</button></label>
+                <label style="min-width: 200px;">
+                    <select name="siteid[]" class="bs-select form-control"  multiple="multiple"  data-actions-box="true">
+                        {loop $ci->site_info $sid $t}
+                        {if $sid > 1}
+                        <option value="{$t.SITE_ID}">{$t.SITE_NAME}</option>
+                        {/if}
+                        {/loop}
+                    </select>
+                </label>
+                {/if}
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="table-scrollable table-clearfix">
             <table class="table table-noborder table-striped table-bordered table-hover table-checkable dataTable">
                 <thead>
                 <tr class="heading">

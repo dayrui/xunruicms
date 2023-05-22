@@ -372,8 +372,8 @@ class Attachment extends \Phpcmf\Model {
     // 存储aid到内存中
     public function save_ueditor_aid($rid, $aid) {
         $name = 'ueditor_aid_'.$rid;
-        $data = \Phpcmf\Service::L('cache')->get_auth_data($name);
-        if (!$data) {
+        $data = dr_string2array(\Phpcmf\Service::L('cache')->get_auth_data($name));
+        if (!$data || !is_array($data)) {
             $data = [$aid];
         } else {
             $data[] = $aid;

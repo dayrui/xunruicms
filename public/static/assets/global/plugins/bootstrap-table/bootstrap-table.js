@@ -2746,8 +2746,8 @@
                 paginationSwitchDown: 'bi-caret-down-square',
                 paginationSwitchUp: 'bi-caret-up-square',
                 refresh: 'bi-arrow-clockwise',
-                toggleOff: 'bi-toggle-off',
-                toggleOn: 'bi-toggle-on',
+                toggleOff: 'bi-search',
+                toggleOn: 'bi-search',
                 columns: 'bi-list-ul',
                 detailOpen: 'bi-plus',
                 detailClose: 'bi-dash',
@@ -2757,7 +2757,7 @@
             },
             classes: {
                 buttonsPrefix: 'btn',
-                buttons: 'default',
+                buttons: 'default  btn-sm',
                 buttonsGroup: 'btn-group',
                 buttonsDropdown: 'btn-group',
                 pull: 'pull',
@@ -2781,99 +2781,6 @@
                 paginationItem: '<li class="page-item%s"><a class="page-link" aria-label="%s" href="javascript:void(0)">%s</a></li>',
                 icon: '<i class="%s %s"></i>',
                 inputGroup: '<div class="input-group">%s<span class="input-group-btn">%s</span></div>',
-                searchInput: '<input class="%s%s" type="text" placeholder="%s">',
-                searchButton: '<button class="%s" type="button" name="search" title="%s">%s %s</button>',
-                searchClearButton: '<button class="%s" type="button" name="clearSearch" title="%s">%s %s</button>'
-            }
-        },
-        4: {
-            iconsPrefix: 'fa',
-            icons: {
-                paginationSwitchDown: 'fa-caret-square-down',
-                paginationSwitchUp: 'fa-caret-square-up',
-                refresh: 'fa-sync',
-                toggleOff: 'fa-toggle-off',
-                toggleOn: 'fa-toggle-on',
-                columns: 'fa-th-list',
-                detailOpen: 'fa-plus',
-                detailClose: 'fa-minus',
-                fullscreen: 'fa-arrows-alt',
-                search: 'fa-search',
-                clearSearch: 'fa-trash'
-            },
-            classes: {
-                buttonsPrefix: 'btn',
-                buttons: 'secondary',
-                buttonsGroup: 'btn-group',
-                buttonsDropdown: 'btn-group',
-                pull: 'float',
-                inputGroup: 'btn-group',
-                inputPrefix: 'form-control-',
-                input: 'form-control',
-                paginationDropdown: 'btn-group dropdown',
-                dropup: 'dropup',
-                dropdownActive: 'active',
-                paginationActive: 'active',
-                buttonActive: 'active'
-            },
-            html: {
-                toolbarDropdown: ['<div class="dropdown-menu dropdown-menu-right">', '</div>'],
-                toolbarDropdownItem: '<label class="dropdown-item dropdown-item-marker">%s</label>',
-                pageDropdown: ['<div class="dropdown-menu">', '</div>'],
-                pageDropdownItem: '<a class="dropdown-item %s" href="#">%s</a>',
-                toolbarDropdownSeparator: '<div class="dropdown-divider"></div>',
-                dropdownCaret: '<span class="caret"></span>',
-                pagination: ['<ul class="pagination%s">', '</ul>'],
-                paginationItem: '<li class="page-item%s"><a class="page-link" aria-label="%s" href="javascript:void(0)">%s</a></li>',
-                icon: '<i class="%s %s"></i>',
-                inputGroup: '<div class="input-group">%s<div class="input-group-append">%s</div></div>',
-                searchInput: '<input class="%s%s" type="text" placeholder="%s">',
-                searchButton: '<button class="%s" type="button" name="search" title="%s">%s %s</button>',
-                searchClearButton: '<button class="%s" type="button" name="clearSearch" title="%s">%s %s</button>'
-            }
-        },
-        5: {
-            iconsPrefix: 'bi',
-            icons: {
-                paginationSwitchDown: 'bi-caret-down-square',
-                paginationSwitchUp: 'bi-caret-up-square',
-                refresh: 'bi-arrow-clockwise',
-                toggleOff: 'bi-toggle-off',
-                toggleOn: 'bi-toggle-on',
-                columns: 'bi-list-ul',
-                detailOpen: 'bi-plus',
-                detailClose: 'bi-dash',
-                fullscreen: 'bi-arrows-move',
-                search: 'bi-search',
-                clearSearch: 'bi-trash'
-            },
-            classes: {
-                buttonsPrefix: 'btn',
-                buttons: 'secondary',
-                buttonsGroup: 'btn-group',
-                buttonsDropdown: 'btn-group',
-                pull: 'float',
-                inputGroup: 'btn-group',
-                inputPrefix: 'form-control-',
-                input: 'form-control',
-                paginationDropdown: 'btn-group dropdown',
-                dropup: 'dropup',
-                dropdownActive: 'active',
-                paginationActive: 'active',
-                buttonActive: 'active'
-            },
-            html: {
-                dataToggle: 'data-bs-toggle',
-                toolbarDropdown: ['<div class="dropdown-menu dropdown-menu-right">', '</div>'],
-                toolbarDropdownItem: '<label class="dropdown-item dropdown-item-marker">%s</label>',
-                pageDropdown: ['<div class="dropdown-menu">', '</div>'],
-                pageDropdownItem: '<a class="dropdown-item %s" href="#">%s</a>',
-                toolbarDropdownSeparator: '<div class="dropdown-divider"></div>',
-                dropdownCaret: '<span class="caret"></span>',
-                pagination: ['<ul class="pagination%s">', '</ul>'],
-                paginationItem: '<li class="page-item%s"><a class="page-link" aria-label="%s" href="javascript:void(0)">%s</a></li>',
-                icon: '<i class="%s %s"></i>',
-                inputGroup: '<div class="input-group">%s%s</div>',
                 searchInput: '<input class="%s%s" type="text" placeholder="%s">',
                 searchButton: '<button class="%s" type="button" name="search" title="%s">%s %s</button>',
                 searchClearButton: '<button class="%s" type="button" name="clearSearch" title="%s">%s %s</button>'
@@ -2911,6 +2818,7 @@
         columns: [[]],
         data: [],
         url: undefined,
+        surl: '',
         method: 'get',
         cache: true,
         contentType: 'application/json',
@@ -3169,13 +3077,13 @@
             return dr_lang('刷新');
         },
         formatToggle: function formatToggle() {
-            return dr_lang('切换');
+            return dr_lang('搜索');
         },
         formatToggleOn: function formatToggleOn() {
-            return dr_lang('显示卡片视图');
+            return dr_lang('搜索开启');
         },
         formatToggleOff: function formatToggleOff() {
-            return dr_lang('隐藏卡片视图');
+            return dr_lang('搜索隐藏');
         },
         formatColumns: function formatColumns() {
             return dr_lang('列');
@@ -7159,6 +7067,16 @@
                     this.options.url = params.url;
                 }
 
+                if ($('#table-search-tool').hasClass('note')) {
+                    // ajax搜索
+                    var values, index;
+                    values = $("#table-search-tool form").serializeArray();
+                    for (index = 0; index < values.length; ++index) {
+                        this.options.surl+= '&'+values[index].name+'='+values[index].value;
+                    }
+                    this.options.url = this.options.surl;
+                }
+
                 if (params && params.pageNumber) {
                     this.options.pageNumber = params.pageNumber;
                 }
@@ -7287,13 +7205,7 @@
         }, {
             key: "toggleView",
             value: function toggleView() {
-                this.options.cardView = !this.options.cardView;
-                this.initHeader();
-                var icon = this.options.showButtonIcons ? this.options.cardView ? this.options.icons.toggleOn : this.options.icons.toggleOff : '';
-                var text = this.options.showButtonText ? this.options.cardView ? this.options.formatToggleOff() : this.options.formatToggleOn() : '';
-                this.$toolbar.find('button[name="toggle"]').html("".concat(Utils.sprintf(this.constants.html.icon, this.options.iconsPrefix, icon), " ").concat(text));
-                this.initBody();
-                this.trigger('toggle', this.options.cardView);
+                $("#table-search-tool").fadeToggle();
             }
         }, {
             key: "resetSearch",

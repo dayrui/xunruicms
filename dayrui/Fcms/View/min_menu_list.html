@@ -2,17 +2,22 @@
 
 
 <div class="right-card-box">
-    {if $ci->_is_admin_auth('del')}
-    <div class="bootstrap-table2">
-        <div id="toolbar" class="toolbar">
-            <label><button type="button" onclick="dr_ajax_option('{dr_url('min_menu/del')}', '{dr_lang('你确定要删除它们吗？')}', 1)" class="btn red btn-sm"> <i class="fa fa-trash"></i> {dr_lang('删除')}</button></label>
 
-
-        </div>
-    </div>       {/if}
     <form class="form-horizontal" role="form" id="myform">
         {dr_form_hidden()}
+        {if $ci->_is_admin_auth('del')}
+        <div class="bootstrap-table2">
+            <div id="toolbar" class="toolbar">
+                <label><button type="button" onclick="dr_ajax_option('{dr_url('min_menu/del')}', '{dr_lang('你确定要删除它们吗？')}', 1)" class="btn red btn-sm"> <i class="fa fa-trash"></i> {dr_lang('删除')}</button></label>
+
+
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="table-scrollable table-clearfix">
+        {else}
         <div class="table-scrollable">
+        {/if}
             <table class="table table-noborder table-striped table-bordered table-hover table-checkable dataTable">
                 <thead>
                 <tr class="heading">

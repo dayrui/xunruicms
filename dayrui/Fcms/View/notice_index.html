@@ -2,45 +2,48 @@
 
 {template "api_list_date_search.html"}
 
-    <div class="note note-danger">
-<div class="row table-search-tool">
-    <form action="{SELF}" method="get">
-        {dr_form_search_hidden()}
-        <div class="col-md-12 col-sm-12">
-            <label>
-                <select name="field" class="form-control">
-                    {loop $field $t}
-                    <option value="{$t.fieldname}" {if $param.field==$t.fieldname}selected{/if}>{$t.name}</option>
-                    {/loop}
-                </select>
-            </label>
-            <label><i class="fa fa-caret-right"></i></label>
-            <label><input type="text" class="form-control" placeholder="" value="{$param['keyword']}" name="keyword" /></label>
-        </div>
+<div class="note note-danger" {if !isset($get.submit)}style="display: none"{/if} id="table-search-tool">
+    <div class="row table-search-tool">
+        <form action="{SELF}" method="get">
+            {dr_form_search_hidden()}
+            <div class="col-md-12 col-sm-12">
+                <label>
+                    <select name="field" class="form-control">
+                        {loop $field $t}
+                        <option value="{$t.fieldname}" {if $param.field==$t.fieldname}selected{/if}>{$t.name}</option>
+                        {/loop}
+                    </select>
+                </label>
+                <label><i class="fa fa-caret-right"></i></label>
+                <label><input type="text" class="form-control" placeholder="" value="{$param['keyword']}" name="keyword" /></label>
+            </div>
 
-        <div class="col-md-12 col-sm-12">
-            <label>
-                <div class="input-group input-medium date-picker input-daterange" data-date="" data-date-format="yyyy-mm-dd">
-                    <input type="text" class="form-control" value="{$param.date_form}" name="date_form">
-                    <span class="input-group-addon"> {dr_lang('到')} </span>
-                    <input type="text" class="form-control" value="{$param.date_to}" name="date_to">
-                </div>
-            </label>
-        </div>
+            <div class="col-md-12 col-sm-12">
+                <label>
+                    <div class="input-group input-medium date-picker input-daterange" data-date="" data-date-format="yyyy-mm-dd">
+                        <input type="text" class="form-control" value="{$param.date_form}" name="date_form">
+                        <span class="input-group-addon"> {dr_lang('到')} </span>
+                        <input type="text" class="form-control" value="{$param.date_to}" name="date_to">
+                    </div>
+                </label>
+            </div>
 
-        <div class="col-md-12 col-sm-12">
-            <button type="submit" class="btn blue btn-sm onloading" name="submit" > <i class="fa fa-search"></i> {dr_lang('搜索')}</button>
-        </div>
-    </form>
-</div></div>
+            <div class="col-md-12 col-sm-12">
+                <button type="submit" class="btn blue btn-sm onloading" name="submit" > <i class="fa fa-search"></i> {dr_lang('搜索')}</button>
+            </div>
+        </form>
+    </div>
+</div>
 
-        <div class="right-card-box">
+<div class="right-card-box">
     {if $ci->_is_admin_auth('del')}
     <div class="bootstrap-table2">
         <div id="toolbar" class="toolbar">
-            <button type="button" onclick="dr_ajax_option('{dr_url('notice/del')}', '{dr_lang('你确定要删除它们吗？')}', 1)" class="btn red btn-sm"> <i class="fa fa-trash"></i> {dr_lang('删除')}</button>
-
+            <label><button type="button" onclick="dr_ajax_option('{dr_url('notice/del')}', '{dr_lang('你确定要删除它们吗？')}', 1)" class="btn red btn-sm"> <i class="fa fa-trash"></i> {dr_lang('删除')}</button>
+            </label>
         </div>
+        <label class="pull-right"> <button class="btn btn-default" onclick="$('#table-search-tool').fadeToggle()" type="button" name="toggle"><i class="bi bi-search"></i> </button>
+        </label>
     </div>
    {/if}
 <form class="form-horizontal" role="form" id="myform">

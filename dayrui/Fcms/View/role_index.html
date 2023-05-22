@@ -11,10 +11,13 @@
             <button type="button" onclick="dr_ajax_option('{dr_url('role/del')}', '{dr_lang('你确定要删除它们吗？')}', 1)" class="btn red btn-sm"> <i class="fa fa-trash"></i> 删除</button>
 
         </div>
-    </div> {/if}
+    </div>
 
-
-    <div class="table-scrollable">
+    <div class="clearfix"></div>
+    <div class="table-scrollable table-clearfix">
+        {else}
+        <div class="table-scrollable">
+            {/if}
         <table class="table table-noborder table-striped table-bordered table-hover table-checkable dataTable">
             <thead>
             <tr class="heading">

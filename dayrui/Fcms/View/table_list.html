@@ -5,7 +5,7 @@
 {/if}
 
 {if $is_search}
-<div class="note note-danger">
+<div class="note note-danger" {if !isset($get.submit)}style="display: none"{/if} id="table-search-tool">
     <div class="row table-search-tool">
         <form action="{SELF}" method="get">
             {dr_form_search_hidden($extend_param)}
@@ -37,7 +37,8 @@
             </div>
             {/if}
             <div class="col-md-12 col-sm-12">
-                <label><button type="submit" class="btn blue btn-sm onloading" name="submit" > <i class="fa fa-search"></i> {dr_lang('搜索')}</button></label>
+                <label><button id="table-search-tool-submit" type="button" class="btn blue btn-sm " name="submit" > <i class="fa fa-search"></i> {dr_lang('搜索')}</button></label>
+                <label><button id="table-search-tool-reset" type="reset" class="btn red btn-sm " name="reset" > <i class="fa fa-refresh"></i> {dr_lang('重置')}</button></label>
             </div>
             {if $extend_end}
             {$extend_end}
