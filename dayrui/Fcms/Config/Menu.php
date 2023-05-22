@@ -303,11 +303,6 @@ return [
                     'uri' => 'site_param/index',
                 ],
                 [
-                    'name' => '附件设置',
-                    'icon' => 'fa fa-folder',
-                    'uri' => 'attachment/index',
-                ],
-                [
                     'name' => '图片设置',
                     'icon' => 'fa fa-photo',
                     'uri' => 'site_image/index',
