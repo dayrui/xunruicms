@@ -58,7 +58,6 @@
 <script type="text/javascript">
 
 $(function (){
-
     var $mytable = $('#mytable').bootstrapTable({
         url : "{dr_now_url()}&is_ajax=1",
         surl : "{dr_web_prefix(SELF)}?is_ajax=1",
@@ -131,8 +130,8 @@ $(function (){
             return temp;
         }
     });
-                $("#table-search-tool-submit").click(function () {
-                    $mytable.bootstrapTable('refresh');
-                });
+    $("#table-search-tool-submit").click(function () {
+        $mytable.bootstrapTable('refresh');
+    });
 });
 </script>
