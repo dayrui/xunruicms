@@ -7140,13 +7140,16 @@ td>.mt-checkbox.mt-checkbox-single,td>.mt-radio.mt-radio-single,th>.mt-checkbox.
 }
 
 .mt-checkbox>span,.mt-radio>span {
-    border: 1px solid transparent;
+    border: 1px solid #d3cfcf;
     position: absolute;
     top: 0;
     left: 0;
     height: 19px;
     width: 19px;
     background: #E6E6E6
+}
+.bootstrap-table input[type=checkbox] {
+    border: 1px solid #d3cfcf;
 }
 
 .mt-checkbox>span:after,.mt-radio>span:after {
@@ -13752,15 +13755,10 @@ form .portlet.light .portlet-body {
 
 .fixed-table-toolbar .columns .btn{
     margin-right: 5px;
-    border-left: 1px solid #d3cfcf !important;
+    border: 1px solid #d3cfcf !important;
     border-radius: 3px !important;
 }
 
-
-.fixed-table-toolbar .btn-group>.btn-group:not(:first-child):not(:last-child)>.btn,
-.fixed-table-toolbar .btn-group>.btn:not(:first-child):not(:last-child):not(.dropdown-toggle) {
-    border-left: 1px solid #adadad !important;
-}
 @media (max-width:780px) {
     .page-404-full-page {
         margin-top: 0px;

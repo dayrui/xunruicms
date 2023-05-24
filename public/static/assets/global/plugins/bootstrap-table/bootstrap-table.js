@@ -2746,12 +2746,12 @@
                 paginationSwitchDown: 'bi-caret-down-square',
                 paginationSwitchUp: 'bi-caret-up-square',
                 refresh: 'bi-arrow-clockwise',
-                toggleOff: 'bi-search',
-                toggleOn: 'bi-search',
+                toggleOff: 'bi-toggle-off',
+                toggleOn: 'bi-toggle-on',
                 columns: 'bi-list-ul',
                 detailOpen: 'bi-plus',
                 detailClose: 'bi-dash',
-                fullscreen: 'bi-arrows-move',
+                fullscreen: 'bi-search',
                 search: 'bi-search',
                 clearSearch: 'bi-trash'
             },
@@ -3080,10 +3080,10 @@
             return dr_lang('搜索');
         },
         formatToggleOn: function formatToggleOn() {
-            return dr_lang('搜索开启');
+            return dr_lang('卡片开启');
         },
         formatToggleOff: function formatToggleOff() {
-            return dr_lang('搜索隐藏');
+            return dr_lang('卡片隐藏');
         },
         formatColumns: function formatColumns() {
             return dr_lang('列');
@@ -3092,7 +3092,7 @@
             return dr_lang('切换所有');
         },
         formatFullscreen: function formatFullscreen() {
-            return dr_lang('全屏');
+            return dr_lang('搜索');
         },
         formatAllRows: function formatAllRows() {
             return dr_lang('所有');
@@ -7199,13 +7199,18 @@
         }, {
             key: "toggleFullscreen",
             value: function toggleFullscreen() {
-                this.$el.closest('.bootstrap-table').toggleClass('fullscreen');
-                this.resetView();
+                $("#table-search-tool").fadeToggle();
             }
         }, {
             key: "toggleView",
             value: function toggleView() {
-                $("#table-search-tool").fadeToggle();
+                this.options.cardView = !this.options.cardView;
+                this.initHeader();
+                var icon = this.options.showButtonIcons ? this.options.cardView ? this.options.icons.toggleOn : this.options.icons.toggleOff : '';
+                var text = this.options.showButtonText ? this.options.cardView ? this.options.formatToggleOff() : this.options.formatToggleOn() : '';
+                this.$toolbar.find('button[name="toggle"]').html("".concat(Utils.sprintf(this.constants.html.icon, this.options.iconsPrefix, icon), " ").concat(text));
+                this.initBody();
+                this.trigger('toggle', this.options.cardView);
             }
         }, {
             key: "resetSearch",
