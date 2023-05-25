@@ -16,8 +16,8 @@
                 <label><button type="button" onclick="dr_ajax_option('{dr_url('linkage/open_edit', ['key'=>$key])}', '{dr_lang('你确定要启用它们吗？')}', 1)" class="btn blue btn-sm"> <i class="fa fa fa-check-circle"></i> {dr_lang('启用')}</button></label>
                 <label><button type="button" onclick="dr_ajax_option('{dr_url('linkage/close_edit', ['key'=>$key])}', '{dr_lang('你确定要禁用它们吗？')}', 1)" class="btn red btn-sm"> <i class="fa fa fa-times-circle"></i> {dr_lang('禁用')}</button></label>
 
-                <label><button type="button" onclick="dr_ajax_option('{dr_url('linkage/pid_edit', ['key'=>$key])}', '{dr_lang('你确定要批量移动它们吗？')}', 1)" class="btn green btn-sm"> <i class="fa fa-edit"></i> {dr_lang('变更分类')}</button></label>
-                <label>{$select}</label>
+                <label style="margin-right: 3px;"><button type="button" onclick="dr_ajax_option('{dr_url('linkage/pid_edit', ['key'=>$key])}', '{dr_lang('你确定要批量移动它们吗？')}', 1)" class="btn green btn-sm"> <i class="fa fa-edit"></i> {dr_lang('变更分类')}</button></label>
+                <label style="margin-top:5px;">{$select}</label>
                 {/if}
             </div>
         </div>
