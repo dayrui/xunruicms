@@ -22,7 +22,6 @@ class Site_mobile extends \Phpcmf\Common
             if ($post['mode'] == -1) {
                 $post['auto'] = $post['auto2'];
                 $post['tohtml'] = 0;
-                $post['tohtml'] = 0;
                 $post['dirname'] = $post['domain'] = '';
             } elseif ($post['mode'] == 1) {
                 // 生成手机目录

@@ -83,7 +83,7 @@ abstract class Common extends \Frame\Controller {
                 $this->site_info[$id]['SITE_ID'] = $id;
                 $this->site_info[$id]['SITE_URL'] = dr_http_prefix($t['SITE_DOMAIN'].'/');
                 $this->site_info[$id]['SITE_MURL'] = dr_http_prefix(($t['SITE_MOBILE'] ? $t['SITE_MOBILE'] : $t['SITE_DOMAIN']).'/');
-                $this->site_info[$id]['SITE_IS_MOBILE'] = $t['SITE_MOBILE'] ? 1 : 0;
+                $this->site_info[$id]['SITE_IS_MOBILE'] = $t['SITE_MOBILE'] ? (strpos($t['SITE_MOBILE'], '/') ? 2 : 1) : 0;
             }
             define('IS_SITES', count($this->site_info) > 1 ? 1 : 0);
         } else {
