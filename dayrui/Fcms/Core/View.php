@@ -1479,9 +1479,8 @@ class View {
                            $arr = explode('|', $t['value']);
                            foreach ($arr as $value) {
                                if ($value) {
-                                   if (strpos($value, '%') === false && strpos($value, '_') === false) {
-                                       $value = '%'.$value.'%'; // 当like没有任何匹配符时采用首尾%查询
-                                   }
+                                   //if (strpos($value, '%') !== 0 && strpos($value, '_') === false) {
+                                   $value = '%'.trim($value, '%').'%'; // 首尾%查询
                                    $vals[]= "{$t['name']} LIKE \"".$value."\"";
                                }
                            }
