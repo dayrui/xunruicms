@@ -637,7 +637,7 @@ class Member extends \Phpcmf\Model {
         $member['spend'] = 0;
         $member['score'] = 0;
         $member['experience'] = 0;
-        $member['regip'] = \Phpcmf\Service::L('input')->ip_info();
+        $member['regip'] = $oauth ? '' : \Phpcmf\Service::L('input')->ip_info(); // 快捷登录时不记录ip
         $member['regtime'] = SYS_TIME;
         $member['randcode'] = \Phpcmf\Service::L('form')->get_rand_value();
 
