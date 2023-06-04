@@ -623,6 +623,9 @@ class Image {
         {
             return FALSE;
         }
+
+        list($this->orig_width, $this->orig_height) = $this->_fix_orientation($this->full_src_path, $this->orig_width, $this->orig_height);
+
         /* Create the image
          *
          * Old conditional which users report cause problems with shared GD libs who report themselves as "2.0 or greater"
@@ -1759,9 +1762,33 @@ class Image {
     // 图片剪切函数可继承
     protected function imageCropper($source_path, $new_path, $target_width, $target_height){
 
+        $source_mime  = $this->image_info['mime'];
+        switch ($source_mime){
+            case 'image/gif':
+                $source_image = imagecreatefromgif($source_path);
+                break;
+            case 'image/jpeg':
+                $source_image = imagecreatefromjpeg($source_path);
+                break;
+            case 'image/png':
+                $source_image = imagecreatefrompng($source_path);
+                break;
+            case 'image/webp':
+                if (!function_exists('imagecreatefromwebp')) {
+                    $source_image = imagecreatefromjpeg($source_path);
+                } else {
+                    $source_image = imagecreatefromwebp($source_path);
+                }
+                break;
+            default:
+                return ;
+                break;
+        }
+
         $source_width = max(1, $this->image_info[0]);
         $source_height = $this->image_info[1];
-        $source_mime  = $this->image_info['mime'];
+        list($source_width, $source_height) = $this->_fix_orientation($source_path, $source_width, $source_height);
+
         $target_width = max((int)$target_width, 1);
         $target_height = max((int)$target_height, 1);
         $source_ratio = ($source_height / $source_width);
@@ -1784,28 +1811,6 @@ class Image {
             $cropped_height = $source_height;
             $source_x = 0;
             $source_y = 0;
-        }
-
-        switch ($source_mime){
-            case 'image/gif':
-                $source_image = imagecreatefromgif($source_path);
-                break;
-            case 'image/jpeg':
-                $source_image = imagecreatefromjpeg($source_path);
-                break;
-            case 'image/png':
-                $source_image = imagecreatefrompng($source_path);
-                break;
-            case 'image/webp':
-                if (!function_exists('imagecreatefromwebp')) {
-                    $source_image = imagecreatefromjpeg($source_path);
-                } else {
-                    $source_image = imagecreatefromwebp($source_path);
-                }
-                break;
-            default:
-                return ;
-                break;
         }
 
         $target_image = imagecreatetruecolor($target_width, $target_height);
@@ -1833,10 +1838,31 @@ class Image {
 
     //..////..//////.....//////////.......///////////
 
+    // 图片方向修复
+    protected function _fix_orientation($imgsrc, $width, $height) {
+
+        if (function_exists('exif_read_data')) {
+            $exif = exif_read_data($imgsrc);
+            if(!empty($exif['Orientation'])) {
+                switch($exif['Orientation']) {
+                    case 8:
+                        return [$height, $width];
+                        break;
+                    case 6:
+                        return [$height, $width];
+                        break;
+                }
+            }
+        }
+
+        return [$width, $height];
+    }
+
     // 图片压缩处理
     public function reduce($imgsrc, $cw) {
 
         list($width, $height, $type) = getimagesize($imgsrc);
+        list($width, $height) = $this->_fix_orientation($imgsrc, $width, $height);
 
         if ($width > $cw) {
             $per = $cw / $width;//计算比例

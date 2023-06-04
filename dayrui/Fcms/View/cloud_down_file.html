@@ -128,7 +128,7 @@
             });
         }, 1000);
     }
-    function dr_install() {
+    function dr_install(cf=0) {
         $('#dr_check_html').html("");
         $('#dr_check_result').html($('#dr_check_ing').html());
         $('#dr_check_div').show();
@@ -140,7 +140,7 @@
         $.ajax({
             type: "GET",
             dataType: "json",
-            url: "{dr_url('cloud/install_app')}&id={$app_id}",
+            url: "{dr_url('cloud/install_app')}&id={$app_id}&cf="+cf,
             success: function (json) {
                 if (json.code == 1) {
                     $('#dr_check_button_ing').html('<i class="fa fa-check-circle"></i> 下载完成');

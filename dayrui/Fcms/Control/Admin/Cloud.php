@@ -348,10 +348,12 @@ return [
         } elseif (!class_exists('ZipArchive')) {
             $this->_json(0, '本站：php_zip扩展未开启，无法在线安装功能，建议尝试离线方式');
         }
+
         $cache = \Phpcmf\Service::L('cache')->get_data('cloud-update-'.$id);
         if (!$cache) {
             $this->_json(0, '本站：授权验证缓存过期，请重试');
         }
+
         // 解压目录
         if (!\Phpcmf\Service::L('file')->unzip($file, $cmspath)) {
             $this->_json(0, '本站：文件解压失败');
@@ -405,6 +407,15 @@ return [
                         $this->_json(0, $rt['msg']);
                     }
                 }
+            }
+        }
+
+        // 判断本地目录是否有重名的
+        if ($is_app && is_dir(APPSPATH.ucfirst($is_app))) {
+            $cf = dr_safe_filename($_GET['cf']);
+            if ('ok' != $cf) {
+                $msg = '<font color="red">本插件文件夹（'.ucfirst($is_app).'）已经存在（'.APPSPATH.ucfirst($is_app).'）是否覆盖本站文件夹？</font></p><p style="margin-top:20px;">建议提前备份本站文件夹，<a href="javascript:dr_install(\'ok\');">确定覆盖本站文件夹</a>';
+                $this->_json(1, $msg);
             }
         }
 
