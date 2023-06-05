@@ -334,6 +334,12 @@ class Auth extends \Phpcmf\Model {
         }
 
         $data['adminid'] = $data['roleid'][1] ? 1 : 9;
+        if ($member['is_admin'] != $data['adminid']) {
+            $this->db->table('member_data')->where('id', $member['id'])->update([
+                'is_admin' => $data['adminid']
+            ]);
+        }
+
         $data['uid'] = $uid;
         $data['email'] = $member['email'];
         $data['phone'] = $member['phone'];

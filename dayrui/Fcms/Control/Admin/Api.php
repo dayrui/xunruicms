@@ -250,9 +250,6 @@ class Api extends \Phpcmf\Common {
 			\Phpcmf\Service::M()->db->table('admin')->where('id', $this->admin['id'])->update([
 				'usermenu' => dr_array2string($menu)
             ]);
-			\Phpcmf\Service::M()->db->table('member_data')->where('id', $this->admin['uid'])->update([
-				'is_admin' => 1
-            ]);
 
 			$this->_json(1, dr_lang('操作成功'));
 		}
