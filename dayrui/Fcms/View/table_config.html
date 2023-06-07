@@ -1,0 +1,105 @@
+{template "header.html"}
+
+<form class="form-horizontal" role="form" id="myform">
+    {dr_form_hidden()}
+    <div class="form-body">
+        <div class="form-group">
+            <label class="col-md-2 control-label">{dr_lang('列表搜索框')}</label>
+            <div class="col-md-9">
+                <div class="mt-radio-inline">
+                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[is_show_search_bar]" value="1" {if $data['is_show_search_bar']}checked{/if} /> {dr_lang('开启')} <span></span></label>
+                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[is_show_search_bar]" value="0" {if empty($data['is_show_search_bar'])}checked{/if} /> {dr_lang('关闭')} <span></span></label>
+                </div>
+                <span class="help-block">{dr_lang('开启后，当进入列表时直接显示搜索框；关闭后，需要点右上角的搜索按钮才会出现')}</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label">{dr_lang('列表默认排序')}</label>
+            <div class="col-md-9">
+                <label><input class="form-control input-xlarge" type="text" name="data[order_by]" value="{if $data['order_by']}{htmlspecialchars((string)$data['order_by'])}{else}id DESC{/if}" ></label>
+                <span class="help-block">{dr_lang('排序格式符号MySQL的语法，例如：字段 desc')}</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label">{dr_lang('列表时间搜索')}</label>
+            <div class="col-md-9">
+                <label><input class="form-control" type="text" name="data[search_time]" value="{if $data['date_field']}{htmlspecialchars((string)$data['date_field'])}{/if}" ></label>
+                <span class="help-block">{dr_lang('设置后台时间范围搜索字段，留空表示不显示')}</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-md-2 control-label">{dr_lang('列表默认搜索字段')}</label>
+            <div class="col-md-9">
+                <label><select name="data[search_first_field]" class="form-control">
+                    {loop $field $t}
+                    {if dr_is_admin_search_field($t)}
+                    <option value="{$t.fieldname}" {if $data['search_first_field']==$t.fieldname}selected{/if}>{dr_lang($t.name)}</option>
+                    {/if}
+                    {/loop}
+                    <option value="id" {if $data['search_first_field']=='id'}selected{/if}> Id </option>
+                </select></label>
+                <span class="help-block">{dr_lang('设置后台列表的默认搜索字段，也就是第一个选中的字段')}</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label">{dr_lang('列表显示字段')}</label>
+            <div class="col-md-10">
+
+
+                <div class="table-scrollable">
+                    <table class="table table-striped table-bordered table-hover table-checkable dataTable">
+                        <thead>
+                        <tr class="heading">
+                            <th class="myselect">
+                                {dr_lang('显示')}
+                            </th>
+                            <th width="180"> {dr_lang('字段')} </th>
+                            <th width="100"> {dr_lang('类别')} </th>
+                            <th width="150"> {dr_lang('名称')} </th>
+                            <th width="100"> {dr_lang('宽度')} </th>
+                            <th width="140"> {dr_lang('对齐方式')} </th>
+                            <th> {dr_lang('回调方法')} </th>
+                        </tr>
+                        </thead>
+                        <tbody class="field-sort-items">
+                        {loop $field $n $t}
+                        {if $t.fieldname}
+                        <tr class="odd gradeX">
+                            <td class="myselect">
+                                <label class="mt-table mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                                    <input type="checkbox" class="checkboxes" name="data[list_field][{$t.fieldname}][use]" value="1" {if $data['list_field'][$t.fieldname]['use']} checked{/if} />
+                                    <span></span>
+                                </label>
+                            </td>
+                            <td>{dr_lang($t.name)} ({$t.fieldname})</td>
+                            <td>{$t.fieldtype}</td>
+                            <td><input class="form-control" type="text" name="data[list_field][{$t.fieldname}][name]" value="{php echo $data['list_field'][$t.fieldname]['name'] ? htmlspecialchars($data['list_field'][$t.fieldname]['name']) : $t.name}" /></td>
+                            <td> <input class="form-control" type="text" name="data[list_field][{$t.fieldname}][width]" value="{htmlspecialchars((string)$data['list_field'][$t.fieldname]['width'])}" /></td>
+                            <td><input type="checkbox" name="data[list_field][{$t.fieldname}][center]" {if $data['list_field'][$t.fieldname]['center']} checked{/if} value="1"  data-on-text="{dr_lang('居中')}" data-off-text="{dr_lang('默认')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                            </td>
+                            <td> <div class="input-group" style="width:250px">
+                                        <span class="input-group-btn">
+                                            <a class="btn btn-success" href="javascript:dr_call_alert();">{dr_lang('回调')}</a>
+                                        </span>
+                                <input class="form-control" type="text" name="data[list_field][{$t.fieldname}][func]" value="{htmlspecialchars((string)$data['list_field'][$t.fieldname]['func'])}" />
+                            </div></td>
+                        </tr>
+                        {/if}
+                        {/loop}
+                        </tbody>
+                    </table>
+                </div>
+
+                <span class="help-block">{dr_lang('拖动字段可以进行顺序排列')}</span>
+            </div>
+        </div>
+
+    </div>
+</form>
+<script type="text/javascript">
+    $(function() {
+        $(".field-sort-items").sortable();
+    });
+</script>
+{template "footer.html"}
