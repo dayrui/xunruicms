@@ -1973,7 +1973,8 @@ function dr_file_preview_html($value, $id = 0) {
 // 用于附件列表查看时
 function dr_file_list_preview_html($t) {
     if (dr_is_image($t['fileext'])) {
-        return '<a href="javascript:dr_preview_image(\''.dr_get_file_url($t).'\');"><img src="'.dr_get_file_url($t, 50, 50).'"></a>';
+        $img = '<img class="rs-load" src="'.ROOT_THEME_PATH.'assets/images/loading-1.gif" rs-src="'.dr_get_file_url($t, 50, 50).'">';
+        return '<a href="javascript:dr_preview_image(\''.dr_get_file_url($t).'\');">'.$img.'</a>';
     } elseif ($t['fileext'] == 'mp4') {
         return '<a href="javascript:dr_preview_video(\''.dr_get_file_url($t).'\');"><img src="'.ROOT_THEME_PATH.'assets/images/ext/'.$t['fileext'].'.png"></a>';
     } elseif (is_file(ROOTPATH.'static/assets/images/ext/'.$t['fileext'].'.png')) {

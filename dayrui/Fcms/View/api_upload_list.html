@@ -173,6 +173,11 @@
             select.val(id);
         }
     }
+   $(function (){
+        $(".rs-load").each(function (){
+            $(this).attr("src", $(this).attr("rs-src"))
+        });
+    });
 </script>
 
 {template "footer.html"}
