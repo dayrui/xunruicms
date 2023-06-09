@@ -6267,7 +6267,9 @@ li [class*=" fa-"].icon-large,li [class*=" glyphicon-"].icon-large,li [class*=" 
     color: #c49f47;
     background-color: #fff
 }
-
+.last-border-none tr:last-child, .last-border-none tr:last-child td {
+    border-bottom:0px !important;
+}
 .btn.btn-outline.yellow {
     border-color: #c49f47;
     color: #c49f47;
