@@ -59,8 +59,9 @@ class Seo {
      * @return  array
      */
     public function module($mod) {
-
-
+        return[
+            'meta_title' => '内容建站插件版本需要升级之后才能显示seo信息',
+        ];
     }
 
 
@@ -68,8 +69,9 @@ class Seo {
      * 模块搜索SEO信息
      */
     public function search($mod, $catid, $param, $page = 1) {
-
-
+        return[
+            'meta_title' => '内容建站插件版本需要升级之后才能显示seo信息',
+        ];
     }
 
     /**
@@ -81,8 +83,9 @@ class Seo {
      * @return  array
      */
     public function category($mod, $catid, $page = 1) {
-
-
+        return[
+            'meta_title' => '内容建站插件版本需要升级之后才能显示seo信息',
+        ];
     }
 
     /**
@@ -94,8 +97,9 @@ class Seo {
      * @return  array
      */
     public function show($mod, $data, $page = 1) {
-
-
+        return[
+            'meta_title' => '内容建站插件版本需要升级之后才能显示seo信息',
+        ];
     }
 
     // 替换seo信息字符
