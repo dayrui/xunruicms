@@ -10,6 +10,7 @@ use think\facade\Cookie;
 
 function set_cookie($name, $value = '', $expire = '') {
     Cookie::set(SYS_KEY.$name, $value, $expire);
+    Cookie::save();
 }
 
 function get_cookie($name) {
