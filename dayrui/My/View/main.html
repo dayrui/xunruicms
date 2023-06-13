@@ -1,19 +1,19 @@
 {template "header.html"}
 
 {if $admin.adminid==1 && !IS_OEM_CMS}
-{if is_file(CMSPATH.'Config/vip.lock') && !is_file(WRITEPATH.'config/safe.php')}
-<div class="note note-danger">
-    {if !dr_is_app('safe')}
-    <p><a style="color: red" href="{dr_url('cloud/local')}">当前环境未能通过安全验证，请安装【系统安全加固】插件</a></p>
-    {else}
-    <p><a style="color: red" href="{dr_url('safe/home/index')}">当前环境未能通过安全验证，请按要求设置参数</a></p>
+    {if is_file(CMSPATH.'Config/vip.lock') && !is_file(WRITEPATH.'config/safe.php')}
+    <div class="note note-danger">
+        {if !dr_is_app('safe')}
+        <p><a style="color: red" href="{dr_url('cloud/local')}">当前环境未能通过安全验证，请安装【系统安全加固】插件</a></p>
+        {else}
+        <p><a style="color: red" href="{dr_url('safe/home/index')}">当前环境未能通过安全验证，请按要求设置参数</a></p>
+        {/if}
+    </div>
+    {elseif IS_DEV}
+    <div class="note note-danger">
+        <p><a style="color: red" href="javascript:dr_help(204);">当前环境参数已经开启开发者模式，项目上线后建议关闭开发者模式</a></p>
+    </div>
     {/if}
-</div>
-{elseif IS_DEV}
-<div class="note note-danger">
-    <p><a style="color: red" href="javascript:dr_help(204);">当前环境参数已经开启开发者模式，项目上线后建议关闭开发者模式</a></p>
-</div>
-{/if}
 {/if}
 
 <div class="row">

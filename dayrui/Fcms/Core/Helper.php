@@ -4237,12 +4237,18 @@ if (! function_exists('dr_get_description')) {
      */
     function dr_get_description($text, $limit = 0) {
 
+        $rs = \Phpcmf\Hooks::trigger_callback('cms_get_description', $text);
+        if ($rs && isset($rs['code']) && $rs['code'] && $rs['msg']) {
+            $text = $rs['msg'];
+        }
+
         if (!$limit) {
             $limit = isset(\Phpcmf\Service::C()->module['setting']['desc_limit']) && \Phpcmf\Service::C()->module['setting']['desc_limit'] ? \Phpcmf\Service::C()->module['setting']['desc_limit'] : 200;
         }
 
         if (isset(\Phpcmf\Service::C()->module['setting']['desc_clear']) && \Phpcmf\Service::C()->module['setting']['desc_clear']) {
             $text = str_replace(' ', '', $text);
+            $text = str_replace('　', '', $text);
         }
 
         return trim(dr_strcut(dr_clearhtml($text), $limit, ''));
