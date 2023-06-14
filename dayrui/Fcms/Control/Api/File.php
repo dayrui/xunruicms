@@ -361,7 +361,7 @@ class File extends \Phpcmf\Common
             'list' => $list,
             'page' => intval($_GET['page']),
             'field' => $field,
-            'psize' => 36,
+            'psize' => defined('SYS_ATTACHMENT_PAGESIZE') && SYS_ATTACHMENT_PAGESIZE ? SYS_ATTACHMENT_PAGESIZE : 36,
             'param' => [
                 'used' => $unused,
                 'name' => $name,

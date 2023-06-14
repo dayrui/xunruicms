@@ -36,6 +36,7 @@ class System extends \Phpcmf\Model {
 
         'SYS_ATTACHMENT_DB'	    => '附件归属开启模式',
         'SYS_ATTACHMENT_GUEST'	=> '游客是否附件上传',
+        'SYS_ATTACHMENT_PAGESIZE'	=> '浏览附件分页数',
         'SYS_ATTACHMENT_CF'	=> '重复上传控制',
         'SYS_ATTACHMENT_SAFE'	=> '附件上传安全模式',
         'SYS_ATTACHMENT_PATH'	=> '附件上传路径',

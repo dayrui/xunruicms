@@ -85,6 +85,7 @@ $system = [
     'SYS_ADMIN_LOGIN_TIME'  => 0,
     'SYS_ADMIN_OAUTH'    => 0,
     'SYS_ATTACHMENT_DB'     => 1,
+    'SYS_ATTACHMENT_PAGESIZE' => 36,
     'SYS_ATTACHMENT_GUEST'   => 0,
     'SYS_ATTACHMENT_CF'   => 0,
     'SYS_ATTACHMENT_PATH'   => '',

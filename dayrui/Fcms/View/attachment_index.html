@@ -49,7 +49,6 @@
                         </div>
                         {/if}
 
-
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('防止重复上传')}</label>
                             <div class="col-md-9">
@@ -58,6 +57,14 @@
                                     <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_ATTACHMENT_CF]" value="0" {if empty($data['SYS_ATTACHMENT_CF'])}checked{/if} /> {dr_lang('关闭')} <span></span></label>
                                 </div>
                                 <span class="help-block">{dr_lang('当存在重复上传同一文件时，只存储一个文件')}</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('浏览附件分页')}</label>
+                            <div class="col-md-9">
+                                <label><input class="form-control" type="text" name="data[SYS_ATTACHMENT_PAGESIZE]" value="{php echo $data['SYS_ATTACHMENT_PAGESIZE']?$data['SYS_ATTACHMENT_PAGESIZE']:36;}" ></label>
+                                <span class="help-block">{dr_lang('在浏览附件界面中每页显示的数量控制')}</span>
                             </div>
                         </div>
 
