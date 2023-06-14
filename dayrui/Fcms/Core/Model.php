@@ -683,8 +683,8 @@ class Model {
                     $arr[] = $row['cname'];
                 }
             }
-            foreach ($arr as $value) {
-                $data = dr_linkage($field['setting']['option']['linkage'], $value);
+            foreach ($arr as $val) {
+                $data = dr_linkage($field['setting']['option']['linkage'], $val);
                 if ($data) {
                     if ($data['child']) {
                         $where[] = '`'.$table.'`.`'.$name.'` IN ('.$data['childids'].')';
@@ -707,8 +707,8 @@ class Model {
                     }
                 }
             }
-            foreach ($arr as $value) {
-                $data = dr_linkage($field['setting']['option']['linkage'], $value);
+            foreach ($arr as $val) {
+                $data = dr_linkage($field['setting']['option']['linkage'], $val);
                 if ($data) {
                     if ($data['child']) {
                         $ids = explode(',', $data['childids']);
@@ -756,14 +756,14 @@ class Model {
                     }
                 }
             }
-            foreach ($arr as $value) {
-                if ($value) {
+            foreach ($arr as $val) {
+                if ($val) {
                     if (version_compare(\Phpcmf\Service::M()->db->getVersion(), '5.7.0') < 0) {
                         // 兼容写法
-                        $where[] = '`'.$table.'`.`'.$name.'` LIKE "%\"'.$this->db->escapeString(dr_safe_replace($value), true).'\"%"';
+                        $where[] = '`'.$table.'`.`'.$name.'` LIKE "%\"'.$this->db->escapeString(dr_safe_replace($val), true).'\"%"';
                     } else {
                         // 高版本写法
-                        $where[] = "(CASE WHEN JSON_VALID(`{$table}`.`{$name}`) THEN JSON_CONTAINS (`{$table}`.`{$name}`->'$[*]', '\"".$this->db->escapeString(dr_safe_replace($value), true)."\"', '$') ELSE null END)";
+                        $where[] = "(CASE WHEN JSON_VALID(`{$table}`.`{$name}`) THEN JSON_CONTAINS (`{$table}`.`{$name}`->'$[*]', '\"".$this->db->escapeString(dr_safe_replace($val), true)."\"', '$') ELSE null END)";
                     }
                 }
             }
@@ -788,11 +788,11 @@ class Model {
                 }
             }
             $where = [];
-            foreach ($arr as $value) {
-                if (is_numeric($value)) {
-                    $where[] = '`'.$table.'`.`'.$name.'`='.$value;
+            foreach ($arr as $val) {
+                if (is_numeric($val)) {
+                    $where[] = '`'.$table.'`.`'.$name.'`='.$val;
                 } else {
-                    $where[] = '`'.$table.'`.`'.$name.'`="'.dr_safe_replace($value, ['\\', '/']).'"';
+                    $where[] = '`'.$table.'`.`'.$name.'`="'.dr_safe_replace($val, ['\\', '/']).'"';
                 }
             }
             return $where ? '('.implode(strpos($value,  '||') !== false ? ' AND ' : ' OR ', $where).')' : '`'.$table.'`.`id` = 0';
