@@ -134,5 +134,11 @@ $(function (){
     $("#table-search-tool-submit").click(function () {
         $mytable.bootstrapTable('refresh');
     });
+    $(".table-search-tool input").keydown(function(e) {
+        if (e.keyCode == 13) {
+            $mytable.bootstrapTable('refresh');
+        }
+    });
+
 });
 </script>
