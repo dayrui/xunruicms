@@ -278,7 +278,7 @@ class GDHandler extends BaseHandler
 
         imagedestroy($this->resource);
 
-        //chmod($target, $this->filePermissions);
+//        chmod($target, $this->filePermissions);
 
         return true;
     }
@@ -354,7 +354,7 @@ class GDHandler extends BaseHandler
                     throw ImageException::forInvalidImageCreate(lang('Images.pngNotSupported'));
                 }
 
-                return imagecreatefrompng($path);
+                return @imagecreatefrompng($path);
 
             case IMAGETYPE_WEBP:
                 if (! function_exists('imagecreatefromwebp')) {
