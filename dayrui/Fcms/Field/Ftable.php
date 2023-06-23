@@ -209,6 +209,9 @@ class Ftable extends \Phpcmf\Library\A_Field {
             $html.= '</label>';
         } elseif ($config['type'] == 5) {
             // 日期
+            if ($config['option'] == 'SYS_TIME' && !$value[$hang][$lie]) {
+                $value[$hang][$lie] = dr_date(SYS_TIME, 'Y-m-d');
+            }
             $html.= '<div class="input-group date field_date_ftable_'.$cname.'">';
             $html.= '<input class="form-control" type="text" name="data['.$cname.']['.$hang.']['.$lie.']" value="'.$value[$hang][$lie].'">';
             $html.= '<span class="input-group-btn">
@@ -233,6 +236,9 @@ class Ftable extends \Phpcmf\Library\A_Field {
                 ';
         } elseif ($config['type'] == 6) {
             // 日期时间
+            if ($config['option'] == 'SYS_TIME' && !$value[$hang][$lie]) {
+                $value[$hang][$lie] = dr_date(SYS_TIME, 'Y-m-d H:i:s');
+            }
             $html.= '<div class="input-group date field_datetime_ftable_'.$cname.'">';
             $html.= '<input class="form-control" type="text" name="data['.$cname.']['.$hang.']['.$lie.']" value="'.$value[$hang][$lie].'">';
             $html.= '<span class="input-group-btn">
