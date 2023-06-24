@@ -28,10 +28,12 @@ class System_log extends \Phpcmf\Common {
 		foreach ($data as $v) {
 			if ($v && $i >= $limit && $j < SYS_ADMIN_PAGESIZE) {
                 $v = dr_string2array($v);
-                \Phpcmf\Service::L('cache')->set_data('system_log_'.USER_HTTP_CODE.$time.'_'.$key, $v, 3600);
-				$list[$key] = $v;
-				$j ++;
-                $key ++;
+                if ($v) {
+                    \Phpcmf\Service::L('cache')->set_data('system_log_'.USER_HTTP_CODE.$time.'_'.$key, $v, 3600);
+                    $list[$key] = $v;
+                    $j ++;
+                    $key ++;
+                }
 			}
 			$i ++;
 		}
