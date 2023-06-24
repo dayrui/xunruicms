@@ -146,7 +146,7 @@ class Input {
 
         $file = WRITEPATH . 'error/log-'.date('Y-m-d').'.php';
         if (!is_file($file)) {
-            file_put_contents($file, $message);
+            file_put_contents($file, "<?php if (!defined('BASEPATH')) exit('No direct script access allowed');?>".PHP_EOL.$message);
         } else {
             file_put_contents($file, $message.PHP_EOL, FILE_APPEND);
         }
@@ -293,7 +293,11 @@ class Input {
             dr_mkdirs($path);
         }
 
-        file_put_contents($file, PHP_EOL.dr_array2string($data), FILE_APPEND);
+        if (!is_file($file)) {
+            file_put_contents($file, "<?php if (!defined('BASEPATH')) exit('No direct script access allowed');?>".PHP_EOL.dr_array2string($data));
+        } else {
+            file_put_contents($file, PHP_EOL.dr_array2string($data), FILE_APPEND);
+        }
     }
 
     // 服务器ip地址
