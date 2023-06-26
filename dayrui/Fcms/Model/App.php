@@ -122,6 +122,7 @@ class App extends \Phpcmf\Model {
 
         // 写入锁定文件
         file_put_contents($path.'install.lock', SYS_TIME);
+        file_put_contents(WRITEPATH.'install.lock', SYS_TIME);
         unlink($path.'install.test');
 
         if (isset($config['uri']) && $config['uri']) {

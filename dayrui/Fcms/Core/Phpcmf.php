@@ -109,8 +109,9 @@ abstract class Common extends \Frame\Controller {
         }
         define('CMF_NAME', $this->cmf_version['name']);
         define('CMF_VERSION', $this->cmf_version['version']);
+
         // 版本更新时间字符串
-        define('CMF_UPDATE_TIME', IS_XRDEV ? SYS_TIME : str_replace(['-', ' ', ':'], '', $this->cmf_version['downtime'] ? $this->cmf_version['downtime'] : $this->cmf_version['updatetime']));
+        define('CMF_UPDATE_TIME', IS_XRDEV ? SYS_TIME : str_replace(['-', ' ', ':'], '', file_get_contents(WRITEPATH.'install.lock')));
 
         $client = \Phpcmf\Service::R(WRITEPATH.'config/domain_client.php'); // 电脑域名对应的手机域名
 
