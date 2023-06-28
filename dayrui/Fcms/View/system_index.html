@@ -80,6 +80,16 @@
                             </div>
                         </div>
                         <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('后台列表操作按钮')}</label>
+                            <div class="col-md-9">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_TABLE_ISFOOTER]" value="0" {if empty($data['SYS_TABLE_ISFOOTER'])}checked{/if} /> {dr_lang('顶部')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_TABLE_ISFOOTER]" value="1" {if $data['SYS_TABLE_ISFOOTER']}checked{/if} /> {dr_lang('底部')} <span></span></label>
+                                </div>
+                                <span class="help-block">{dr_lang('列表批量操作按钮的位置设定，仅限于Table布局的表格列表')}</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('后台数据分页条数')}</label>
                             <div class="col-md-9">
                                 <label><input class="form-control" type="text" name="data[SYS_ADMIN_PAGESIZE]" value="{intval($data['SYS_ADMIN_PAGESIZE'])}" ></label>

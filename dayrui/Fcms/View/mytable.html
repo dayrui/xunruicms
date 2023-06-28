@@ -5,7 +5,12 @@
 </form>
 <script type="text/javascript">
     var table_name = '{$mytable_name}';
+    {if defined("SYS_TABLE_ISFOOTER") && SYS_TABLE_ISFOOTER}
+    var is_foot = true;
+    $("#toolbar label").hide();
+    {else}
     var is_foot = $('#toolbar label').hasClass('table_select_all') == true ? false : true;
+    {/if}
     var table_ignoreColumn = {php echo dr_count($list_field)+1;};
     var page_id = {max(1,intval($_GET['page']))};
     var post_token = {{csrf_token()}: "{csrf_hash()}"};

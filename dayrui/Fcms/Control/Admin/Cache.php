@@ -64,6 +64,7 @@ class Cache extends \Phpcmf\Common {
         $page = intval($_GET['page']);
         $next = dr_url('cache/update_index');
         if (!$page) {
+            file_put_contents(WRITEPATH.'install.lock', SYS_TIME);
             $this->_html_msg(1, dr_lang('正在更新升级程序'), $next.'&page=1');
         }
 

@@ -16,6 +16,7 @@ class System extends \Phpcmf\Model {
         'SYS_ADMIN_LOG' => '后台操作日志开关',
         'SYS_AUTO_FORM' => '自动存储表单数据',
         'SYS_ADMIN_PAGESIZE' => '后台数据分页显示数量',
+        'SYS_TABLE_ISFOOTER' => '批量操作按钮位置设定',
         'SYS_CRON_AUTH' => '自动任务权限IP地址',
         'SYS_SMS_IMG_CODE' => '发送短信验证码双重图形验证开关',
         'SYS_GO_404' => '404页面跳转开关',

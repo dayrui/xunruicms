@@ -66,6 +66,7 @@ $system = [
     'SYS_AUTO_FORM' => 0,
     'SYS_ADMIN_PAGESIZE' => 10,
     'SYS_CRON_AUTH' => '',
+    'SYS_TABLE_ISFOOTER' => 0,
     'SYS_SMS_IMG_CODE' => 0,
     'SYS_GO_404' => 0,
     'SYS_THEME_ROOT_PATH' => 0,
