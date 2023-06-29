@@ -672,6 +672,13 @@ class Model {
             } else {
                 //\Phpcmf\Service::C()->goto_404_page(dr_lang('没有定位到您的坐标'));
             }
+        } elseif (isset($field['fieldtype']) && $field['fieldtype'] == 'Diy'
+            && function_exists('dr_diy_field_'.substr($field['setting']['option']['file'], 0, -4).'search')) {
+            // DIY字段
+            return call_user_func(
+                'dr_diy_field_'.substr($field['setting']['option']['file'], 0, -4).'search',
+                $table, $name, $value, $field
+            );
         } elseif (isset($field['fieldtype']) && $field['fieldtype'] == 'Linkage') {
             // 联动菜单字段
             $arr = explode('|', $value);
