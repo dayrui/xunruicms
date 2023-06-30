@@ -198,7 +198,7 @@ class Service {
     // 错误日志记录
     public static function Log($level, $message, array $context = []) {
 
-        if ($level == 'debug' && defined('IS_FB_DEBUG')) {
+        if ($level == 'debug' && defined('IS_FB_DEBUG') && IS_FB_DEBUG) {
             return;
         }
 
