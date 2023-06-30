@@ -32,7 +32,8 @@ class View {
     private $_return_sql; // 是否返回sql语句用于运算
 
     private $_view_time; // 模板的运行时间
-    private $_view_files; // 模板的引用文件
+    private $_view_files; // 累计模板的引用文件
+    private $_view_file; // 当前模板的引用文件
 
     private $pos_map; // 地图定位坐标
     private $pos_order; // 是否包含有地图定位的排序
@@ -243,7 +244,7 @@ class View {
 
         // 加载编译后的缓存文件
         $this->_disp_dir = $phpcmf_dir;
-        $_view_file = $this->get_file_name($this->_filename, $phpcmf_dir);
+        $this->_view_file = $_view_file = $this->get_file_name($this->_filename, $phpcmf_dir);
 
         $is_dev = 0;
         if ((IS_DEV || (IS_ADMIN && SYS_DEBUG))
@@ -1305,11 +1306,30 @@ class View {
             }
         }
 
-        // 挂钩点 模板中的sql语句
-        \Phpcmf\Hooks::trigger('cms_view_sql', $sql);
-
         // 执行SQL
+        $t = microtime(TRUE);
         $query = $mysql->query($sql);
+        $time = microtime(TRUE) - $t;
+
+        // 记录慢日志
+        if ($time > 1 && is_file(WRITEPATH.'database/sql.lock')) {
+            $file = WRITEPATH.'database/Sql/sql.txt';
+            $path = dirname($file);
+            if (!is_dir($path)) {
+                dr_mkdirs($path);
+            }
+            $size = filesize($file);
+            $json = json_encode([SYS_TIME, $sql, $time, $this->_view_file, $this->_list_tag, SITE_URL.SELF.'?'.http_build_query($_GET)]);
+            if ($size > 1024*1024*2) {
+                copy($file, $path.SYS_TIME.'.txt');
+                file_put_contents($file, $json.PHP_EOL, LOCK_EX);
+            } else {
+                file_put_contents($file, $json.PHP_EOL, FILE_APPEND | LOCK_EX);
+            }
+        }
+
+        // 挂钩点 模板中的sql语句
+        \Phpcmf\Hooks::trigger('cms_view_sql', $sql, $time, $this->_view_file, $this->_list_tag);
 
         if (!$query) {
             return 'SQL查询解析不正确：'.$sql;

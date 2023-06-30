@@ -105,6 +105,25 @@ function dr_array_keys($array, $value = '', $strict = false) {
 }
 
 /**
+ * 返回包含数组中指定键名的对应值
+ * @param $array 指定数组
+ * @param $key 数组key
+ * @return 返回包含数组中指定键名的对应值
+ */
+function dr_array_value($array, $key) {
+
+    if (!$array || !is_array($array)) {
+        return NULL;
+    } elseif (is_array($key)) {
+        return NULL;
+    } elseif (isset($array[$key])) {
+        return $array[$key];
+    } else {
+        return NULL;
+    }
+}
+
+/**
  * 判断存在于数组中
  * @param $var 指定值
  * @param $array 指定数组

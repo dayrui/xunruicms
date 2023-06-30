@@ -109,6 +109,11 @@ return [
                             'uri' => 'error/index',
                         ],
                         [
+                            'name' => '查询日志',
+                            'icon' => 'fa fa-database',
+                            'uri' => 'sql_log/index',
+                        ],
+                        [
                             'name' => '操作日志',
                             'icon' => 'fa fa-calendar',
                             'uri' => 'system_log/index',
