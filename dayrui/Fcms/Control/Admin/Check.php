@@ -255,10 +255,10 @@ class Check extends \Phpcmf\Common
                     }
                 }
 
-				if (is_file(WEBPATH.'config/api.php')) {
-					$code = dr_catcher_data(SITE_URL.'config/api.php', 5, false);
+				if (is_file(WEBPATH.'cache/api.php')) {
+					$code = dr_catcher_data(SITE_URL.'cache/api.php/test', 5, false);
 					if (strpos($code, 'phpcmf') !== false) {
-						$rt[] = '目录[config]需要设置禁止访问，<a href="javascript:dr_help(1005);">设置方法</a>';
+						$rt[] = '目录[cache]需要设置禁止访问，<a href="javascript:dr_help(1005);">设置方法</a>';
 					}
 				}
 
