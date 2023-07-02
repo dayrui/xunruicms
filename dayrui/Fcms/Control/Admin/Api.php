@@ -414,7 +414,7 @@ class Api extends \Phpcmf\Common {
         $name = dr_safe_replace($_GET['id']);
         \Phpcmf\Service::M('cache')->$name();
 
-        $this->_json(1, dr_lang('更新完成'), 0);
+        $this->_json(1, dr_lang('执行完成'), 0);
     }
 
 	// 执行清空缓存数据

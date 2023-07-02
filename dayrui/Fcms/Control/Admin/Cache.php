@@ -15,6 +15,7 @@ class Cache extends \Phpcmf\Common {
             ['表或表字段异常时，更新数据结构', 'update_db'],
             ['附件地址未更新时，更新附件缓存', 'update_attachment'],
             ['手动清理缩略图文件（如果生成过静态页面，请慎用）', 'update_thumb'],
+            ['清理全部系统日志、操作日志、邮件日志、短信日志、慢查询日志等', 'update_log'],
         ];
         $cname[] = '更新模块域名目录';
         $module_more = $module = $cname = [];

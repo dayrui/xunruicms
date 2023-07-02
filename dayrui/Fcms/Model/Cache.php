@@ -25,6 +25,32 @@ class Cache extends \Phpcmf\Model {
         \Phpcmf\Service::C()->_json(1, dr_lang('清理完成'), 1);
     }
 
+
+    // 清理日志文件
+    public function update_log() {
+
+        foreach ([
+            WRITEPATH.'log/',
+            WRITEPATH.'debugbar/',
+            WRITEPATH.'debuglog/',
+            WRITEPATH.'error/',
+            WRITEPATH.'database/Sql/',
+                 ] as $t) {
+            if (is_dir($t)) {
+                dr_dir_delete($t);
+                dr_mkdirs($t);
+            }
+        }
+        foreach ([
+                     WRITEPATH.'email_log.txt',
+                     WRITEPATH.'sms_log.txt',
+                 ] as $t) {
+            if (is_file($t)) {
+                unlink($t);
+            }
+        }
+        \Phpcmf\Service::C()->_json(1, dr_lang('清理完成'), 1);
+    }
     // 更新附件缓存
     public function update_attachment() {
 

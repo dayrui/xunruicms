@@ -11,7 +11,7 @@
             <thead>
             <tr class="heading">
                 <th width="55"> </th>
-                <th width="500"> {dr_lang('更新项目')} </th>
+                <th width="500"> {dr_lang('执行项目')} </th>
                 <th> </th>
             </tr>
             </thead>
@@ -28,7 +28,7 @@
                 </td>
                 <td style="overflow:auto">
                     <label>
-                        <a href="javascript:my_update_cache('{$id}', '{$t[1]}');" class="btn red btn-xs"><i class="fa fa-refresh"></i> {dr_lang('立即更新')} </a>
+                        <a href="javascript:my_update_cache('{$id}', '{$t[1]}');" class="btn red btn-xs"><i class="fa fa-refresh"></i> {dr_lang('立即执行')} </a>
                     </label>
                     <label id="dr_{$id}_result" >
 
@@ -134,7 +134,7 @@
                 </td>
                 <td style="overflow:auto">
                     <label>
-                        <a href="javascript:dr_iframe_show('{dr_lang('升级程序脚本')}', '{dr_url('cache/update_index')}', '500px', '300px');" class="btn red btn-xs"><i class="fa fa-refresh"></i> {dr_lang('立即更新')} </a>
+                        <a href="javascript:dr_iframe_show('{dr_lang('升级程序脚本')}', '{dr_url('cache/update_index')}', '500px', '300px');" class="btn red btn-xs"><i class="fa fa-refresh"></i> {dr_lang('立即执行')} </a>
                     </label>
                     <label>
                         <a href="javascript:dr_load_ajax('{dr_lang('确定初始化后台菜单吗？')}', '{dr_url('menu/init')}', 0);" class="btn blue btn-xs"><i class="fa fa-list"></i> {dr_lang('初始化后台菜单')} </a>
@@ -168,7 +168,7 @@
                     if (json.code == 0) {
                         obj.html('<font color="red">'+json.msg+'</font>');
                     } else {
-                        obj.html('<font color="green">{dr_lang("更新完成")}</font>');
+                        obj.html('<font color="green">{dr_lang("执行完成")}</font>');
                     }
                 },
                 error: function(HttpRequest, ajax, thrownError) {
