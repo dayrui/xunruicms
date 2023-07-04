@@ -109,17 +109,22 @@ return [
                             'uri' => 'error/index',
                         ],
                         [
-                            'name' => '操作日志',
+                            'name' => '操作记录',
                             'icon' => 'fa fa-calendar',
                             'uri' => 'system_log/index',
                         ],
                         [
-                            'name' => '短信日志',
+                            'name' => '密码错误',
+                            'icon' => 'fa fa-unlock-alt',
+                            'uri' => 'password_log/index',
+                        ],
+                        [
+                            'name' => '短信错误',
                             'icon' => 'fa fa-envelope',
                             'uri' => 'sms_log/index',
                         ],
                         [
-                            'name' => '邮件日志',
+                            'name' => '邮件错误',
                             'icon' => 'fa fa-envelope-open',
                             'uri' => 'email_log/index',
                         ],

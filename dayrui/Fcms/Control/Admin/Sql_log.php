@@ -37,10 +37,11 @@ class Sql_log extends \Phpcmf\Common
 			$limit = ($page - 1) * SYS_ADMIN_PAGESIZE;
 			$i = $j = 0;
 			foreach ($data as $v) {
-				if ($i >= $limit && $j < SYS_ADMIN_PAGESIZE) {
-					$list[] = json_decode($v);
-					$j ++;
-				}
+                $val = dr_string2array($v);
+                if ($val && $i >= $limit && $j < SYS_ADMIN_PAGESIZE) {
+                    $list[] = $val;
+                    $j ++;
+                }
 				$i ++;
 			}
 		}

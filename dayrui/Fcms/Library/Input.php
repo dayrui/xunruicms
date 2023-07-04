@@ -266,7 +266,6 @@ class Input {
         ];
     }
 
-
     /**
      * 后台日志
      */
@@ -292,6 +291,26 @@ class Input {
         if (!is_dir($path)) {
             dr_mkdirs($path);
         }
+
+        if (!is_file($file)) {
+            file_put_contents($file, "<?php if (!defined('BASEPATH')) exit('No direct script access allowed');?>".PHP_EOL.dr_array2string($data));
+        } else {
+            file_put_contents($file, PHP_EOL.dr_array2string($data), FILE_APPEND);
+        }
+    }
+
+    /**
+     * 密码错误日志
+     */
+    public function password_log($post) {
+
+        $data = [
+            'ip' => $this->ip_address(),
+            'time' => SYS_TIME,
+            'username' => $post['username'],
+        ];
+
+        $file = WRITEPATH.'password_log.php';
 
         if (!is_file($file)) {
             file_put_contents($file, "<?php if (!defined('BASEPATH')) exit('No direct script access allowed');?>".PHP_EOL.dr_array2string($data));

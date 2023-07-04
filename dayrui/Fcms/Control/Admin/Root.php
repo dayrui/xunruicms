@@ -111,6 +111,26 @@ class Root extends \Phpcmf\Table
         $this->_json($data ? 0 : 1, 'ok');
     }
 
+    public function status_edit() {
+
+        $uid = intval($_GET['id']);
+        if ($this->uid == $uid) {
+            $this->_json(0, dr_lang('无法对自己设置状态'));
+        } elseif (1 == $uid) {
+            $this->_json(0, dr_lang('不能设置超管账号'));
+        }
+
+        $data = \Phpcmf\Service::M()->db->table('member_data')->where('id', $uid)->get()->getRowArray();
+        if ($data['is_lock']) {
+            \Phpcmf\Service::M()->db->table('member_data')->where('id', $uid)->update(['is_lock' => 0]);
+            $this->_json(1, dr_lang('解除登录锁定'));
+        } else {
+            \Phpcmf\Service::M()->db->table('member_data')->where('id', $uid)->update(['is_lock' => 1]);
+            $this->_json(1, dr_lang('登录已锁定，将无法登陆账号'));
+        }
+
+    }
+
     public function add() {
 
         if (IS_AJAX_POST) {

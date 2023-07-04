@@ -62,6 +62,7 @@
                     </label>
                 </th>
                 {/if}
+                <th width="60" style="text-align: center; ">{dr_lang('锁定')}</th>
                 <th width="200" class="{dr_sorting('username')}" name="username">{dr_lang('账号')}</th>
                 <th>{dr_lang('角色组')}</th>
                 <th>{dr_lang('操作')}</th>
@@ -79,6 +80,14 @@
                     </label>
                 </td>
                 {/if}
+                <td style="text-align: center; ">
+                    {if \Phpcmf\Service::M()->table('member_data')->where('id', $t.uid)->where('is_lock=1')->counts()}
+                    <a href="javascript:;" onclick="dr_ajax_list_open_close(this, '{dr_url($uriprefix.'/status_edit', ['id'=>$t.uid])}');" value="1" class="badge badge-yes"><i class="fa fa-check"></i></a>
+                    {else}
+                    <a href="javascript:;" onclick="dr_ajax_list_open_close(this, '{dr_url($uriprefix.'/status_edit', ['id'=>$t.uid])}');" value="0" class="badge badge-no"><i class="fa fa-times"></i></a>
+                    {/if}
+
+                </td>
                 <td><a href="javascript:;" class="fc_member_show" member="{$t.username}">{$t.username}</a></td>
                 <td>
                     {loop $t.role $c}
@@ -105,5 +114,36 @@
     {/if}
 </form>
 </div>
-
+<script>
+    function dr_ajax_list_open_close(e, url) {
+    var obj = $(e);
+    var val = 0;
+    if (obj.attr("value") == 1) {
+        val = 0;
+    } else {
+        val = 1;
+    }
+    url+="&value="+val;
+    $.ajax({
+        type: "GET",
+        url: url,
+        dataType: "json",
+        success: function (json) {
+            if (json.code == 1) {
+                if (val == 0) {
+                    obj.attr('class', 'badge badge-no');
+                    obj.html('<i class="fa fa-times"></i>');
+                } else {
+                    obj.attr('class', 'badge badge-yes');
+                    obj.html('<i class="fa fa-check"></i>');
+                }
+                obj.attr("value", val);
+            }
+            dr_tips(json.code, json.msg);
+        },
+        error: function(HttpRequest, ajaxOptions, thrownError) {
+            dr_ajax_admin_alert_error(HttpRequest, ajaxOptions, thrownError);
+        }
+    });
+}</script>
 {template "footer.html"}

@@ -1,4 +1,6 @@
 <?php namespace Phpcmf\Control\Admin;
+use Phpcmf\Service;
+
 /**
  * {{www.xunruicms.com}}
  * {{迅睿内容管理框架系统}}
@@ -44,7 +46,15 @@ class Login extends \Phpcmf\Common
 			if (SYS_ADMIN_CODE && !\Phpcmf\Service::L('form')->check_captcha('code')) {
 				$this->_json(0, dr_lang('验证码不正确'));
 			} elseif (!IS_DEV && defined('SYS_ADMIN_LOGINS') && SYS_ADMIN_LOGINS && $sn && $sn > SYS_ADMIN_LOGINS) {
-                $this->_json(0, dr_lang('失败次数已达到%s次，已被禁止登录', SYS_ADMIN_LOGINS));
+                $msg = dr_lang('失败次数已达到%s次，已被禁止登录', SYS_ADMIN_LOGINS);
+                $msg2 = dr_lang('后台登录密码错误的次数已达到%s次', SYS_ADMIN_LOGINS);
+                $user = \Phpcmf\Service::M()->table('member')->where('username', $data['username'])->getRow();
+                if ($user) {
+                    \Phpcmf\Service::M()->table('member_data')->update($user['id'], ['is_lock' => 1]);
+                    $user['email'] && \Phpcmf\Service::M('member')->sendmail($user['email'], $msg2, 'admin_password_error.html', $data);
+                }
+                \Phpcmf\Service::L('input')->system_log($msg2, 1, [], $data['username']);
+                $this->_json(0, $msg);
 			} elseif (empty($data['username']) || empty($data['password'])) {
 				$this->_json(0, dr_lang('账号或密码必须填写'));
 			} else {
@@ -93,12 +103,18 @@ class Login extends \Phpcmf\Common
                     return $this->_json(1, 'ok', ['sync' => [], 'url' => $url], true);
                 } else {
                     // 登录失败
-                    if (defined('SYS_ADMIN_LOGINS') && SYS_ADMIN_LOGINS) {
-                        \Phpcmf\Service::C()->session()->set('fclogin_error_sn', intval($sn) + 1);
-                        \Phpcmf\Service::C()->session()->set('fclogin_error_time', SYS_TIME);
+                    if ($login['data'] == 3) {
+                        // 密码错误时记录日志
+                        \Phpcmf\Service::L('input')->password_log($data);
+                        // 记录错误计次
+                        if (defined('SYS_ADMIN_LOGINS') && SYS_ADMIN_LOGINS) {
+                            \Phpcmf\Service::C()->session()->set('fclogin_error_sn', $sn + 1);
+                            \Phpcmf\Service::C()->session()->set('fclogin_error_time', SYS_TIME);
+                        }
+                    } else {
+                        // 写入日志
+                        \Phpcmf\Service::L('input')->system_log($login['msg'], 1, [], $data['username']);
                     }
-                    // 写入日志
-                    \Phpcmf\Service::L('input')->system_log($login['msg'].'（密码'.$data['password'].'）', 1, [], $data['username']);
                     $this->_json(0, $login['msg']);
                 }
 			}

@@ -1664,6 +1664,9 @@ class View {
                         } elseif (strpos($t['value'], ',')) {
                             // 范围查询
                             list($s, $e) = explode(',', $t['value']);
+                            if (!$e) {
+                                $e = $s;
+                            }
                             $stime = strtotime($s.'-01 00:00:00');
                             $etime = strtotime($e." +1 month -1 day");
                         } else {

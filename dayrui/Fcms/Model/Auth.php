@@ -130,21 +130,21 @@ class Auth extends \Phpcmf\Model {
         $password = dr_safe_password($password);
         // 判断用户状态
         if (!$data) {
-            return dr_return_data(0, IS_DEV ? dr_lang('账号[%s]不存在', $username) : dr_lang('登录失败'));
+            return dr_return_data(0, IS_DEV ? dr_lang('账号[%s]不存在', $username) : dr_lang('登录失败'), 1);
         } elseif (!$password) {
-            return dr_return_data(0, IS_DEV ? dr_lang('密码不能为空') : dr_lang('登录失败'));
+            return dr_return_data(0, IS_DEV ? dr_lang('密码不能为空') : dr_lang('登录失败'), 2);
         } elseif (IS_API_HTTP && md5(md5($password).$data['salt'].md5($password)) == $data['password']) {
             $password = md5($password);
         }
         if (md5($password.$data['salt'].$password) != $data['password']) {
-            return dr_return_data(0, IS_DEV ? dr_lang('密码不正确') : dr_lang('登录失败'));
+            return dr_return_data(0, IS_DEV ? dr_lang('密码不正确') : dr_lang('登录失败'), 3);
         }
 
         $data['uid'] = $uid = (int)$data['id'];
         // 查询角色组
         $data['role'] = $role = $this->_role($uid);
         if (!$role) {
-            return dr_return_data(0, IS_DEV ? dr_lang('此账号不是管理员') : dr_lang('登录失败'));
+            return dr_return_data(0, IS_DEV ? dr_lang('此账号不是管理员') : dr_lang('登录失败'), 4);
         }
 
         // 保存会话
@@ -292,7 +292,11 @@ class Auth extends \Phpcmf\Model {
         $data = $this->db->table('admin')->where('uid', $uid)->get()->getRowArray();
         if (!$data) {
             return dr_return_data(0, dr_lang('管理员账号不存在'));
-        } elseif ($member['is_lock'] && !CI_DEBUG) {
+        } elseif ($member['is_lock'] && !IS_DEV) {
+            // 注销账号
+            \Phpcmf\Service::C()->session()->remove('uid');
+            \Phpcmf\Service::C()->session()->remove('admin');
+            \Phpcmf\Service::C()->session()->remove('siteid');
             return dr_return_data(0, dr_lang('账号被锁定，禁止登陆'));
         }
 
