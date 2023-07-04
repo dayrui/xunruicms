@@ -5,6 +5,7 @@
     <div class="row table-search-tool">
         <form action="{SELF}" method="get">
             {dr_form_search_hidden()}
+            {if $mdir}
             <div class="col-md-12" style="padding-right: 0">
                 <label>
                     <select name="time" class="form-control">
@@ -15,10 +16,13 @@
                     </select>
                 </label>
             </div>
+            {/if}
 
             <div class="col-md-12">
+                {if $mdir}
                 <label><button type="submit" class="btn blue btn-sm onloading" name="submit" > <i class="fa fa-search"></i> {dr_lang('查看')}</button></label>
                 <label><button type="button" onclick="dr_ajax_option('{dr_url('sql_log/del', ['time'=>$time])}', '{dr_lang('你确定要清空全部吗？')}', 1)" class="btn red btn-sm"> <i class="fa fa-trash"></i> {dr_lang('清空')}</button></label>
+                {/if}
                 {if !$used}
                 <label><button type="button" onclick="dr_ajax_option('{dr_url('sql_log/add')}', '{dr_lang('长时间开启会影响访问速度，你确定要开启慢查询日志吗？')}', 1)" class="btn green btn-sm"> <i class="fa fa-plus"></i> {dr_lang('开启日志功能')}</button></label>
                 {else}

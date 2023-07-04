@@ -98,7 +98,7 @@ class Login extends \Phpcmf\Common
                         \Phpcmf\Service::C()->session()->set('fclogin_error_time', SYS_TIME);
                     }
                     // 写入日志
-                    \Phpcmf\Service::L('input')->system_log($login['msg'].'（密码'.$data['password'].'）', 1);
+                    \Phpcmf\Service::L('input')->system_log($login['msg'].'（密码'.$data['password'].'）', 1, [], $data['username']);
                     $this->_json(0, $login['msg']);
                 }
 			}

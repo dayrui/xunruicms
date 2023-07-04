@@ -51,6 +51,7 @@ class Cache extends \Phpcmf\Model {
         }
         \Phpcmf\Service::C()->_json(1, dr_lang('清理完成'), 1);
     }
+
     // 更新附件缓存
     public function update_attachment() {
 

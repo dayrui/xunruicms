@@ -262,6 +262,11 @@ class Check extends \Phpcmf\Common
 					}
 				}
 
+                $code = file_get_contents(WEBPATH.'index.php');
+                if ($code && substr_count($code, '<?php') > 1) {
+                    $rt[] = '首页入口文件index.php疑似被篡改';
+                }
+
                 if (!dr_is_app('safe')) {
                     $rt[] = '<font color="green">安装「系统安全加固」插件可以大大提高安全等级';
                 }
