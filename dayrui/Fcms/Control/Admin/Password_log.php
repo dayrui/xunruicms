@@ -20,28 +20,33 @@ class Password_log extends \Phpcmf\Common
 
 	public function index() {
 
-
         $file = WRITEPATH.'password_log.php';
-
 		$data = $list = [];
-		$code = file_get_contents($file);
-		if ($code) {
-			$data = explode(PHP_EOL, str_replace(array(chr(13), chr(10)), PHP_EOL, $code));
-			$data = $data ? array_reverse($data) : [];
-			unset($data[0]);
-			$page = max(1, (int)\Phpcmf\Service::L('input')->get('page'));
-			$limit = ($page - 1) * SYS_ADMIN_PAGESIZE;
-			$i = $j = 0;
-			foreach ($data as $v) {
-                $val = dr_string2array($v);
-				if ($val && $i >= $limit && $j < SYS_ADMIN_PAGESIZE) {
-					$list[] = $val;
-					$j ++;
-				}
-				$i ++;
-			}
-		}
-
+        if (filesize($file) > 1024*1024*2) {
+            $list[] = [
+                'time' => SYS_TIME,
+                'username' => '账号',
+                'message' => '此日志文件大于2MB，请使用Ftp等工具查看此文件：'.$file,
+            ];
+        } else {
+            $code = file_get_contents($file);
+            if ($code) {
+                $data = explode(PHP_EOL, str_replace(array(chr(13), chr(10)), PHP_EOL, $code));
+                $data = $data ? array_reverse($data) : [];
+                unset($data[0]);
+                $page = max(1, (int)\Phpcmf\Service::L('input')->get('page'));
+                $limit = ($page - 1) * SYS_ADMIN_PAGESIZE;
+                $i = $j = 0;
+                foreach ($data as $v) {
+                    $val = dr_string2array($v);
+                    if ($val && $i >= $limit && $j < SYS_ADMIN_PAGESIZE) {
+                        $list[] = $val;
+                        $j ++;
+                    }
+                    $i ++;
+                }
+            }
+        }
 
         $total = max(0, dr_count($data) - 1);
 		

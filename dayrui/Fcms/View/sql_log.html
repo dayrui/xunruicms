@@ -49,7 +49,11 @@
                 <tr class="odd gradeX" id="dr_row_{$id}">
                     <td>{dr_date($t[0])}</td>
                     <td style="text-align: center">{round($t[2],2)}s</td>
-                    <td><a href="javascript:my_show({$id});">{str_replace('{list action=', '{', $t[4])}</a>
+                    <td>
+                        {if $t.message}
+                        {$t.message}
+                        {else}
+                        <a href="javascript:my_show({$id});">{str_replace('{list action=', '{', $t[4])}</a>
                         <div id="my_show_{$id}" style="display: none">
                             <div class="myp" style="padding: 0 20px">
                                 <p>{dr_lang('耗时')}：{round($t[2],2)}s</p>
@@ -59,6 +63,7 @@
                                 <p>{dr_lang('地址')}：<a href="{$t[5]}" target="_blank">{$t[5]}</a></p>
                             </div>
                         </div>
+                        {/if}
                     </td>
                 </tr>
                 {/loop}
