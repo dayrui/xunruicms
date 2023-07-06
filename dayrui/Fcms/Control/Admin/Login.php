@@ -58,6 +58,7 @@ class Login extends \Phpcmf\Common
 			} elseif (empty($data['username']) || empty($data['password'])) {
 				$this->_json(0, dr_lang('账号或密码必须填写'));
 			} else {
+                $data['username'] = trim($data['username']);
 				$login = \Phpcmf\Service::M('auth')->login($data['username'], $data['password']);
                 if (isset($this->admin) && is_array($this->admin)) {
                     $this->admin['uid'] = 0;

@@ -2,7 +2,7 @@
 
 {if is_file(WRITEPATH.'password_log.php') && $ci->_is_admin_auth('password_log/index')}
 <div class="note note-danger">
-    <p><a style="color: red" href="{dr_url('password_log/index')}">{dr_lang('存在后台密码登录错误记录，若是你本人操作，请清空本日志')}</a></p>
+    <p><a style="color: red" href="{dr_url('password_log/index')}">{dr_lang('存在后台密码登录错误记录，若不是你本人操作，请及时修改密码和修改后台入口文件')}</a></p>
 </div>
 {/if}
 

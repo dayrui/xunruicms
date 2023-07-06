@@ -173,7 +173,7 @@ class db_mysql {
         if ($this->param['limit']) {
             list($a, $b) = explode(',', $this->param['limit']);
             if ($b) {
-                $builder->limit($a, $b);
+                $builder->limit($b, $a);
             } else {
                 $builder->limit($a);
             }
