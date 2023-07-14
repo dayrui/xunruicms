@@ -204,9 +204,10 @@ class View {
      *
      * @param   string  $_name      模板文件名称（含扩展名）
      * @param   string  $_dir       模块名称
+     * @param   boll  $is_destruction   是否销毁变量
      * @return  void
      */
-    public function display($phpcmf_name, $phpcmf_dir = '') {
+    public function display($phpcmf_name, $phpcmf_dir = '', $is_destruction = true) {
 
         if ($this->_is_return) {
             return $phpcmf_name;
@@ -283,10 +284,12 @@ class View {
         $this->_view_time = round(microtime(true) - $phpcmf_start, 2);
 
         // 消毁变量
-        unset($this->loadjs);
-        unset($this->_include_file);
-        if (!$is_dev) {
-            unset($this->_options);
+        if ($is_destruction) {
+            unset($this->loadjs);
+            unset($this->_include_file);
+            if (!$is_dev) {
+                unset($this->_options);
+            }
         }
     }
 
@@ -1809,7 +1812,7 @@ class View {
                 $where[$i]['use'] = 1;
                 $where[$i]['prefix'] = "`$prefix`.";
             } else {
-                if (!$t['use']) {
+                if (!$t['use'] && !in_array($t['name'], ['where'])) {
                     $this->_list_error[] = '在['.$prefix.']表中字段['.$t['name'].']不存在（可用字段：'.implode('、', $field).'）';
                 }
                 $where[$i]['use'] = $t['use'] ? 1 : 0;
