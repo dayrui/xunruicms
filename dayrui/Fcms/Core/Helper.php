@@ -3787,6 +3787,16 @@ function dr_web_prefix($url) {
 }
 
 /**
+ * url转为完整路径 URL补全
+ * @param $url
+ * @param $prefix 指定替换域名/
+ * @return 新的url
+ */
+function dr_url_full($url, $prefix = '') {
+    return dr_url_prefix($url, $prefix);
+}
+
+/**
  * url转为相对路径
  * @param $url
  * @param $prefix 将指定字符串替换成/
