@@ -185,7 +185,7 @@ class Property extends \Phpcmf\Library\A_Field {
 			    if (!isset($t['name']) && $t['name']) {
 			        continue;
                 }
-				$str.= '<tr id="dr_items_'.$name.'_'.$i.'">';
+				$str.= '<tr id="dr_items_'.$name.'_'.$i.'" class="dr_items_readonly">';
 				$str.= '<td class="highlight"><input type="text" readonly class="form-control input-sm" value="'.$t['name'].'" name="data['.$name.']['.$i.'][name]"></td>';
 				$str.= '<td>';
 				switch ($t['type']) {
@@ -227,7 +227,7 @@ class Property extends \Phpcmf\Library\A_Field {
 		// 剩下自定义属性
 		if ($value && !$field['setting']['option']['is_hang']) {
 			foreach ($value as $t) {
-                $str.= '<tr id="dr_items_'.$name.'_'.$i.'">';
+                $str.= '<tr id="dr_items_'.$name.'_'.$i.'" class="dr_items_sort">';
                 $str.= '<td><input type="text" class="form-control input-sm" value="'.htmlspecialchars((string)$t['name']).'" name="data['.$name.']['.$i.'][name]"></td>';
                 $str.= '<td>';
                 $str.= '<input type="text" class="form-control input-sm" value="'.htmlspecialchars((string)$t['value']).'" name="data['.$name.']['.$i.'][value]" />';
@@ -243,10 +243,11 @@ class Property extends \Phpcmf\Library\A_Field {
             </tbody>
         </table></div></div>';
 		if (!$field['setting']['option']['is_hang']) {
-
             $js = \Phpcmf\Service::L('js_packer');
             $str.= $js->pack('<script type="text/javascript">
-		$("#property_'.$name.'-sort-items").sortable();
+		$("#property_'.$name.'-sort-items").sortable({
+  items: ".dr_items_sort"
+});
         dr_slimScroll_init(".scroller_'.$name.'_files", 300);
 		var id='.($i).';
 		function dr_add_property_'.$name.'() {
