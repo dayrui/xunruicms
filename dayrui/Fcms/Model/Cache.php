@@ -276,7 +276,6 @@ class Cache extends \Phpcmf\Model {
 
         \Phpcmf\Service::M('menu')->cache();
 
-        $this->update_data_cache();
     }
 
     // 重建索引

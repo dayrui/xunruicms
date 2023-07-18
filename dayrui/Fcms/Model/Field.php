@@ -201,7 +201,7 @@ class Field extends \Phpcmf\Model {
 
         $name = 'my-table-'.$table;
         $value = \Phpcmf\Service::L('cache')->get_data($name);
-        if (!$value) {
+        if (IS_ADMIN || !$value) {
             $field = $this->db->table('field')
                         ->where('disabled', 0)
                         ->where('relatedid', $siteid)
@@ -226,7 +226,7 @@ class Field extends \Phpcmf\Model {
 
         $name = 'my-site-'.$siteid;
         $value = \Phpcmf\Service::L('cache')->get_data($name);
-        if (!$value) {
+        if (IS_ADMIN || !$value) {
             $field = $this->db->table('field')
                         ->where('disabled', 0)
                         ->where('relatedid', $siteid)
