@@ -419,6 +419,12 @@ return [
             }
         }
 
+        // 备份模板
+        \Phpcmf\Service::L('file')->zip(
+            WRITEPATH.'backups/update/template/'.date('Y-m-d-H-i-s').'.zip',
+            TPLPATH
+        );
+
         // 复制文件到程序
         $is_ok = 0;
         if (is_dir($cmspath.'APPSPATH')) {
