@@ -275,7 +275,7 @@ class Attachment extends \Phpcmf\Model {
         // 按uid散列分表
         $tid = (int)substr((string)$this->member['id'], -1, 1);
         $related = $related ? $related : (SYS_ATTACHMENT_DB ? '' : 'rand');
-        $data['name'] = dr_safe_filename($data['name']);
+        $data['name'] = dr_safe_replace($data['name'], ["/", '\\', '..']);
 
         // 入库索引表
         $rt = $this->table('attachment')->replace([
