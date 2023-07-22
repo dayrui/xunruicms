@@ -22,6 +22,11 @@ class Site_image extends \Phpcmf\Common
                 'image_reduce',
                 \Phpcmf\Service::L('input')->post('image')
             );*/
+
+            $image = \Phpcmf\Service::L('input')->post('image');
+            unset($image['avatar_url'], $image['avatar_path']);
+            \Phpcmf\Service::M('site')->config(SITE_ID, 'image', $image);
+
             \Phpcmf\Service::M('cache')->sync_cache('');
             \Phpcmf\Service::L('input')->system_log('设置项目图片参数');
             $this->_json(1, dr_lang('操作成功'));
@@ -55,6 +60,7 @@ class Site_image extends \Phpcmf\Common
             ),
             'page' => $page,
             'data' => $data['watermark'],
+            'image' => $data['image'],
             //'image' => $data['image_reduce'],
             'form' => dr_form_hidden(['page' => $page]),
             'locate' => $locate,

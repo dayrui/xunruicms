@@ -1277,15 +1277,15 @@ function dr_thumb_path() {
 
     $config = \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'image');
     if (!$config['cache_path'] || !$config['cache_url']) {
-        return [ROOTPATH.'uploadfile/thumb/', ROOT_URL.'uploadfile/thumb/'];
+        return [ROOTPATH.'uploadfile/thumb/', ROOT_URL.'uploadfile/thumb/', $config['ext']];
     }
 
     if ((strpos($config['cache_path'], '/') === 0 || strpos($config['cache_path'], ':') !== false) && is_dir($config['cache_path'])) {
         // 相对于根目录
-        return [rtrim($config['cache_path'], DIRECTORY_SEPARATOR).'/', trim($config['cache_url'], '/').'/'];
+        return [rtrim($config['cache_path'], DIRECTORY_SEPARATOR).'/', trim($config['cache_url'], '/').'/', $config['ext']];
     } else {
         // 在当前网站目录
-        return [ROOTPATH.trim($config['cache_path'], '/').'/', ROOT_URL.trim($config['cache_path'], '/').'/'];
+        return [ROOTPATH.trim($config['cache_path'], '/').'/', ROOT_URL.trim($config['cache_path'], '/').'/', $config['ext']];
     }
 }
 
@@ -1300,7 +1300,7 @@ function dr_thumb($img, $width = 0, $height = 0, $water = 0, $mode = 'auto', $we
         return dr_get_file($img).(IS_DEV ? '#没有设置高宽参数，将以原图输出' : '');
     } elseif (is_numeric($img) || $webimg) {
 
-        list($cache_path, $cache_url) = dr_thumb_path();
+        list($cache_path, $cache_url, $ext) = dr_thumb_path();
 
         // 强制缩略图水印
         if (defined('SITE_THUMB_WATERMARK') && SITE_THUMB_WATERMARK) {
@@ -1309,7 +1309,7 @@ function dr_thumb($img, $width = 0, $height = 0, $water = 0, $mode = 'auto', $we
 
         if (!IS_DEV) {
             // 非开发者模式下读取缓存
-            $cache_file = md5($img).'/'.$width.'x'.$height.($water ? '_water' : '').'_'.$mode.'.jpg';
+            $cache_file = md5($img).'/'.$width.'x'.$height.($water ? '_water' : '').'_'.$mode.'.'.($ext ? 'webp' : 'jpg');
             if (is_file($cache_path.$cache_file)) {
                 return dr_url_rel($cache_url.$cache_file);
             }

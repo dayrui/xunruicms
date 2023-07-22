@@ -454,11 +454,8 @@ class Image {
         {
             $this->thumb_marker = '';
         }
-        $xp = $this->explode_name($this->dest_image);
-        $filename = $xp['name'];
-        $file_ext = $xp['ext'];
         $this->full_src_path = $this->source_folder.$this->source_image;
-        $this->full_dst_path = $this->dest_folder.$filename.$this->thumb_marker.$file_ext;
+        $this->full_dst_path = $this->new_image;
         /* Should we maintain image proportions?
          *
          * When creating thumbs or copies, the target width/height
@@ -1282,6 +1279,9 @@ class Image {
      */
     public function image_save_gd($resource)
     {
+        if ($this->image_type != 18 && strpos($this->full_dst_path, '.webp')) {
+            $this->image_type = 18;
+        }
         switch ($this->image_type)
         {
             case 1:
@@ -1598,10 +1598,10 @@ class Image {
      */
     public function thumb($img, $width = 0, $height = 0, $water = 0, $mode = 'auto', $webimg = 0) {
 
-        list($cache_path, $cache_url) = dr_thumb_path();
+        list($cache_path, $cache_url, $ext) = dr_thumb_path();
 
         // 图片缩略图文件
-        $cache_file = md5($img).'/'.$width.'x'.$height.($water ? '_water' : '').'_'.$mode.'.jpg';
+        $cache_file = md5($img).'/'.$width.'x'.$height.($water ? '_water' : '').'_'.$mode.'.'.($ext ? 'webp' : 'jpg');
         if (!IS_DEV && is_file($cache_path.$cache_file)) {
             return $cache_url.$cache_file;
         }
@@ -1863,6 +1863,9 @@ class Image {
 
         list($width, $height, $type) = getimagesize($imgsrc);
         list($width, $height) = $this->_fix_orientation($imgsrc, $width, $height);
+        if ($type != 18 && strpos($imgsrc, '.webp')) {
+            $type = 18;
+        }
 
         if ($width > $cw) {
             $per = $cw / $width;//计算比例

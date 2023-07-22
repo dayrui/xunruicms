@@ -16,8 +16,8 @@
                 <li class="{if $page==0}active{/if}">
                     <a href="#tab_0" data-toggle="tab" onclick="$('#dr_page').val('0')"> <i class="fa fa-photo"></i> {dr_lang('水印设置')} </a>
                 </li>
-                <li class="{if $page==1}active{/if} hide">
-                    <a href="#tab_1" data-toggle="tab" onclick="$('#dr_page').val('1')"> <i class="fa fa-cog"></i> {dr_lang('图片压缩设置')} </a>
+                <li class="{if $page==1}active{/if}">
+                    <a href="#tab_1" data-toggle="tab" onclick="$('#dr_page').val('1')"> <i class="fa fa-cog"></i> {dr_lang('缩略图设置')} </a>
                 </li>
             </ul>
         </div>
@@ -28,14 +28,48 @@
                 <div class="tab-pane {if $page==1}active{/if}" id="tab_1">
                     <div class="form-body">
 						
-						<div class="form-group">
-                            <label class="col-md-2 control-label">{dr_lang('压缩图片开关')}</label>
+						<div class="form-group " >
+                            <label class="col-md-2 control-label">{dr_lang('缩略图格式')}</label>
                             <div class="col-md-9">
                                 <div class="mt-radio-inline">
-                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="image[used]" value="1" {if $image['used']}checked{/if} /> {dr_lang('开启')} <span></span></label>
-                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="image[SYS_DusedEBUG]" value="0" {if empty($image['used'])}checked{/if} /> {dr_lang('关闭')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="image[ext]" value="0" {if empty($image['ext'])}checked{/if} /> JPG <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="image[ext]" value="1" {if $image['ext']}checked{/if} /> WEBP <span></span></label>
                                 </div>
-                                <span class="help-block">{dr_lang('将大尺寸的图片压缩小')}</span>
+                                <span class="help-block">{dr_lang('缩略图扩展名格式选择')}</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('缩略图存储目录')}</label>
+                            <div class="col-md-9">
+                                <div class="input-group input-xlarge">
+                                    <input class="form-control " type="text" id="dr_cache_dir" name="image[cache_path]" value="{htmlspecialchars((string)$image['cache_path'])}" >
+                                    <span class="input-group-btn">
+                                            <button class="btn blue" onclick="dr_test_domain_dir('dr_cache_dir')" type="button"><i class="fa fa-code"></i> {dr_lang('测试')}</button>
+                                        </span>
+                                </div>
+                                <span class="help-block">{dr_lang('绝对路径请以“/”开头，默认uploadfile/thumb/')}</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('缩略图访问URL地址')}</label>
+                            <div class="col-md-9">
+                                <div class="input-group input-xlarge">
+                                    <input class="form-control " id="dr_cache_url" type="text" name="image[cache_url]" value="{htmlspecialchars((string)$image['cache_url'])}" >
+                                    <span class="input-group-btn">
+                                            <button class="btn blue" onclick="dr_test_thumb_domain()" type="button"><i class="fa fa-wrench"></i> {dr_lang('检测')}</button>
+                                        </span>
+                                </div>
+
+                                <span class="help-block">{dr_lang('缩略图文件访问地址，可单独指定域名，默认/uploadfile/thumb/')}</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="display: none" id="dr_test_thumb_domain">
+                            <label class="col-md-2 control-label">{dr_lang('目录检测结果')}</label>
+                            <div class="col-md-9" style="padding-top: 3px; line-height: 25px; color:green" id="dr_test_thumb_domain_result">
+
                             </div>
                         </div>
                         
@@ -318,7 +352,35 @@ $(function(){
 
 });
 
-
+function dr_test_thumb_domain() {
+    // 延迟加载
+    var loading = layer.load(2, {
+        shade: [0.3,'#fff'], //0.1透明度的白色背景
+        time: 5000
+    });
+    $('#dr_test_domain').hide();
+    $.ajax({type: "POST",dataType:"json", url: admin_file+"?c=api&m=test_thumb_domain", data: $('#myform').serialize(),
+        success: function(json) {
+            layer.close(loading);
+            $('#dr_test_thumb_domain').show();
+            $('#dr_test_thumb_domain_result').html(json.msg);
+            return false;
+        },
+        error: function(HttpRequest, ajaxOptions, thrownError) {
+            dr_ajax_admin_alert_error(HttpRequest, ajaxOptions, thrownError);
+        }
+    });
+}
+function dr_test_domain_dir(id) {
+    $.ajax({type: "GET",dataType:"json", url: admin_file+"?c=api&m=test_attach_dir&v="+encodeURIComponent($("#"+id).val()),
+        success: function(json) {
+            dr_tips(json.code, json.msg, -1);
+        },
+        error: function(HttpRequest, ajaxOptions, thrownError) {
+            dr_ajax_admin_alert_error(HttpRequest, ajaxOptions, thrownError)
+        }
+    });
+}
 </script>
 <style>
     .btn-default.active, .btn-default:active, .btn-default:hover, .btn-default.active.focus {
