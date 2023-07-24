@@ -1023,7 +1023,12 @@ function dr_linkagepos($code, $id, $symbol = ' > ', $url = '', $html = '') {
         if ($ii) {
             $data = dr_linkage($code, $ii, 0);
             if ($url) {
-                $name[] = ($html ? str_replace(['[url]', '[name]'], array(str_replace(['[linkage]', '{linkage}'], $data['id'], $url), $data['name']), $html) : "<a href=\"".str_replace(['[linkage]', '{linkage}'], $data['id'], $url)."\">{$data['name']}</a>");
+                $curl = str_replace(
+                    ['[linkage]', '{linkage}', '[id]', '{id}'],
+                    [$data['id'], $data['id'], $data['iid'], $data['iid']],
+                    $url
+                );
+                $name[] = ($html ? str_replace(['[url]', '[name]'], array($curl, $data['name']), $html) : "<a href=\"".$curl."\">{$data['name']}</a>");
             } else {
                 $name[] = $data['name'];
             }
