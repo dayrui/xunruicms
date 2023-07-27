@@ -444,7 +444,7 @@ class Linkage extends \Phpcmf\Model {
                     continue;
                 }
                 $lv[] = substr_count($t['pids'], ',');
-                $t['ii'] = $t['id'];
+                $t['ii'] = $t['iid'] = $t['id'];
                 $t['id'] = $t['cname'];
                 $cid[$t['ii']] = $t['id'];
                 $data[$t['cname']] = \Phpcmf\Service::L('Field')->app('')->format_value($field, $t);

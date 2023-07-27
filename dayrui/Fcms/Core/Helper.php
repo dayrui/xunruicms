@@ -1024,8 +1024,8 @@ function dr_linkagepos($code, $id, $symbol = ' > ', $url = '', $html = '') {
             $data = dr_linkage($code, $ii, 0);
             if ($url) {
                 $curl = str_replace(
-                    ['[linkage]', '{linkage}', '[id]', '{id}'],
-                    [$data['id'], $data['id'], $data['iid'], $data['iid']],
+                    ['[linkage]', '{linkage}', '[id]', '{id}', '[iid]', '{iid}'],
+                    [$data['id'], $data['id'], $data['ii'], $data['ii'], $data['iid'], $data['iid']],
                     $url
                 );
                 $name[] = ($html ? str_replace(['[url]', '[name]'], array($curl, $data['name']), $html) : "<a href=\"".$curl."\">{$data['name']}</a>");
