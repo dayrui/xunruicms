@@ -983,6 +983,10 @@ class Model {
             } else {
                 $select->select('count(*) as total');
             }
+            // 自定义查询闭包函数
+            if (isset($this->init['select_function'])) {
+                $this->init['select_function']($select);
+            }
             $where && $select->where($where);
             $param = $this->_limit_page_where($select, $param);
             $query = $select->get();
@@ -1003,7 +1007,10 @@ class Model {
 
         $select	= $this->db->table($this->table);
         $this->param['select_list'] && $select->select($this->param['select_list']);
-
+        // 自定义查询闭包函数
+        if (isset($this->init['select_function'])) {
+            $this->init['select_function']($select);
+        }
         $where && $select->where($where);
         $param = $this->_limit_page_where($select, $param);
         if ($size > 0) {

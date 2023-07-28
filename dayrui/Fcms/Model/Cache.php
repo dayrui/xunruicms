@@ -139,7 +139,6 @@ class Cache extends \Phpcmf\Model {
     public function update_site_cache() {
 
         $site_cache = $this->table('site')->where('disabled', 0)->order_by('displayorder ASC,id ASC')->getAll();
-
         $module_cache = dr_is_use_module() ? $this->table('module')->order_by('displayorder ASC,id ASC')->getAll() : [];
 
         // 按项目更新的缓存
@@ -166,6 +165,7 @@ class Cache extends \Phpcmf\Model {
 
         if (!$page) {
             // 全局系统缓存
+            dr_dir_delete(WRITEPATH.'data');
             \Phpcmf\Service::M('site')->cache(0, $site_cache, $module_cache);
             foreach (['auth', 'email', 'member', 'attachment', 'system'] as $m) {
                 \Phpcmf\Service::M($m)->cache();
@@ -213,9 +213,7 @@ class Cache extends \Phpcmf\Model {
     public function update_cache() {
 
         $site_cache = $this->table('site')->where('disabled', 0)->order_by('displayorder ASC,id ASC')->getAll();
-
         $module_cache = dr_is_use_module() ? $this->table('module')->order_by('displayorder ASC,id ASC')->getAll() : [];
-
         \Phpcmf\Service::M('site')->cache(0, $site_cache, $module_cache);
 
         // 全局缓存

@@ -218,9 +218,8 @@ class Site extends \Phpcmf\Model {
     public function cache($siteid = null, $data = null, $module = null) {
 
         !$data && $data = $this->table('site')->where('disabled', 0)->order_by('displayorder ASC,id ASC')->getAll();
-        $sso_domain = $client_name = $client_domain = $webpath = $app_domain = $site_domain = $config = $cache = [];
+        $sso_domain = $client_domain = $webpath = $app_domain = $site_domain = $config = $cache = [];
         if ($data) {
-            $module_cache_file = []; // 删除多余的模块缓存文件
             foreach ($data as $t) {
                 if ($t['id'] > 1 && !dr_is_app('sites')) {
                     break;
@@ -315,9 +314,6 @@ class Site extends \Phpcmf\Model {
                 //unlink($webpath[$t['id']]['site'].'index.html');
                 //unlink($webpath[$t['id']]['site'].$mobile_dirname.'/index.html');
 
-                $module_cache_file[] = 'module-'.$t['id'].'-content.cache'; // 删除多余的模块缓存文件
-                $module_cache_file[] = 'module-'.$t['id'].'-share.cache'; // 删除多余的模块缓存文件
-                $module_cache_file[] = 'module-'.$t['id'].'.cache'; // 删除多余的模块缓存文件
                 $cache[$t['id']] = $t['setting'];
             }
 
@@ -329,7 +325,7 @@ class Site extends \Phpcmf\Model {
                     $app_domain,
                     $sso_domain,
                     $client_domain,
-                    $module_cache_file,
+                    [],
                     $data
                 );
             }
