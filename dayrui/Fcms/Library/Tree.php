@@ -233,7 +233,7 @@ class Tree {
         $default && $string.= "<option value='0'>$default</option>";
 
         if (!IS_DEV) {
-            $name = 'tree'.md5(dr_array2string($data).$id.$str.$default);
+            $name = 'tree'.md5(dr_array2string($data).$id.$str.$default.\Phpcmf\Service::M()->uid);
             $cache = \Phpcmf\Service::L('cache')->get_data($name);
             if ($cache) {
                 return $cache;
@@ -290,14 +290,11 @@ class Tree {
         }
 
         $dir = 'module/category-'.SITE_ID.'-'.$mid.'-select/';
-        $name = 'tree2_'.md5(dr_array2string($data).$this->ismain.$mid.$str.$default.$onlysub.$is_push.$is_first);
-        if ($is_push) {
-            $name.= \Phpcmf\Service::C()->uid;
-            if (IS_ADMIN) {
-                $name.= 'admin'.md5(\Phpcmf\Service::C()->admin ? dr_array2string(\Phpcmf\Service::C()->admin['roleid']) : '1');
-            } else {
-                $name.= md5(\Phpcmf\Service::C()->member ? dr_array2string(\Phpcmf\Service::C()->member['authid']) : '2');
-            }
+        $name = 'tree_cache_'.md5(dr_array2string($data).$this->ismain.$mid.$str.$default.$onlysub.$is_push.$is_first);
+        if (IS_ADMIN) {
+            $name.= 'admin'.md5(\Phpcmf\Service::C()->admin ? dr_array2string(\Phpcmf\Service::C()->admin['roleid']) : '1');
+        } else {
+            $name.= md5(\Phpcmf\Service::C()->member ? dr_array2string(\Phpcmf\Service::C()->member['authid']) : '2');
         }
         $string = CI_DEBUG ? '' : \Phpcmf\Service::L('cache')->get_file($name, $dir);
         if (!$string) {
