@@ -765,7 +765,7 @@ abstract class Common extends \Frame\Controller {
         header('Content-type: application/json');
 
         echo dr_array2string($rt);
-        if (!$return) {
+        if (!$return or IS_API_HTTP) {
             exit;
         }
     }
