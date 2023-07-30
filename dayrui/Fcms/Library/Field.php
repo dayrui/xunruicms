@@ -882,7 +882,7 @@
         }
 
         // 判断是否禁止修改
-        protected function _not_edit($field, $value) {
+        public function _not_edit($field, $value) {
             if (defined('IS_MODULE_VERIFY')) {
                 // 内容审核时
                 if (defined('IS_MODULE_VERIFY_NEW') && IS_MODULE_VERIFY_NEW) {
