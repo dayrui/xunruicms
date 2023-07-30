@@ -883,8 +883,13 @@
 
         // 判断是否禁止修改
         protected function _not_edit($field, $value) {
-            return !defined('IS_MODULE_VERIFY')
-                && !IS_ADMIN
+            if (defined('IS_MODULE_VERIFY')) {
+                // 内容审核时
+                if (defined('IS_MODULE_VERIFY_NEW') && IS_MODULE_VERIFY_NEW) {
+                    return 0;
+                }
+            }
+            return !IS_ADMIN
                 && $this->id
                 && dr_strlen($value)
                 && $field['setting']['validate']['isedit'];

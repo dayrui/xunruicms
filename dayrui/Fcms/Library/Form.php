@@ -148,14 +148,15 @@ class Form {
                     unset($fields[$fid]);
                     continue; // 对象不存在
                 }
-                $obj->init($field);;
+                $obj->init($field);
+                $name = $field['fieldname']; // 字段名称
                 // 非后台时
                 if (!IS_ADMIN) {
                     if (!$field['ismember']) {
                         $notfields[] = $field['fieldname']; // 无权限排除的字段
                         unset($fields[$fid]);
                         continue; // 前端字段筛选
-                    } elseif ($field['setting']['validate']['isedit'] && $this->id && $old[$field['fieldname']] && !defined('IS_MODULE_VERIFY')) {
+                    } elseif ($obj->_not_edit($field, $data[$name])) {
                         unset($fields[$fid]);
                         $notfields[] = $field['fieldname']; // 无权限排除的字段
                         continue; // 前端禁止修改时
@@ -171,7 +172,6 @@ class Form {
                 }
 
                 // 验证字段
-                $name = $field['fieldname']; // 字段名称
                 $validate = $field['setting']['validate']; // 字段验证规则
                 // 默认xss开关
                 $xss = 0;
