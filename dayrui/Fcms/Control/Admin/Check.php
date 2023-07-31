@@ -267,6 +267,17 @@ class Check extends \Phpcmf\Common
                     $rt[] = '首页入口文件index.php疑似被篡改';
                 }
 
+                if (function_exists('ini_get')) {
+                    $pfile = ini_get('auto_prepend_file');
+                    if ($pfile) {
+                        $rt[] = '<font color="#ff7f50">php.ini中auto_prepend_file参数疑似可疑代码：'.dr_strcut($pfile, 20);
+                    }
+                    $afile = ini_get('auto_append_file');
+                    if ($afile) {
+                        $rt[] = '<font color="#ff7f50">php.ini中auto_append_file参数疑似可疑代码：'.dr_strcut($afile, 20);
+                    }
+                }
+
                 if (!dr_is_app('safe')) {
                     $rt[] = '<font color="green">安装「系统安全加固」插件可以大大提高安全等级';
                 }
