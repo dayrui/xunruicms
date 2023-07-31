@@ -12906,6 +12906,7 @@ td>.mt-table.mt-checkbox-single,th>.mt-table.mt-checkbox-single {
     width: 78px;
     top: -18px;
     text-align: right;
+    height: 0;
 }
 
 .table-finecms-upload .files_row_preview {
@@ -13808,4 +13809,18 @@ form .portlet.light .portlet-body {
 select.form-control {
     color: #5e6278;
     transition: color .2s ease,background-color .2s ease;
+}
+.files-image-list .template-download .op-btn label {
+    margin: 0 5px;
+}
+.files-image-list .template-download .op-btn{
+    clear: both;
+    text-align: center;
+    width:80px;
+    margin-top:5px;
+}
+.files-image-list .template-download {
+    border: 0;
+    float: left;
+    width: 100px;
 }
