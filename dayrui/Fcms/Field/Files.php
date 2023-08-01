@@ -46,6 +46,13 @@ class Files extends \Phpcmf\Library\A_Field {
                 </div>
             </div>
             <div class="form-group">
+                <label class="col-md-2 control-label">'.dr_lang('附件名称').'</label>
+                <div class="col-md-9">
+                    <input type="checkbox" name="data[setting][option][name]" '.($option['name'] ? 'checked' : '').' value="1"  data-on-text="'.dr_lang('已开启').'" data-off-text="'.dr_lang('已关闭').'" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                    <span class="help-block">'.dr_lang('开启将会出现单行文本输入框').'</span>
+                </div>
+            </div>
+            <div class="form-group">
                 <label class="col-md-2 control-label">'.dr_lang('描述文本').'</label>
                 <div class="col-md-9">
                     <input type="checkbox" name="data[setting][option][desc]" '.($option['desc'] ? 'checked' : '').' value="1"  data-on-text="'.dr_lang('已开启').'" data-off-text="'.dr_lang('已关闭').'" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
@@ -161,9 +168,10 @@ class Files extends \Phpcmf\Library\A_Field {
 
         $data = [];
         $value = \Phpcmf\Service::L('Field')->post[$field['fieldname']];
-        if ($value && $value['title']) {
-            foreach ($value['title'] as $id => $title) {
-                $data['file'][$id] = $value['id'][$id] ? $value['id'][$id] : $value['file'][$id];
+        if ($value && $value['id']) {
+            foreach ($value['id'] as $id => $aid) {
+                $title = (string)$value['title'][$id];
+                $data['file'][$id] = $aid ? $aid : (string)$value['file'][$id];
                 $data['title'][$id] = trim($title);
                 $data['description'][$id] = $value['description'][$id] ? trim($value['description'][$id]) : '';
             }
@@ -271,32 +279,50 @@ class Files extends \Phpcmf\Library\A_Field {
         ], 'ENCODE');
 
         // 显示模板
-        $tpl = '<tr class="template-download files_row">';
-        $tpl.= '<td style="text-align:center;width: 80px;">';
-        $tpl.= '<div class="files_row_preview preview">{preview}</div>';
-        $tpl.= '</td>';
-        $tpl.= '<td class="files_show_info">';
-        $tpl.= '<div class="row">';
-        $tpl.= '<div class="col-md-12 files_show_title_html">';
-        $tpl.= '<input class="form-control files_row_title" type="text" name="data[' . $name . '][title][]" value="{title}">';
-        $tpl.= '<input type="hidden" class="files_row_id" name="data[' . $name . '][id][]" value="{id}">';
-        $tpl.= '<input class="files_row_name" {disabled} type="hidden" name="data[' . $name . '][file][]" value="{filepath}">';
-        $tpl.= '</div>';
-        if ($field['setting']['option']['desc']) {
-            $tpl.= '<div class="col-md-12 files_show_description_html">';
-            $tpl.= '<textarea class="form-control files_row_description" name="data['.$name.'][description][]">{description}</textarea>';
+        if ($field['setting']['option']['name'] or $field['setting']['option']['desc']) {
+            $tpl = '<tr class="template-download files_row">';
+            $tpl.= '<td style="text-align:center;width: 80px;">';
+            $tpl.= '<div class="files_row_preview preview">{preview}</div>';
+            $tpl.= '</td>';
+            $tpl.= '<td class="files_show_info">';
+            $tpl.= '<div class="row">';
+            $tpl.= '<div class="col-md-12 files_show_title_html">';
+            if ($field['setting']['option']['name']) {
+                $tpl .= '<input class="form-control files_row_title" type="text" name="data[' . $name . '][title][]" value="{title}">';
+            }
+            $tpl.= '<input type="hidden" class="files_row_id" name="data[' . $name . '][id][]" value="{id}">';
+            $tpl.= '<input class="files_row_name" {disabled} type="hidden" name="data[' . $name . '][file][]" value="{filepath}">';
             $tpl.= '</div>';
+            if ($field['setting']['option']['desc']) {
+                $tpl.= '<div class="col-md-12 files_show_description_html">';
+                $tpl.= '<textarea class="form-control files_row_description" name="data['.$name.'][description][]">{description}</textarea>';
+                $tpl.= '</div>';
+            }
+            $tpl.= '</div>';
+            $tpl.= '</td>';
+
+            $tpl.= '<td style="text-align:center;width: 80px;">';
+            $tpl.= '<label><button onclick="dr_file_remove(this)" type="button" class="btn red file_delete btn-sm"><i class="fa fa-trash"></i></button></label>';
+
+            $tpl.= $js_rm = '<label><button onclick="fileupload_file_edit(\''.$name.'\',this)" type="button" class="fileinput-button btn green file_edit btn-sm"><i class="fa fa-edit"></i>{upload}</button></label>';
+
+            $tpl.= '</td>';
+            $tpl.= '</tr>';
+        } else {
+            $tpl = '<div class="template-download files_row">';
+            $tpl.= '<div class="files_row_preview preview">{preview}</div>';
+            $tpl.= '<input type="hidden" class="files_row_id" name="data[' . $name . '][id][]" value="{id}">';
+            $tpl.= '<input class="files_row_name" {disabled} type="hidden" name="data[' . $name . '][file][]" value="{filepath}">';
+
+            $tpl.= '<div class="op-btn">';
+            $tpl.= '<label><button onclick="dr_file_remove(this)" type="button" class="btn red file_delete btn-xs"><i class="fa fa-trash"></i></button></label>';
+            $tpl.= $js_rm = '<label><button onclick="fileupload_file_edit(\''.$name.'\',this)" type="button" class="fileinput-button btn green file_edit btn-xs"><i class="fa fa-edit"></i>{upload}</button></label>';
+
+            $tpl.= '</div>';
+            $tpl.= '</div>';
+
         }
-        $tpl.= '</div>';
-        $tpl.= '</td>';
 
-        $tpl.= '<td style="text-align:center;width: 80px;">';
-        $tpl.= '<label><button onclick="dr_file_remove(this)" type="button" class="btn red file_delete btn-sm"><i class="fa fa-trash"></i></button></label>';
-
-        $tpl.= $js_rm = '<label><button onclick="fileupload_file_edit(\''.$name.'\',this)" type="button" class="fileinput-button btn green file_edit btn-sm"><i class="fa fa-edit"></i>{upload}</button></label>';
-
-        $tpl.= '</td>';
-        $tpl.= '</tr>';
 
         // 已保存数据
         $val = '';
@@ -316,14 +342,21 @@ class Files extends \Phpcmf\Library\A_Field {
                     $filepath = htmlspecialchars((string)$id);
                     $preview = dr_file_preview_html($id);
                     $upload = '';
-                    $id = '';
+                    //$id = '';
                 }
                 $val.= str_replace(
-                    ['{title}', '{description}', '{id}', '{filepath}', '{disabled}', '{preview}', '{upload}'],
-                    [htmlspecialchars((string)$t['title']), $description, $id, $filepath, $disabled, $preview, $upload],
+                    ['{title}', '{description}', '{id}', '{file}', '{filepath}', '{disabled}', '{preview}', '{upload}'],
+                    [htmlspecialchars((string)$t['title']), $description, $id, $id, $filepath, $disabled, $preview, $upload],
                     $tpl
                 );
             }
+        }
+        if ($field['setting']['option']['name'] or $field['setting']['option']['desc']) {
+            $val = '<table role="presentation" class="table table-striped table-fc-upload clearfix">
+                        <tbody id="fileupload_'.$name.'_files" class="files scroller_body">'.$val.'</tbody>
+                    </table>';
+        } else {
+            $val = '<div id="fileupload_'.$name.'_files" class="files scroller_body files-image-list">'.$val.'</div>';
         }
 
         $json = json_encode([
@@ -332,7 +365,7 @@ class Files extends \Phpcmf\Library\A_Field {
             'size' => floatval($field['setting']['option']['size']) * 1024 * 1024,
             'url' =>  dr_web_prefix('index.php?s=api&c=file&is_iframe=1&token='.dr_get_csrf_token()).'&siteid=' . SITE_ID . '&m=upload&p=' . $p . '&fid=' . $field['id'],
             'unused_url' => dr_web_prefix('index.php?s=api&c=file&m=input_file_list&is_iframe=1&token='.dr_get_csrf_token()).'&siteid='.SITE_ID.'&p=' . $p . '&fid=' . $field['id'],
-            'input_url' => dr_web_prefix('index.php?s=api&c=file&m=input_file_url&is_iframe=1&token='.dr_get_csrf_token()).'&siteid='.SITE_ID.'&p='.$p.'&fid='.$field['id'],
+            'input_url' => dr_web_prefix('index.php?s=api&c=file&m=input_file_url&is_iframe=1&token='.dr_get_csrf_token()).'&siteid='.SITE_ID.'&p='.$p.'&fid='.$field['id'].'&one='.($field['setting']['option']['name']?0:1),
             'tpl' => str_replace($js_rm, '', $tpl),
             'area' => \Phpcmf\Service::IS_MOBILE_USER() ? ["95%", "90%"] : ["80%", "80%"],
             'url_area' => \Phpcmf\Service::IS_MOBILE_USER() ? ["95%", "90%"] : ["50%", "340px"],
@@ -382,9 +415,7 @@ class Files extends \Phpcmf\Library\A_Field {
         $str.= '
 			<div class="scroller_'.$name.'_files">
                 <div class="'.($field['setting']['option']['scroller'] ? 'scroller' : '').'" data-inited="0" data-initialized="1" data-always-visible="1" data-rail-visible="1">
-                    <table role="presentation" class="table table-striped table-fc-upload clearfix">
-                        <tbody id="fileupload_'.$name.'_files" class="files scroller_body">'.$val.'</tbody>
-                    </table>
+                    '.$val.'
                 </div>
 			</div>
 		';
