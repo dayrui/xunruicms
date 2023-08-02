@@ -49,11 +49,11 @@ class Cron extends \Phpcmf\Model {
     // 执行本任务
     public function do_cron($cron) {
 
+        $value = dr_string2array($cron['value']);
         switch ($cron['type']) {
 
             case 'notice':
                 // 通知消息
-                $value = dr_string2array($cron['value']);
                 list($error, $value) = \Phpcmf\Service::L('notice')->cron_notice($cron['site'], $value);
 
                 // 加入队列并执行
@@ -65,8 +65,27 @@ class Cron extends \Phpcmf\Model {
 
             default:
 
-                log_message('debug', '任务查询（'.$cron['id'].'）类型【'.$cron['type'].'】不存在：'.FC_NOW_URL);
-                return dr_return_data(0, '任务查询（'.$cron['id'].'）类型【'.$cron['type'].'】不存在');
+                if ($cron['type'] && strpos($cron['type'], '::')) {
+                    list($app, $name) = explode('::', $cron['type']);
+                    if (dr_is_app($app)) {
+                        $file = dr_get_app_dir($app).'Cron/'.ucfirst($name).'.php';
+                    }
+                } else {
+                    $file = MYPATH.'Cron/'.ucfirst($cron['type']).'.php';
+                }
+
+                if (is_file($file)) {
+                    $error = require $file;
+                    // 加入队列并执行
+                    return $this->save_cron($cron, [
+                        'error' => $error,
+                        'value' => $error ? $value : [],
+                    ]);
+                } else {
+                    log_message('debug', '任务查询（'.$cron['id'].'）类型【'.$cron['type'].'】程序文件不存在：'.$file);
+                    return dr_return_data(0, '任务查询（'.$cron['id'].'）类型【'.$cron['type'].'】程序文件不存在');
+                }
+
                 break;
         }
 

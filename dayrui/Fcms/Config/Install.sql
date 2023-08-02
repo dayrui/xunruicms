@@ -2,7 +2,7 @@ DROP TABLE IF EXISTS `{dbprefix}cron`;
 CREATE TABLE IF NOT EXISTS `{dbprefix}cron` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `site` int(10) NOT NULL COMMENT '站点',
-  `type` varchar(20) NOT NULL COMMENT '类型',
+  `type` varchar(100) NOT NULL COMMENT '类型',
   `value` text NOT NULL COMMENT '参数值',
   `status` tinyint(1) unsigned NOT NULL COMMENT '状态',
   `error` text DEFAULT NULL COMMENT '错误信息',

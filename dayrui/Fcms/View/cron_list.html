@@ -68,7 +68,7 @@
                             <span></span>
                         </label>
                     </th>
-                    <th width="110" class="{dr_sorting('type')}" name="type">{dr_lang('类型')}</th>
+                    <th width="140" class="{dr_sorting('type')}" name="type">{dr_lang('类型')}</th>
                     <th class="{dr_sorting('inputtime')}" name="inputtime" width="170">{dr_lang('录入时间')}</th>
                     <th class="{dr_sorting('updatetime')}" name="updatetime" width="170">{dr_lang('执行时间')}</th>
                     <th style="text-align:center" width="100" class="{dr_sorting('status')}" name="status">{dr_lang('状态')}</th>
@@ -84,7 +84,7 @@
                             <span></span>
                         </label>
                     </td>
-                    <td>{$type[$t.type]}</td>
+                    <td>{if isset($type[$t.type])}<span class="label label-sm label-info">{$type[$t.type]}</span>{else}<span class="label label-sm label-danger">{$t.type}</span>{/if}</td>
                     <td>{dr_date($t.inputtime, null, 'red')}</td>
                     <td>{dr_date($t.updatetime, null, 'red')}</td>
                     <td style="text-align:center">
