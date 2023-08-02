@@ -150,13 +150,14 @@ class Form {
                 }
                 $obj->init($field);
                 $name = $field['fieldname']; // 字段名称
+                $obj->id = $this->id;
                 // 非后台时
                 if (!IS_ADMIN) {
                     if (!$field['ismember']) {
                         $notfields[] = $field['fieldname']; // 无权限排除的字段
                         unset($fields[$fid]);
                         continue; // 前端字段筛选
-                    } elseif ($obj->_not_edit($field, $data[$name])) {
+                    } elseif ($obj->_not_edit($field, $old[$field['fieldname']])) {
                         unset($fields[$fid]);
                         $notfields[] = $field['fieldname']; // 无权限排除的字段
                         continue; // 前端禁止修改时

@@ -445,7 +445,7 @@ abstract class Common extends \Frame\Controller {
                 if (!$cname) {
                     $cname = '#'.$uri;
                 }
-                $this->_admin_msg(0, dr_lang('%s：没有%s权限', $cname, $name));
+                $this->_admin_msg(0, dr_lang('%s：没有%s权限', $cname, $name).(IS_DEV ? $uri : ''));
             }
         }
 
