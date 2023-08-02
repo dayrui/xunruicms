@@ -3115,7 +3115,8 @@ function dr_string2array($data, $limit = '') {
         $rt = $data;
     } else {
         $rt = json_decode($data, true);
-        if (!$rt) {
+        if (!$rt && IS_DEV) {
+            // 存在安全隐患时改为开发模式下执行
             $rt = unserialize(stripslashes($data));
         }
     }
