@@ -349,7 +349,7 @@ class File extends \Phpcmf\Common
                 .'&siteid='.SITE_ID.'&m=upload&p='.dr_authcode($p, 'ENCODE')
                 .'&is_wm='.\Phpcmf\Service::L('input')->get('is_wm')
                 .'&fid='.\Phpcmf\Service::L('input')->get('fid'),
-            'tips' => dr_lang('上传格式要求：%s，最大允许上传：%s', str_replace(',', '、', $p['exts']), ($p['size']).'MB'),
+            'tips' => dr_lang('上传格式要求：%s，最大允许上传：%s', str_replace(',', '、', (string)$p['exts']), ($p['size']).'MB'),
             'param' => $p,
             'back' => $url.'&pp=0',
         ];

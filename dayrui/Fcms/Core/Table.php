@@ -808,6 +808,7 @@ class Table extends \Phpcmf\Common {
         $data['mytable_name'] = $this->name ? $this->name : 'mytable';
         $data['mytable_pagesize'] = $size;
         $data['is_search'] = $this->is_search;
+        $data['is_show_export'] = true;
 
         \Phpcmf\Service::V()->assign($data);
 
