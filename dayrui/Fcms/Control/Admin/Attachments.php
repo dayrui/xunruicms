@@ -244,4 +244,51 @@ class Attachments extends \Phpcmf\Table {
 
         $this->_json(1, dr_lang('操作成功'));
     }
+
+    // 重新上传附件
+    public function file_edit() {
+
+        $id = \Phpcmf\Service::L('input')->get('id');
+        if (!$id) {
+            $this->_json(0, dr_lang('你还没有选择呢'));
+        }
+
+        $data = $this->get_attachment($id, true);
+        if (!$data) {
+            $this->_json(0, dr_lang('附件信息不存在'));
+        }
+
+        \Phpcmf\Service::V()->assign([
+            'data' => $data,
+        ]);
+        \Phpcmf\Service::V()->display('attachment_upload.html');
+    }
+
+    // 重新上传附件
+    public function upload_edit() {
+
+        $id = \Phpcmf\Service::L('input')->get('id');
+        if (!$id) {
+            $this->_json(0, dr_lang('你还没有选择呢'));
+        }
+
+        $data = $this->get_attachment($id, true);
+        if (!$data) {
+            $this->_json(0, dr_lang('附件信息不存在'));
+        }
+
+        $rt = \Phpcmf\Service::L('upload')->upload_file([
+            'save_name' => str_replace('.'.$data['fileext'], '', basename($data['attachment'])),
+            'path' => dirname($data['attachment']),
+            'form_name' => 'file_data',
+            'file_exts' => [$data['fileext']],
+            'file_size' => 1000 * 1024 * 1024,
+            'attachment' => \Phpcmf\Service::M('Attachment')->get_attach_info($data['remote']),
+        ]);
+        if (!$rt['code']) {
+            exit(dr_array2string($rt));
+        }
+
+        $this->_json(1, dr_lang('上传成功'), $rt['data']);
+    }
 }

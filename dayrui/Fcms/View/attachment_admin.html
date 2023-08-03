@@ -102,7 +102,7 @@
                     <th style="text-align:center" width="90" class="{dr_sorting('fileext')}" name="fileext">{dr_lang('扩展名')}</th>
                     <th width="100" class="{dr_sorting('filesize')}" name="filesize">{dr_lang('大小')}</th>
                     <th width="160" class="{dr_sorting('inputtime')}" name="inputtime">{dr_lang('上传时间')}</th>
-                    <th>{dr_lang('附件归属')}</th>
+                    <th width="200">{dr_lang('附件归属')}</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -139,6 +139,7 @@
                     <td>
                         <a href="{$t.url}">{Function_list::title($t.filename, $param)}</a>
                         <a class="btn blue btn-xs" href="javascript:dr_iframe('{dr_lang('改名')}', '/index.php?s=api&c=file&m=name_edit&id={$t.id}', '350px', '220px');">{dr_lang('改名')}</a>
+                        <a class="btn green btn-xs" href="javascript:dr_iframe_show('{dr_lang('重新上传')}', '{dr_url('attachments/file_edit', ['id'=>$t.id])}', '350px', '220px');">{dr_lang('重传')}</a>
                         {if $ci->_is_admin_auth() && in_array($t.fileext, ['jpg', 'gif', 'png', 'jpeg'])}<a class="btn red btn-xs" href="javascript:dr_iframe('{dr_lang('改图')}', '/index.php?s=api&c=file&m=image_edit&id={$t.id}', '80%');">{dr_lang('改图')}</a>{/if}
                     </td>
                     <td style="text-align:center">{$t.fileext}</td>

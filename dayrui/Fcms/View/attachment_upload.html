@@ -1,0 +1,60 @@
+{template "header.html"}
+
+
+
+<link href="{ROOT_THEME_PATH}assets/global/plugins/jquery-fileupload/css/jquery.fileupload.css?v={CMF_UPDATE_TIME}" rel="stylesheet" type="text/css" />
+<script src="{ROOT_THEME_PATH}assets/global/plugins/jquery-fileupload/js/jquery.fileupload.min.js?v={CMF_UPDATE_TIME}" type="text/javascript"></script>
+
+<form action="" class="form-horizontal" method="post" name="myform" id="myform">
+    {$form}
+    <div class="myfbody text-center">
+        <label class="wm-fileupload-img">
+            <div class="btn green btn-sm fileinput-button"><i class="fa fa-plus"></i> <span>{dr_lang('上传')}</span> <input type="file" name="file_data"> </div>
+        </label>
+
+        <span class="help-block">{$data.attachment}</span>
+    </div>
+
+</form>
+
+ <script type="text/javascript">
+
+
+    $(function(){
+
+
+        // 初始化上传组件
+        $('.wm-fileupload-img').fileupload({
+            disableImageResize: false,
+            autoUpload: true,
+            maxFileSize: 2,
+            url: '{dr_url("attachments/upload_edit")}&id={$data.id}',
+            dataType: 'json',
+            formData : {
+                '{csrf_token()}': '{csrf_hash()}',
+            },
+            progressall: function (e, data) {
+                // 上传进度条 all
+                var progress = parseInt(data.loaded / data.total * 100, 10);
+                layer.msg(progress+'%');
+            },
+            add: function (e, data) {
+                data.submit();
+            },
+            done: function (e, data) {
+                //console.log($(this).html());
+                if (data.result.code) {
+                    //
+                    parent.layer.closeAll();
+                }
+
+                top.dr_tips(data.result.code, data.result.msg);
+            },
+        });
+
+
+    });
+
+</script>
+
+{template "footer.html"}
