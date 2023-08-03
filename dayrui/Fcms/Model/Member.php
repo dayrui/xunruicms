@@ -156,8 +156,8 @@ class Member extends \Phpcmf\Model {
         \Phpcmf\Service::L('input')->set_cookie('member_uid', $data['id'], $expire);
         \Phpcmf\Service::L('input')->set_cookie('member_cookie', md5(SYS_KEY.$data['password'].(isset($data['login_attr']) ? $data['login_attr'] : '')), $expire);
 
-        // 登录后的钩子
-        \Phpcmf\Hooks::trigger('member_login_after', $data);
+        // 登录后的钩子，在_login_log中执行他
+        //\Phpcmf\Hooks::trigger('member_login_after', $data);
 
         $this->clear_cache($data['id']);
     }
