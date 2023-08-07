@@ -55,7 +55,7 @@ class Home extends \Phpcmf\Common {
 
         // 挂钩点 网站首页时
         \Phpcmf\Hooks::trigger('cms_index');
-        \Phpcmf\Service::L('Router')->is_redirect_url(dr_url_prefix('/'));
+        \Phpcmf\Service::L('Router')->is_redirect_url(dr_url_prefix('/'), 1);
 
         $this->_index();
 	}
