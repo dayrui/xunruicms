@@ -2054,7 +2054,7 @@ class View {
         // 开始返回
         if ($this->_return_sql) {
             if (CI_DEBUG) {
-                $debug .= '<p>运算数量：' . intval($data[0]['ct']) . '</p>';
+                $debug .= '<p>运算数量：' . ($data[0]['ct']) . '</p>';
                 $debug .= '<p>运算变量：' . ($return ? '{$' . $return . '_' . $this->_return_sql . '} 不输出，需要手动调用变量' : '自动输出') . '</p>';
                 $debug .= '</pre>';
             }

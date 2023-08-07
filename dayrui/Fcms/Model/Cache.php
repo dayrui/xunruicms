@@ -473,6 +473,7 @@ class Cache extends \Phpcmf\Model {
 
         // 创建入口文件
         //(defined('FIX_WEB_DIR') && FIX_WEB_DIR ? FIX_WEB_DIR.'/' : '').
+
         foreach ([
                      'admin.php',
                      'index.php',
@@ -488,7 +489,8 @@ class Cache extends \Phpcmf\Model {
                 }
                 $fix_web_dir = isset($value['FIX_WEB_DIR']) && $value['FIX_WEB_DIR'] ? $value['FIX_WEB_DIR'] : '';
                 if (isset($value['SITE_ID']) && $value['SITE_ID'] > 1) {
-                    if (isset($value['MOBILE_DIR']) && $value['MOBILE_DIR']) {
+                    if (strpos($file, 'mobile') !== false
+                        && isset($value['MOBILE_DIR']) && $value['MOBILE_DIR']) {
                         $fix_web_dir.= '/'.$value['MOBILE_DIR'];
                     } elseif ($fix_web_dir) {
                         // 移动端加二级
