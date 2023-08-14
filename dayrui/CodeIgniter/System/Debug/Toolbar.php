@@ -357,7 +357,6 @@ class Toolbar
         if (CI_DEBUG && ! is_cli()) {
             $app = Services::codeigniter();
             global $app;
-
             $request ??= Services::request();
             $response ??= Services::response();
 
@@ -366,7 +365,7 @@ class Toolbar
                 return;
             }
 
-            $toolbar = Services::toolbar(config(self::class));
+            $toolbar = Services::toolbar(config(ToolbarConfig::class));
             $stats   = $app->getPerformanceStats();
             $data    = $toolbar->run(
                 $stats['startTime'],

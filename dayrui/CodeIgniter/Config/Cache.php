@@ -5,6 +5,7 @@
  * 本文件是框架系统文件，二次开发时不可以修改本文件
  **/
 
+use CodeIgniter\Cache\CacheInterface;
 use CodeIgniter\Cache\Handlers\DummyHandler;
 use CodeIgniter\Cache\Handlers\FileHandler;
 use CodeIgniter\Cache\Handlers\MemcachedHandler;
