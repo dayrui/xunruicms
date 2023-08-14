@@ -44,6 +44,10 @@ class Site_config extends \Phpcmf\Common
 		}
 
 		$page = intval(\Phpcmf\Service::L('input')->get('page'));
+        $run_time = '';
+        if (is_file(WRITEPATH.'config/run_time.php')) {
+            $run_time = file_get_contents(WRITEPATH.'config/run_time.php');
+        }
 
 		\Phpcmf\Service::V()->assign([
 			'page' => $page,
@@ -57,6 +61,7 @@ class Site_config extends \Phpcmf\Common
                 ]
             ),
 			'theme' => dr_get_theme(),
+            'run_time' => $run_time,
 			'is_theme' => dr_strpos($data['config']['SITE_THEME'], '/') !== false ? 1 : 0,
 			'template_path' => dr_dir_map(TPLPATH.'pc/', 1),
 		]);

@@ -6,6 +6,11 @@
         {else}
         $('.dr_close_msg').show();
         {/if}
+            {if empty($data['SITE_INDEX_HTML'])}
+            $('.dr_index_time').hide();
+            {else}
+            $('.dr_index_time').show();
+            {/if}
             dr_theme({$is_theme});
         });
     function dr_theme(id) {
@@ -55,15 +60,10 @@
 
                 <div class="tab-pane {if $page==0}active{/if}" id="tab_0">
                     <div class="form-body">
-
                         <div class="form-group">
-                            <label class="col-md-2 control-label">{dr_lang('首页静态')}</label>
+                            <label class="col-md-2 control-label">{dr_lang('项目名称')}</label>
                             <div class="col-md-9">
-                                <div class="mt-radio-inline">
-                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SITE_INDEX_HTML]" value="1" {if $data['SITE_INDEX_HTML']}checked{/if} /> {dr_lang('开启')} <span></span></label>
-                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SITE_INDEX_HTML]" value="0" {if empty($data['SITE_INDEX_HTML'])}checked{/if} /> {dr_lang('关闭')} <span></span></label>
-                                </div>
-                                <span class="help-block">{dr_lang('自动生成首页静态index.html文件')}</span>
+                                <label><input class="form-control input-large" type="text" name="data[SITE_NAME]" id="dr_name" value="{htmlspecialchars((string)$data['SITE_NAME'])}"></label>
                             </div>
                         </div>
                         <div class="form-group">
@@ -83,12 +83,39 @@
 
                             </div>
                         </div>
+
                         <div class="form-group">
-                            <label class="col-md-2 control-label">{dr_lang('项目名称')}</label>
+                            <label class="col-md-2 control-label">{dr_lang('首页静态')}</label>
                             <div class="col-md-9">
-                                <label><input class="form-control input-large" type="text" name="data[SITE_NAME]" id="dr_name" value="{htmlspecialchars((string)$data['SITE_NAME'])}"></label>
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" onclick="$('.dr_index_time').show()" name="data[SITE_INDEX_HTML]" value="1" {if $data['SITE_INDEX_HTML']}checked{/if} /> {dr_lang('开启')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" onclick="$('.dr_index_time').hide()" name="data[SITE_INDEX_HTML]" value="0" {if empty($data['SITE_INDEX_HTML'])}checked{/if} /> {dr_lang('关闭')} <span></span></label>
+                                </div>
+                                <span class="help-block">{dr_lang('是否自动生成首页静态index.html文件')}</span>
                             </div>
                         </div>
+                        <div class="form-group dr_index_time">
+                            <label class="col-md-2 control-label">{dr_lang('生成周期')}</label>
+                            <div class="col-md-9">
+                                <div class="input-inline input-small">
+                                    <div class="input-group">
+                                        <input type="text" name="data[SITE_INDEX_TIME]" value="{php echo $data['SITE_INDEX_TIME'] ? intval($data['SITE_INDEX_TIME']) : 10;}" class="form-control">
+                                        <span class="input-group-addon">
+                                            {dr_lang('小时')}
+                                        </span>
+                                    </div>
+                                </div>
+                                <span class="help-inline"> {dr_lang('每隔多少小时生成首页静态文件')} </span>
+                                <p>
+                                    {if $run_time}
+                                    <font color="green">{dr_lang('最近自动执行时间为：%s', $run_time)}</font>
+                                    {else}
+                                    <font color="red">{dr_lang('当前服务器没有设置自动任务脚本')}</font>
+                                    {/if}
+                                </p>
+                            </div>
+                        </div>
+
 
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('项目语言')}</label>

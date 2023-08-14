@@ -290,7 +290,7 @@ class Tree {
         }
 
         $dir = 'module/category-'.SITE_ID.'-'.$mid.'-select/';
-        $name = 'tree_cache_'.md5(dr_array2string($data).$this->ismain.$mid.$str.$default.$onlysub.$is_push.$is_first);
+        $name = 'tree2_cache_'.md5(dr_array2string($data).$this->ismain.$mid.$str.$default.$onlysub.$is_push.$is_first);
         if (IS_ADMIN) {
             $name.= 'admin'.md5(\Phpcmf\Service::C()->admin ? dr_array2string(\Phpcmf\Service::C()->admin['roleid']) : '1');
         } else {
@@ -379,7 +379,7 @@ class Tree {
             }
 
             $string.= \Phpcmf\Service::L('Field')->get('select')->get_select_search_code();
-            \Phpcmf\Service::L('cache')->set_file($name, $string, $dir);
+            $tree && \Phpcmf\Service::L('cache')->set_file($name, $string, $dir);
 
         }
 

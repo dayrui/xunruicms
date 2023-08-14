@@ -91,8 +91,16 @@ class Run extends \Phpcmf\Common
         foreach ($this->site_info as $siteid => $site) {
             // 删除网站首页
             if ($site['SITE_INDEX_HTML']) {
-                unlink(\Phpcmf\Service::L('html')->get_webpath($siteid,'site', 'index.html'));
-                unlink(\Phpcmf\Service::L('html')->get_webpath($siteid,'site', 'mobile/index.html'));
+                $time = (isset($site['SITE_INDEX_TIME']) && $site['SITE_INDEX_TIME'] ? $site['SITE_INDEX_TIME'] : 10) * 3600;
+                foreach ([
+                             \Phpcmf\Service::L('html')->get_webpath($siteid,'site', 'index.html'),
+                             \Phpcmf\Service::L('html')->get_webpath($siteid,'site', 'mobile/index.html'),
+                         ] as $file) {
+                    $ft = filemtime($file);
+                    if ($ft && SYS_TIME - $ft > $time) {
+                        unlink($file);
+                    }
+                }
             }
         }
 
