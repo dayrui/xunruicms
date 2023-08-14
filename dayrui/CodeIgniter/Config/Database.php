@@ -53,6 +53,18 @@ class Database extends Config
         'foreignKeys'   => true,
         'failover'     => []
     ];
+    public array $db1 = [];
+    public array $db2 = [];
+    public array $db3 = [];
+    public array $db4 = [];
+    public array $db5 = [];
+    public array $db6 = [];
+    public array $db7 = [];
+    public array $db8 = [];
+    public array $db9 = [];
+
+    private $mykey = 1;
+    private $mydb = [];
 
     //--------------------------------------------------------------------
 
@@ -75,7 +87,17 @@ class Database extends Config
 
         foreach ($this->default as $p => $t) {
             foreach ($db as $name => $v) {
-                isset($this->$name) && $this->$name[$p] = isset($v[$p]) ? $v[$p] : $t;
+                if (isset($this->$name)) {
+                    // 默认库
+                    $this->$name[$p] = isset($v[$p]) ? $v[$p] : $t;
+                } else {
+                    // 自定义库
+                    $key = $this->_get_key($name);
+                    if ($key) {
+                        $this->$key[$p] = isset($v[$p]) ? $v[$p] : $t;
+                    }
+
+                }
             }
         }
 
@@ -86,6 +108,23 @@ class Database extends Config
             exit('数据库名称不能存在.号');
         }
 
+    }
+
+    private function _get_key($name) {
+        if (isset($this->mydb[$name])) {
+            return $this->mydb[$name];
+        } else {
+            $this->mydb[$name] = 'db'.$this->mykey;
+            $this->mykey++;
+        }
+        return $this->mydb[$name];
+    }
+
+    public function get_group($name) {
+        if (isset($this->mydb[$name])) {
+            return $this->mydb[$name];
+        }
+        return 'default';
     }
 
     //--------------------------------------------------------------------

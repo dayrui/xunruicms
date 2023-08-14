@@ -25,7 +25,8 @@ class Model {
             return [self::$dbs[$name], self::$dbs[$name]->DBPrefix];
         }
 
-        self::$dbs[$name] = \Config\Database::connect($name,  false);
+        $dbConfig = config(\Config\Database::class);
+        self::$dbs[$name] = \Config\Database::connect($dbConfig->get_group($name),  false);
 
         return [self::$dbs[$name], self::$dbs[$name]->DBPrefix];
     }
