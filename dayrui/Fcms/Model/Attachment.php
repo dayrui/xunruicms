@@ -263,7 +263,8 @@ class Attachment extends \Phpcmf\Model {
     }
     
     // 附件归档存储
-    public function save_data($data, $related = '') {
+    // $handle是否强制随机储存已使用
+    public function save_data($data, $related = '', $handle = 0) {
 
         if (!$this->member) {
             $this->member = [
@@ -295,7 +296,7 @@ class Attachment extends \Phpcmf\Model {
             return $rt;
         }
         $id = $rt['code'];
-        if (strpos($related, 'ueditor') === 0 ? 0 : SYS_ATTACHMENT_DB) {
+        if ($handle == 0 && (strpos($related, 'ueditor') === 0 ? 0 : SYS_ATTACHMENT_DB)) {
             // 归档存储
             $rt = $this->table('attachment_unused')->replace([
                 'id' => $id,
