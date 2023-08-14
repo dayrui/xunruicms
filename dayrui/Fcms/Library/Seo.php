@@ -120,6 +120,7 @@ class Seo {
             $seo[$key] = str_replace([',,'], ',', $seo[$key]);
             $seo[$key] = trim($seo[$key], SITE_SEOJOIN);
             $seo[$key] = trim($seo[$key], ',');
+            $seo[$key] = dr_safe_replace($seo[$key]);
         }
 
         return $seo;
