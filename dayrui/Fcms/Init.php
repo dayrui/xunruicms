@@ -416,6 +416,8 @@ if (is_cli()) {
     }
 }
 
+!defined('CMSURI') &&  define('CMSURI', '');
+
 // API接口项目标识 放到后面是为了识别api 的伪静态
 !defined('IS_API') && define('IS_API', isset($_GET['s']) && $_GET['s'] == 'api');
 
