@@ -288,7 +288,7 @@ class Site extends \Phpcmf\Model {
                         $site_domain[$c['domain']] = $t['id'];
                         $_save[$c['name']] = $sso_domain[] = $c['domain'];
                     }
-                    $cache[$t['id']]['client'] = $t['setting']['client'] = $_save;
+                    $t['setting']['client'] = $_save;
                 }
 
                 // 网站路径
@@ -299,8 +299,7 @@ class Site extends \Phpcmf\Model {
                     $webpath[$t['id']]['site'] = dr_get_dir_path($t['setting']['webpath']);
                     if (!is_dir($webpath[$t['id']]['site'])) {
                         log_message('error', '多站点：站点【'.$t['id'].'】目录【'.$webpath[$t['id']]['site'].'】不存在');
-                        unset($cache[$t['id']]);
-                        continue;
+                        //continue;
                     }
                 }
 
