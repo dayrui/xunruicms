@@ -819,15 +819,16 @@ function dr_get_domain_name($url) {
 /**
  * 按百分比分割数组
  * @param $data 数组
+ * @param $num 分成几等分
  * @return 将数组按百分比等分划分
  */
-function dr_save_bfb_data($data) {
+function dr_save_bfb_data($data, $num = 100) {
 
     $cache = [];
     $count = dr_count($data);
-    if ($count > 100) {
-        $pagesize = ceil($count/100);
-        for ($i = 1; $i <= 100; $i ++) {
+    if ($count > $num) {
+        $pagesize = ceil($count/$num);
+        for ($i = 1; $i <= $num; $i ++) {
             $cache[$i] = array_slice($data, ($i - 1) * $pagesize, $pagesize);
         }
     } else {

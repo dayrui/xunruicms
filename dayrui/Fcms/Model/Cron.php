@@ -65,7 +65,12 @@ class Cron extends \Phpcmf\Model {
 
             default:
 
-                if ($cron['type'] && strpos($cron['type'], '::')) {
+                if (!$cron['type']) {
+                    log_message('debug', '任务查询（'.$cron['id'].'）类型type不存在');
+                    return dr_return_data(0, '任务查询（'.$cron['id'].'）类型type不存在');
+                }
+
+                if (strpos($cron['type'], '::')) {
                     list($app, $name) = explode('::', $cron['type']);
                     if (dr_is_app($app)) {
                         $file = dr_get_app_dir($app).'Cron/'.ucfirst($name).'.php';
