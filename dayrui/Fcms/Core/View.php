@@ -1488,14 +1488,23 @@ class View {
 
                     case 'FIND':
                     case 'NOTFIND':
-                        $v = dr_safe_replace($t['value']);
-                        if (!is_numeric($v)) {
-                            $v = "'".$v."'";
+                        $vals = [];
+                        $value = dr_safe_replace($t['value']);
+                        if ($value) {
+                            $arr = explode('|', $t['value']);
+                            foreach ($arr as $v) {
+                                if ($v) {
+                                    if (!is_numeric($v)) {
+                                        $v = "'".$v."'";
+                                    }
+                                    $vals[] = " FIND_IN_SET (".$v.", {$t['name']})";
+                                }
+                            }
                         }
                         if ($t['adj'] == 'NOTFIND') {
                             $join.= ' NOT';
                         }
-                        $string.= $join." FIND_IN_SET (".$v.", {$t['name']})";
+                        $string.= $vals ? $join.' ('.implode(' OR ', $vals).')' : '';
                         break;
 
                     case 'LIKE':

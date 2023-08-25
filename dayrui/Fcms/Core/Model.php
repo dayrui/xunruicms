@@ -776,7 +776,7 @@ class Model {
             }
             return $where ? '('.implode(strpos($value,  '||') !== false ? ' AND ' : ' OR ', $where).')' : '`'.$table.'`.`id` = 0';
         } elseif (isset($field['fieldtype']) && in_array($field['fieldtype'], ['Members', 'Related'])) {
-            $where[] = ' FIND_IN_SET ('.intval($value).',`'.$table.'`.`'.$name.'`)';
+            return ' FIND_IN_SET ('.intval($value).',`'.$table.'`.`'.$name.'`)';
         } elseif (isset($field['fieldtype']) && in_array($field['fieldtype'], ['Radio', 'Select'])) {
             // 单选字段
             $arr = explode('|', $value);
