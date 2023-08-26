@@ -6,9 +6,12 @@
 <script type="text/javascript">
     var table_name = '{$mytable_name}';
     {if defined("SYS_TABLE_ISFOOTER") && SYS_TABLE_ISFOOTER}
+    // 批量按钮设置为下面
     var is_foot = true;
     $("#toolbar label").hide();
+    $("#toolbar button").hide();
     {else}
+    // 批量按钮设置为上面
     var is_foot = $('#toolbar label').hasClass('table_select_all') == true ? false : true;
     {/if}
     var table_ignoreColumn = {php echo dr_count($list_field)+1;};

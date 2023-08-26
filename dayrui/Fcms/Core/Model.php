@@ -776,7 +776,17 @@ class Model {
             }
             return $where ? '('.implode(strpos($value,  '||') !== false ? ' AND ' : ' OR ', $where).')' : '`'.$table.'`.`id` = 0';
         } elseif (isset($field['fieldtype']) && in_array($field['fieldtype'], ['Members', 'Related'])) {
-            return ' FIND_IN_SET ('.intval($value).',`'.$table.'`.`'.$name.'`)';
+            $arr = explode('|', $value);
+            $where = [];
+            foreach ($arr as $val) {
+                if (is_numeric($val)) {
+                    $where[] = ' FIND_IN_SET ('.intval($value).',`'.$table.'`.`'.$name.'`)';
+                } else {
+                    $where[] = ' FIND_IN_SET ("'.dr_safe_replace($value).'",`'.$table.'`.`'.$name.'`)';
+                }
+            }
+            return $where ? '('.implode(strpos($value,  '||') !== false ? ' AND ' : ' OR ', $where).')' : '`'.$table.'`.`id` = 0';
+
         } elseif (isset($field['fieldtype']) && in_array($field['fieldtype'], ['Radio', 'Select'])) {
             // 单选字段
             $arr = explode('|', $value);
