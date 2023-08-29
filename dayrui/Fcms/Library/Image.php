@@ -1598,10 +1598,10 @@ class Image {
      */
     public function thumb($img, $width = 0, $height = 0, $water = 0, $mode = 'auto', $webimg = 0) {
 
-        list($cache_path, $cache_url, $ext) = dr_thumb_path();
+        list($cache_path, $cache_url, $ext, $path) = dr_thumb_path($img);
 
         // 图片缩略图文件
-        $cache_file = md5($img).'/'.$width.'x'.$height.($water ? '_water' : '').'_'.$mode.'.'.($ext ? 'webp' : 'jpg');
+        $cache_file = $path.'/'.$width.'x'.$height.($water ? '_water' : '').'_'.$mode.'.'.($ext ? 'webp' : 'jpg');
         if (!IS_DEV && is_file($cache_path.$cache_file)) {
             return $cache_url.$cache_file;
         }

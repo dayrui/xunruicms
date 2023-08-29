@@ -1279,19 +1279,27 @@ function dr_get_dir_path($path) {
 }
 
 // 缩略图路径和url
-function dr_thumb_path() {
+function dr_thumb_path($img = '') {
+
+
+    $path = '';
+    if ($img) {
+        $md5 = md5($img);
+        $path = substr($md5, 0, 1).substr($md5, -1, 1)
+            .'/'.substr($md5, 2, 1).substr($md5, -2, 1).'/'.$md5;
+    }
 
     $config = \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'image');
     if (!$config['cache_path'] || !$config['cache_url']) {
-        return [ROOTPATH.'uploadfile/thumb/', ROOT_URL.'uploadfile/thumb/', $config['ext']];
+        return [ROOTPATH.'uploadfile/thumb/', ROOT_URL.'uploadfile/thumb/', $config['ext'], $path];
     }
 
     if ((strpos($config['cache_path'], '/') === 0 || strpos($config['cache_path'], ':') !== false) && is_dir($config['cache_path'])) {
         // 相对于根目录
-        return [rtrim($config['cache_path'], DIRECTORY_SEPARATOR).'/', trim($config['cache_url'], '/').'/', $config['ext']];
+        return [rtrim($config['cache_path'], DIRECTORY_SEPARATOR).'/', trim($config['cache_url'], '/').'/', $config['ext'], $path];
     } else {
         // 在当前网站目录
-        return [ROOTPATH.trim($config['cache_path'], '/').'/', ROOT_URL.trim($config['cache_path'], '/').'/', $config['ext']];
+        return [ROOTPATH.trim($config['cache_path'], '/').'/', ROOT_URL.trim($config['cache_path'], '/').'/', $config['ext'], $path];
     }
 }
 
@@ -1306,7 +1314,7 @@ function dr_thumb($img, $width = 0, $height = 0, $water = 0, $mode = 'auto', $we
         return dr_get_file($img).(IS_DEV ? '#没有设置高宽参数，将以原图输出' : '');
     } elseif (is_numeric($img) || $webimg) {
 
-        list($cache_path, $cache_url, $ext) = dr_thumb_path();
+        list($cache_path, $cache_url, $ext, $path) = dr_thumb_path($img);
 
         // 强制缩略图水印
         if (defined('SITE_THUMB_WATERMARK') && SITE_THUMB_WATERMARK) {
@@ -1315,7 +1323,7 @@ function dr_thumb($img, $width = 0, $height = 0, $water = 0, $mode = 'auto', $we
 
         if (!IS_DEV) {
             // 非开发者模式下读取缓存
-            $cache_file = md5($img).'/'.$width.'x'.$height.($water ? '_water' : '').'_'.$mode.'.'.($ext ? 'webp' : 'jpg');
+            $cache_file = $path.'/'.$width.'x'.$height.($water ? '_water' : '').'_'.$mode.'.'.($ext ? 'webp' : 'jpg');
             if (is_file($cache_path.$cache_file)) {
                 return dr_url_rel($cache_url.$cache_file);
             }

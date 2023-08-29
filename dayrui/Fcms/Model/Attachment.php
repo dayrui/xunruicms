@@ -257,8 +257,8 @@ class Attachment extends \Phpcmf\Model {
 
         // 删除缩略图的缓存
         if (in_array($index['fileext'], ['png', 'jpeg', 'jpg', 'gif'])) {
-            list($cache_path) = dr_thumb_path();
-            dr_dir_delete($cache_path.md5($index['id']).'/', true);
+            list($cache_path, $a, $b, $path) = dr_thumb_path($index['id']);
+            dr_dir_delete($cache_path.'/'.$path.'/', true);
         }
     }
     
