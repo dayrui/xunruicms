@@ -186,8 +186,13 @@ class Cache extends \Phpcmf\Common {
                     'member' => '用户系统',
                 ];
                 foreach ($table_app as $table => $name) {
-                    if (\Phpcmf\Service::M()->is_table_exists($table) && \Phpcmf\Service::M()->table($table)->counts() && !dr_is_app($name)) {
-                        $error[] = $app_name[$name];
+                    if (\Phpcmf\Service::M()->is_table_exists($table) && \Phpcmf\Service::M()->table($table)->counts()) {
+                        $cpath = dr_get_app_dir($name);
+                        if (is_dir($cpath)) {
+                            file_put_contents($cpath.'/install.lock', 1);
+                        } else {
+                            $error[] = $app_name[$name];
+                        }
                     }
                 }
 

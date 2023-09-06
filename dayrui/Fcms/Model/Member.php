@@ -694,7 +694,15 @@ class Member extends \Phpcmf\Model {
         }
 
         // 归属用户组
-        IS_USE_MEMBER && $this->insert_group($uid, $groupid, 0);
+        if (IS_USE_MEMBER) {
+            $lid = 0;
+            if (\Phpcmf\Service::C()->member_cache['group'][$groupid]['level']) {
+                $level = \Phpcmf\Service::C()->member_cache['group'][$groupid]['level'];
+                $one = array_shift($level);
+                $lid = $one['id'];
+            }
+            $this->apply_group(0, $member, $groupid, $lid, 0, ['content' => $data]);
+        }
 
         // 组合字段信息
         $data = array_merge($member, $data);
