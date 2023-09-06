@@ -955,6 +955,9 @@ return [
                     $cname = 'WEBPATH'.$filename;
                     $ofile = WEBPATH.substr($filename, 1);
                 }
+                if (CI_DEBUG) {
+                    $cname = $ofile;
+                }
                 $class = '';
                 if (!is_file($ofile)) {
                     $ok = "<span class='error'>不存在</span>";
@@ -967,7 +970,7 @@ return [
                 }
                 $html.= '<p class="'.$class.'"><label class="rleft">'.$cname.'</label><label class="rright">'.$ok.'</label></p>';
                 if ($class) {
-                    $html.= '<p class="rbf" style="display: none"><label class="rleft">'.(CI_DEBUG ? $ofile : $cname).'</label><label class="rright">'.$ok.'</label></p>';
+                    $html.= '<p class="rbf" style="display: none"><label class="rleft">'.$cname.'</label><label class="rright">'.$ok.'</label></p>';
                 }
             }
             $this->_json($page + 1, $html);
