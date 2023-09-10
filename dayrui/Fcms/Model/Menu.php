@@ -207,13 +207,13 @@ class Menu extends \Phpcmf\Model {
                 $top_id = $top['name'] ? $this->_add('admin', 0, $top, $mark, true) : 0;
                 !$top_id && $top_id = $this->_get_id_for_mark('admin', $mark);
                 // 插入分组菜单
-                if ($top_id && $top['left']) {
+                if ($top_id && $top['left'] && is_array($top['left'])) {
                     foreach ($top['left'] as $mark2 => $left) {
                         $mark2 = strlen($mark2) > 2 ? $mark2 : '';
                         $left_id = $left['name'] ? $this->_add('admin', $top_id, $left, $mark2, true) : 0;
                         !$left_id && $left_id = $this->_get_id_for_mark('admin', $mark2);
                         // 插入链接菜单
-                        if ($left_id) {
+                        if ($left_id && $left['link'] && is_array($left['link'])) {
                             foreach ($left['link'] as $key => $link) {
                                 if (!$afirst && $link['uri']) {
                                     $afirst = $link['uri']; // 第一个菜单
@@ -242,7 +242,7 @@ class Menu extends \Phpcmf\Model {
                 $top_id = $top['name'] ? $this->_add('member', 0, $top, $mark, true) : 0;
                 !$top_id && $top_id = $this->_get_id_for_mark('member', $mark);
                 // 插入链接菜单
-                if ($top_id && $top['link']) {
+                if ($top_id && $top['link'] && is_array($top['link'])) {
                     foreach ($top['link'] as $mark2 => $link) {
                         if ($this->counts('member_menu', 'pid='.$top_id.' and `uri`="'.$link['uri'].'"')) {
                             continue;
@@ -265,7 +265,7 @@ class Menu extends \Phpcmf\Model {
                 $top_id = $top['name'] ? $this->_add('admin_min', 0, $top, $mark, true) : 0;
                 !$top_id && $top_id = $this->_get_id_for_mark('admin_min', $mark);
                 // 插入链接菜单
-                if ($top_id && $top['link']) {
+                if ($top_id && $top['link'] && is_array($top['link'])) {
                     foreach ($top['link'] as $mark2 => $link) {
                         if ($this->counts('admin_min_menu', 'pid='.$top_id.' and `uri`="'.$link['uri'].'"')) {
                             continue;
