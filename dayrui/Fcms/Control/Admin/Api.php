@@ -970,7 +970,7 @@ class Api extends \Phpcmf\Common {
         } else {
             // 在当前网站目录
             $path = ROOTPATH.trim($data['SYS_ATTACHMENT_PATH'], '/').'/';
-            $url = ROOT_URL.trim($data['SYS_ATTACHMENT_PATH'], '/').'/';
+            $url = (SYS_ATTACHMENT_REL ? FC_NOW_HOST : ROOT_URL).trim($data['SYS_ATTACHMENT_PATH'], '/').'/';
             !$note && $note = dr_lang('上传目录不是绝对的路径时采用，系统分配的URL地址');
         }
 
@@ -1009,7 +1009,7 @@ class Api extends \Phpcmf\Common {
         } else {
             // 在当前网站目录
             $path = ROOTPATH.trim($data['cache_path'], '/').'/';
-            $url = ROOT_URL.trim($data['cache_path'], '/').'/';
+            $url = (SYS_ATTACHMENT_REL ? FC_NOW_HOST : ROOT_URL).trim($data['cache_path'], '/').'/';
             !$note && $note = dr_lang('存储目录不是绝对的路径时采用，系统分配的URL地址');
         }
 
@@ -1048,7 +1048,7 @@ class Api extends \Phpcmf\Common {
         } else {
             // 在当前网站目录
             $path = ROOTPATH.trim($data['avatar_path'], '/').'/';
-            $url = ROOT_URL.trim($data['avatar_path'], '/').'/';
+            $url = (SYS_ATTACHMENT_REL ? FC_NOW_HOST : ROOT_URL).trim($data['avatar_path'], '/').'/';
             !$note && $note = dr_lang('存储目录不是绝对的路径时采用，系统分配的URL地址');
         }
 

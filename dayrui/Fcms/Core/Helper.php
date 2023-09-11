@@ -874,13 +874,22 @@ function dr_avatar_path() {
     ];
 
     if (!$config['avatar_path'] || !$config['avatar_url']) {
-        return [SYS_UPLOAD_PATH.'member/', SYS_UPLOAD_URL.'member/'];
+        return [
+            SYS_UPLOAD_PATH.'member/',
+            SYS_UPLOAD_URL.'member/'
+        ];
     } elseif ((strpos($config['avatar_path'], '/') === 0 || strpos($config['avatar_path'], ':') !== false) && is_dir($config['avatar_path'])) {
         // 相对于根目录
-        return [rtrim($config['avatar_path'], DIRECTORY_SEPARATOR).'/', trim($config['avatar_url'], '/').'/'];
+        return [
+            rtrim($config['avatar_path'], DIRECTORY_SEPARATOR).'/',
+            trim($config['avatar_url'], '/').'/'
+        ];
     } else {
         // 在当前网站目录
-        return [ROOTPATH.trim($config['avatar_path'], '/').'/', ROOT_URL.trim($config['avatar_path'], '/').'/'];
+        return [
+            ROOTPATH.trim($config['avatar_path'], '/').'/',
+            (SYS_ATTACHMENT_REL ? FC_NOW_HOST : ROOT_URL).trim($config['avatar_path'], '/').'/'
+        ];
     }
 }
 
@@ -1291,15 +1300,30 @@ function dr_thumb_path($img = '') {
 
     $config = \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'image');
     if (!$config['cache_path'] || !$config['cache_url']) {
-        return [ROOTPATH.'uploadfile/thumb/', ROOT_URL.'uploadfile/thumb/', $config['ext'], $path];
+        return [
+            ROOTPATH.'uploadfile/thumb/',
+            (SYS_ATTACHMENT_REL ? FC_NOW_HOST : ROOT_URL).'uploadfile/thumb/',
+            $config['ext'],
+            $path
+        ];
     }
 
     if ((strpos($config['cache_path'], '/') === 0 || strpos($config['cache_path'], ':') !== false) && is_dir($config['cache_path'])) {
         // 相对于根目录
-        return [rtrim($config['cache_path'], DIRECTORY_SEPARATOR).'/', trim($config['cache_url'], '/').'/', $config['ext'], $path];
+        return [
+            rtrim($config['cache_path'], DIRECTORY_SEPARATOR).'/',
+            trim($config['cache_url'], '/').'/',
+            $config['ext'],
+            $path
+        ];
     } else {
         // 在当前网站目录
-        return [ROOTPATH.trim($config['cache_path'], '/').'/', ROOT_URL.trim($config['cache_path'], '/').'/', $config['ext'], $path];
+        return [
+            ROOTPATH.trim($config['cache_path'], '/').'/',
+            (SYS_ATTACHMENT_REL ? FC_NOW_HOST : ROOT_URL).trim($config['cache_path'], '/').'/',
+            $config['ext'],
+            $path
+        ];
     }
 }
 

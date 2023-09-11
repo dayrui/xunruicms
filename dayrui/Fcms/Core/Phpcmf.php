@@ -204,7 +204,7 @@ abstract class Common extends \Frame\Controller {
             // 附件上传目录
             define('SYS_UPLOAD_PATH', ROOTPATH.$path.'/');
             // 附件访问URL
-            define('SYS_UPLOAD_URL', ROOT_URL.$path.'/');
+            define('SYS_UPLOAD_URL', (SYS_ATTACHMENT_REL ? FC_NOW_HOST : ROOT_URL).$path.'/');
         }
 
         // 设置终端模板
@@ -576,6 +576,7 @@ abstract class Common extends \Frame\Controller {
         if (!$update) {
             $data = \Phpcmf\Service::L('cache')->get_file('attach-info-'.$id, 'attach');
             if ($data) {
+                $data['url'] = dr_get_file_url($data);
                 return $data;
             }
         }

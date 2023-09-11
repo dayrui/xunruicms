@@ -43,6 +43,7 @@ class Attachment extends \Phpcmf\Common {
                 'SYS_ATTACHMENT_SAFE' => (int)$post['SYS_ATTACHMENT_SAFE'],
                 'SYS_ATTACHMENT_GUEST' => (int)$post['SYS_ATTACHMENT_GUEST'],
                 'SYS_ATTACHMENT_CF' => (int)$post['SYS_ATTACHMENT_CF'],
+                'SYS_ATTACHMENT_REL' => (int)$post['SYS_ATTACHMENT_REL'],
                 'SYS_ATTACHMENT_DB' => (int)$post['SYS_ATTACHMENT_DB'],
                 'SYS_ATTACHMENT_PAGESIZE' => (int)$post['SYS_ATTACHMENT_PAGESIZE'],
                 'SYS_ATTACHMENT_URL' => $post['SYS_ATTACHMENT_URL'],

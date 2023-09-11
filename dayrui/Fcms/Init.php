@@ -89,6 +89,7 @@ $system = [
     'SYS_ATTACHMENT_PAGESIZE' => 36,
     'SYS_ATTACHMENT_GUEST'   => 0,
     'SYS_ATTACHMENT_CF'   => 0,
+    'SYS_ATTACHMENT_REL'   => 0,
     'SYS_ATTACHMENT_PATH'   => '',
     'SYS_ATTACHMENT_SAVE_TYPE'  => '',
     'SYS_ATTACHMENT_SAVE_DIR'   => '',

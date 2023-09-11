@@ -112,7 +112,16 @@
                             <span class="help-block">{dr_lang('留空表示不要目录存储，可填参数格式：{y}表示年，{m}表示月，{d}表示日，/表示目录，不要填写其他特殊符号')}</span>
                         </div>
                     </div>
-
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">{dr_lang('附件相对域名')}</label>
+                        <div class="col-md-9">
+                            <div class="mt-radio-inline">
+                                <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_ATTACHMENT_REL]" value="0" {if empty($data['SYS_ATTACHMENT_REL'])}checked{/if} /> {dr_lang('主站域名')} <span></span></label>
+                                <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_ATTACHMENT_REL]" value="1" {if $data['SYS_ATTACHMENT_REL']}checked{/if} /> {dr_lang('相对域名')} <span></span></label>
+                            </div>
+                            <span class="help-block">{dr_lang('相对模式表示各个终端调用附件显示当前的域名地址，不显示主域名，需要开启服务器的目录映射到主站目录')}</span>
+                        </div>
+                    </div>
                     <div class="form-group">
                         <label class="col-md-2 control-label">{dr_lang('附件上传目录')}</label>
                         <div class="col-md-9">
