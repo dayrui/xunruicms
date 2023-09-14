@@ -484,7 +484,16 @@ class Editor extends \Phpcmf\Library\A_Field {
         $wm = \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'watermark', 'ueditor') || $field['setting']['option']['watermark'] ? 1 : 0;
         $str.= \Phpcmf\Service::L('js_packer')->pack("
         <script type=\"text/javascript\">
+        function dr_is_auto_description_".$field['fieldname']."() {
+            var v = $(\"#is_auto_description_".$field['fieldname']."\").is(\":checked\");
+            if (v == true) {
+                $(\"#dr_description\").prop(\"readonly\", true);
+            } else {
+                $(\"#dr_description\").prop(\"readonly\", false);
+            }
+        }
             $(function(){
+            dr_is_auto_description_".$field['fieldname']."();
                 $('#dr_".$name."').summernote({
                 isMobileWidth: '".(\Phpcmf\Service::IS_MOBILE_USER() ? '95%' : '80%')."',
                 llVideoUrl: '".dr_web_prefix('index.php?s=api&c=file&m=input_file_list&is_iframe=1&p=' . $p)."',
@@ -588,7 +597,7 @@ $.ajax({
                  </label>';
             $str.= '
                  <label style="margin-bottom: 0;" class="mt-checkbox mt-checkbox-outline">
-                  <input name="is_auto_description_'.$field['fieldname'].'" type="checkbox" '.($field['setting']['option']['tool_select_2'] ? 'checked' : '').' value="1"> '.dr_lang('提取内容作为描述信息').' <span></span>
+                  <input id="is_auto_description_'.$field['fieldname'].'" onclick="dr_is_auto_description_'.$field['fieldname'].'()" name="is_auto_description_'.$field['fieldname'].'" type="checkbox" '.($field['setting']['option']['tool_select_2'] ? 'checked' : '').' value="1"> '.dr_lang('提取内容作为描述信息').' <span></span>
                  </label>';
             $str.= '
                  <label style="margin-bottom: 0;" class="mt-checkbox mt-checkbox-outline">
