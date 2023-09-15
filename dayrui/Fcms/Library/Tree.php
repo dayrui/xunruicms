@@ -285,11 +285,11 @@ class Tree {
         if (isset($data[0]) && dr_is_module($data[0])) {
             $mid = $data[0];
             $data = \Phpcmf\Service::L('category', 'module')->get_category($mid);
+            $dir = 'module/category-'.SITE_ID.'-'.$mid.'-select/';
         } else {
             $mid = md5(dr_array2string($data));
+            $dir = 'module/category-'.SITE_ID.'-share-select/';
         }
-
-        $dir = 'module/category-'.SITE_ID.'-'.$mid.'-select/';
         $name = 'tree2_cache_'.md5(dr_array2string($data).$this->ismain.$mid.$str.$default.$onlysub.$is_push.$is_first);
         if (IS_ADMIN) {
             $name.= 'admin'.md5(\Phpcmf\Service::C()->admin ? dr_array2string(\Phpcmf\Service::C()->admin['roleid']) : '1');

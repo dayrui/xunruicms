@@ -693,6 +693,17 @@ class Member extends \Phpcmf\Model {
             return dr_return_data(0, $rt['msg']);
         }
 
+        // 归属用户组
+        if (IS_USE_MEMBER) {
+            $lid = 0;
+            if (\Phpcmf\Service::C()->member_cache['group'][$groupid]['level']) {
+                $level = \Phpcmf\Service::C()->member_cache['group'][$groupid]['level'];
+                $one = array_shift($level);
+                $lid = $one['id'];
+            }
+            $this->apply_group(0, $data, $groupid, $lid, 0, ['content' => $data]);
+        }
+
         // 组合字段信息
         $data = array_merge($member, $data);
         $data['oauth'] = $oauth;
@@ -718,18 +729,6 @@ class Member extends \Phpcmf\Model {
                 dr_lang('新会员【%s】注册审核', $member['username']),
                 'member/verify/index:field/id/keyword/'.$uid
             );
-        }
-
-        $data['id'] = $uid;
-        // 归属用户组
-        if (IS_USE_MEMBER) {
-            $lid = 0;
-            if (\Phpcmf\Service::C()->member_cache['group'][$groupid]['level']) {
-                $level = \Phpcmf\Service::C()->member_cache['group'][$groupid]['level'];
-                $one = array_shift($level);
-                $lid = $one['id'];
-            }
-            $this->apply_group(0, $data, $groupid, $lid, 0, ['content' => $data]);
         }
 
         // 注册后的通知
