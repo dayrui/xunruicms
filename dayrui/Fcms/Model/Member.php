@@ -701,7 +701,9 @@ class Member extends \Phpcmf\Model {
                 $one = array_shift($level);
                 $lid = $one['id'];
             }
+            $data['uid'] = $uid;
             $this->apply_group(0, $data, $groupid, $lid, 0, ['content' => $data]);
+            unset($data['uid']);
         }
 
         // 组合字段信息
