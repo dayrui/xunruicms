@@ -669,7 +669,7 @@ class Member extends \Phpcmf\Model {
         $update && $this->table('member')->update($rt['code'], $update);
 
         // 附表信息
-        $data['id'] = $member['uid'] = $uid = $rt['code'];
+        $data['id'] = $member['uid'] = $member['id'] = $uid = $rt['code'];
         $data['is_admin'] = 0;
         $data['is_avatar'] = 0;
         // 审核状态值
@@ -701,9 +701,7 @@ class Member extends \Phpcmf\Model {
                 $one = array_shift($level);
                 $lid = $one['id'];
             }
-            $data['uid'] = $uid;
-            $this->apply_group(0, $data, $groupid, $lid, 0, ['content' => $data]);
-            unset($data['uid']);
+            $this->apply_group(0, $member, $groupid, $lid, 0, ['content' => $data]);
         }
 
         // 组合字段信息
