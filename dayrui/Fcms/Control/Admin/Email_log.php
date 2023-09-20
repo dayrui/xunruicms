@@ -24,7 +24,6 @@ class Email_log extends \Phpcmf\Common
 		if (is_file(WRITEPATH.'email_log.txt')) {
 			$data = explode(PHP_EOL, str_replace(array(chr(13), chr(10)), PHP_EOL, file_get_contents($file)));
 			$data = $data ? array_reverse($data) : [];
-			unset($data[0]);
 			$page = max(1, (int)\Phpcmf\Service::L('input')->get('page'));
 			$limit = ($page - 1) * SYS_ADMIN_PAGESIZE;
 			$i = $j = 0;

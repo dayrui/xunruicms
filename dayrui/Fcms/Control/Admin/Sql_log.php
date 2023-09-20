@@ -40,7 +40,6 @@ class Sql_log extends \Phpcmf\Common
             if ($code) {
                 $data = explode(PHP_EOL, str_replace(array(chr(13), chr(10)), PHP_EOL, $code));
                 $data = $data ? array_reverse($data) : [];
-                unset($data[0]);
                 $page = max(1, (int)\Phpcmf\Service::L('input')->get('page'));
                 $limit = ($page - 1) * SYS_ADMIN_PAGESIZE;
                 $i = $j = 0;

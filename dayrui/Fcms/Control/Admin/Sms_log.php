@@ -25,7 +25,6 @@ class Sms_log extends \Phpcmf\Common
 		if ($file) {
 			$data = explode(PHP_EOL, str_replace(array(chr(13), chr(10)), PHP_EOL, $file));
 			$data = $data ? array_reverse($data) : [];
-			unset($data[0]);
 			$page = max(1, (int)\Phpcmf\Service::L('input')->get('page'));
 			$limit = ($page - 1) * SYS_ADMIN_PAGESIZE;
 			$i = $j = 0;
