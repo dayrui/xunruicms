@@ -322,6 +322,7 @@ if (is_cli()) {
     defined('ENVIRONMENT') && define('ENVIRONMENT', 'testing');
 } else {
     // 正常访问模式
+    defined('ENVIRONMENT') && define('ENVIRONMENT', 'production');
     // 当前URL
     $url = 'http';
     if ((!IS_ADMIN && isset($system['SYS_HTTPS']) && $system['SYS_HTTPS'])
