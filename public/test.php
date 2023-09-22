@@ -25,13 +25,6 @@ if (!function_exists('declare')) {
 // 判断环境
 $min = '7.4.0';
 $max = '8.3.0';
-if (version_compare(PHP_VERSION, $max) > 0) {
-    dr_echo_msg(0, "<font color=red>PHP版本过高，请在".$max."以下的环境使用，当前".PHP_VERSION."，高版本需要等待官方对CMS版本的更新升级！~</font>");exit;
-} elseif (version_compare(PHP_VERSION, $min) < 0) {
-    dr_echo_msg(0, "<font color=red>PHP版本建议在".$min."及以上，当前".PHP_VERSION."</font><hr>最低支持PHP7.2环境，需要在这里下载兼容包：https://www.xunruicms.com/doc/1166.html");exit;
-} else {
-    dr_echo_msg(1, 'PHP版本要求：'.$min.'及以上，当前'.PHP_VERSION.'');
-}
 
 // 判断目录
 if (is_file(WEBPATH.'config/api.php')) {
@@ -57,6 +50,15 @@ if (is_file(WEBPATH.'config/api.php')) {
         $vcfg = require $version;
         dr_echo_msg(1, '当前CMS版本：V'.$vcfg['version'].'（'.$vcfg['downtime'].'）- '.$vcfg['name']);
     }
+}
+
+// 判断环境
+if (version_compare(PHP_VERSION, $max) > 0) {
+    dr_echo_msg(0, "<font color=red>PHP版本过高，请在".$max."以下的环境使用，当前".PHP_VERSION."，高版本需要等待官方对CMS版本的更新升级！~</font>");exit;
+} elseif (version_compare(PHP_VERSION, $min) < 0) {
+    dr_echo_msg(0, "<font color=red>PHP版本建议在".$min."及以上，当前".PHP_VERSION."</font><hr>最低支持PHP7.2环境，需要在这里下载兼容包：https://www.xunruicms.com/doc/1166.html");exit;
+} else {
+    dr_echo_msg(1, 'PHP版本要求：'.$min.'及以上，当前'.PHP_VERSION.'');
 }
 
 
