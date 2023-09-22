@@ -21,6 +21,7 @@ use CodeIgniter\Debug\Timer;
 use CodeIgniter\Files\Exceptions\FileNotFoundException;
 use CodeIgniter\HTTP\CLIRequest;
 use CodeIgniter\HTTP\Exceptions\HTTPException;
+use CodeIgniter\HTTP\Exceptions\RedirectException;
 use CodeIgniter\HTTP\IncomingRequest;
 use CodeIgniter\HTTP\RedirectResponse;
 use CodeIgniter\HTTP\RequestInterface;
@@ -470,28 +471,28 @@ if (! function_exists('force_https')) {
      *
      * @see https://en.wikipedia.org/wiki/HTTP_Strict_Transport_Security
      *
-     * @param int               $duration How long should the SSL header be set for? (in seconds)
-     *                                    Defaults to 1 year.
-     * @param RequestInterface  $request
-     * @param ResponseInterface $response
+     * @param int $duration How long should the SSL header be set for? (in seconds)
+     *                      Defaults to 1 year.
      *
      * @throws HTTPException
+     * @throws RedirectException
      */
-    function force_https(int $duration = 31_536_000, ?RequestInterface $request = null, ?ResponseInterface $response = null)
-    {
-        if ($request === null) {
-            $request = Services::request(null, true);
-        }
+    function force_https(
+        int $duration = 31_536_000,
+        ?RequestInterface $request = null,
+        ?ResponseInterface $response = null
+    ) {
+        $request ??= Services::request();
 
         if (! $request instanceof IncomingRequest) {
             return;
         }
 
-        if ($response === null) {
-            $response = Services::response(null, true);
-        }
+        $response ??= Services::response();
 
-        if ((ENVIRONMENT !== 'testing' && (is_cli() || $request->isSecure())) || (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'test')) {
+        if ((ENVIRONMENT !== 'testing' && (is_cli() || $request->isSecure()))
+            || $request->getServer('HTTPS') === 'test'
+        ) {
             return; // @codeCoverageIgnore
         }
 
@@ -520,13 +521,14 @@ if (! function_exists('force_https')) {
         );
 
         // Set an HSTS header
-        $response->setHeader('Strict-Transport-Security', 'max-age=' . $duration);
-        $response->redirect($uri);
-        $response->sendHeaders();
+        $response->setHeader('Strict-Transport-Security', 'max-age=' . $duration)
+            ->redirect($uri)
+            ->setStatusCode(307)
+            ->setBody('')
+            ->getCookieStore()
+            ->clear();
 
-        if (ENVIRONMENT !== 'testing') {
-            exit(); // @codeCoverageIgnore
-        }
+        throw new RedirectException($response);
     }
 }
 
@@ -716,7 +718,7 @@ if (! function_exists('is_really_writable')) {
             }
 
             fclose($fp);
-            //@chmod($file, 0777);
+            @chmod($file, 0777);
             @unlink($file);
 
             return true;
@@ -884,11 +886,21 @@ if (! function_exists('_solidus')) {
     /**
      * Generates the solidus character (`/`) depending on the HTML5 compatibility flag in `Config\DocTypes`
      *
+     * @param DocTypes|null $docTypesConfig New config. For testing purpose only.
+     *
      * @internal
      */
-    function _solidus(): string
+    function _solidus(?DocTypes $docTypesConfig = null): string
     {
-        if (config(DocTypes::class)->html5 ?? false) {
+        static $docTypes = null;
+
+        if ($docTypesConfig !== null) {
+            $docTypes = $docTypesConfig;
+        }
+
+        $docTypes ??= new DocTypes();
+
+        if ($docTypes->html5 ?? false) {
             return '';
         }
 

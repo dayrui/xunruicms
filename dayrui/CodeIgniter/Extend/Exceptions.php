@@ -6,6 +6,7 @@
  **/
 
 use Config\Paths;
+use Config\Services;
 use Throwable;
 
 
@@ -45,6 +46,9 @@ class Exceptions extends \CodeIgniter\Debug\Exceptions {
             // 传入对象到日志中
             log_message('critical', $exception);
         }
+
+        $this->request  = Services::request();
+        $this->response = Services::response();
 
 		 // ajax 返回
         if (IS_AJAX || IS_API) {
@@ -119,9 +123,8 @@ class Exceptions extends \CodeIgniter\Debug\Exceptions {
             dr_exit_msg(0, $message);
         }
 
-        $this->viewPath = is_file(MYPATH.'View/errors/html/production.php') ? MYPATH.'View/errors/' : FRAMEPATH.'View/errors/';
+        $path = $this->viewPath = is_file(MYPATH.'View/errors/html/production.php') ? MYPATH.'View/errors/' : FRAMEPATH.'View/errors/';
         // Determine possible directories of error views
-        $path    = $this->viewPath;
         $altPath = rtrim((new Paths())->viewDirectory, '\\/ ') . DIRECTORY_SEPARATOR . 'errors' . DIRECTORY_SEPARATOR;
 
         $path    .= (is_cli() ? 'cli' : 'html') . DIRECTORY_SEPARATOR;

@@ -101,7 +101,7 @@ class FileHandler extends BaseHandler
 
         if ($this->writeFile($this->path . $key, serialize($contents))) {
             try {
-                //chmod($this->path . $key, $this->mode);
+                chmod($this->path . $key, $this->mode);
 
                 // @codeCoverageIgnoreStart
             } catch (Throwable $e) {
@@ -127,6 +127,8 @@ class FileHandler extends BaseHandler
 
     /**
      * {@inheritDoc}
+     *
+     * @return int
      */
     public function deleteMatching(string $pattern)
     {

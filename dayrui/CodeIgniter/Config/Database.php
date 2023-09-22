@@ -51,6 +51,7 @@ class Database extends Config
         'compress'     => false,
         'strictOn'     => false,
         'foreignKeys'   => true,
+        'numberNative' => false,
         'failover'     => []
     ];
     public array $db1 = [];

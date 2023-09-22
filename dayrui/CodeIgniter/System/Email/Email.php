@@ -113,7 +113,9 @@ class Email
     /**
      * SMTP Encryption
      *
-     * @var string Empty, 'tls' or 'ssl'
+     * @var string '', 'tls' or 'ssl'. 'tls' will issue a STARTTLS command
+     *             to the server. 'ssl' means implicit SSL. Connection on port
+     *             465 should set this to ''.
      */
     public $SMTPCrypto = '';
 
@@ -1064,6 +1066,8 @@ class Email
 
     /**
      * Build final headers
+     *
+     * @return void
      */
     protected function buildHeaders()
     {
@@ -1077,6 +1081,8 @@ class Email
 
     /**
      * Write Headers as a string
+     *
+     * @return void
      */
     protected function writeHeaders()
     {
@@ -1103,6 +1109,8 @@ class Email
 
     /**
      * Build Final Body and attachments
+     *
+     * @return void
      */
     protected function buildMessage()
     {
@@ -1263,6 +1271,8 @@ class Email
      * @param string      $body      Message body to append to
      * @param string      $boundary  Multipart boundary
      * @param string|null $multipart When provided, only attachments of this type will be processed
+     *
+     * @return void
      */
     protected function appendAttachments(&$body, $boundary, $multipart = null)
     {
@@ -1579,6 +1589,8 @@ class Email
 
     /**
      * Batch Bcc Send. Sends groups of BCCs in batches
+     *
+     * @return void
      */
     public function batchBCCSend()
     {
@@ -1623,6 +1635,8 @@ class Email
 
     /**
      * Unwrap special elements
+     *
+     * @return void
      */
     protected function unwrapSpecials()
     {
@@ -1837,6 +1851,8 @@ class Email
 
     /**
      * Shortcut to send RSET or QUIT depending on keep-alive
+     *
+     * @return void
      */
     protected function SMTPEnd()
     {
@@ -1854,9 +1870,13 @@ class Email
 
         $ssl = '';
 
+        // Connection to port 465 should use implicit TLS (without STARTTLS)
+        // as per RFC 8314.
         if ($this->SMTPPort === 465) {
             $ssl = 'tls://';
-        } elseif ($this->SMTPCrypto === 'ssl') {
+        }
+        // But if $SMTPCrypto is set to `ssl`, SSL can be used.
+        if ($this->SMTPCrypto === 'ssl') {
             $ssl = 'ssl://';
         }
 
@@ -2156,6 +2176,8 @@ class Email
 
     /**
      * @param string $msg
+     *
+     * @return void
      */
     protected function setErrorMessage($msg)
     {

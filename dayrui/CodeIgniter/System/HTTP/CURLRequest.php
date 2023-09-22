@@ -151,6 +151,8 @@ class CURLRequest extends OutgoingRequest
 
     /**
      * Reset all options to default.
+     *
+     * @return void
      */
     protected function resetOptions()
     {
@@ -277,6 +279,8 @@ class CURLRequest extends OutgoingRequest
     /**
      * Sets the correct settings based on the options array
      * passed in.
+     *
+     * @return void
      */
     protected function parseOptions(array $options)
     {
@@ -479,6 +483,8 @@ class CURLRequest extends OutgoingRequest
     /**
      * Parses the header retrieved from the cURL response into
      * our Response object.
+     *
+     * @return void
      */
     protected function setResponseHeaders(array $headers = [])
     {
@@ -552,6 +558,12 @@ class CURLRequest extends OutgoingRequest
             } elseif (is_bool($config['verify'])) {
                 $curlOptions[CURLOPT_SSL_VERIFYPEER] = $config['verify'];
             }
+        }
+
+        // Proxy
+        if (isset($config['proxy'])) {
+            $curlOptions[CURLOPT_HTTPPROXYTUNNEL] = true;
+            $curlOptions[CURLOPT_PROXY]           = $config['proxy'];
         }
 
         // Debug

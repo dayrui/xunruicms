@@ -4,6 +4,7 @@
  * {{迅睿内容管理框架系统}}
  * 本文件是框架系统文件，二次开发时不可以修改本文件
  **/
+use Config\Services;
 
 /**
  * 继承主类，用于init.php
@@ -18,6 +19,7 @@ class CodeIgniter extends \CodeIgniter\CodeIgniter {
         // 执行时间标记
         $this->startTime = microtime(true);
         $this->config = $config;
+        $this->pageCache = Services::responsecache();
     }
 
     /**

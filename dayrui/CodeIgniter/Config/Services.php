@@ -6,8 +6,8 @@
  **/
 
 use CodeIgniter\Config\Services as CoreServices;
-use CodeIgniter\HTTP\IncomingRequest;
 use CodeIgniter\HTTP\UserAgent;
+use Config\Security as SecurityConfig;
 
 /**
  * Services Configuration file.
@@ -47,14 +47,13 @@ class Services extends CoreServices
     }
 
     // 防跨站验证
-    public static function security(App $config = null, bool $getShared = true)
+    public static function security(?SecurityConfig $config = null, bool $getShared = true)
     {
-        if ($getShared)
-        {
+        if ($getShared) {
             return static::getSharedInstance('security', $config);
         }
 
-		$config = $config ?? config('App');
+        $config ??= config(SecurityConfig::class);
 
         return new \Phpcmf\Extend\Security($config);
     }

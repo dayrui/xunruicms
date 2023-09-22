@@ -11,6 +11,7 @@
 
 namespace CodeIgniter\Filters;
 
+use CodeIgniter\Exceptions\ConfigException;
 use CodeIgniter\Filters\Exceptions\FilterException;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
@@ -63,7 +64,7 @@ class Filters
      * The processed filters that will
      * be used to check against.
      *
-     * @var array
+     * @var array<string, array>
      */
     protected $filters = [
         'before' => [],
@@ -74,7 +75,7 @@ class Filters
      * The collection of filters' class names that will
      * be used to execute in each position.
      *
-     * @var array
+     * @var array<string, array>
      */
     protected $filtersClass = [
         'before' => [],
@@ -84,14 +85,16 @@ class Filters
     /**
      * Any arguments to be passed to filters.
      *
-     * @var array
+     * @var array<string, array<int, string>|null> [name => params]
+     * @phpstan-var array<string, list<string>|null>
      */
     protected $arguments = [];
 
     /**
      * Any arguments to be passed to filtersClass.
      *
-     * @var array
+     * @var array<string, array|null> [classname => arguments]
+     * @phpstan-var array<class-string, array<string, list<string>>|null>
      */
     protected $argumentsClass = [];
 
@@ -121,7 +124,7 @@ class Filters
      * Sample :
      * $filters->aliases['custom-auth'] = \Acme\Blob\Filters\BlobAuth::class;
      */
-    private function discoverFilters()
+    private function discoverFilters(): void
     {
         $locator = Services::locator();
 
@@ -144,6 +147,8 @@ class Filters
 
     /**
      * Set the response explicitly.
+     *
+     * @return void
      */
     public function setResponse(ResponseInterface $response)
     {
@@ -154,7 +159,9 @@ class Filters
      * Runs through all of the filters for the specified
      * uri and position.
      *
-     * @return mixed|RequestInterface|ResponseInterface
+     * @param string $uri URI path relative to baseURL
+     *
+     * @return RequestInterface|ResponseInterface|string|null
      *
      * @throws FilterException
      */
@@ -170,7 +177,10 @@ class Filters
             }
 
             if ($position === 'before') {
-                $result = $class->before($this->request, $this->argumentsClass[$className] ?? null);
+                $result = $class->before(
+                    $this->request,
+                    $this->argumentsClass[$className] ?? null
+                );
 
                 if ($result instanceof RequestInterface) {
                     $this->request = $result;
@@ -193,7 +203,11 @@ class Filters
             }
 
             if ($position === 'after') {
-                $result = $class->after($this->request, $this->response, $this->argumentsClass[$className] ?? null);
+                $result = $class->after(
+                    $this->request,
+                    $this->response,
+                    $this->argumentsClass[$className] ?? null
+                );
 
                 if ($result instanceof ResponseInterface) {
                     $this->response = $result;
@@ -218,6 +232,8 @@ class Filters
      * We go ahead and process the entire tree because we'll need to
      * run through both a before and after and don't want to double
      * process the rows.
+     *
+     * @param string|null $uri URI path relative to baseURL (all lowercase)
      *
      * @return Filters
      */
@@ -316,23 +332,17 @@ class Filters
      * after the filter name, followed by a comma-separated list of arguments that
      * are passed to the filter when executed.
      *
-     * @return Filters
+     * @param string $name filter_name or filter_name:arguments like 'role:admin,manager'
+     *
+     * @return $this
      *
      * @deprecated Use enableFilters(). This method will be private.
      */
     public function enableFilter(string $name, string $when = 'before')
     {
-        // Get parameters and clean name
-        if (strpos($name, ':') !== false) {
-            [$name, $params] = explode(':', $name);
-
-            $params = explode(',', $params);
-            array_walk($params, static function (&$item) {
-                $item = trim($item);
-            });
-
-            $this->arguments[$name] = $params;
-        }
+        // Get arguments and clean name
+        [$name, $arguments]     = $this->getCleanName($name);
+        $this->arguments[$name] = ($arguments !== []) ? $arguments : null;
 
         if (class_exists($name)) {
             $this->config->aliases[$name] = $name;
@@ -355,11 +365,37 @@ class Filters
     }
 
     /**
+     * Get clean name and arguments
+     *
+     * @param string $name filter_name or filter_name:arguments like 'role:admin,manager'
+     *
+     * @return array [name, arguments]
+     * @phpstan-return array{0: string, 1: list<string>}
+     */
+    private function getCleanName(string $name): array
+    {
+        $arguments = [];
+
+        if (strpos($name, ':') !== false) {
+            [$name, $arguments] = explode(':', $name);
+
+            $arguments = explode(',', $arguments);
+            array_walk($arguments, static function (&$item) {
+                $item = trim($item);
+            });
+        }
+
+        return [$name, $arguments];
+    }
+
+    /**
      * Ensures that specific filters are on and enabled for the current request.
      *
      * Filters can have "arguments". This is done by placing a colon immediately
      * after the filter name, followed by a comma-separated list of arguments that
      * are passed to the filter when executed.
+     *
+     * @params array<string> $names filter_name or filter_name:arguments like 'role:admin,manager'
      *
      * @return Filters
      */
@@ -389,7 +425,9 @@ class Filters
     /**
      * Add any applicable (not excluded) global filter settings to the mix.
      *
-     * @param string $uri
+     * @param string|null $uri URI path relative to baseURL (all lowercase)
+     *
+     * @return void
      */
     protected function processGlobals(?string $uri = null)
     {
@@ -412,7 +450,7 @@ class Filters
                         if (isset($rules['except'])) {
                             // grab the exclusion rules
                             $check = $rules['except'];
-                            if ($this->pathApplies($uri, $check)) {
+                            if ($this->checkExcept($uri, $check)) {
                                 $keep = false;
                             }
                         }
@@ -430,6 +468,8 @@ class Filters
 
     /**
      * Add any method-specific filters to the mix.
+     *
+     * @return void
      */
     protected function processMethods()
     {
@@ -448,7 +488,9 @@ class Filters
     /**
      * Add any applicable configured filters to the mix.
      *
-     * @param string $uri
+     * @param string|null $uri URI path relative to baseURL (all lowercase)
+     *
+     * @return void
      */
     protected function processFilters(?string $uri = null)
     {
@@ -463,22 +505,63 @@ class Filters
             // Look for inclusion rules
             if (isset($settings['before'])) {
                 $path = $settings['before'];
+
                 if ($this->pathApplies($uri, $path)) {
-                    $this->filters['before'][] = $alias;
+                    // Get arguments and clean name
+                    [$name, $arguments] = $this->getCleanName($alias);
+
+                    $this->filters['before'][] = $name;
+
+                    $this->registerArguments($name, $arguments);
                 }
             }
 
             if (isset($settings['after'])) {
                 $path = $settings['after'];
+
                 if ($this->pathApplies($uri, $path)) {
-                    $this->filters['after'][] = $alias;
+                    // Get arguments and clean name
+                    [$name, $arguments] = $this->getCleanName($alias);
+
+                    $this->filters['after'][] = $name;
+
+                    // The arguments may have already been registered in the before filter.
+                    // So disable check.
+                    $this->registerArguments($name, $arguments, false);
                 }
             }
         }
     }
 
     /**
+     * @param string $name      filter alias
+     * @param array  $arguments filter arguments
+     * @param bool   $check     if true, check if already defined
+     */
+    private function registerArguments(string $name, array $arguments, bool $check = true): void
+    {
+        if ($arguments !== []) {
+            if ($check && array_key_exists($name, $this->arguments)) {
+                throw new ConfigException(
+                    '"' . $name . '" already has arguments: '
+                    . (($this->arguments[$name] === null) ? 'null' : implode(',', $this->arguments[$name]))
+                );
+            }
+
+            $this->arguments[$name] = $arguments;
+        }
+
+        $classNames = (array) $this->config->aliases[$name];
+
+        foreach ($classNames as $className) {
+            $this->argumentsClass[$className] = $this->arguments[$name] ?? null;
+        }
+    }
+
+    /**
      * Maps filter aliases to the equivalent filter classes
+     *
+     * @return void
      *
      * @throws FilterException
      */
@@ -500,8 +583,8 @@ class Filters
             }
         }
 
-        // when using enableFilter() we already write the class name in ->filtersClass as well as the
-        // alias in ->filters. This leads to duplicates when using route filters.
+        // when using enableFilter() we already write the class name in $filtersClass as well as the
+        // alias in $filters. This leads to duplicates when using route filters.
         // Since some filters like rate limiters rely on being executed once a request we filter em here.
         $this->filtersClass[$position] = array_values(array_unique($this->filtersClass[$position]));
     }
@@ -526,12 +609,47 @@ class Filters
             $paths = [$paths];
         }
 
-        // treat each paths as pseudo-regex
+        return $this->checkPseudoRegex($uri, $paths);
+    }
+
+    /**
+     * Check except paths
+     *
+     * @param string       $uri   URI path relative to baseURL (all lowercase)
+     * @param array|string $paths The except path patterns
+     *
+     * @return bool True if the URI matches except paths.
+     */
+    private function checkExcept(string $uri, $paths): bool
+    {
+        // empty array does not match anything
+        if ($paths === []) {
+            return false;
+        }
+
+        // make sure the paths are iterable
+        if (is_string($paths)) {
+            $paths = [$paths];
+        }
+
+        return $this->checkPseudoRegex($uri, $paths);
+    }
+
+    /**
+     * Check the URI path as pseudo-regex
+     *
+     * @param string $uri   URI path relative to baseURL (all lowercase)
+     * @param array  $paths The except path patterns
+     */
+    private function checkPseudoRegex(string $uri, array $paths): bool
+    {
+        // treat each path as pseudo-regex
         foreach ($paths as $path) {
             // need to escape path separators
             $path = str_replace('/', '\/', trim($path, '/ '));
             // need to make pseudo wildcard real
             $path = strtolower(str_replace('*', '.*', $path));
+
             // Does this rule apply here?
             if (preg_match('#^' . $path . '$#', $uri, $match) === 1) {
                 return true;

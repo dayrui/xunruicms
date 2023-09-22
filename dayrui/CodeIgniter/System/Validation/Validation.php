@@ -66,6 +66,13 @@ class Validation implements ValidationInterface
     protected $data = [];
 
     /**
+     * The data that was actually validated.
+     *
+     * @var array
+     */
+    protected $validated = [];
+
+    /**
      * Any generated errors during validation.
      * 'key' is the alias, 'value' is the message.
      *
@@ -107,6 +114,8 @@ class Validation implements ValidationInterface
         $this->config = $config;
 
         $this->view = $view;
+
+        $this->loadRuleSets();
     }
 
     /**
@@ -122,12 +131,16 @@ class Validation implements ValidationInterface
      */
     public function run(?array $data = null, ?string $group = null, ?string $dbGroup = null): bool
     {
-        $data ??= $this->data;
+        if ($data === null) {
+            $data = $this->data;
+        } else {
+            // Store data to validate.
+            $this->data = $data;
+        }
 
         // `DBGroup` is a reserved name. For is_unique and is_not_unique
         $data['DBGroup'] = $dbGroup;
 
-        $this->loadRuleSets();
         $this->loadRuleGroup($group);
 
         // If no rules exist, we return false to ensure
@@ -183,16 +196,26 @@ class Validation implements ValidationInterface
             }
         }
 
-        return $this->getErrors() === [];
+        if ($this->getErrors() === []) {
+            // Store data that was actually validated.
+            $this->validated = DotArrayFilter::run(
+                array_keys($this->rules),
+                $this->data
+            );
+
+            return true;
+        }
+
+        return false;
     }
 
     /**
      * Runs the validation process, returning true or false determining whether
      * validation was successful or not.
      *
-     * @param array|bool|float|int|object|string|null $value
-     * @param array|string                            $rules
-     * @param string[]                                $errors
+     * @param array|bool|float|int|object|string|null $value   The data to validate.
+     * @param array|string                            $rules   The validation rules.
+     * @param string[]                                $errors  The custom error message.
      * @param string|null                             $dbGroup The database group to use.
      */
     public function check($value, $rules, array $errors = [], $dbGroup = null): bool
@@ -209,6 +232,14 @@ class Validation implements ValidationInterface
             null,
             $dbGroup
         );
+    }
+
+    /**
+     * Returns the actual validated data.
+     */
+    public function getValidated(): array
+    {
+        return $this->validated;
     }
 
     /**
@@ -472,7 +503,8 @@ class Validation implements ValidationInterface
      *        'rule2' => 'message2',
      *    ]
      *
-     * @param array|string $rules
+     * @param array|string $rules  The validation rules.
+     * @param array        $errors The custom error message.
      *
      * @return $this
      *
@@ -593,6 +625,8 @@ class Validation implements ValidationInterface
      *
      * @param string $group Group.
      *
+     * @return void
+     *
      * @throws ValidationException If group not found.
      */
     public function setRuleGroup(string $group)
@@ -645,6 +679,8 @@ class Validation implements ValidationInterface
     /**
      * Loads all of the rulesets classes that have been defined in the
      * Config\Validation and stores them locally so we can use them.
+     *
+     * @return void
      */
     protected function loadRuleSets()
     {
@@ -912,6 +948,7 @@ class Validation implements ValidationInterface
     public function reset(): ValidationInterface
     {
         $this->data         = [];
+        $this->validated    = [];
         $this->rules        = [];
         $this->errors       = [];
         $this->customErrors = [];
