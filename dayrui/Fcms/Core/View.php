@@ -58,6 +58,7 @@ class View {
     private $_sum_field; // 求和时的字段
 
     private $_code;
+    private $_mdir;
 
     private $_select_rt_name = '_XUNRUICMS_RT_'; // select替换字符
 

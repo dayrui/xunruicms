@@ -200,7 +200,7 @@ class Field extends \Phpcmf\Common {
 
 		// 提交表单
 		if (IS_AJAX_POST) {
-			$data = \Phpcmf\Service::L('input')->post('data');
+			$data = \Phpcmf\Service::L('input')->post('data', false);
 			$field = \Phpcmf\Service::L('field')->get($data['fieldtype']);
 			if (!$field) {
 				$this->_json(0, dr_lang('字段类别（%s）不存在', $data['fieldtype']));
@@ -269,7 +269,7 @@ class Field extends \Phpcmf\Common {
         }
 
 		if (IS_AJAX_POST) {
-			$post = \Phpcmf\Service::L('input')->post('data');
+			$post = \Phpcmf\Service::L('input')->post('data', false);
 			$field = \Phpcmf\Service::L('field')->get($post['fieldtype']);
             if (!$field) {
                 $this->_json(0, dr_lang('字段类别（%s）不存在', $post['fieldtype']));
