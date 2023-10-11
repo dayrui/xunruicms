@@ -964,7 +964,7 @@ class CodeIgniter
 
         // Throws new PageNotFoundException and remove exception message on production.
         throw PageNotFoundException::forPageNotFound(
-            (ENVIRONMENT !== 'production' || ! $this->isWeb()) ? $e->getMessage() : null
+            (! $this->isWeb()) ? $e->getMessage() : null
         );
     }
 
