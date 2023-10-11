@@ -203,7 +203,7 @@ class Field extends \Phpcmf\Common {
 			$data = \Phpcmf\Service::L('input')->post('data', false);
 			$field = \Phpcmf\Service::L('field')->get($data['fieldtype']);
 			if (!$field) {
-				$this->_json(0, dr_lang('字段类别（%s）不存在', $data['fieldtype']));
+				$this->_json(0, dr_lang('字段类别（%s）文件不存在', $data['fieldtype']));
 			} elseif (empty($data['name'])) {
 				$this->_json(0, dr_lang('字段显示名称不能为空'));
 			} elseif (empty($data['fieldname'])) {
@@ -272,7 +272,7 @@ class Field extends \Phpcmf\Common {
 			$post = \Phpcmf\Service::L('input')->post('data', false);
 			$field = \Phpcmf\Service::L('field')->get($post['fieldtype']);
             if (!$field) {
-                $this->_json(0, dr_lang('字段类别（%s）不存在', $post['fieldtype']));
+                $this->_json(0, dr_lang('字段类别（%s）文件不存在', $post['fieldtype']));
             }
             $rt = $field->edit_config($post);
             if (!$rt['code']) {
@@ -488,7 +488,7 @@ class Field extends \Phpcmf\Common {
                     }
                     $field = \Phpcmf\Service::L('field')->get($data['fieldtype']);
                     if (!$field) {
-                        $this->_json(0, dr_lang('字段类别（%s）不存在', $data['fieldtype']));
+                        $this->_json(0, dr_lang('字段类别（%s）文件不存在', $data['fieldtype']));
                     } elseif (empty($data['name'])) {
                         $this->_json(0, dr_lang('字段显示名称不能为空'));
                     } elseif (empty($data['fieldname'])) {
