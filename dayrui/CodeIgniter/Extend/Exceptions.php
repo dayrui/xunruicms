@@ -80,7 +80,7 @@ class Exceptions extends \CodeIgniter\Debug\Exceptions {
 
             if (strpos($this->request->getHeaderLine('accept'), 'text/html') === false)
             {
-                $this->respond(ENVIRONMENT === 'development' ? $this->collectVars($exception, $statusCode) : '', $statusCode)->send();
+                $this->respond(IS_DEV ? $this->collectVars($exception, $statusCode) : '', $statusCode)->send();
 
                 exit($exitCode);
             }
