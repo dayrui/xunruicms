@@ -232,9 +232,13 @@ class Form {
                         // 函数格式
                         $func = $validate['check'];
                         if (function_exists($func)) {
-                            $rt = call_user_func_array($func, [$value, $data, $old]);
-                            if (!$rt['code']) {
-                                return [[], ['name' => $name, 'error' => $rt['msg']]];
+                            if (strpos($func, 'dr_') === 0 or strpos($func, 'my_') === 0) {
+                                $rt = call_user_func_array($func, [$value, $data, $old]);
+                                if (!$rt['code']) {
+                                    return [[], ['name' => $name, 'error' => $rt['msg']]];
+                                }
+                            } else {
+                                log_message('error', "校验函数 $func 不可用，必须以dr_或者my_开头");
                             }
                         } else {
                             log_message('error', "校验函数 $func 不存在！");
@@ -257,7 +261,11 @@ class Form {
                         $func = $validate['filter'];
                         if (function_exists($func)) {
                             // 开始过滤
-                            $post[$name] = call_user_func_array($func, [$value, $data, $old]);
+                            if(strpos($func, 'dr_') === 0 or strpos($func, 'my_') === 0){
+                                $post[$name] = call_user_func_array($func, [$value, $data, $old]);
+                            } else {
+                                log_message('error', "过滤函数 $func 不可用，必须以dr_或者my_开头");
+                            }
                         } else {
                             log_message('error', "过滤函数 $func 不存在！");
                         }

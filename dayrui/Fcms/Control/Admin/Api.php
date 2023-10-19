@@ -173,10 +173,14 @@ class Api extends \Phpcmf\Common {
                 $this->_json(0, 'form类方法【'.$call.'】未定义');
             }
         } else {
-            if (function_exists($call)) {
-                $this->_json(1, dr_lang('定义成功'));
+            if (strpos($call, 'dr_') === 0 or strpos($call, 'my_') === 0) {
+                if (function_exists($call)) {
+                    $this->_json(1, dr_lang('定义成功'));
+                } else {
+                    $this->_json(0, '函数【'.$call.'】未定义');
+                }
             } else {
-                $this->_json(0, '函数【'.$call.'】未定义');
+                $this->_json(0, '函数【'.$call.'】必须以dr_或者my_开头');
             }
         }
     }

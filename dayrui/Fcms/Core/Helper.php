@@ -994,7 +994,11 @@ function dr_list_function($func, $value, $param = [], $data = [], $field = [], $
     if (method_exists($obj, $func)) {
         return call_user_func_array([$obj, $func], [$value, $param, $data, $field]);
     } elseif (function_exists($func)) {
-        return call_user_func_array($func, [$value, $param, $data, $field]);
+        if (strpos($func, 'dr_') === 0 or strpos($func, 'my_') === 0) {
+            return call_user_func_array($func, [$value, $param, $data, $field]);
+        } else {
+            log_message('error', '列表回调函数【'.$func.'】必须以dr_或者my_开头');
+        }
     } else {
         log_message('debug', '你没有定义字段列表回调函数：'.$func);
     }
