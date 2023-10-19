@@ -986,7 +986,7 @@ function dr_list_function($func, $value, $param = [], $data = [], $field = [], $
         } elseif ($field['fieldtype'] && isset($dfunc[$field['fieldtype']]) && $dfunc[$field['fieldtype']]) {
             $func = $dfunc[$field['fieldtype']];
         } else {
-            return $value;
+            return htmlspecialchars($value);
         }
     }
 
@@ -999,7 +999,7 @@ function dr_list_function($func, $value, $param = [], $data = [], $field = [], $
         log_message('debug', '你没有定义字段列表回调函数：'.$func);
     }
 
-    return $value;
+    return htmlspecialchars($value);
 }
 
 /**

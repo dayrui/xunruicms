@@ -665,11 +665,12 @@ class Model {
             // 地图
             list($a, $km) = explode('|', $value);
             list($lng, $lat) = explode(',', $a);
-            if ($lat && $lng) {
+            if ($km && $lat && $lng) {
                 // 获取Nkm内的数据
                 $squares = dr_square_point($lng, $lat, $km);
                 return "(`".$table."`.`".$name."_lat` between {$squares['right-bottom']['lat']} and {$squares['left-top']['lat']}) and (`".$table."`.`".$name."_lng` between {$squares['left-top']['lng']} and {$squares['right-bottom']['lng']})";
             } else {
+                return '1=1';
                 //\Phpcmf\Service::C()->goto_404_page(dr_lang('没有定位到您的坐标'));
             }
         } elseif (isset($field['fieldtype']) && $field['fieldtype'] == 'Diy'

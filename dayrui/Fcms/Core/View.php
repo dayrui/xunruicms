@@ -1907,7 +1907,17 @@ class View {
         }
 
         // 定位范围搜索
-        $this->pos_order && ($this->pos_map ? $field.= ',ROUND(6378.138*2*ASIN(SQRT(POW(SIN(('.$this->pos_map['lat'].'*PI()/180-'.$this->pos_order.'_lat*PI()/180)/2),2)+COS('.$this->pos_map['lat'].'*PI()/180)*COS('.$this->pos_order.'_lat*PI()/180)*POW(SIN(('.$this->pos_map['lng'].'*PI()/180-'.$this->pos_order.'_lng*PI()/180)/2),2)))*1000) AS '.$this->pos_order.'_map' : '没有定位到您的坐标');
+        if ($this->pos_order) {
+            if ($this->pos_map && $this->pos_map['lat'] && $this->pos_map['lng']) {
+                if (version_compare(\Phpcmf\Service::M()->db->getVersion(), '5.7.0') < 0) {
+                    $field .= ',ROUND(6378.138*2*ASIN(SQRT(POW(SIN((' . $this->pos_map['lat'] . '*PI()/180-' . $this->pos_order . '_lat*PI()/180)/2),2)+COS(' . $this->pos_map['lat'] . '*PI()/180)*COS(' . $this->pos_order . '_lat*PI()/180)*POW(SIN((' . $this->pos_map['lng'] . '*PI()/180-' . $this->pos_order . '_lng*PI()/180)/2),2)))*1000) AS ' . $this->pos_order . '_map';
+                } else {
+                    $field.= ',ST_Distance_Sphere(POINT('.$this->pos_order.'_lng, '.$this->pos_order.'_lat), POINT('.$this->pos_map['lng'].', '.$this->pos_map['lat'].')) AS '.$this->pos_order.'_map';
+                }
+            } else {
+                $field.= '没有定位到您的坐标';
+            }
+        }
 
         return $field;
     }
