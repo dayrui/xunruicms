@@ -288,6 +288,13 @@ class Table extends \Phpcmf\Common {
         $value = urldecode((string)\Phpcmf\Service::L('input')->get('value'));
         $after = dr_safe_filename(\Phpcmf\Service::L('input')->get('after'));
         $before = dr_safe_filename(\Phpcmf\Service::L('input')->get('before'));
+        if ($before) {
+            if (strpos($before, 'dr_') === 0 or strpos($before, 'my_') === 0) {
+
+            } else {
+                $this->_json(0, '函数【'.$before.'】必须以dr_或者my_开头');
+            }
+        }
 
         if (!$id) {
             $this->_json(0, dr_lang('缺少id参数'));
