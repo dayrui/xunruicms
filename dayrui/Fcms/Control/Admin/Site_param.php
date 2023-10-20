@@ -14,7 +14,7 @@ class Site_param extends \Phpcmf\Common {
                 'ismain' => 1,
                 'fieldtype' => 'File',
                 'fieldname' => 'logo',
-                'setting' => ['option' => ['ext' => 'jpg,gif,png,jpeg', 'size' => 10, 'input' => 1]]
+                'setting' => ['option' => ['ext' => 'jpg,gif,png,jpeg,webp,svg', 'size' => 10, 'input' => 1]]
             ]
         ];
 

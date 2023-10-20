@@ -4169,7 +4169,9 @@ class php5replace {
 
     // 替换函数值
     function php55_replace_function($value) {
-        if (function_exists($value[1])) {
+        if (!dr_is_safe_function($value[1])) {
+            return '函数['.$value[1].']不安全，禁止在此处使用';
+        } elseif (function_exists($value[1])) {
             // 执行函数体
             $param = '';
             if ($value[2]) {
@@ -4222,6 +4224,18 @@ function dr_code2utf8($str) {
 
 ////////////////////////////////////////////////////////////
 
+
+// 函数安全性判断
+if (!function_exists('dr_is_safe_function')) {
+    function dr_is_safe_function($func) {
+
+        if (stripos('apache_child_terminate, apache_setenv, define_syslog_variables, escapeshellarg, escapeshellcmd, eval, exec, fp, fput, ftp_connect, ftp_exec, ftp_get, ftp_login, ftp_nb_fput, ftp_put, ftp_raw, ftp_rawlist, highlight_file, ini_alter, ini_get_all, ini_restore, inject_code, mysql_pconnect, openlog, passthru, php_uname, phpAds_remoteInfo, phpAds_XmlRpc, phpAds_xmlrpcDecode, phpAds_xmlrpcEncode, popen, posix_getpwuid, posix_kill, posix_mkfifo, posix_setpgid, posix_setsid, posix_setuid, posix_setuid, posix_uname, proc_close, proc_get_status, proc_nice, proc_open, proc_terminate, shell_exec, syslog, system, xmlrpc_entity_decode', $func) !== false) {
+            return false;
+        }
+
+        return true;
+    }
+}
 
 // 兼容性判断
 if (!function_exists('gethostbyname')) {
