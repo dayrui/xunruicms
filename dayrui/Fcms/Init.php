@@ -134,6 +134,7 @@ if (CI_DEBUG) {
     define('ENVIRONMENT', 'development');
 } else {
     ini_set('display_errors', 0);
+    defined('ENVIRONMENT') && define('ENVIRONMENT', 'production');
 }
 
 // 缓存变量
@@ -319,10 +320,8 @@ if (is_cli()) {
             }
         }
     }
-    defined('ENVIRONMENT') && define('ENVIRONMENT', 'testing');
 } else {
     // 正常访问模式
-    defined('ENVIRONMENT') && define('ENVIRONMENT', 'production');
     // 当前URL
     $url = 'http';
     if ((!IS_ADMIN && isset($system['SYS_HTTPS']) && $system['SYS_HTTPS'])

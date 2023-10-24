@@ -125,7 +125,7 @@ function dr_array_value($array, $key) {
 
 /**
  * 判断存在于数组中
- * @param $var 指定值
+ * @param $var|array 指定值或数组
  * @param $array 指定数组
  * @return 判断$var是否存在于数组$array中
  */
@@ -133,9 +133,11 @@ function dr_in_array($var, $array) {
 
     if (!$array || !is_array($array)) {
         return 0;
+    } elseif (is_array($var)) {
+        return array_intersect($var, $array);
+    } else {
+        return in_array($var, $array);
     }
-
-    return in_array($var, $array);
 }
 
 /**
