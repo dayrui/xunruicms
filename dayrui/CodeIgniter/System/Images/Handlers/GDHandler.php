@@ -278,7 +278,7 @@ class GDHandler extends BaseHandler
 
         imagedestroy($this->resource);
 
-        //chmod($target, $this->filePermissions);
+        #chmod($target, $this->filePermissions);
 
         return true;
     }
@@ -381,11 +381,11 @@ class GDHandler extends BaseHandler
         // offset flips itself automatically
 
         if ($options['vAlign'] === 'bottom') {
-            $options['vOffset'] = $options['vOffset'] * -1;
+            $options['vOffset'] *= -1;
         }
 
         if ($options['hAlign'] === 'right') {
-            $options['hOffset'] = $options['hOffset'] * -1;
+            $options['hOffset'] *= -1;
         }
 
         // Set font width and height

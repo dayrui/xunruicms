@@ -18,6 +18,8 @@ use Throwable;
 
 /**
  * File system cache handler
+ *
+ * @see \CodeIgniter\Cache\Handlers\FileHandlerTest
  */
 class FileHandler extends BaseHandler
 {
@@ -101,7 +103,7 @@ class FileHandler extends BaseHandler
 
         if ($this->writeFile($this->path . $key, serialize($contents))) {
             try {
-                //chmod($this->path . $key, $this->mode);
+                #chmod($this->path . $key, $this->mode);
 
                 // @codeCoverageIgnoreStart
             } catch (Throwable $e) {

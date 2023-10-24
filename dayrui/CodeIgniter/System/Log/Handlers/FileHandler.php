@@ -16,6 +16,8 @@ use Exception;
 
 /**
  * Log error messages to file system
+ *
+ * @see \CodeIgniter\Log\Handlers\FileHandlerTest
  */
 class FileHandler extends BaseHandler
 {
@@ -113,9 +115,9 @@ class FileHandler extends BaseHandler
         flock($fp, LOCK_UN);
         fclose($fp);
 
-        //if (isset($newfile) && $newfile === true) {
-            //chmod($filepath, $this->filePermissions);
-        //}
+        #if (isset($newfile) && $newfile === true) {
+            #chmod($filepath, $this->filePermissions);
+        # }
 
         return is_int($result);
     }

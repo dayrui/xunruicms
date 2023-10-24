@@ -15,6 +15,7 @@ namespace CodeIgniter;
  * Superglobals manipulation.
  *
  * @internal
+ * @see \CodeIgniter\SuperglobalsTest
  */
 final class Superglobals
 {
@@ -49,7 +50,7 @@ final class Superglobals
     public function setGet(string $key, string $value): void
     {
         $this->get[$key] = $value;
-        //$_GET[$key]      = $value; 避免GET被覆盖
+        //$_GET      = $array; 避免GET被覆盖
     }
 
     public function setGetArray(array $array): void

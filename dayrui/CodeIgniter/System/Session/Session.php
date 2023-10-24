@@ -13,7 +13,6 @@ namespace CodeIgniter\Session;
 
 use CodeIgniter\Cookie\Cookie;
 use CodeIgniter\I18n\Time;
-use Config\App;
 use Config\Cookie as CookieConfig;
 use Config\Services;
 use Config\Session as SessionConfig;
@@ -27,6 +26,7 @@ use SessionHandlerInterface;
  * variables in app/config/App.php
  *
  * @property string $session_id
+ * @see \CodeIgniter\Session\SessionTest
  */
 class Session implements SessionInterface
 {
@@ -208,7 +208,7 @@ class Session implements SessionInterface
      */
     public function start()
     {
-        if (is_cli()) {
+        if (is_cli() && ENVIRONMENT !== 'testing') {
             // @codeCoverageIgnoreStart
             $this->logger->debug('Session: Initialization under CLI aborted.');
 
@@ -427,7 +427,9 @@ class Session implements SessionInterface
      */
     public function destroy()
     {
-
+        if (ENVIRONMENT === 'testing') {
+            return;
+        }
 
         session_destroy();
     }
@@ -439,7 +441,9 @@ class Session implements SessionInterface
      */
     public function close()
     {
-
+        if (ENVIRONMENT === 'testing') {
+            return;
+        }
 
         session_write_close();
     }
@@ -906,7 +910,11 @@ class Session implements SessionInterface
      */
     protected function startSession()
     {
+        if (ENVIRONMENT === 'testing') {
+            $_SESSION = [];
 
+            return;
+        }
 
         session_start(); // @codeCoverageIgnore
     }
