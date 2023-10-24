@@ -686,6 +686,7 @@ class Table extends \Phpcmf\Common {
             }
             // 查询数据结果
             list($list, $total, $param) = $this->_db()->init($this->init)->limit_page($size, $this->list_where);
+            $sql = $this->_db()->get_sql_query();
             // 格式化字段
             if ($this->init['list_field'] && $list) {
                 $field = $this->_field_save(0);
@@ -708,7 +709,7 @@ class Table extends \Phpcmf\Common {
             // 存储当前页URL
             unset($param['is_ajax']);
             \Phpcmf\Service::L('Router')->set_back(\Phpcmf\Service::L('Router')->uri(), $param);
-            $this->_json(1, $total, $list);
+            $this->_json(1, $total, $list, '', ['sql' => $sql]);
         }
 
 

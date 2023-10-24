@@ -2173,14 +2173,25 @@ function dr_file_map($source_dir) {
  * @param $code 状态码 0失败 >1表示成功
  * @param $msg 提示文字
  * @param $data 传输数组
+ * @param $extend 根附加数组
  * @return 返回统一的数组格式
  */
-function dr_return_data($code, $msg = '', $data = []) {
-    return [
+function dr_return_data($code, $msg = '', $data = [], $extend = []) {
+
+    $rt = [
         'code'  => $code,
         'msg'   => $msg,
         'data'  => $data,
     ];
+    if ($extend) {
+        foreach ($extend as $i => $t) {
+            if (!isset($rt[$i])) {
+                $rt[$i] = $t;
+            }
+        }
+    }
+
+    return $rt;
 }
 
 /**

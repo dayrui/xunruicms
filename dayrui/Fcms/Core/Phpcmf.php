@@ -720,7 +720,7 @@ abstract class Common extends \Frame\Controller {
     /**
      * 统一返回json格式并退出程序
      */
-    public function _json($code, $msg, $data = [], $return = false){
+    public function _json($code, $msg, $data = [], $return = false, $extend = []){
 
         // 强制显示提交信息而不采用ajax返回
         if (isset($_GET['is_show_msg']) && $_GET['is_show_msg']) {
@@ -740,7 +740,7 @@ abstract class Common extends \Frame\Controller {
         }
 
         // 返回的钩子
-        $rt = dr_return_data($code, $msg, $data);
+        $rt = dr_return_data($code, $msg, $data, $extend);
 
         if (SYS_CSRF && IS_POST) {
             $rt['token'] = [
@@ -753,7 +753,7 @@ abstract class Common extends \Frame\Controller {
         if (isset($_GET['format']) && $_GET['format']) {
             switch ($_GET['format']) {
                 case 'jsonp':
-                    $this->_jsonp(1, $msg, $data, $return);
+                    $this->_jsonp(1, $msg, $data, $return, $extend);
                     break;
                 case 'text':
                     \Phpcmf\Hooks::trigger('cms_end', $rt);
@@ -774,16 +774,16 @@ abstract class Common extends \Frame\Controller {
     /**
      * 统一返回jsonp格式并退出程序
      */
-    public function _jsonp($code, $msg, $data = [], $return = false){
+    public function _jsonp($code, $msg, $data = [], $return = false, $extend = []){
 
         $callback = dr_safe_replace(\Phpcmf\Service::L('input')->get('callback'));
         !$callback && $callback = 'callback';
 
         if (IS_API_HTTP) {
-            $this->_json($code, $msg, $data, $return);
+            $this->_json($code, $msg, $data, $return, $extend);
         } else {
             // 返回的钩子
-            $rt = dr_return_data($code, $msg, $data);
+            $rt = dr_return_data($code, $msg, $data, $extend);
             \Phpcmf\Hooks::trigger('cms_end', $rt);
             echo $callback.'('.dr_array2string($rt).')';
             if (!$return) {
