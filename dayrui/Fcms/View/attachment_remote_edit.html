@@ -6,13 +6,28 @@
         <div class="form-group">
             <label class="col-xs-12 control-label ">{dr_lang('原来的储存策略')}</label>
             <div class="col-xs-12">
-                <label>
-                    <select name="data[o]" class="form-control">
-                        <option value="0"> {dr_lang('默认')} </option>
-                        {loop $remote $t}
-                        <option value="{$t.id}">{$t.name}</option>
-                        {/loop}
-                    </select>
+
+
+                <label style="width: 200px">
+                    <div class="input-group">
+                        <input type="text" name="data[o]" id="dr_old" class="form-control">
+                        <div class="input-group-btn">
+                            <button type="button" class="btn default dropdown-toggle" data-toggle="dropdown" tabindex="-1">
+                                <i class="fa fa-angle-down"></i>
+                            </button>
+                            <ul class="dropdown-menu pull-right" role="menu">
+                                <li>
+                                    <a href="javascript:$('#dr_old').val('0');"> {dr_lang('默认')} </a>
+                                </li>
+                                {loop $remote $t}
+                                <li>
+                                    <a href="javascript:$('#dr_old').val('{$t.id}');"> {$t.name} </a>
+                                </li>
+                                {/loop}
+                            </ul>
+                        </div>
+                    </div>
+
                 </label>
             </div>
         </div>
