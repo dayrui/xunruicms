@@ -516,42 +516,17 @@ class File extends \Phpcmf\Common
                 // 不存在
                 $this->_msg(0, dr_lang('附件[%s]不存在', $id));
             }
-
             if (is_file($info['file'])) {
-                //大文件在读取内容未结束时会被超时处理，导致下载文件不全。
-                set_time_limit(0);
-                $handle = fopen($info['file'],"rb");
-                if (FALSE === $handle) {
-                    $this->_msg(0, dr_lang('文件已经损坏'));
-                }
-
-                $filesize = filesize($info['file']);
-				if ($filesize > 1024 * 1024 * 50) {
-					// 大文件转向
-                    if (isset($rt['name']) && $rt['name'] && IS_DEV) {
-                        log_message('debug', '由于文件大于50MB，重命名文件功能将失效，下载地址将跳转到文件本身的地址');
-                    }
-					dr_redirect($info['url']);exit;
-				}
-				
-				header('Content-Type: application/octet-stream');
-                header("Accept-Ranges:bytes");
-                header("Accept-Length:".$filesize);
-                header("Content-Disposition: attachment; filename=".urlencode((isset($rt['name']) && $rt['name'] ? $rt['name'] : $info['filename']).'.'.$info['fileext']));
-
-                while (!feof($handle)) {
-                    $contents = fread($handle, 4096);
-                    echo $contents;
-                    ob_flush();  //把数据从PHP的缓冲中释放出来
-                    flush();      //把被释放出来的数据发送到浏览器
-                }
-				
-                fclose($handle);
-                exit;
+                \Phpcmf\Service::L('upload')->down(
+                    $info['file'],
+                    $info['url'],
+                    (isset($rt['name']) && $rt['name'] ? $rt['name'] : $info['filename']).'.'.$info['fileext']
+                );
             } else {
                 // 其他附件就转向地址
                 $this->_redirect_url($info['url']);
             }
+            exit;
         } else {
             $info = dr_file($id);
             if (!$info) {

@@ -222,4 +222,42 @@ class File {
         }
     }
 
+    /*下载文件
+    储存路径
+    访问地址
+    文件名含扩展名
+    */
+    public function down($file, $url, $name) {
+        //大文件在读取内容未结束时会被超时处理，导致下载文件不全。
+        set_time_limit(0);
+        $handle = fopen($file,"rb");
+        if (FALSE === $handle) {
+            \Phpcmf\Service::C()->_msg(0, dr_lang('文件已经损坏'));
+        }
+
+        $filesize = filesize($file);
+        if ($filesize > 1024 * 1024 * 50) {
+            // 大文件转向
+            if (IS_DEV) {
+                log_message('debug', '由于文件大于50MB，重命名文件功能将失效，下载地址将跳转到文件本身的地址');
+            }
+            dr_redirect($url);
+        } else {
+            header('Content-Type: application/octet-stream');
+            header("Accept-Ranges:bytes");
+            header("Accept-Length:".$filesize);
+            header("Content-Disposition: attachment; filename=".urlencode($name));
+
+            while (!feof($handle)) {
+                $contents = fread($handle, 4096);
+                echo $contents;
+                ob_flush();  //把数据从PHP的缓冲中释放出来
+                flush();      //把被释放出来的数据发送到浏览器
+            }
+
+            fclose($handle);
+        }
+
+    }
+
 }
