@@ -630,6 +630,9 @@ class View {
             '#{\s?php\s?}#i',
             '#{\s?\/php\s?}#i',
             '#\?\>\s*\<\?php\s#s',
+            // 结果为空时
+            '#{\s?empty\s?}#i',
+            '#{\s?\/empty\s?}#i',
         ];
 
         // 替换直接变量输出
@@ -652,23 +655,25 @@ class View {
             "<?php if (\$fn_include = \$this->_load(\"\\1\")) include(\$fn_include); ?>",
             "<?php if (\$fn_include = \$this->_load(\"\\1\")) include(\$fn_include); ?>",
             "<?php \\1 ?>",
-            "<?php \$return_\\2 = [];\$list_return_\\2 = \$this->list_tag(\"\\1 return=\\2\"); if (\$list_return_\\2) { extract(\$list_return_\\2, EXTR_OVERWRITE); \$count_\\2=dr_count(\$return_\\2);} if (is_array(\$return_\\2)) { \$key_\\2=-1;foreach (\$return_\\2 as \$\\2) { \$key_\\2++; \$is_first=\$key_\\2==0 ? 1 : 0;\$is_last=\$count_\\2==\$key_\\2+1 ? 1 : 0;  ?>",
-            "<?php \$return = [];\$list_return = \$this->list_tag(\"\\1\"); if (\$list_return) { extract(\$list_return, EXTR_OVERWRITE); \$count=dr_count(\$return);} if (is_array(\$return)) { \$key=-1; foreach (\$return as \$t) { \$key++; \$is_first=\$key==0 ? 1 : 0;\$is_last=\$count==\$key+1 ? 1 : 0; ?>",
+            "<?php \$return_\\2 = [];\$list_return_\\2 = \$this->list_tag(\"\\1 return=\\2\"); if (\$list_return_\\2) { extract(\$list_return_\\2, EXTR_OVERWRITE); \$count_\\2=dr_count(\$return_\\2);} if (is_array(\$return_\\2) && \$return_\\2) { \$key_\\2=-1;foreach (\$return_\\2 as \$\\2) { \$key_\\2++; \$is_first=\$key_\\2==0 ? 1 : 0;\$is_last=\$count_\\2==\$key_\\2+1 ? 1 : 0;  ?>",
+            "<?php \$return = [];\$list_return = \$this->list_tag(\"\\1\"); if (\$list_return) { extract(\$list_return, EXTR_OVERWRITE); \$count=dr_count(\$return);} if (is_array(\$return) && \$return) { \$key=-1; foreach (\$return as \$t) { \$key++; \$is_first=\$key==0 ? 1 : 0;\$is_last=\$count==\$key+1 ? 1 : 0; ?>",
             "<?php } } ?>",
             "<?php if (\\1) { ?>",
             "<?php } else if (\\1) { ?>",
             "<?php } else if (\\1) { ?>",
             "<?php } else { ?>",
             "<?php } ?>",
-            "<?php if (isset(\$\\1) && is_array(\$\\1)) { \$key_\\3=-1;\$count_\\3=dr_count(\$\\1);foreach (\$\\1 as \$\\2=>\$\\3) { \$key_\\3++; \$is_first=\$key_\\3==0 ? 1 : 0;\$is_last=\$count_\\3==\$key_\\3+1 ? 1 : 0; ?>",
-            "<?php if (isset(\$\\1) && is_array(\$\\1)) { \$key_\\2=-1;\$count_\\2=dr_count(\$\\1);foreach (\$\\1 as \$\\2) { \$key_\\2++; \$is_first=\$key_\\2==0 ? 1 : 0;\$is_last=\$count_\\2==\$key_\\2+1 ? 1 : 0;?>",
-            "<?php if (isset(\$\\1) && is_array(\$\\1)) { \$key_\\3=-1;\$count_\\3=dr_count(\$\\1);foreach (\$\\1 as \$\\2=>\$\\3) { \$key_\\3++; \$is_first=\$key_\\3==0 ? 1 : 0;\$is_last=\$count_\\3==\$key_\\3+1 ? 1 : 0; ?>",
+            "<?php if (isset(\$\\1) && is_array(\$\\1) && \$\\1) { \$key_\\3=-1;\$count_\\3=dr_count(\$\\1);foreach (\$\\1 as \$\\2=>\$\\3) { \$key_\\3++; \$is_first=\$key_\\3==0 ? 1 : 0;\$is_last=\$count_\\3==\$key_\\3+1 ? 1 : 0; ?>",
+            "<?php if (isset(\$\\1) && is_array(\$\\1) && \$\\1) { \$key_\\2=-1;\$count_\\2=dr_count(\$\\1);foreach (\$\\1 as \$\\2) { \$key_\\2++; \$is_first=\$key_\\2==0 ? 1 : 0;\$is_last=\$count_\\2==\$key_\\2+1 ? 1 : 0;?>",
+            "<?php if (isset(\$\\1) && is_array(\$\\1) && \$\\1) { \$key_\\3=-1;\$count_\\3=dr_count(\$\\1);foreach (\$\\1 as \$\\2=>\$\\3) { \$key_\\3++; \$is_first=\$key_\\3==0 ? 1 : 0;\$is_last=\$count_\\3==\$key_\\3+1 ? 1 : 0; ?>",
             "<?php } } ?>",
             "<?php for (\\1 ; \\2 ; \\3) { ?>",
             "<?php }  ?>",
             "<?php ",
             " ?>",
             " ",
+            "<?php } } else { ?>",
+            "<?php } ?>",
         ];
 
         // 统计和求和
@@ -688,8 +693,8 @@ class View {
             $regex_array[] = '#{'.$name.'\s+(.+?)\s?}#i';
             $regex_array[] = '#{\s?\/'.$name.'\s?}#i';
             // 替换直接变量输出
-            $replace_array[] = "<?php \$list_return_\\2 = \$this->list_tag(\"action=".$name." \\1 return=\\2\"); if (\$list_return_\\2 && is_array(\$list_return_\\2)) extract(\$list_return_\\2, EXTR_OVERWRITE); \$count_\\2=dr_count(\$return_\\2); if (is_array(\$return_\\2)) { \$key_\\2=-1;  foreach (\$return_\\2 as \$\\2) { \$key_\\2++; \$is_first=\$key_\\2==0 ? 1 : 0;\$is_last=\$count_\\2==\$key_\\2+1 ? 1 : 0; ?>";
-            $replace_array[] = "<?php \$list_return = \$this->list_tag(\"action=".$name." \\1\"); if (\$list_return && is_array(\$list_return)) extract(\$list_return, EXTR_OVERWRITE); \$count=dr_count(\$return); if (is_array(\$return)) { \$key=-1; foreach (\$return as \$t) { \$key++; \$is_first=\$key==0 ? 1 : 0;\$is_last=\$count==\$key+1 ? 1 : 0; ?>";
+            $replace_array[] = "<?php \$list_return_\\2 = \$this->list_tag(\"action=".$name." \\1 return=\\2\"); if (\$list_return_\\2 && is_array(\$list_return_\\2)) extract(\$list_return_\\2, EXTR_OVERWRITE); \$count_\\2=dr_count(\$return_\\2); if (is_array(\$return_\\2) && \$return_\\2) { \$key_\\2=-1;  foreach (\$return_\\2 as \$\\2) { \$key_\\2++; \$is_first=\$key_\\2==0 ? 1 : 0;\$is_last=\$count_\\2==\$key_\\2+1 ? 1 : 0; ?>";
+            $replace_array[] = "<?php \$list_return = \$this->list_tag(\"action=".$name." \\1\"); if (\$list_return && is_array(\$list_return)) extract(\$list_return, EXTR_OVERWRITE); \$count=dr_count(\$return); if (is_array(\$return) && \$return) { \$key=-1; foreach (\$return as \$t) { \$key++; \$is_first=\$key==0 ? 1 : 0;\$is_last=\$count==\$key+1 ? 1 : 0; ?>";
             $replace_array[] = "<?php } } ?>";
         }
 
