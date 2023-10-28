@@ -91,10 +91,7 @@ class MigrateStatus extends BaseCommand
         $status = [];
 
         foreach (array_keys($namespaces) as $namespace) {
-            if (ENVIRONMENT !== 'testing') {
-                // Make Tests\\Support discoverable for testing
-                $this->ignoredNamespaces[] = 'Tests\Support'; // @codeCoverageIgnore
-            }
+
 
             if (in_array($namespace, $this->ignoredNamespaces, true)) {
                 continue;

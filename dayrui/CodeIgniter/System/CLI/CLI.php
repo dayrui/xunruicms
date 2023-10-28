@@ -194,7 +194,7 @@ class CLI
     public static function input(?string $prefix = null): string
     {
         // readline() can't be tested.
-        if (static::$readline_support && ENVIRONMENT !== 'testing') {
+        if (static::$readline_support ) {
             return readline($prefix); // @codeCoverageIgnore
         }
 
@@ -691,12 +691,7 @@ class CLI
      */
     public static function streamSupports(string $function, $resource): bool
     {
-        if (ENVIRONMENT === 'testing') {
-            // In the current setup of the tests we cannot fully check
-            // if the stream supports the function since we are using
-            // filtered streams.
-            return function_exists($function);
-        }
+
 
         return function_exists($function) && @$function($resource); // @codeCoverageIgnore
     }

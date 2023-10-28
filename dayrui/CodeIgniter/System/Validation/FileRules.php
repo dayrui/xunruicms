@@ -60,7 +60,7 @@ class FileRules
                 return false;
             }
 
-            if (ENVIRONMENT === 'testing') {
+            if (false) {
                 if ($file->getError() !== 0) {
                     return false;
                 }

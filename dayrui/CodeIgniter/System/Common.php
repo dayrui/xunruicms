@@ -579,7 +579,7 @@ if (! function_exists('function_usable')) {
 if (! function_exists('helper')) {
     /**
      * Loads a helper file into memory. Supports namespaced helpers,
-     * both in and out of the 'helpers' directory of a namespaced directory.
+     * both in and out of the 'Helpers' directory of a namespaced directory.
      *
      * Will load ALL helpers of the matching name, in the following order:
      *   1. app/Helpers
@@ -718,7 +718,7 @@ if (! function_exists('is_really_writable')) {
             }
 
             fclose($fp);
-            #@chmod($file, 0777);
+            @chmod($file, 0777);
             @unlink($file);
 
             return true;

@@ -31,7 +31,7 @@ class Config
             'ciVersion'   => CodeIgniter::CI_VERSION,
             'phpVersion'  => PHP_VERSION,
             'phpSAPI'     => PHP_SAPI,
-            'environment' => ENVIRONMENT,
+            'environment' => '',
             'baseURL'     => $config->baseURL,
             'timezone'    => app_timezone(),
             'locale'      => Services::request()->getLocale(),

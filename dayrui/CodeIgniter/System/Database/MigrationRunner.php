@@ -399,9 +399,7 @@ class MigrationRunner
         $migrations = [];
 
         foreach ($namespaces as $namespace) {
-            if (ENVIRONMENT !== 'testing' && $namespace === 'Tests\Support') {
-                continue;
-            }
+
 
             foreach ($this->findNamespaceMigrations($namespace) as $migration) {
                 $migrations[$migration->uid] = $migration;
@@ -842,13 +840,7 @@ class MigrationRunner
         $instance = new $class();
         $group    = $instance->getDBGroup() ?? config(Database::class)->defaultGroup;
 
-        if (ENVIRONMENT !== 'testing' && $group === 'tests' && $this->groupFilter !== 'tests') {
-            // @codeCoverageIgnoreStart
-            $this->groupSkip = true;
 
-            return true;
-            // @codeCoverageIgnoreEnd
-        }
 
         if ($direction === 'up' && $this->groupFilter !== null && $this->groupFilter !== $group) {
             $this->groupSkip = true;

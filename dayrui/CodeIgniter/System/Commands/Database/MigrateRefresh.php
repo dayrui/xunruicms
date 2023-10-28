@@ -69,7 +69,6 @@ class MigrateRefresh extends BaseCommand
     {
         $params['b'] = 0;
 
-        if (ENVIRONMENT === 'production') {
             // @codeCoverageIgnoreStart
             $force = array_key_exists('f', $params) || CLI::getOption('f');
 
@@ -79,7 +78,6 @@ class MigrateRefresh extends BaseCommand
 
             $params['f'] = null;
             // @codeCoverageIgnoreEnd
-        }
 
         $this->call('migrate:rollback', $params);
         $this->call('migrate', $params);

@@ -1127,7 +1127,7 @@ class RouteCollection implements RouteCollectionInterface
      */
     public function environment(string $env, Closure $callback): RouteCollectionInterface
     {
-        if ($env === ENVIRONMENT) {
+        if ($env === 'ENVIRONMENT') {
             $callback($this);
         }
 

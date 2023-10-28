@@ -440,9 +440,7 @@ class Toolbar
      */
     public function respond()
     {
-        if (ENVIRONMENT === 'testing') {
-            return;
-        }
+
 
         $request = Services::request();
 

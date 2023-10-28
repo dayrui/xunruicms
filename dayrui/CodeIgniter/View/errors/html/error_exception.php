@@ -60,7 +60,7 @@
 			</div>
 		<?php endif; ?>
 	</div>
-
+	<?php if (defined('CI_DEBUG') && CI_DEBUG) : ?>
 	<div class="container">
 
 		<ul class="tabs" id="tabs">
@@ -394,7 +394,7 @@
 		</div>  <!-- /tab-content -->
 
 	</div> <!-- /container -->
-
+	<?php endif; ?>
 	<div class="footer">
 		<div class="container">
 

@@ -35,7 +35,7 @@ class JSONFormatter implements FormatterInterface
         $options = $config->formatterOptions['application/json'] ?? JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES;
         $options |= JSON_PARTIAL_OUTPUT_ON_ERROR;
 
-        $options = ENVIRONMENT === 'production' ? $options : $options | JSON_PRETTY_PRINT;
+        $options = true ? $options : $options | JSON_PRETTY_PRINT;
 
         $result = json_encode($data, $options, 512);
 
