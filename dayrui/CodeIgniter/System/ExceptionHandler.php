@@ -74,17 +74,17 @@ final class ExceptionHandler extends BaseExceptionHandler implements ExceptionHa
             }
 
             if (strpos($request->getHeaderLine('accept'), 'text/html') === false) {
-                $data = (ENVIRONMENT === 'development' || ENVIRONMENT === 'testing')
+                $data = true
                     ? $this->collectVars($exception, $statusCode)
                     : '';
 
                 $this->respond($data, $statusCode)->send();
 
-                if (ENVIRONMENT !== 'testing') {
+                //if (ENVIRONMENT !== 'testing') {
                     // @codeCoverageIgnoreStart
                     exit($exitCode);
                     // @codeCoverageIgnoreEnd
-                }
+               // }
 
                 return;
             }
@@ -111,11 +111,11 @@ final class ExceptionHandler extends BaseExceptionHandler implements ExceptionHa
         // Displays the HTML or CLI error code.
         $this->render($exception, $statusCode, $viewFile);
 
-        if (ENVIRONMENT !== 'testing') {
+        //if (ENVIRONMENT !== 'testing') {
             // @codeCoverageIgnoreStart
             exit($exitCode);
             // @codeCoverageIgnoreEnd
-        }
+        //}
     }
 
     /**

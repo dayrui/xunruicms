@@ -592,16 +592,16 @@ class CodeIgniter
      */
     protected function bootstrapEnvironment()
     {
-        if (is_file(APPPATH . 'Config/Boot/' . ENVIRONMENT . '.php')) {
-            require_once APPPATH . 'Config/Boot/' . ENVIRONMENT . '.php';
-        } else {
+        //if (is_file(APPPATH . 'Config/Boot/' . ENVIRONMENT . '.php')) {
+           // require_once APPPATH . 'Config/Boot/' . ENVIRONMENT . '.php';
+       // } else {
             // @codeCoverageIgnoreStart
             header('HTTP/1.1 503 Service Unavailable.', true, 503);
             echo 'The application environment is not set correctly.';
 
             exit(EXIT_ERROR); // EXIT_ERROR
             // @codeCoverageIgnoreEnd
-        }
+        //}
     }
 
     /**
@@ -986,7 +986,7 @@ class CodeIgniter
 
         // Throws new PageNotFoundException and remove exception message on production.
         throw PageNotFoundException::forPageNotFound(
-            (ENVIRONMENT !== 'production' || ! $this->isWeb()) ? $e->getMessage() : null
+            (! $this->isWeb()) ? $e->getMessage() : null
         );
     }
 
