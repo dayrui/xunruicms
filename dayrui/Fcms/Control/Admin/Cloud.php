@@ -613,7 +613,10 @@ return [
         }
 
         $vid = dr_safe_replace($_GET['version']);
-        $surl = $this->service_url.'&action=check_version&php='.PHP_VERSION.'&get_http=1&time='.strtotime((string)$this->cmf_version['downtime']).'&id='.$cid.'&version='.$vid;
+        $surl = $this->service_url.'&action=check_version&php='.PHP_VERSION
+            .'&get_http=1&time='.strtotime((string)$this->cmf_version['downtime'])
+            .'&id='.$cid.'&version='
+            .$vid.'&license='.$this->cmf_license['license'];
         $json = dr_catcher_data($surl);
         if (!$json) {
             $this->_json(0, '本站：没有从服务端获取到数据，检查本地环境是否支持远程下载功能');
@@ -917,7 +920,10 @@ return [
 
     public function bf_count() {
 
-        $surl = 'https://www.xunruicms.com/version.php?action=bf_count&domain='.dr_get_domain_name(ROOT_URL).'&cms='.$this->version['id'].'&version='.$this->cmf_version['version'].'&time='.strtotime((string)$this->cmf_version['downtime']).'&license='.$this->cmf_license['license'];
+        $surl = 'https://www.xunruicms.com/version.php?action=bf_count&domain='
+            .dr_get_domain_name(ROOT_URL).'&cms='.$this->version['id'].
+            '&version='.$this->cmf_version['version'].'&time='.strtotime((string)$this->cmf_version['downtime'])
+            .'&license='.$this->cmf_license['license'];
         $json = dr_catcher_data($surl);
         if (!$json) {
             $this->_json(0, '本站：没有从服务端获取到数据，检查本地环境是否支持远程下载功能');
