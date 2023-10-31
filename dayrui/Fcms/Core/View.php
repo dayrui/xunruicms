@@ -1683,9 +1683,9 @@ class View {
                     case 'MONTH':
                         if (substr($t['value'], 0, 1) == 'E') {
                             // 当月
-                            $stime = strtotime('-'.intval(substr($t['value'], 1)).' month');
+                            //$stime = strtotime('-'.intval(substr($t['value'], 1)).' month');
                             $stime = strtotime(date('Y-m', $stime).'-01 00:00:00');;
-                            $etime = strtotime(date('Y-m', $stime).'-1  +1 month -1 day');
+                            $etime = strtotime(date('Y-m', $stime).'-1  +1 month -1 day 23:59:59');
                         } elseif (strpos($t['value'], ',')) {
                             // 范围查询
                             list($s, $e) = explode(',', $t['value']);
@@ -1693,7 +1693,7 @@ class View {
                                 $e = $s;
                             }
                             $stime = strtotime($s.'-01 00:00:00');
-                            $etime = strtotime($e." +1 month -1 day");
+                            $etime = strtotime($e." +1 month -1 day 23:59:59");
                         } else {
                             $time = strtotime('-'.intval($t['value']).' month');
                             $stime = strtotime(date('Y-m', $time).'-01 00:00:00');;
