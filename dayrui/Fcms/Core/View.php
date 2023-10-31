@@ -1683,8 +1683,7 @@ class View {
                     case 'MONTH':
                         if (substr($t['value'], 0, 1) == 'E') {
                             // 当月
-                            //$stime = strtotime('-'.intval(substr($t['value'], 1)).' month');
-                            $stime = strtotime(date('Y-m', $stime).'-01 00:00:00');;
+                            $stime = strtotime(date('Y-m-01 00:00:00') . " - ".intval(substr($t['value'], 1))." month");
                             $etime = strtotime(date('Y-m', $stime).'-1  +1 month -1 day 23:59:59');
                         } elseif (strpos($t['value'], ',')) {
                             // 范围查询
