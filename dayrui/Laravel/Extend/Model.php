@@ -18,7 +18,7 @@ class Model {
         }
 
         self::$db = new db_mysql();
-        self::$db->prefix = Config::get('database.connections.mysql.prefix');
+        self::$db->DBPrefix = self::$db->prefix = Config::get('database.connections.mysql.prefix');
 
         return [self::$db, self::$db->prefix];
     }
@@ -32,7 +32,7 @@ class Model {
         }
 
         self::$dbs[$name] = new db_mysql($name);
-        self::$dbs[$name]->prefix = config('database.connections.'.$name.'.prefix');
+        self::$dbs[$name]->DBPrefix = self::$dbs[$name]->prefix = config('database.connections.'.$name.'.prefix');
 
         return [self::$dbs[$name], self::$dbs[$name]->prefix];
     }
@@ -44,6 +44,7 @@ class db_mysql {
     public $query_sql;
     public $param = [];
     public $prefix;
+    public $DBPrefix;
     public $likeEscapeChar = '!';
     public $affectedRows = 0;
     public $db_source = '';
