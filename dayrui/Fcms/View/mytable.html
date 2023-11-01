@@ -1,7 +1,7 @@
 
 <form class="form-horizontal " role="form" id="myform">
     {dr_form_hidden()}
-    <table id="mytable" style="table-layout:fixed!important;word-break:break-all;" data-show-export="true"></table>
+    <table id="mytable" data-show-export="true"></table>
 </form>
 <script type="text/javascript">
     var table_name = '{$mytable_name}';
@@ -83,7 +83,7 @@ $(function (){
         cache: false,
         fixedColumns: true,  //固定列
         fixedRightNumber:1,	 //固定右侧列
-        classes: "table table-striped table-bordered table-hover table-checkable dataTable ",
+        classes: "table table-striped table-bordered table-bordered2 table-hover table-checkable dataTable ",
         queryParamsType: 'my',
         sidePagination: 'server',
         silent: true,
