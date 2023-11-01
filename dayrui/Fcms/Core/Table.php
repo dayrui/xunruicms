@@ -47,6 +47,7 @@ class Table extends \Phpcmf\Common {
     protected $fix_table_list; //
     protected $is_ajax_list; // 是否作为ajax请求列表数据，不进行第一次查询
     protected $is_search; // 是否开启列表上方的搜索功能
+    protected $is_fixed_columns; // 是否开启列表右侧一行浮动固定
     protected $is_show_search_bar; // 是否默认显示搜索区域
 
     public function __construct() {
@@ -819,7 +820,10 @@ class Table extends \Phpcmf\Common {
         $data['mytable_pagesize'] = $size;
         $data['is_search'] = $this->is_search;
         $data['is_show_export'] = true;
+        $data['is_fixed_columns'] =  $this->is_fixed_columns;
         $data['is_show_search_bar'] = $this->is_show_search_bar;
+
+
 
         \Phpcmf\Service::V()->assign($data);
 

@@ -1,7 +1,7 @@
 
-<form class="form-horizontal" role="form" id="myform">
+<form class="form-horizontal " role="form" id="myform">
     {dr_form_hidden()}
-    <table id="mytable" data-show-export="true"></table>
+    <table id="mytable" style="table-layout:fixed!important;word-break:break-all;" data-show-export="true"></table>
 </form>
 <script type="text/javascript">
     var table_name = '{$mytable_name}';
@@ -49,6 +49,7 @@
                 formatter: function formatter (value, row, index) {
                     var html = mytable.link_tpl;
                     eval(mytable.link_var);
+
                     return html;
                 },
                 visible: true
@@ -63,8 +64,11 @@
 <script type="text/javascript" src="{ROOT_URL}api/pdfmake/gbsn00lp_fonts.js"></script>
 <script type="text/javascript" src="{ROOT_URL}api/pdfmake/FileSaver.min.js"></script>
 {/if}
+{if $is_fixed_columns}
+<script src="{THEME_PATH}assets/global/plugins/bootstrap-table/bootstrap-table-fixed-columns.js" type="text/javascript"></script>
+<link href="{THEME_PATH}assets/global/plugins/bootstrap-table/bootstrap-table-fixed-columns.css"  rel="stylesheet" type="text/css" />
+{/if}
 <script type="text/javascript">
-
 $(function (){
     var $mytable = $('#mytable').bootstrapTable({
         url : "{dr_now_url()}&is_ajax=1",
@@ -77,6 +81,8 @@ $(function (){
         selectItemName:"ids[]",
         idField:"id",
         cache: false,
+        fixedColumns: true,  //固定列
+        fixedRightNumber:1,	 //固定右侧列
         classes: "table table-striped table-bordered table-hover table-checkable dataTable ",
         queryParamsType: 'my',
         sidePagination: 'server',
