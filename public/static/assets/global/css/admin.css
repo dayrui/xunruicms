@@ -8626,10 +8626,7 @@ body[ng-controller] .modal {
     border-top: 1px dotted rgb(223, 226, 229);border-bottom: 0;
 }
 
-.fixed-table-pagination, .fc-list-footer {
-    border-top: 1px dotted rgb(223, 226, 229);
-    padding-top:10px;
-}
+
 .fc-list-footer{
     padding-top: 20px;
     margin: 0;
@@ -13700,13 +13697,9 @@ body{background-color:#f5f6f8}
 .table-clearfix {
     clear: both;
     padding-top: 10px;
-    margin-top: 10px;
-    border-top: 1px solid #e6e6e6;
 }
 .fixed-table-container .table-scrollable{
     padding-top: 10px;
-    margin-top: 10px;
-    border-top: 1px solid #eee;
 }
 .fixed-table-container .table>thead>tr>th {
     padding-top: 0 ;
@@ -13823,4 +13816,22 @@ select.form-control {
     border: 0;
     float: left;
     width: 100px;
+}
+
+
+.table-bordered2 {
+    border: 1px solid #eee;
+}
+.table-bordered2 > tbody > tr:hover {
+    background-color: #f5f5f5;
+}
+.bootstrap-table .table-bordered2>thead>tr>th {
+    vertical-align: bottom;
+    border-bottom: 1px solid #ddd
+}
+.table-bordered2 > thead > tr > th, .table-bordered2 > tbody > tr > th, .table-bordered2 > tfoot > tr > th, .table-bordered2 > thead > tr > td, .table-bordered2 > tbody > tr > td, .table-bordered2 > tfoot > tr > td {
+    border: 1px solid #f4f4f4;
+}
+.table-bordered2 > tbody > tr:nth-of-type(odd) {
+    background-color: #f9f9f9;
 }
