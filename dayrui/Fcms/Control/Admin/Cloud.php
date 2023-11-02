@@ -897,6 +897,8 @@ return [
 
         dr_dir_delete($cmspath, 1);
 
+        file_put_contents(WRITEPATH.'update.lock', SYS_TIME);
+
         $this->_json(1, '<p><label class="rleft">升级完成</label><label class="rright"><span class="ok">完成</span></label></p>');
     }
 

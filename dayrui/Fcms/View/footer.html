@@ -5,5 +5,10 @@
 <div class="scroll-to-top">
     <i class="bi bi-arrow-up-circle-fill"></i>
 </div>
+{if is_file(WRITEPATH.'update.lock')}
+<script>
+    dr_iframe_show('{dr_lang('升级程序脚本')}', '{dr_url('cache/update_index')}');
+</script>
+{/if}
 </body>
 </html>
