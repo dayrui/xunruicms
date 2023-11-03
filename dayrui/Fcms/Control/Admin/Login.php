@@ -195,11 +195,12 @@ class Login extends \Phpcmf\Common
     // 子站客户端自动登录
     public function fclient() {
 
-        if (!is_file(ROOTPATH.'api/fclient/login.php')) {
-            $this->_admin_msg(0, '子站客户端程序未安装');
+        $file = ROOTPATH.'api/fclient/login.php';
+        if (!is_file($file)) {
+            $this->_admin_msg(0, '子站客户端程序'.(IS_DEV ? $file : '').'未安装');
         }
 
-        require ROOTPATH.'api/fclient/login.php';
+        require $file;
     }
 
 	public function out() {
