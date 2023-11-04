@@ -1279,6 +1279,9 @@ class Image {
      */
     public function image_save_gd($resource)
     {
+        if (!$this->full_dst_path) {
+            return;
+        }
         if ($this->image_type != 18 && strpos($this->full_dst_path, '.webp')) {
             $this->image_type = 18;
         }
