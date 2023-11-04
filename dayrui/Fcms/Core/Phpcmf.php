@@ -100,7 +100,7 @@ abstract class Common extends \Frame\Controller {
             $this->cmf_version = [
                 'id' => 8,
                 'name' => '迅睿CMS开源框架',
-                'version' => '4.6.2',
+                'version' => '4.6测试版',
                 'downtime' => SYS_TIME,
                 'updatetime' => '--',
             ];
