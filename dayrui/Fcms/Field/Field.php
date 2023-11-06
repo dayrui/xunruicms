@@ -32,7 +32,7 @@ return [
     ],
     [
         'id' => 'Editor',
-        'name' => '编辑器',
+        'name' => '简化编辑器',
     ],
     [
         'id' => 'Radio',
