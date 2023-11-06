@@ -74,6 +74,9 @@ class Exceptions extends \CodeIgniter\Debug\Exceptions {
 
         if (! is_cli())
         {
+            if (!$statusCode) {
+                $statusCode = 201;
+            }
             $this->response->setStatusCode($statusCode);
             $header = "HTTP/{$this->request->getProtocolVersion()} {$this->response->getStatusCode()} {$this->response->getReason()}";
             header($header, true, $statusCode);

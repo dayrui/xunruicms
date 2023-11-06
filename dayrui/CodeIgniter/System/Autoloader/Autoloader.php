@@ -123,9 +123,9 @@ class Autoloader
             $this->helpers = [...$this->helpers, ...$config->helpers];
         }
 
-        if (is_file(COMPOSER_PATH)) {
-            $this->loadComposerAutoloader($modules);
-        }
+        //if (is_file(COMPOSER_PATH)) {
+            //$this->loadComposerAutoloader($modules);
+        //}
 
         return $this;
     }
