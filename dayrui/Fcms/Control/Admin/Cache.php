@@ -68,6 +68,9 @@ class Cache extends \Phpcmf\Common {
             file_put_contents(WRITEPATH.'install.lock', SYS_TIME);
             if (is_file(WRITEPATH.'update.lock')) {
                 @unlink(WRITEPATH.'update.lock');
+                if (is_file(WRITEPATH.'update.lock')) {
+                    $this->_html_msg(0, dr_lang('%s目录请给可写入权限', IS_DEV ? WRITEPATH : 'cache'));
+                }
             }
             $this->_html_msg(1, dr_lang('正在更新升级程序'), $next.'&page=1');
         }
