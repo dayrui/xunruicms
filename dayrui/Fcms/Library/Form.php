@@ -226,22 +226,18 @@ class Form {
                                 }
                             }
                         } else {
-                            log_message('error', "校验方法 $method 不存在");
+                            log_message('error', "校验方法 $method 不可用");
                         }
                     } else {
                         // 函数格式
                         $func = $validate['check'];
-                        if (function_exists($func)) {
-                            if (strpos($func, 'dr_') === 0 or strpos($func, 'my_') === 0) {
-                                $rt = call_user_func_array($func, [$value, $data, $old]);
-                                if (!$rt['code']) {
-                                    return [[], ['name' => $name, 'error' => $rt['msg']]];
-                                }
-                            } else {
-                                log_message('error', "校验函数 $func 不可用，必须以dr_或者my_开头");
+                        if (dr_is_call_function($func)) {
+                            $rt = call_user_func_array($func, [$value, $data, $old]);
+                            if (!$rt['code']) {
+                                return [[], ['name' => $name, 'error' => $rt['msg']]];
                             }
                         } else {
-                            log_message('error', "校验函数 $func 不存在！");
+                            log_message('error', "校验函数 $func 不可用");
                         }
                     }
                 }
@@ -254,20 +250,16 @@ class Form {
                             // 开始过滤
                             $post[$name] = call_user_func_array([$this, $method], [$value, $data, $old]);
                         } else {
-                            log_message('error', "过滤方法 $method 不存在！");
+                            log_message('error', "过滤方法 $method 不可用");
                         }
                     } else {
                         // 函数格式
                         $func = $validate['filter'];
-                        if (function_exists($func)) {
+                        if (dr_is_call_function($func)) {
                             // 开始过滤
-                            if(strpos($func, 'dr_') === 0 or strpos($func, 'my_') === 0){
-                                $post[$name] = call_user_func_array($func, [$value, $data, $old]);
-                            } else {
-                                log_message('error', "过滤函数 $func 不可用，必须以dr_或者my_开头");
-                            }
+                            $post[$name] = call_user_func_array($func, [$value, $data, $old]);
                         } else {
-                            log_message('error', "过滤函数 $func 不存在！");
+                            log_message('error', "过滤函数 $func 不可用");
                         }
                     }
                 }

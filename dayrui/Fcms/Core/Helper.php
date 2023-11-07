@@ -987,26 +987,26 @@ function dr_list_function($func, $value, $param = [], $data = [], $field = [], $
             $func = $dname[$name];
         } elseif ($field['fieldtype'] && isset($dfunc[$field['fieldtype']]) && $dfunc[$field['fieldtype']]) {
             $func = $dfunc[$field['fieldtype']];
+        } elseif (!$value) {
+            return '';
         } else {
-            return htmlspecialchars($value);
+            return htmlspecialchars((string)$value);
         }
     }
 
     $obj = \Phpcmf\Service::L('Function_list');
     if (method_exists($obj, $func)) {
         return call_user_func_array([$obj, $func], [$value, $param, $data, $field]);
-    } elseif (function_exists($func)) {
-        if (strpos($func, 'dr_') === 0 or strpos($func, 'my_') === 0) {
-            return call_user_func_array($func, [$value, $param, $data, $field]);
-        } else {
-            log_message('error', '列表回调函数【'.$func.'】必须以dr_或者my_开头');
-        }
+    } elseif (dr_is_call_function($func)) {
+        return call_user_func_array($func, [$value, $param, $data, $field]);
     } else {
         log_message('debug', '你没有定义字段列表回调函数：'.$func);
     }
 
-    return htmlspecialchars($value);
+    return htmlspecialchars((string)$value);
 }
+
+
 
 /**
  * 联动菜单包屑导航
@@ -4247,6 +4247,26 @@ if (!function_exists('dr_is_safe_function')) {
         }
 
         return true;
+    }
+}
+
+// 回调函数安全性判断
+if (!function_exists('dr_is_call_function')) {
+    function dr_is_call_function($func) {
+
+        if (!function_exists($func)) {
+            return false;
+        }
+
+        if (strpos($func, 'dr_') === 0
+            or strpos($func, 'my_') === 0
+            or strpos($func, 'cloud_') === 0) {
+            return true;
+        } else {
+            log_message('error', '回调函数【'.$func.'】必须以dr_或者my_开头');
+        }
+
+        return false;
     }
 }
 
