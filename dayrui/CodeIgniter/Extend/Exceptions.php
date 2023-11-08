@@ -118,7 +118,7 @@ class Exceptions extends \CodeIgniter\Debug\Exceptions {
         }
 
         if (strpos($message, 'The action you requested is not allowed') !== false) {
-            dr_exit_msg(0, '提交验证超时，请重试', 'CSRFVerify');
+            dr_exit_msg(0, '提交CSRF验证超时，请重试', 'CSRFVerify');
         }
 
         // ajax 返回
