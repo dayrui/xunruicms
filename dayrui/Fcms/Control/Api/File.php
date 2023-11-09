@@ -517,7 +517,7 @@ class File extends \Phpcmf\Common
                 $this->_msg(0, dr_lang('附件[%s]不存在', $id));
             }
             if (is_file($info['file'])) {
-                \Phpcmf\Service::L('upload')->down(
+                \Phpcmf\Service::L('file')->down(
                     $info['file'],
                     $info['url'],
                     (isset($rt['name']) && $rt['name'] ? $rt['name'] : $info['filename']).'.'.$info['fileext']
