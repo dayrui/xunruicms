@@ -502,8 +502,8 @@ class Auth extends \Phpcmf\Model {
         foreach (\Phpcmf\Service::C()->admin['roleid'] as $aid) {
             if (isset($auth[$aid]['application']['tid']) && $auth[$aid]['application']['tid']) {
                 if (isset($auth[$aid]['application']['verify']) && $auth[$aid]['application']['verify']) {
-                    $this->_is_post_user_status = 1;
-                    return 1;
+                    $this->_is_post_user_status = $auth[$aid]['application']['verify'];
+                    return $this->_is_post_user_status;
                 }
                 $this->_is_post_user_status = 0;
                 return 0;

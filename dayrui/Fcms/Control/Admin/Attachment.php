@@ -79,6 +79,8 @@ class Attachment extends \Phpcmf\Common {
         }
 
         $page = intval(\Phpcmf\Service::L('input')->get('page'));
+
+
         $site = \Phpcmf\Service::M('Site')->config(SITE_ID);
         $image = $site['image'];
         $image['avatar_url'] = defined('SYS_AVATAR_URL') ? SYS_AVATAR_URL : '';

@@ -662,7 +662,7 @@ class Field extends \Phpcmf\Common {
                 case 'site':
                     // 网站信息
                     $ismain = 1;
-                    $this->name = '项目信息字段';
+                    $this->name = '自定义字段';
                     $this->backurl = \Phpcmf\Service::L('Router')->url('site_param/index'); // 返回uri地址
                     \Phpcmf\Service::M('Field')->func = 'site'; // 重要标识: 函数和识别码
                     break;
