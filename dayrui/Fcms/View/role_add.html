@@ -34,9 +34,9 @@
                     <select name="data[application][verify]" class="form-control">
                         <option value="0">{dr_lang('不审核')}</option>
                         {table table=admin_verify}
-                        <option value="{$t.id}">{dr_lang($t.name)}</option>
+                        <option {if $data['application']['verify'] == $t.id} selected{/if} value="{$t.id}">{dr_lang($t.name)}</option>
                         {empty}
-                        <option value="1">{dr_lang('启用审核')}</option>
+                        <option {if $data['application']['verify'] == 1} selected{/if} value="1">{dr_lang('启用审核')}</option>
                         {/empty}
                     </select>
                 </label>

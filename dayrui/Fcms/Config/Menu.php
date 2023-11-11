@@ -58,7 +58,7 @@ return [
                     'icon' => 'fa fa-cog',
                     'link' => [
                         [
-                            'name' => '系统环境',
+                            'name' => '系统参数',
                             'icon' => 'fa fa-cog',
                             'uri' => 'system/index',
                         ],
@@ -143,38 +143,12 @@ return [
             'icon' => 'fa fa-cogs',
             'displayorder' => '-2',
             'left' => [
-                'config-web' => [
+                [
                     'name' => '项目设置',
                     'icon' => 'fa fa-cog',
-                    'link' => [
-                        [
-                            'name' => '项目设置',
-                            'icon' => 'fa fa-cog',
-                            'uri' => 'site_config/index',
-                        ],
-                        [
-                            'name' => '项目信息',
-                            'icon' => 'fa fa-edit',
-                            'uri' => 'site_param/index',
-                        ],
-                        [
-                            'name' => '手机设置',
-                            'icon' => 'fa fa-mobile',
-                            'uri' => 'site_mobile/index',
-                        ],
-                        [
-                            'name' => '域名绑定',
-                            'icon' => 'fa fa-globe',
-                            'uri' => 'site_domain/index',
-                        ],
-                        [
-                            'name' => '图片设置',
-                            'icon' => 'fa fa-photo',
-                            'uri' => 'site_image/index',
-                        ],
-                    ]
+                    'uri' => 'site_param/index',
                 ],
-            ],
+            ]
         ],
 
         'auth' => [
@@ -306,16 +280,6 @@ return [
                     'name' => '资料修改',
                     'icon' => 'fa fa-user',
                     'uri' => 'api/my',
-                ],
-                [
-                    'name' => '项目设置',
-                    'icon' => 'fa fa-cog',
-                    'uri' => 'site_param/index',
-                ],
-                [
-                    'name' => '图片设置',
-                    'icon' => 'fa fa-photo',
-                    'uri' => 'site_image/index',
                 ],
             ]
         ],

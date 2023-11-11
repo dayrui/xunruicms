@@ -44,15 +44,6 @@
                     <div class="portlet-body">
                         <div class="form-body">
 
-
-
-                        <div class="form-group">
-                            <label class="col-md-2 control-label">{dr_lang('LOGO')}</label>
-                            <div class="col-md-9">
-                                {$logofield}
-                            </div>
-                        </div>
-
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('项目名称')}</label>
                             <div class="col-md-9">
@@ -60,23 +51,11 @@
                              </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-md-2 control-label">{dr_lang('ICP备案信息')}</label>
+                            <label class="col-md-2 control-label">{dr_lang('项目域名')}</label>
                             <div class="col-md-9">
-                                <label><input class="form-control input-large" type="text" name="data[SITE_ICP]" value="{htmlspecialchars((string)$data['SITE_ICP'])}"></label>
+                                <label><input class="form-control input-large" type="text" name="data[SITE_DOMAIN]" value="{htmlspecialchars((string)$data['SITE_DOMAIN'])}"></label>
                              </div>
                         </div>
-
-                        <div class="form-group ">
-                            <label class="col-md-2 control-label">{dr_lang('第三方统计代码')}</label>
-                            <div class="col-md-9">
-                                <textarea class="form-control" style="height:100px" name="data[SITE_TONGJI]">{$data['SITE_TONGJI']}</textarea>
-                            </div>
-                        </div>
-
-
-                        {if $my_site_info}
-                        {load "$my_site_info"}
-                        {/if}
 
                         {$myfield}
 
@@ -92,8 +71,7 @@
     <div class="portlet-body form myfooter">
         <div class="form-actions text-center">
             <label><button type="button" onclick="dr_ajax_submit('{dr_now_url()}&page='+$('#dr_page').val(), 'myform', '2000')" class="btn blue"> <i class="fa fa-save"></i> {dr_lang('保存')}</button></label>
-            {if dr_is_app('mbdy') && $ci->_is_admin_auth()}<label><a class="btn  yellow" href="javascript:dr_iframe_show('show', '{dr_url('mbdy/site/cms')}');"> <i class="fa fa-code"></i>
-                {dr_lang('前端调用')}</a></label>{/if}
+
         </div>
     </div>
 </form>

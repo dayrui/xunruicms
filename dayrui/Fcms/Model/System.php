@@ -104,6 +104,58 @@ class System extends \Phpcmf\Model {
         }
 
         \Phpcmf\Service::L('cache')->set_file('admin_setting', $rt);
+
+        if (!IS_USE_MODULE) {
+
+            $t = $this->table('site')->get(1);
+            $t['setting'] = dr_string2array($t['setting']);
+
+            $config[$t['id']] = [
+                'SITE_NAME' => $t['name'],
+                'SITE_DOMAIN' => strtolower($t['domain']),
+                'SITE_LOGO' => $t['setting']['config']['logo'] ? dr_get_file($t['setting']['config']['logo']) : ROOT_THEME_PATH.'assets/logo-web.png',
+                'SITE_MOBILE' => strtolower($t['domain']),
+                'SITE_MOBILE_DIR' => '',
+                'SITE_AUTO' => 0,
+                'SITE_IS_MOBILE_HTML' => 0,
+                'SITE_MOBILE_NOT_PAD' => '',
+                'SITE_CLOSE' => '',
+                'SITE_THEME' => '',
+                'SITE_TEMPLATE' => '',
+                'SITE_REWRITE' => '',
+                'SITE_SEOJOIN' => '_',
+                'SITE_LANGUAGE' => $t['setting']['config']['SITE_LANGUAGE'],
+                'SITE_TIMEZONE' => $t['setting']['config']['SITE_TIMEZONE'],
+                'SITE_TIME_FORMAT' => $t['setting']['config']['SITE_TIME_FORMAT'],
+                'SITE_INDEX_HTML' => (string)$t['setting']['config']['SITE_INDEX_HTML'],
+                'SITE_THUMB_WATERMARK' => (int)$t['setting']['watermark']['thumb'],
+            ];
+            unset($t['setting']['mobile']['auto'],
+                $t['setting']['mobile']['domain'],
+                $t['setting']['seo']['SITE_REWRITE'],
+                $t['setting']['seo']['SITE_SEOJOIN'],
+                $t['setting']['config']['SITE_THEME'],
+                $t['setting']['config']['SITE_TEMPLATE'],
+                $t['setting']['config']['SITE_LANGUAGE'],
+                $t['setting']['config']['SITE_TIME_FORMAT'],
+                $t['setting']['config']['SITE_NAME'],
+                $t['setting']['config']['SITE_TIMEZONE'],
+                $t['setting']['config']['SITE_DOMAIN'],
+                $t['setting']['config']['SITE_CLOSE']
+            );
+
+            // 自定义站点字段
+            $field = \Phpcmf\Service::M('field')->get_mysite_field($t['id']);
+            if ($field && $t['setting']['param']) {
+                $t['setting']['param'] = \Phpcmf\Service::L('Field')->app('')->format_value($field, $t['setting']['param'], 1);
+            }
+
+            $cache = [];
+            $cache[$t['id']] = $t['setting'];
+
+            \Phpcmf\Service::L('Cache')->set_file('site', $cache);
+            \Phpcmf\Service::L('Config')->file(WRITEPATH.'config/site.php', '项目配置文件', 32)->to_require($config);
+        }
     }
 
 }

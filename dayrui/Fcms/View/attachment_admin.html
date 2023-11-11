@@ -1,6 +1,6 @@
 {template "header.html"}
 
-<div class="note note-danger" {if !isset($get.submit)}style="display: none"{/if} id="table-search-tool">
+<div class="note note-danger"  id="table-search-tool">
 
     {template "api_list_date_search.html"}
 
@@ -81,12 +81,10 @@
                 {/if}
             </div>
 
-            <label class="pull-right"> <button class="btn btn-default btn-sm" onclick="$('#table-search-tool').fadeToggle()" type="button" name="toggle"><i class="bi bi-search"></i> </button>
-            </label>
         </div>
         <div class="clearfix"></div>
         <div class="table-scrollable table-clearfix">
-            <table class="table table-striped table-bordered table-hover table-checkable dataTable">
+            <table class="table table-striped table-bordered table-bordered2 table-hover table-checkable dataTable">
                 <thead>
                 <tr class="heading">
                     <th class="myselect">

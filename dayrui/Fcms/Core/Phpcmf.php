@@ -113,8 +113,6 @@ abstract class Common extends \Frame\Controller {
         // 版本更新时间字符串
         define('CMF_UPDATE_TIME', IS_XRDEV ? SYS_TIME : str_replace(['-', ' ', ':'], '', file_get_contents(WRITEPATH.'install.lock')));
 
-        $client = \Phpcmf\Service::R(WRITEPATH.'config/domain_client.php'); // 电脑域名对应的手机域名
-
         // 站点id
         !defined('SITE_ID') && define('SITE_ID', 1);
 
@@ -132,11 +130,11 @@ abstract class Common extends \Frame\Controller {
         define('SITE_MURL', $this->site_info[SITE_ID]['SITE_MURL']);
         define('SITE_NAME', $this->site_info[SITE_ID]['SITE_NAME']);
         define('SITE_LOGO', $this->site_info[SITE_ID]['SITE_LOGO']);
-        define('SITE_THUMB_WATERMARK', $this->site_info[SITE_ID]['SITE_THUMB_WATERMARK']);
         define('SITE_IS_MOBILE', $this->site_info[SITE_ID]['SITE_IS_MOBILE']); // 是否存在移动端
         define('SITE_IS_MOBILE_HTML', (int)$this->site_info[SITE_ID]['SITE_IS_MOBILE_HTML']);
         define('SITE_MOBILE_DIR', $this->site_info[SITE_ID]['SITE_MOBILE_DIR']); // 移动端目录
         define('SITE_MOBILE_NOT_PAD', (int)$this->site_info[SITE_ID]['SITE_MOBILE_NOT_PAD']); // pad不归类为移动端
+        define('SITE_THUMB_WATERMARK', $this->site_info[SITE_ID]['SITE_THUMB_WATERMARK']);
         define('SITE_THEME', dr_strlen($this->site_info[SITE_ID]['SITE_THEME']) ? $this->site_info[SITE_ID]['SITE_THEME'] : 'default');
         define('SITE_SEOJOIN', dr_strlen($this->site_info[SITE_ID]['SITE_SEOJOIN']) ? $this->site_info[SITE_ID]['SITE_SEOJOIN'] : '_');
         define('SITE_REWRITE', (int)$this->site_info[SITE_ID]['SITE_REWRITE']);
@@ -207,6 +205,7 @@ abstract class Common extends \Frame\Controller {
             define('SYS_UPLOAD_URL', (SYS_ATTACHMENT_REL ? FC_NOW_HOST : ROOT_URL).$path.'/');
         }
 
+
         // 设置终端模板
         $is_auto_mobile_page = 0;
         if (defined('IS_CLIENT')) {
@@ -233,18 +232,8 @@ abstract class Common extends \Frame\Controller {
         if (IS_CLIENT) {
             define('MEMBER_URL', CLIENT_URL.(defined('MEMBER_PAGE') && MEMBER_PAGE ? MEMBER_PAGE : 'index.php?s=member'));
         } else {
-            if (!$is_auto_mobile_page && isset($this->member_cache['domain'][SITE_ID]['domain'])
-                && $this->member_cache['domain'][SITE_ID]['domain']) {
-                // 电脑端绑定域名时
-                define('MEMBER_URL', dr_http_prefix($this->member_cache['domain'][SITE_ID]['domain'].'/'));
-            } elseif ($is_auto_mobile_page && isset($this->member_cache['domain'][SITE_ID]['mobile_domain'])
-                && $this->member_cache['domain'][SITE_ID]['mobile_domain']) {
-                // 移动端绑定域名时
-                define('MEMBER_URL', dr_http_prefix($this->member_cache['domain'][SITE_ID]['mobile_domain'].'/'));
-            } else {
-                // 默认域名
-                define('MEMBER_URL', (!$is_auto_mobile_page ? SITE_URL : SITE_MURL).(defined('MEMBER_PAGE') && MEMBER_PAGE ? MEMBER_PAGE : 'index.php?s=member'));
-            }
+            // 默认域名
+            define('MEMBER_URL', (!$is_auto_mobile_page ? SITE_URL : SITE_MURL).(defined('MEMBER_PAGE') && MEMBER_PAGE ? MEMBER_PAGE : 'index.php?s=member'));
         }
 
         // 预览开发的id
@@ -256,6 +245,7 @@ abstract class Common extends \Frame\Controller {
         // 网站常量
         define('SITE_ICP', $this->get_cache('site', SITE_ID, 'config', 'SITE_ICP'));
         define('SITE_TONGJI', $this->get_cache('site', SITE_ID, 'config', 'SITE_TONGJI'));
+
         // 默认登录时间
         define('SITE_LOGIN_TIME', $this->member_cache['config']['logintime'] ? max(intval($this->member_cache['config']['logintime']), 500) : 36000);
 
@@ -327,43 +317,8 @@ abstract class Common extends \Frame\Controller {
             define('USER_HTTP_CODE', md5($this->uid.\Phpcmf\Service::L('input')->ip_address().\Phpcmf\Service::L('input')->get_user_agent()));
         }
 
-        // 开启自动跳转手机端(api、admin、member不跳转)
-        if (!IS_API // api不跳转
-            && !IS_ADMIN // 后台不跳转
-            && !IS_MEMBER // 会员中心不跳
-            && !IS_API_HTTP // API请求不跳
-            && !IS_CLIENT // 终端不跳
-            //&& !defined('IS_NOT_301') // 定义禁止301不跳
-            //&& !defined('IS_NOT_301') // 定义禁止301不跳
-            && $client // 没有客户端不跳
-            && $this->site_info[SITE_ID]['SITE_MOBILE'] // 没有绑定移动端域名不跳
-            //&& !in_array(DOMAIN_NAME, $client) // 当前域名不存在于客户端中时
-            && $this->site_info[SITE_ID]['SITE_AUTO'] // 开启自动识别跳转
-        ) {
-            $domain = trim(DOMAIN_NAME.WEB_DIR, '/');
-            if (\Phpcmf\Service::IS_MOBILE_USER()) {
-                // 这是移动端
-                if (isset($client[$domain])) {
-                    // 表示这个域名属于电脑端,需要跳转到移动端
-                    \Phpcmf\Service::L('Router')->auto_redirect(str_replace(dr_http_prefix($domain), dr_http_prefix($client[$domain]), dr_now_url()));
-                }
-            } else {
-                // 这是电脑端
-                if (dr_in_array($domain, $client)) {
-                    // 表示这个域名属于移动端,需要跳转到pc
-                    $arr = array_flip($client);
-                    \Phpcmf\Service::L('Router')->auto_redirect(str_replace(dr_http_prefix($domain), dr_http_prefix($arr[$domain]), dr_now_url()));
-                }
-            }
-        }
-
-        // 判断网站是否关闭
-        if (!IS_DEV && !IS_ADMIN && !IS_API
-            && $this->site_info[SITE_ID]['SITE_CLOSE']
-            && (!$this->member || !$this->member['is_admin'])) {
-            // 挂钩点 网站关闭时
-            \Phpcmf\Hooks::trigger('cms_close');
-            $this->_msg(0, $this->get_cache('site', SITE_ID, 'config', 'SITE_CLOSE_MSG'));
+        if (IS_USE_MODULE) {
+            require IS_USE_MODULE.'Config/Run.php';
         }
 
         // 判断是否存在授权登录
@@ -383,23 +338,6 @@ abstract class Common extends \Frame\Controller {
             'member' => $this->member,
         ]);
 
-        // 站群系统接入
-        if (is_file(ROOTPATH.'api/fclient/sync.php')) {
-            $sync = \Phpcmf\Service::R(ROOTPATH.'api/fclient/sync.php') ;
-            if ($sync['status'] == 4) {
-                if ($sync['close_url']) {
-                    dr_redirect($sync['close_url']);
-                } else {
-                    $this->_msg(0, '网站被关闭');
-                }
-            } elseif ($sync['status'] == 3 || ($sync['endtime'] && SYS_TIME > $sync['endtime'])) {
-                if ($sync['pay_url']) {
-                    dr_redirect($sync['pay_url']);
-                } else {
-                    $this->_msg(0, '网站已过期');
-                }
-            }
-        }
 
         if (IS_ADMIN) {
             // 开启session
@@ -460,7 +398,7 @@ abstract class Common extends \Frame\Controller {
             // 判断网站访问权限
             if (!defined('SC_HTML_FILE') && !IS_MEMBER && IS_USE_MEMBER
                 && \Phpcmf\Service::L('member_auth', 'member')->home_auth('show', $this->member)) {
-                $this->_msg(0, dr_lang('您的用户组无权限访问站点'));
+                $this->_msg(0, dr_lang('您的用户组无权限访问'));
             }
             // 账户被锁定
             if ($this->member && $this->member['is_lock']) {
@@ -477,7 +415,6 @@ abstract class Common extends \Frame\Controller {
 
         // 加载初始化文件
         $this->_init_run();
-
     }
 
     /**
@@ -547,14 +484,6 @@ abstract class Common extends \Frame\Controller {
      */
     protected function cachePage(int $time) {
         return;// 暂时不使用页面缓存
-        if (isset($this->site_info[SITE_ID]['SITE_CLOSE']) && $this->site_info[SITE_ID]['SITE_CLOSE']) {
-            // 网站关闭状态时不进行缓存页面
-            return;
-        } elseif ($this->site_info[SITE_ID]['SITE_AUTO']) {
-            // 开启了自动识别移动端，不进行缓存
-            return;
-        }
-        parent::cachePage($time);
     }
 
     /**
@@ -629,90 +558,7 @@ abstract class Common extends \Frame\Controller {
     // 初始化模块 $rt 是否返回
     public function _module_init($dirname = '', $siteid = SITE_ID, $rt = 0) {
 
-        !$dirname && $dirname = APP_DIR;
-
-        if ($this->is_module_init == $dirname.'-'.$siteid) {
-            // 防止模块重复初始化
-            return 1;
-        }
-
-        $this->is_module_init = $dirname.'-'.$siteid;
-
-        // 判断模块是否安装在站点中
-        $cache = \Phpcmf\Service::L('cache')->get('module-'.$siteid);
-        $this->module = [];
-        if ($dirname == 'share' || (isset($cache[$dirname]) && $cache[$dirname])) {
-            $this->module = \Phpcmf\Service::L('cache')->get('module-'.$siteid.'-'.$dirname);
-        }
-
-        // 判断模块是否存在
-        if (!$this->module) {
-            // 重新生成一次缓存
-            \Phpcmf\Service::M('cache')->sync_cache('');
-            $this->module = \Phpcmf\Service::L('cache')->get('module-'.$siteid.'-'.$dirname);
-            if (!$this->module) {
-                if (IS_ADMIN) {
-                    if ($dirname == 'share') {
-                        if ($rt) {
-                            return 0;
-                        } else {
-                            CI_DEBUG && log_message('debug', $dirname.' - '.dr_lang('系统未安装共享模块，无法使用栏目'));
-                            $this->_admin_msg(0, dr_lang('系统未安装共享模块，无法使用栏目'));
-                        }
-                    } else {
-                        if ($rt) {
-                            return 0;
-                        } else {
-                            CI_DEBUG && log_message('error', $dirname.' - '.dr_lang('模块【%s】不存在', $dirname));
-                            $this->_admin_msg(0, dr_lang('模块缓存【%s】不存在', $dirname));
-                        }
-                    }
-                } else {
-                    if ($rt) {
-                        return 0;
-                    } else {
-                        CI_DEBUG && log_message('error', $dirname.' - '.dr_lang('模块【%s】不存在', $dirname));
-                        $this->goto_404_page(dr_lang('模块缓存【%s】不存在', $dirname));
-                    }
-                }
-            }
-        }
-
-        // 无权限访问模块
-        if (!defined('SC_HTML_FILE') && !IS_ADMIN && !IS_MEMBER && IS_USE_MEMBER
-            && \Phpcmf\Service::L('member_auth', 'member')->module_auth($dirname, 'show', $this->member)) {
-            if ($rt) {
-                CI_DEBUG && log_message('debug', $dirname.' - '.dr_lang('您的用户组无权限访问模块'));
-                return 0;
-            }
-            $this->_msg(0, dr_lang('您的用户组无权限访问模块'), $this->uid || !defined('SC_HTML_FILE') ? '' : dr_member_url('login/index'));
-        }
-
-        // 初始化数据表
-        $this->content_model = \Phpcmf\Service::M('Content', $dirname);
-        $this->content_model->_init($dirname, $siteid, $this->module['share']);
-
-        // 共享模块时，单页界面时，排除
-        if ($dirname == 'share') {
-           return 0;
-        }
-
-        $this->module['comment'] = dr_is_app('comment') && \Phpcmf\Service::L('cache')->get('app-comment-'.SITE_ID, 'module', $dirname, 'use') ? 1 : 0;
-
-        // 兼容老版本
-        define('MOD_DIR', $dirname);
-        define('IS_SHARE', $this->module['share']);
-        define('IS_COMMENT', $this->module['comment']);
-        define('MODULE_URL', $this->module['share'] ? '/' : $this->module['url']); // 共享模块没有模块url
-        define('MODULE_NAME', dr_lang($this->module['name']));
-
-        $this->content_model->is_hcategory = $this->is_hcategory = isset($this->module['config']['hcategory']) && $this->module['config']['hcategory'];
-
-        // 设置模板到模块下
-        !$this->module['url'] && \Phpcmf\Service::V()->module($dirname);
-
-        // 初始化加载
-        $this->init_file($dirname);
+        require_once IS_USE_MODULE.'Config/Module_init.php';
 
         return 1;
     }
@@ -1045,6 +891,8 @@ abstract class Common extends \Frame\Controller {
                     // 权限验证
                     if (method_exists($obj, 'is_link_auth') && $obj->is_link_auth(APP_DIR)) {
                         $data = $_clink;
+                    } else {
+                        CI_DEBUG && log_message('debug', 'Auth类（'.APPPATH.'Models/Auth'.$endfix.'.php'.'）没有定义is_link_auth或者is_link_auth验证失败');
                     }
                 } else {
                     $data = $_clink;
@@ -1084,6 +932,8 @@ abstract class Common extends \Frame\Controller {
                             // 权限验证
                             if (method_exists($obj, 'is_link_auth') && $obj->is_link_auth(APP_DIR)) {
                                 $data = array_merge($data , $_clink) ;
+                            } else {
+                                CI_DEBUG && log_message('debug', 'Auth类（'.$path.'Models/Auth'.$endfix.'.php'.'）没有定义is_link_auth或者is_link_auth验证失败');
                             }
                         } else {
                             $data = array_merge($data , $_clink) ;
@@ -1148,6 +998,8 @@ abstract class Common extends \Frame\Controller {
                     $obj = \Phpcmf\Service::M('auth'.$endfix, APP_DIR);
                     if (method_exists($obj, 'is_bottom_auth') && $obj->is_bottom_auth(APP_DIR)) {
                         $data = array_merge($data , $_clink);
+                    } else {
+                        CI_DEBUG && log_message('debug', 'Auth类（'.APPPATH.'Models/Auth'.$endfix.'.php'.'）没有定义is_bottom_auth或者is_bottom_auth验证失败');
                     }
                 } else {
                     $data = array_merge($data , $_clink);
@@ -1163,7 +1015,9 @@ abstract class Common extends \Frame\Controller {
                 continue;
             }
             // 判断插件目录
-            if (is_file($path.'install.lock') && is_file($path.'Config/Cbottom'.$endfix.'.php') && is_file($path.'Config/App.php')) {
+            if (is_file($path.'install.lock')
+                && is_file($path.'Config/Cbottom'.$endfix.'.php')
+                && is_file($path.'Config/App.php')) {
                 $cfg = require $path.'Config/App.php';
                 if ($cfg['type'] == 'app' && !$cfg['ftype']) {
                     // 表示插件非模块
@@ -1173,6 +1027,8 @@ abstract class Common extends \Frame\Controller {
                             $obj = \Phpcmf\Service::M('auth'.$endfix, $dir);
                             if (method_exists($obj, 'is_bottom_auth') && $obj->is_bottom_auth(APP_DIR)) {
                                 $data = array_merge($data , $_clink);
+                            } else {
+                                CI_DEBUG && log_message('debug', 'Auth类（'.$path.'Models/Auth'.$endfix.'.php'.'）没有定义is_bottom_auth或者is_bottom_auth验证失败');
                             }
                         } else {
                             $data = array_merge($data , $_clink);

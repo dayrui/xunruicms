@@ -92,9 +92,11 @@ class Cache extends \Phpcmf\Model {
     public function sync_cache($name = '', $namepspace = '', $is_site_param = 0) {
 
         if (!$this->is_sync_cache) {
-            $this->site_cache = $this->table('site')->where('disabled', 0)->getAll();
-            dr_is_use_module() && $this->module_cache = $this->table('module')->order_by('displayorder ASC,id ASC')->getAll();
-            \Phpcmf\Service::M('site')->cache(0, $this->site_cache, $this->module_cache);
+            if (dr_is_use_module()) {
+                $this->site_cache = $this->table('site')->where('disabled', 0)->getAll();
+                $this->module_cache = $this->table('module')->order_by('displayorder ASC,id ASC')->getAll();
+                \Phpcmf\Service::M('site', 'module')->cache(0, $this->site_cache, $this->module_cache);
+            }
         }
 
         if ($name) {
@@ -137,58 +139,33 @@ class Cache extends \Phpcmf\Model {
 
     // 更新全部项目缓存
     public function update_site_cache() {
-
-        $site_cache = $this->table('site')->where('disabled', 0)->order_by('displayorder ASC,id ASC')->getAll();
-        $module_cache = dr_is_use_module() ? $this->table('module')->order_by('displayorder ASC,id ASC')->getAll() : [];
-
-        // 按项目更新的缓存
-        $cache = [];
-
-        if (is_file(MYPATH.'/Config/Cache.php')) {
-            $_cache = require MYPATH.'/Config/Cache.php';
-            $_cache && $cache = dr_array22array($cache, $_cache);
-        }
-
-        // 执行插件自己的缓存程序
-        $local = \Phpcmf\Service::Apps();
-        $app_cache = [];
-        foreach ($local as $dir => $path) {
-            if (is_file($path.'install.lock')
-                && is_file($path.'Config/Cache.php')) {
-                $_cache = require $path.'Config/Cache.php';
-                $_cache && $app_cache[$dir] = $_cache;
+        if (dr_is_use_module()) {
+            \Phpcmf\Service::M('site', 'module')->update_site_cache();
+        } else {
+            // 按项目更新的缓存
+            $cache = [];
+            if (is_file(MYPATH.'/Config/Cache.php')) {
+                $_cache = require MYPATH.'/Config/Cache.php';
+                $_cache && $cache = dr_array22array($cache, $_cache);
             }
-        }
-
-        $page = intval($_GET['page']);
-        $tpage = dr_count($site_cache);
-
-        if (!$page) {
-            // 全局系统缓存
+            // 执行插件自己的缓存程序
+            $local = \Phpcmf\Service::Apps();
+            $app_cache = [];
+            foreach ($local as $dir => $path) {
+                if (is_file($path.'install.lock')
+                    && is_file($path.'Config/Cache.php')) {
+                    $_cache = require $path.'Config/Cache.php';
+                    $_cache && $app_cache[$dir] = $_cache;
+                }
+            }
             dr_dir_delete(WRITEPATH.'data');
-            \Phpcmf\Service::M('site')->cache(0, $site_cache, $module_cache);
             foreach (['auth', 'email', 'member', 'attachment', 'system'] as $m) {
                 \Phpcmf\Service::M($m)->cache();
             }
-            \Phpcmf\Service::C()->_json(1, dr_lang('正在缓存数据'), 1);
-        }
-
-        $key = $page - 1;
-        if (!isset($site_cache[$key])) {
-            \Phpcmf\Service::M('menu')->cache();
-            $this->update_data_cache();
-            \Phpcmf\Service::C()->_json(1, dr_lang('更新完成'));
-        }
-
-        foreach ([ $site_cache[$key] ] as $t) {
-
-            \Phpcmf\Service::M('table')->cache($t['id'], $module_cache);
-            dr_is_use_module() && \Phpcmf\Service::M('module')->cache($t['id'], $module_cache);
-
+            // 自定义缓存
             foreach ($cache as $m => $namespace) {
-                \Phpcmf\Service::M($m, $namespace)->cache($t['id']);
+                \Phpcmf\Service::M($m, $namespace)->cache(1);
             }
-
             // 插件缓存
             $apps = [];
             if ($app_cache) {
@@ -197,103 +174,48 @@ class Cache extends \Phpcmf\Model {
                     foreach ($c as $i => $apt) {
                         $class = is_numeric($i) ? $apt : $i;
                         $apps[] = '['.$namespace.'-'.$class.']';
-                        \Phpcmf\Service::M($class, $namespace)->cache($t['id']);
+                        \Phpcmf\Service::M($class, $namespace)->cache(1);
                     }
                 }
             }
-
             // 记录日志
-            CI_DEBUG && \Phpcmf\Service::L('input')->system_log('更新[项目#'.$t['id'].']缓存： '.implode(' - ', $apps));
+            CI_DEBUG && \Phpcmf\Service::L('input')->system_log('更新缓存：'.implode(' - ', $apps));
+            \Phpcmf\Service::C()->_json(1, dr_lang('更新完成'));
         }
-
-        \Phpcmf\Service::C()->_json(1, dr_lang('正在更新中（%s/%s）', $page+1, $tpage), $page + 1);
     }
 
     // 更新当前项目缓存
     public function update_cache() {
 
-        $site_cache = $this->table('site')->where('disabled', 0)->order_by('displayorder ASC,id ASC')->getAll();
-        $module_cache = dr_is_use_module() ? $this->table('module')->order_by('displayorder ASC,id ASC')->getAll() : [];
-        \Phpcmf\Service::M('site')->cache(0, $site_cache, $module_cache);
-
-        // 全局缓存
-        foreach (['auth', 'email', 'member', 'attachment', 'system'] as $m) {
-            \Phpcmf\Service::M($m)->cache();
-        }
-
-        // 按项目更新的缓存
-        $cache = [];
-
-        if (is_file(MYPATH.'/Config/Cache.php')) {
-            $_cache = require MYPATH.'/Config/Cache.php';
-            $_cache && $cache = dr_array22array($cache, $_cache);
-        }
-
-        // 执行插件自己的缓存程序
-        $local = \Phpcmf\Service::Apps();
-        $app_cache = [];
-        foreach ($local as $dir => $path) {
-            if (is_file($path.'install.lock')
-                && is_file($path.'Config/Cache.php')) {
-                $_cache = require $path.'Config/Cache.php';
-                $_cache && $app_cache[$dir] = $_cache;
-            }
-        }
-
-        foreach ($site_cache as $t) {
-
-            if (!in_array($t['id'], [SITE_ID, 1])) {
-                continue;
+        if (dr_is_use_module()) {
+            \Phpcmf\Service::M('site', 'module')->update_cache();
+        } else {
+            // 全局缓存
+            foreach (['auth', 'email', 'member', 'attachment', 'system'] as $m) {
+                \Phpcmf\Service::M($m)->cache();
             }
 
-            \Phpcmf\Service::M('table')->cache($t['id'], $module_cache);
-            dr_is_use_module() && \Phpcmf\Service::M('module')->cache($t['id'], $module_cache);
+            // 按项目更新的缓存
+            $cache = [];
 
-            if ($cache) {
-                foreach ($cache as $m => $namespace) {
-                    \Phpcmf\Service::M($m, $namespace)->cache($t['id']);
+            if (is_file(MYPATH.'/Config/Cache.php')) {
+                $_cache = require MYPATH.'/Config/Cache.php';
+                $_cache && $cache = dr_array22array($cache, $_cache);
+            }
+
+            // 执行插件自己的缓存程序
+            $local = \Phpcmf\Service::Apps();
+            $app_cache = [];
+            foreach ($local as $dir => $path) {
+                if (is_file($path.'install.lock')
+                    && is_file($path.'Config/Cache.php')) {
+                    $_cache = require $path.'Config/Cache.php';
+                    $_cache && $app_cache[$dir] = $_cache;
                 }
             }
 
-            // 插件缓存
-            $apps = [];
-            if ($app_cache) {
-                foreach ($app_cache as $namespace => $c) {
-                    \Phpcmf\Service::C()->init_file($namespace);
-                    foreach ($c as $i => $apt) {
-                        $class = is_numeric($i) ? $apt : $i;
-                        $apps[] = '['.$namespace.'-'.$class.']';
-                        \Phpcmf\Service::M($class, $namespace)->cache($t['id']);
-                    }
-                }
-            }
-
-            // 记录日志
-            CI_DEBUG && \Phpcmf\Service::L('input')->system_log('更新[项目#'.$t['id'].']缓存： '.implode(' - ', $apps));
-        }
-
-        \Phpcmf\Service::M('menu')->cache();
-
-    }
-
-    // 重建索引
-    public function update_search_index() {
-
-        $site_cache = $this->table('site')->where('disabled', 0)->getAll();
-        dr_is_use_module() && $module_cache = $this->table('module')->getAll();
-        if (!$module_cache) {
-            return;
-        }
-
-        foreach ($site_cache as $t) {
-            foreach ($module_cache as $m ) {
-                $table = dr_module_table_prefix($m['dirname'], $t['id']);
-                // 判断是否存在表
-                if (!$this->db->tableExists($table)) {
-                    continue;
-                }
-                $this->db->table($table.'_search')->truncate();
-            }
+            \Phpcmf\Service::M('table')->cache(1, []);
+            \Phpcmf\Service::M('menu')->cache();
         }
     }
 
@@ -371,169 +293,6 @@ class Cache extends \Phpcmf\Model {
         function_exists('opcache_reset') && opcache_reset();
     }
 
-    // 重建子站配置文件
-    public function update_site_config() {
-
-        $page = intval($_GET['page']);
-        if (!$page) {
-            $site_cache = $this->table('site')->where('disabled', 0)->getAll();
-            foreach ($site_cache as $t) {
-                $t['setting'] = dr_string2array($t['setting']);
-                if ($t['id'] > 1 && $t['setting']['webpath']) {
-                    $rt = $this->update_webpath('Web', $t['setting']['webpath'], [
-                        'SITE_ID' => $t['id'],
-                        'FIX_WEB_DIR' => strpos($t['setting']['webpath'], '/') === false && strpos($t['domain'], $t['setting']['webpath']) !== false ? $t['setting']['webpath'] : '',
-                        'MOBILE_DIR' => $t['setting']['mobile']['mode'] == 1 ? $t['setting']['mobile']['dirname'] : '',
-                    ]);
-                    if ($rt) {
-                        $this->_error_msg('项目['.$t['domain'].']: '.$rt);
-                    }
-                    $path = rtrim($t['setting']['webpath'], '/').'/';
-                } else {
-                    $path = ROOTPATH;
-                }
-                if ($t['setting']['client']) {
-                    foreach ($t['setting']['client'] as $c) {
-                        if ($c['name'] && $c['domain']) {
-                            $rt = $this->update_webpath('Client', $path.$c['name'].'/', [
-                                'CLIENT' => $c['name'],
-                                'SITE_ID' => $t['id'],
-                                'FIX_WEB_DIR' => $c['domain'] == $t['domain'].'/'.$c['name'] ? $c['name'] : '',
-                                'SITE_FIX_WEB_DIR' => $t['id'] > 1 && $t['setting']['webpath'] && strpos($t['setting']['webpath'], '/') === false && strpos($t['domain'], $t['setting']['webpath']) !== false ? $t['setting']['webpath'] : '',
-                            ]);
-                            if ($rt) {
-                                $this->_error_msg('项目['.$t['domain'].']的终端['.$c['name'].']: '.$rt);
-                            }
-                        }
-                    }
-                }
-            }
-            if (dr_is_use_module()) {
-                \Phpcmf\Service::L('cache')->set_auth_data('update_site_config', $this->table('module')->where('share', 0)->getAll());
-                \Phpcmf\Service::C()->_json(1, dr_lang('正在准备更新'), 1);
-            } else {
-                \Phpcmf\Service::C()->_json(1, dr_lang('更新完成'), 0);
-            }
-        }
-
-        $module = \Phpcmf\Service::L('cache')->get_auth_data('update_site_config');
-        if (!$module) {
-            \Phpcmf\Service::C()->_json(1, dr_lang('无可用更新'), 0);
-        }
-
-        $key = $page - 1;
-        if (!isset($module[$key])) {
-            \Phpcmf\Service::C()->_json(1, dr_lang('更新完成'), 0);
-        }
-
-        \Phpcmf\Service::M('module', 'module')->update_site_config($module[$key]);
-
-        \Phpcmf\Service::C()->_json(1, dr_lang('正在更新中（%s）', $page), $page + 1);
-    }
-
-    // 生成目录式手机目录
-    public function update_mobile_webpath($path, $dirname) {
-
-        foreach (['api.php', 'index.php'] as $file) {
-            if (is_file(TEMPPATH.'Web/mobile/'.$file)) {
-                $dst = $path.$dirname.'/'.$file;
-                dr_mkdirs(dirname($dst));
-                $size = file_put_contents($dst, str_replace([
-                    '{FIX_WEB_DIR}'
-                ], [
-                    (defined('FIX_WEB_DIR') && FIX_WEB_DIR ? FIX_WEB_DIR.'/' : '').$dirname
-                ], file_get_contents(TEMPPATH.'Web/mobile/'.$file)));
-                if (!$size) {
-                    return '文件['.$dst.']无法写入';
-                }
-            }
-        }
-
-        return;
-    }
-
-    // 更新项目
-    public function update_webpath($name, $path, $value, $root = TEMPPATH) {
-
-        if (!$path) {
-            return '目录为空';
-        } elseif (strpos($path, ' ') === 0) {
-            return '不能用空格开头';
-        }
-
-        $path = dr_get_dir_path($path);
-        if (!$path) {
-            return '目录为空';
-        }
-
-        dr_mkdirs($path);
-        if (!is_dir($path)) {
-            return '目录['.$path.']不存在';
-        }
-
-        // 创建入口文件
-        //(defined('FIX_WEB_DIR') && FIX_WEB_DIR ? FIX_WEB_DIR.'/' : '').
-
-        foreach ([
-                     'admin.php',
-                     'index.php',
-                     'api.php',
-                     'mobile/api.php',
-                     'mobile/index.php',
-                 ] as $file) {
-            if (is_file($root.$name.'/'.$file)) {
-                if ($file == 'admin.php') {
-                    $dst = $path.(SELF == 'index.php' ? 'admin.php' : SELF);
-                } else {
-                    $dst = $path.$file;
-                }
-                $fix_web_dir = isset($value['FIX_WEB_DIR']) && $value['FIX_WEB_DIR'] ? $value['FIX_WEB_DIR'] : '';
-                if (isset($value['SITE_ID']) && $value['SITE_ID'] > 1) {
-                    if (strpos($file, 'mobile') !== false
-                        && isset($value['MOBILE_DIR']) && $value['MOBILE_DIR']) {
-                        $fix_web_dir.= '/'.$value['MOBILE_DIR'];
-                    } elseif ($fix_web_dir) {
-                        // 移动端加二级
-                        if (strpos($file, 'mobile/') !== false) {
-                            $fix_web_dir.= '/mobile';
-                        }
-                        // 终端加二级
-                        if ( $name == 'Client') {
-                            $fix_web_dir= (isset($value['SITE_FIX_WEB_DIR']) && $value['SITE_FIX_WEB_DIR'] ? $value['SITE_FIX_WEB_DIR'].'/' : '').$fix_web_dir;
-                        }
-                    }
-                }
-                dr_mkdirs(dirname($dst));
-                $size = file_put_contents($dst, str_replace([
-                    '{CLIENT}',
-                    '{ROOTPATH}',
-                    '{MOD_DIR}',
-                    '{SITE_ID}',
-                    '{FIX_WEB_DIR}'
-                ], [
-                    $value['CLIENT'],
-                    ROOTPATH,
-                    $value['MOD_DIR'],
-                    $value['SITE_ID'],
-                    trim($fix_web_dir, '/')
-                ], file_get_contents($root.$name.'/'.$file)));
-                if (!$size) {
-                    return '文件['.$dst.']无法写入';
-                }
-            }
-        }
-
-        // 复制百度编辑器到当前目录
-        //$this->cp_ueditor_file($path);
-
-        // 复制百度编辑器到移动端项目
-        //if (is_dir($path.'mobile')) {
-            //$this->cp_ueditor_file($path.'mobile/');
-        //}
-
-        return '';
-    }
-
     // 编辑器更新
     public function update_ueditor() {
 
@@ -584,6 +343,25 @@ class Cache extends \Phpcmf\Model {
 
         \Phpcmf\Service::L('file')->copy_dir(ROOTPATH.'api/ueditor/dialogs/', ROOTPATH.'api/ueditor/dialogs/', $npath.'dialogs/');
         \Phpcmf\Service::L('file')->copy_dir(ROOTPATH.'api/ueditor/third-party/', ROOTPATH.'api/ueditor/third-party/', $npath.'third-party/');
+    }
+
+    public function update_search_index() {
+        \Phpcmf\Service::M('site', 'module')->update_search_index();
+    }
+
+    // 重建子站配置文件
+    public function update_site_config() {
+        \Phpcmf\Service::M('site', 'module')->update_site_config();
+    }
+
+    // 生成目录式手机目录
+    public function update_mobile_webpath($path, $dirname) {
+        \Phpcmf\Service::M('site', 'module')->update_mobile_webpath($path, $dirname);
+    }
+
+    // 更新项目
+    public function update_webpath($name, $path, $value, $root = TEMPPATH) {
+        \Phpcmf\Service::M('site', 'module')->update_webpath($name, $path, $value, $root);
     }
 
     // 错误输出

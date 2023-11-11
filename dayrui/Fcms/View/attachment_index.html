@@ -12,9 +12,11 @@
                 <li class="{if $page==2}active{/if}">
                     <a href="#tab_2" data-toggle="tab" onclick="$('#dr_page').val('2')"> <i class="fa fa-user"></i> {dr_lang('头像存储')} </a>
                 </li>
+                {if IS_USE_MODULE}
                 <li class="{if $page==1}active{/if}">
                     <a href="#tab_1" data-toggle="tab" onclick="$('#dr_page').val('1')"> <i class="fa fa-photo"></i> {if IS_SITES}{dr_lang('[%s]缩略图', SITE_NAME)}{else}{dr_lang('缩略图')}{/if} </a>
                 </li>
+                {/if}
             </ul>
         </div>
         <div class="portlet-body">
