@@ -21,15 +21,18 @@ class Check extends \Phpcmf\Common
         //'08' => '程序兼容性检测',
         '09' => '项目安全性检测',
         '10' => '数据负载优化检测',
-        '11' => '域名绑定检测',
         '12' => 'HTTPS检测',
         '13' => '应用插件兼容性检测',
-        '14' => '移动端检测',
         '16' => '自动任务配置检测',
 
     ];
 
     public function index() {
+
+        if (IS_USE_MODULE) {
+            $this->_list['14'] = '移动端检测';
+            $this->_list['11'] = '移动端检测';
+        }
 
         if (is_file(WRITEPATH.'install.info')) {
             unlink(WRITEPATH.'install.info');

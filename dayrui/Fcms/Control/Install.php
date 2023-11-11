@@ -319,9 +319,13 @@ $db[\'default\']	= [
                                 'roleid' => 1,
                             ]);
                             // 创建站点
-                            \Phpcmf\Service::M('site')->create([
+                            $this->db->table('site')->replace([
+                                'id' => 1,
                                 'name' => $data['name'],
                                 'domain' => DOMAIN_NAME,
+                                'setting' => '',
+                                'disabled' => 0,
+                                'displayorder' => 0,
                             ]);
                             \Phpcmf\Service::M()->site = $this->site = [ 1 => 1 ];
 

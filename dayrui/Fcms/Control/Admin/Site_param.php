@@ -9,14 +9,12 @@ class Site_param extends \Phpcmf\Common {
 
 	public function index() {
 
-        $logo = [
-            'logo' => [
-                'ismain' => 1,
-                'fieldtype' => 'File',
-                'fieldname' => 'logo',
-                'setting' => ['option' => ['ext' => 'jpg,gif,png,jpeg,webp,svg', 'size' => 10, 'input' => 1]]
-            ]
-        ];
+        if (IS_USE_MODULE) {
+            dr_redirect(dr_url('module/site_param/index'));
+            exit;
+        }
+
+
 
         $data = \Phpcmf\Service::M('Site')->config(SITE_ID);
         $field = \Phpcmf\Service::M('field')->get_mysite_field(SITE_ID);
@@ -62,11 +60,8 @@ class Site_param extends \Phpcmf\Common {
 
 		    // config
             $config = \Phpcmf\Service::L('input')->post('data');
-            $config['SITE_TONGJI'] = $_POST['data']['SITE_TONGJI'];
+
             // 防止参数丢失
-            $config['SITE_CLOSE'] = $data['config']['SITE_CLOSE'];
-            $config['SITE_INDEX_HTML'] = $data['config']['SITE_INDEX_HTML'];
-            $config['SITE_CLOSE_MSG'] = $data['config']['SITE_CLOSE_MSG'];
             $config['SITE_LANGUAGE'] = $data['config']['SITE_LANGUAGE'];
             $config['SITE_TEMPLATE'] = $data['config']['SITE_TEMPLATE'];
             $config['SITE_TIMEZONE'] = $data['config']['SITE_TIMEZONE'];
@@ -74,7 +69,7 @@ class Site_param extends \Phpcmf\Common {
             $config['SITE_THEME'] = $data['config']['SITE_THEME'];
             $rt = \Phpcmf\Service::M('Site')->config(SITE_ID, 'config', $config);
             if (!is_array($rt)) {
-                $this->_json(0, dr_lang('网站信息(#%s)不存在', SITE_ID));
+                $this->_json(0, dr_lang('项目信息(#%s)不存在', SITE_ID));
             }
             // 附件归档
             if (SYS_ATTACHMENT_DB) {
@@ -103,8 +98,6 @@ class Site_param extends \Phpcmf\Common {
             'field' => $field,
             'myfield' => $field ? \Phpcmf\Service::L('Field')->toform(0, $field, $data['param']) : '',
             'mymerge' => $field ? \Phpcmf\Service::L('Field')->merge : '',
-            'logofield' => dr_fieldform($logo['logo'], $data['config']['logo']),
-            'my_site_info' => is_file(MYPATH.'View/site_info.html') ? MYPATH.'View/site_info.html' : '',
 		]);
 
 		\Phpcmf\Service::V()->display('site_param.html');
