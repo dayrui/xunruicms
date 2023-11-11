@@ -15,6 +15,8 @@ use Config\App;
 
 class Security extends \CodeIgniter\Security\Security {
 
+    protected $tokenName = 'csrf_test_name';
+
     /**
      * CSRF Verify
      *
