@@ -932,6 +932,10 @@ function dr_member_info($uid, $name = '', $cache = -1) {
     $data = \Phpcmf\Service::L('cache')->get_data('member-info-'.$uid);
     if (!$data) {
         $data = \Phpcmf\Service::M('member')->get_member($uid);
+        if ($data) {
+            $data['salt'] = '***';
+            $data['password'] = '***';
+        }
         SYS_CACHE && \Phpcmf\Service::L('cache')->set_data('member-info-'.$uid, $data, $cache > 0 ? $cache : SYS_CACHE_SHOW * 3600);
     }
 
@@ -951,6 +955,10 @@ function dr_member_username_info($username, $name = '', $cache = -1) {
     $data = \Phpcmf\Service::L('cache')->get_data('member-info-name-'.$username);
     if (!$data) {
         $data = \Phpcmf\Service::M('member')->get_member(0, $username);
+        if ($data) {
+            $data['salt'] = '***';
+            $data['password'] = '***';
+        }
         SYS_CACHE && \Phpcmf\Service::L('cache')->set_data('member-info-name-'.$username, $data, $cache > 0 ? $cache : SYS_CACHE_SHOW * 3600);
     }
 
