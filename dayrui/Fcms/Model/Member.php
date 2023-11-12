@@ -224,10 +224,6 @@ class Member extends \Phpcmf\Model {
         $data['uid'] = $data['id'];
         $data['avatar'] = dr_avatar($data['id']);
         $data['adminid'] = (int)$data['is_admin'];
-        if (!IS_ADMIN) {
-            $data['salt'] = '***';
-            $data['password'] = '***';
-        }
         //$data['tableid'] = (int)substr((string)$data['id'], -1, 1);
 
         $data['group'] = $data['groupid'] = $data['levelid'] = $data['authid'] = $data['group_name'] = [];
