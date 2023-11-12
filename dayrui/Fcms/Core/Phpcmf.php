@@ -318,7 +318,11 @@ abstract class Common extends \Frame\Controller {
         }
 
         if (IS_USE_MODULE) {
-            require IS_USE_MODULE.'Config/Run.php';
+            if (is_file(IS_USE_MODULE.'Config/Run.php')) {
+                require IS_USE_MODULE.'Config/Run.php';
+            } else {
+                $this->_msg(0, '请离线升级内容系统插件');
+            }
         }
 
         // 判断是否存在授权登录
