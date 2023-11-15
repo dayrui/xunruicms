@@ -3093,7 +3093,7 @@ function dr_date($time = '', $format = SITE_TIME_FORMAT, $color = '') {
         if (is_numeric($new)) {
             $time = $new;
         } else {
-            return IS_DEV ? '参数不是时间戳格式' : '';
+            return IS_DEV ? '参数（'.$time.'）不是时间戳格式' : '';
         }
     }
 
