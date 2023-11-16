@@ -143,11 +143,17 @@ return [
             'icon' => 'fa fa-cogs',
             'displayorder' => '-2',
             'left' => [
-                [
+                'config-web' => [
                     'name' => '项目设置',
                     'icon' => 'fa fa-cog',
-                    'uri' => 'site_param/index',
-                ],
+                    'link' => [
+                        [
+                            'name' => '项目信息',
+                            'icon' => 'fa fa-cog',
+                            'uri' => 'site_param/index',
+                        ],
+                    ]
+                ]
             ]
         ],
 
