@@ -101,6 +101,11 @@ if (isset($_GET['log']) && $_GET['log']) {
 
 dr_echo_msg(1, '客户端字符串：'.$_SERVER['HTTP_USER_AGENT']);
 
+if (is_file(CONFIGPATH.'database.php')) {
+    require CONFIGPATH.'database.php';
+    dr_echo_msg(1, '数据库配置文件：'.CONFIGPATH.'database.php');
+}
+
 // GD库判断
 if (!function_exists('imagettftext')) {
     dr_echo_msg(0, 'PHP扩展库：GD库未安装或GD库版本太低');
@@ -123,10 +128,6 @@ if (! extension_loaded('xml')) {
 
 if (!fopen('https://www.xunruicms.com/', "rb")) {
     dr_echo_msg(0, 'fopen无法获取远程数据，无法使用在线下载插件和在线升级');
-}
-
-if (is_file(CONFIGPATH.'database.php')) {
-    require CONFIGPATH.'database.php';
 }
 
 $mysqli = function_exists('mysqli_init') ? mysqli_init() : 0;
