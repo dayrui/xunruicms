@@ -288,14 +288,14 @@ class Files extends \Phpcmf\Library\A_Field {
             $tpl.= '<div class="row">';
             $tpl.= '<div class="col-md-12 files_show_title_html">';
             if ($field['setting']['option']['name']) {
-                $tpl .= '<input class="form-control files_row_title" type="text" name="data[' . $name . '][title][]" value="{title}">';
+                $tpl .= '<input  placeholder="'.dr_lang('名称').'" class="form-control files_row_title" type="text" name="data[' . $name . '][title][]" value="{title}">';
             }
             $tpl.= '<input type="hidden" class="files_row_id" name="data[' . $name . '][id][]" value="{id}">';
             $tpl.= '<input class="files_row_name" {disabled} type="hidden" name="data[' . $name . '][file][]" value="{filepath}">';
             $tpl.= '</div>';
             if ($field['setting']['option']['desc']) {
                 $tpl.= '<div class="col-md-12 files_show_description_html">';
-                $tpl.= '<textarea class="form-control files_row_description" name="data['.$name.'][description][]">{description}</textarea>';
+                $tpl.= '<textarea placeholder="'.dr_lang('描述').'" class="form-control files_row_description" name="data['.$name.'][description][]">{description}</textarea>';
                 $tpl.= '</div>';
             }
             $tpl.= '</div>';
