@@ -317,12 +317,8 @@ abstract class Common extends \Frame\Controller {
             define('USER_HTTP_CODE', md5($this->uid.\Phpcmf\Service::L('input')->ip_address().\Phpcmf\Service::L('input')->get_user_agent()));
         }
 
-        if (IS_USE_MODULE) {
-            if (is_file(IS_USE_MODULE.'Config/Run.php')) {
-                require IS_USE_MODULE.'Config/Run.php';
-            } else {
-                $this->_msg(0, '请离线升级内容系统插件');
-            }
+        if (IS_USE_MODULE && is_file(IS_USE_MODULE.'Config/Run.php')) {
+            require IS_USE_MODULE.'Config/Run.php';
         }
 
         // 判断是否存在授权登录
@@ -562,7 +558,11 @@ abstract class Common extends \Frame\Controller {
     // 初始化模块 $rt 是否返回
     public function _module_init($dirname = '', $siteid = SITE_ID, $rt = 0) {
 
-        require_once IS_USE_MODULE.'Config/Module_init.php';
+        if (is_file(IS_USE_MODULE.'Config/Module_init.php')) {
+            require_once IS_USE_MODULE.'Config/Module_init.php';
+        } else {
+            $this->_msg(0, '请升级内容系统插件');
+        }
 
         return 1;
     }
@@ -792,7 +792,8 @@ abstract class Common extends \Frame\Controller {
             'msg' => $msg,
             'url' => $url,
             'note' => $note,
-            'mark' => $code
+            'mark' => $code,
+            'meta_title' => dr_lang('操作进度')
         ]);
         \Phpcmf\Service::V()->display('html_msg.html', 'admin');exit;
     }
