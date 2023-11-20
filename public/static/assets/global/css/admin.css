@@ -1544,7 +1544,7 @@ output {
     border: 1px solid #d3cfcf;
     color: #3F4254;
     background-clip: padding-box;
-    border-radius: 4px;
+    border-radius: 2px;
     -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
     -webkit-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
     -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
@@ -1924,13 +1924,19 @@ textarea.form-control {
     padding: 6px 12px;
     font-size: 14px;
     line-height: 1.42857;
-    border-radius: 4px;
+    border-radius: 2px;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none
 }
+.myfooter .btn i {
+    display: none;
+}
+.myfooter .btn {
 
+    padding: 6px 18px;
+}
 .btn.active.focus,.btn.active:focus,.btn.focus,.btn:active.focus,.btn:active:focus,.btn:focus {
     outline: dotted thin;
     outline: -webkit-focus-ring-color auto 5px;
@@ -2195,21 +2201,18 @@ a.btn.disabled,fieldset[disabled] a.btn {
     padding: 10px 16px;
     font-size: 18px;
     line-height: 1.33333;
-    border-radius: 6px
 }
 
 .btn-group-sm>.btn,.btn-sm {
     padding: 5px 10px;
     font-size: 12px;
     line-height: 1.5 !important;
-    border-radius: 3px
 }
 
 .btn-group-xs>.btn,.btn-xs {
     padding: 2px 5px;
     font-size: 12px;
     line-height: 1.5 !important;
-    border-radius: 3px
 }
 
 .btn-block {
@@ -7200,7 +7203,7 @@ td>.mt-checkbox.mt-checkbox-single,td>.mt-radio.mt-radio-single,th>.mt-checkbox.
 }
 
 .mt-checkbox.mt-checkbox-outline:hover>input:not([disabled]):checked~span,.mt-checkbox.mt-checkbox-outline:hover>input:not([disabled])~span,.mt-checkbox.mt-checkbox-outline>input:checked~span,.mt-checkbox.mt-checkbox-outline>input:focus~span,.mt-checkbox.mt-checkbox-outline>span,.mt-checkbox.mt-radio-outline:hover>input:not([disabled]):checked~span,.mt-checkbox.mt-radio-outline:hover>input:not([disabled])~span,.mt-checkbox.mt-radio-outline>input:checked~span,.mt-checkbox.mt-radio-outline>input:focus~span,.mt-checkbox.mt-radio-outline>span,.mt-radio.mt-checkbox-outline:hover>input:not([disabled]):checked~span,.mt-radio.mt-checkbox-outline:hover>input:not([disabled])~span,.mt-radio.mt-checkbox-outline>input:checked~span,.mt-radio.mt-checkbox-outline>input:focus~span,.mt-radio.mt-checkbox-outline>span,.mt-radio.mt-radio-outline:hover>input:not([disabled]):checked~span,.mt-radio.mt-radio-outline:hover>input:not([disabled])~span,.mt-radio.mt-radio-outline>input:checked~span,.mt-radio.mt-radio-outline>input:focus~span,.mt-radio.mt-radio-outline>span {
-    border-radius: 4px;
+    border-radius: 2px;
     background-color: #eff2f5;
 }
 
@@ -9743,7 +9746,7 @@ body .ui-tooltip {
     margin-bottom: 10px;
     color: #555;
     vertical-align: middle;
-    border-radius: 4px;
+    border-radius: 2px;
     max-width: 100%;
     line-height: 22px;
     cursor: text
