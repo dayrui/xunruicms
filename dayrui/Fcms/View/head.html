@@ -110,49 +110,28 @@
                      name = '';
                  }
                 {/if}
-                {if SYS_NOT_ADMIN_CACHE}
-                $("#right_page").attr('src', url);
-                $("#right_page").attr("url", url);
-                {else}
+
                 var cmd = $.md5(url);
                 $('#myiframe iframe').hide();
                 $('#myiframe').attr("cid", 'right_page_'+cmd);
-                $('#dr_go_url li').removeClass('active');
+
+                $('#dr_go_url').html('<li id="dr_tab_close"><i title="{dr_lang('刷新')}" onclick="dr_tab_close(\''+cmd+'\')" class="fa fa-refresh"></i></li>');
 
                 if ($('#right_page_'+cmd).length > 0) {
                     // 存在
                     $('#right_page_'+cmd).show();
-                    $('#dr_go_url_'+cmd).addClass('active');
                     var iurl = document.getElementById("right_page_"+cmd).contentWindow.location.href;
                     if (iurl.indexOf(url) == -1 && nocache != 'true') {
                         // 地址不符合，重置
                         $('#right_page_'+cmd).attr('src', url);
                     }
                 } else {
-                    $('#dr_tab_close').remove();
                     var html = '<iframe class="myiframe" name="right" id="right_page_'+cmd+'" src="'+url+'" url="'+url+'" style="border:none; margin-bottom:0px;height:'+$('#right_page').height()+'px" width="100%" height="auto" allowtransparency="true"></iframe>';
                     $("#myiframe").append(html);
                 }
-                if (name && $('#dr_go_url_'+cmd).length == 0) {
-                    var iw = parseInt($("#myiframe").width());
-                    if (iw < 1300) {
-                        var wh = 500;
-                    } else if (iw < 1400) {
-                       var wh = 700;
-                    } else {
-                        var wh = iw/2;
-                    }
-                    $('#dr_tab_close').remove();
-                    $('#dr_go_url').attr('style', 'width:'+wh+'px');
-                    $('#dr_go_url').prepend('<li id="dr_go_url_'+cmd+'" class="active"><a href="javascript:;" onclick="dr_go_url(\''+url+'\', \'\', \'true\')">'+name+'</a><i onclick="$(\'#dr_go_url_'+cmd+'\').remove();" class="close-tab fa fa-remove"></i></li>');
-                    if ($('#dr_tab_close').length == 0) {
-                        $('#dr_go_url').prepend('<li id="dr_tab_close"><i title="{dr_lang('全部移除')}" onclick="dr_tab_close()" class="fa fa-trash"></i></li>');
-                    }
-                }
-                {/if}
             }
-            function dr_tab_close() {
-                $('#dr_go_url li').remove();
+            function dr_tab_close(cmd) {
+                document.getElementById("right_page_"+cmd).contentWindow.location.reload();
             }
             function Mlink(top, left, link, url) {
 

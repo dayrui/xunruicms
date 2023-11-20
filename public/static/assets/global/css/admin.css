@@ -11422,13 +11422,16 @@ code.form-control-static {
 .page-bar .page-breadcrumb>li>a,.page-bar .page-breadcrumb>li>span {
     color: #888;
     font-size: 14px;
-    text-shadow: none
+    text-shadow: none;
+    height: 30px;
+    line-height: 30px;
+    border: unset;
+    background-color: #F7F7F7;
+    padding: 5px 9px;
 }
 
 .page-bar .page-breadcrumb>li>i {
-    color: #aaa;
-    font-size: 14px;
-    text-shadow: none
+    display: none;
 }
 
 .page-bar .page-breadcrumb>li>i[class*=icon-],.page-bar .page-breadcrumb>li>i[class^=icon-] {
@@ -11471,9 +11474,7 @@ code.form-control-static {
     padding: 12px 0
 }
 
-.page-container-bg-solid .page-bar .page-breadcrumb>li>a,.page-container-bg-solid .page-bar .page-breadcrumb>li>span,.page-content-white .page-bar .page-breadcrumb>li>a,.page-content-white .page-bar .page-breadcrumb>li>span {
-    color: #888
-}
+
 
 .page-container-bg-solid .page-bar .page-breadcrumb>li>i,.page-content-white .page-bar .page-breadcrumb>li>i {
     color: #aaa
@@ -11513,10 +11514,6 @@ code.form-control-static {
     background: #eef1f5
 }
 
-.page-content-white .page-content .page-bar {
-    border-bottom: 1px solid #eef1f5;
-    border-radius: 0
-}
 
 .page-container-bg-solid.page-md .page-content .page-bar,.page-content-white.page-md .page-content .page-bar {
     border-radius: 0!important
@@ -11797,12 +11794,7 @@ code.form-control-static {
         padding: 8px 13px
     }
 
-    .fc-mb-left-menu {
-        position: absolute;
-        margin-top: 5px;
-        left: 5px;
-        background: #fff
-    }
+
 }
 
 .fc_mini_menu_top .open,.fc_mini_menu_top .open .fa {
@@ -11863,7 +11855,7 @@ code.form-control-static {
 }
 
 .page-bar .page-breadcrumb .default,.page-bar .page-breadcrumb .on {
-    color: #f0868e!important
+    color: #40aae3!important
 }
 
 .fc-cat-select {
@@ -12991,17 +12983,18 @@ code.form-control-static {
 .files .on-view {
     border: 2px solid #40aae3;
 }
+
 .fc-mb-left-menu {
     position: absolute;
     right: 0;
     padding: 0 10px;
     overflow: hidden;
-    height: 44px;
+    height: 54px;
     text-align: right;
 }
 .fc-mb-left-menu li {
-    height: 44px;
-    line-height: 44px;
+    height: 54px;
+    line-height: 54px;
     padding: 0px 10px 0px 15px;
     border-right: 1px solid rgba(0,0,0,0.02);
     color: #888;
@@ -13671,9 +13664,7 @@ body{background-color:#f5f6f8}
 .font-green {
     color: #40aae3!important;
 }
-.page-bar .page-breadcrumb .default, .page-bar .page-breadcrumb .on {
-    color: #3ea9e2!important;
-}
+
 .note.note-danger {
     border-radius: 4px;
     background-color: #ffffff;
