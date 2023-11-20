@@ -585,10 +585,10 @@ class Member extends \Phpcmf\Model {
                     return $rt;
                 }
             }
-            if (dr_in_array('email', \Phpcmf\Service::C()->member_cache['register']['field'])
+            if ($member['email'] && dr_in_array('email', \Phpcmf\Service::C()->member_cache['register']['field'])
                 && !\Phpcmf\Service::L('Form')->check_email($member['email'])) {
                 return dr_return_data(0, dr_lang('邮箱格式不正确'), ['field' => 'email']);
-            } elseif (dr_in_array('phone', \Phpcmf\Service::C()->member_cache['register']['field'])
+            } elseif ($member['phone'] && dr_in_array('phone', \Phpcmf\Service::C()->member_cache['register']['field'])
                 && !\Phpcmf\Service::L('Form')->check_phone($member['phone'])) {
                 return dr_return_data(0, dr_lang('手机号码格式不正确'), ['field' => 'phone']);
             }
