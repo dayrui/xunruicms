@@ -217,7 +217,7 @@
                             <div class="col-md-9">
                                 <div class="input-inline input-medium">
                                     <div class="input-group">
-                                        <input type="text" name="system[SYS_ADMIN_LOGINS]" value="{php echo $system['SYS_ADMIN_LOGINS'] ? $system['SYS_ADMIN_LOGINS'] : 10;}" class="form-control">
+                                        <input type="text" name="data[SYS_ADMIN_LOGINS]" value="{php echo $data['SYS_ADMIN_LOGINS'] ? $data['SYS_ADMIN_LOGINS'] : 10;}" class="form-control">
                                         <span class="input-group-addon">
                                             {dr_lang('次')}
                                         </span>
@@ -226,7 +226,7 @@
                                 <span class="help-block">{dr_lang('密码错误过多时，将锁定账号禁止登录，默认10次')}</span>
                             </div>
                         </div>
-                        <input type="hidden" name="system[SYS_ADMIN_LOGIN_TIME]" value="{$system['SYS_ADMIN_LOGIN_TIME']}" class="form-control">
+                        <input type="hidden" name="data[SYS_ADMIN_LOGIN_TIME]" value="{$data['SYS_ADMIN_LOGIN_TIME']}" class="form-control">
                     </div>
                 </div>
 
