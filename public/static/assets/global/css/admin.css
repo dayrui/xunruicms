@@ -12493,20 +12493,15 @@ code.form-control-static {
 }
 
 .table-search-tool .col-md-12 {
-    width: auto
+    width: auto;
+}
+.table-search-tool .col-md-12 button{
+    width: auto;
+    margin-top: 2px
 }
 
 .table-search-tool .col-md-12 .onloading {
     margin-top: 2px
-}
-
-.table-search-tool {
-    margin-top: 10px;
-    margin-bottom: 10px;
-}
-.bootstrap-table .table-search-tool {
-    margin-top: 0px;
-    margin-bottom: 0px;
 }
 
 .list-field-cog {
