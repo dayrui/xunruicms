@@ -950,6 +950,10 @@ class Image {
         $config['wm_vrt_offset'] = (int)$data['wm_vrt_offset'];
         $this->initialize($config);
 
+        if (!$this->full_dst_path) {
+            $this->full_dst_path = $config['source_image'];
+        }
+
         $this->source_image = $config['source_image'];
 
         // 判断水印尺寸
