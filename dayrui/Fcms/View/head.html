@@ -115,7 +115,7 @@
                 $('#myiframe iframe').hide();
                 $('#myiframe').attr("cid", 'right_page_'+cmd);
 
-                $('#dr_go_url').html('<li id="dr_tab_close"><i title="{dr_lang('刷新')}" onclick="dr_tab_close(\''+cmd+'\')" class="fa fa-refresh"></i></li>');
+                $('#dr_go_url').html('<li id="dr_tab_close"><i onclick="dr_tab_close(\''+cmd+'\')" class="fa fa-refresh"></i></li>');
 
                 if ($('#right_page_'+cmd).length > 0) {
                     // 存在
@@ -131,7 +131,8 @@
                 }
             }
             function dr_tab_close(cmd) {
-                document.getElementById("right_page_"+cmd).contentWindow.location.reload();
+                var url =  $('#right_page_'+cmd).attr('src');
+                document.getElementById("right_page_"+cmd).contentWindow.location.replace(url);
             }
             function Mlink(top, left, link, url) {
 
