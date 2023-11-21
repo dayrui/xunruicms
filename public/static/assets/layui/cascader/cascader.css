@@ -118,7 +118,7 @@
     font-size: 12px;
     color: #3ea9e2;
     border: 1px solid #d9ecff;
-    border-radius: 4px;
+    border-radius: 2px;
     box-sizing: border-box;
     white-space: nowrap
 }
@@ -464,7 +464,7 @@
 
 .el-checkbox.is-bordered {
     padding: 9px 20px 9px 10px;
-    border-radius: 4px;
+    border-radius: 2px;
     border: 1px solid #dcdfe6;
     box-sizing: border-box;
     line-height: normal;
@@ -486,7 +486,7 @@
 
 .el-checkbox.is-bordered.el-checkbox--medium {
     padding: 7px 20px 7px 10px;
-    border-radius: 4px;
+    border-radius: 2px;
     height: 36px
 }
 
@@ -762,7 +762,7 @@
 
 .el-checkbox-button:first-child .el-checkbox-button__inner {
     border-left: 1px solid #dcdfe6;
-    border-radius: 4px 0 0 4px;
+    border-radius: 2px 0 0 2px;
     box-shadow: none!important
 }
 
@@ -827,7 +827,7 @@
 
 .el-radio.is-bordered {
     padding: 12px 20px 0 10px;
-    border-radius: 4px;
+    border-radius: 2px;
     border: 1px solid #dcdfe6;
     box-sizing: border-box;
     height: 40px
@@ -848,7 +848,7 @@
 
 .el-radio--medium.is-bordered {
     padding: 10px 20px 0 10px;
-    border-radius: 4px;
+    border-radius: 2px;
     height: 36px
 }
 
@@ -1042,7 +1042,7 @@
     right: 2px;
     bottom: 2px;
     z-index: 1;
-    border-radius: 4px;
+    border-radius: 2px;
     opacity: 0;
     transition: opacity .12s ease-out
 }
@@ -1131,7 +1131,7 @@
     font-size: 14px;
     background: #fff;
     border: 1px solid #e4e7ed;
-    border-radius: 4px;
+    border-radius: 2px;
     box-shadow: 0 2px 12px 0 rgba(0, 0, 0, .1)
 }
 
@@ -1178,7 +1178,7 @@
 }
 
 .el-cascader__suggestion-panel {
-    border-radius: 4px
+    border-radius: 2px
 }
 
 .el-cascader__suggestion-list {
@@ -1242,13 +1242,13 @@
 /*cascader面板*/
 .el-cascader-panel {
     display: flex;
-    border-radius: 4px;
+    border-radius: 2px;
     font-size: 14px
 }
 
 .el-cascader-panel.is-bordered {
     border: 1px solid #e4e7ed;
-    border-radius: 4px
+    border-radius: 2px
 }
 
 .el-cascader-menu {
@@ -1415,7 +1415,7 @@
     -webkit-appearance: none;
     background-color: #fff;
     background-image: none;
-    border-radius: 4px;
+    border-radius: 2px;
     border: 1px solid #d3cfcf;
     box-sizing: border-box;
     color: #606266;
@@ -1589,7 +1589,7 @@
     display: table-cell;
     position: relative;
     border: 1px solid #dcdfe6;
-    border-radius: 4px;
+    border-radius: 2px;
     padding: 0 20px;
     width: 1px;
     white-space: nowrap
