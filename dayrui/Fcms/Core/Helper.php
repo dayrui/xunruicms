@@ -3507,6 +3507,7 @@ function dr_get_form_post_value($table, $siteid = SITE_ID) {
 
     $rt['form_name'] = $form['name'];
     $rt['form_table'] = $form['table'];
+    $rt['form_cache'] = $form;
 
     // 是否有验证码
     if ($form['setting']['post_code']) {
@@ -3589,6 +3590,8 @@ function dr_get_mform_post_value($mid, $table, $cid, $siteid = SITE_ID) {
 
     $rt['form_name'] = $form['name'];
     $rt['form_table'] = $form['table'];
+    $rt['form_cache'] = $form;
+    $rt['module_cache'] = $module;
 
     // 是否有验证码
     $rt['is_post_code'] = $form['setting']['is_post_code'] ? 0 : 1;
