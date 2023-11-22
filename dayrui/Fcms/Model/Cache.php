@@ -140,7 +140,11 @@ class Cache extends \Phpcmf\Model {
     // 更新全部项目缓存
     public function update_site_cache() {
         if (dr_is_use_module()) {
-            \Phpcmf\Service::M('site', 'module')->update_site_cache();
+            if (is_file(IS_USE_MODULE.'Models/Site.php')) {
+                \Phpcmf\Service::M('site', 'module')->update_site_cache();
+            } else {
+                \Phpcmf\Service::C()->_json(0, dr_lang('请升级内容系统插件'));
+            }
         } else {
             // 按项目更新的缓存
             $cache = [];
@@ -188,7 +192,11 @@ class Cache extends \Phpcmf\Model {
     public function update_cache() {
 
         if (dr_is_use_module()) {
-            \Phpcmf\Service::M('site', 'module')->update_cache();
+            if (is_file(IS_USE_MODULE.'Models/Site.php')) {
+                \Phpcmf\Service::M('site', 'module')->update_cache();
+            } else {
+                \Phpcmf\Service::C()->_json(0, dr_lang('请升级内容系统插件'));
+            }
         } else {
             // 全局缓存
             foreach (['auth', 'email', 'member', 'attachment', 'system'] as $m) {
