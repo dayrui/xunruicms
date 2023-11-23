@@ -33,11 +33,13 @@
                 <label>
                     <select name="data[application][verify]" class="form-control">
                         <option value="0">{dr_lang('不审核')}</option>
+                        {if IS_USE_MEMBER}
                         {table table=admin_verify}
                         <option {if $data['application']['verify'] == $t.id} selected{/if} value="{$t.id}">{dr_lang($t.name)}</option>
                         {empty}
                         <option {if $data['application']['verify'] == 1} selected{/if} value="1">{dr_lang('启用审核')}</option>
                         {/empty}
+                        {/if}
                     </select>
                 </label>
                 <p class="help-block">{dr_lang('发布或修改模块内容时需要通过管理员审核')}</p>
