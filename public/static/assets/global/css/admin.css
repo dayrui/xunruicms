@@ -2417,7 +2417,7 @@ tbody.collapse.in {
 }
 
 .btn-group .btn+.btn,.btn-group .btn+.btn-group,.btn-group .btn-group+.btn,.btn-group .btn-group+.btn-group {
-    margin-left: -1px
+    margin-left: -1px;
 }
 
 .btn-toolbar {
@@ -2595,7 +2595,8 @@ tbody.collapse.in {
 
 .input-group-btn:last-child>.btn,.input-group-btn:last-child>.btn-group {
     z-index: 2;
-    margin-left: -1px
+    margin-left: -1px;
+    margin-top:0px;
 }
 
 .nav {
