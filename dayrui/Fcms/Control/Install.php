@@ -117,7 +117,7 @@ class Install extends \Phpcmf\Common {
             case 2:
                 // 安装信息填写
 
-                $is_demo = is_file(MYPATH.'Config/demo.sql');
+                $is_demo = is_file(MYPATH.'Config/demo.sql') && !is_file(MYPATH.'Config/Install.sql');
 
                 if (IS_AJAX_POST) {
 
@@ -162,7 +162,6 @@ class Install extends \Phpcmf\Common {
                     }
 
                     $data['db_prefix'] = strtolower($data['db_prefix']);
-
 
                     // 存储缓存文件中
                     $size = file_put_contents(WRITEPATH.'install.info', dr_array2string($data));
@@ -219,7 +218,11 @@ $db[\'default\']	= [
 
                         // 导入数据结构
                         if ($page) {
-                            $sql = file_get_contents(CMSPATH.'Config/Install.sql');
+                            if (is_file(MYPATH.'Config/Install.sql')) {
+                                $sql = file_get_contents(MYPATH.'Config/Install.sql');
+                            } else {
+                                $sql = file_get_contents(CMSPATH.'Config/Install.sql');
+                            }
                             $sql = str_replace('{dbprefix}', $data['db_prefix'], $sql);
                             $rows = $this->query_rows($sql, 10);
                             $key = $page - 1;
