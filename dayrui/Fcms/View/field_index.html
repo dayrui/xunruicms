@@ -54,7 +54,7 @@
                 </label>
             </td>
             {/if}
-            <td style="text-align:center"> <input type="text" onblur="dr_ajax_save(this.value, '{dr_url('field/option', ['rname' => $rname, 'rid' => $rid, 'op' => 'save', 'id'=>$t.id])}', 'displayorder')" value="{$t.displayorder}" class="displayorder form-control input-sm input-inline input-mini"> </td>
+            <td style="text-align:center"> {if $t.spacer}{else}<input type="text" onblur="dr_ajax_save(this.value, '{dr_url('field/option', ['rname' => $rname, 'rid' => $rid, 'op' => 'save', 'id'=>$t.id])}', 'displayorder')" value="{$t.displayorder}" class="displayorder form-control input-sm input-inline input-mini"> {/if}</td>
             <td style="text-align: center;font-size: 15px;">{$t.id}</td>
             <td> {$t.spacer}  {dr_lang($t.name)} / {$t.fieldname}</td>
             <td>{$t.ftype}</td>
