@@ -285,51 +285,85 @@ $db[\'default\']	= [
                             // 创建账号
                             $pwd = md5(dr_safe_password($data['password']));
                             $salt = substr(md5(rand(0, 999)), 0, 10);
-                            $this->db->table('member')->insert([
-                                'email' => $data['email'],
-                                'username' => $data['username'],
-                                'password' => md5($pwd.$salt.$pwd),
-                                'salt' => $salt,
-                                'name' => '创始人',
-                                'phone' => '',
-                                'money' => 1000000,
-                                'freeze' => 0,
-                                'spend' => 0,
-                                'score' => 1000000,
-                                'experience' => 1000000,
-                                'regip' => '',
-                                'regtime' => SYS_TIME,
-                                'randcode' => 0,
-                            ]);
-                            $id = $this->db->insertID();
-                            $this->db->table('member_data')->insert([
-                                'id' => $id,
-                                'is_lock' => 0,
-                                'is_admin' => 1,
-                                'is_verify' => 1,
-                                'is_mobile' => 1,
-                                'is_complete' => 1,
-                            ]);
+                            $prefix = \Phpcmf\Service::M()->prefix;
+
+                            if (\Phpcmf\Service::M()->table('member')->get(1)) {
+                                \Phpcmf\Service::M()->table('member')->update(1, [
+                                    'email' => $data['email'],
+                                    'username' => $data['username'],
+                                    'password' => md5($pwd.$salt.$pwd),
+                                    'salt' => $salt,
+                                    'name' => '创始人',
+                                    'phone' => '',
+                                    'money' => 1000000,
+                                    'freeze' => 0,
+                                    'spend' => 0,
+                                    'score' => 1000000,
+                                    'experience' => 1000000,
+                                    'regip' => '',
+                                    'regtime' => SYS_TIME,
+                                    'randcode' => 0,
+                                ]);
+                                $id = 1;
+                            } else {
+                                $this->db->table('member')->insert([
+                                    'email' => $data['email'],
+                                    'username' => $data['username'],
+                                    'password' => md5($pwd.$salt.$pwd),
+                                    'salt' => $salt,
+                                    'name' => '创始人',
+                                    'phone' => '',
+                                    'money' => 1000000,
+                                    'freeze' => 0,
+                                    'spend' => 0,
+                                    'score' => 1000000,
+                                    'experience' => 1000000,
+                                    'regip' => '',
+                                    'regtime' => SYS_TIME,
+                                    'randcode' => 0,
+                                ]);
+                                $id = $this->db->insertID();
+                                $this->db->table('member_data')->insert([
+                                    'id' => $id,
+                                    'is_lock' => 0,
+                                    'is_admin' => 1,
+                                    'is_verify' => 1,
+                                    'is_mobile' => 1,
+                                    'is_complete' => 1,
+                                ]);
+                            }
+
                             // 加入管理员表
-                            $this->db->table('admin')->insert([
-                                'uid' => $id,
-                                'setting' => '',
-                                'usermenu' => '',
-                            ]);
-                            // 加入角色表
-                            $this->db->table('admin_role_index')->insert([
-                                'uid' => $id,
-                                'roleid' => 1,
-                            ]);
+                            if (!\Phpcmf\Service::M()->table('admin')->where('uid', $id)->counts()) {
+                                $this->db->table('admin')->insert([
+                                    'uid' => $id,
+                                    'setting' => '',
+                                    'usermenu' => '',
+                                ]);
+                                // 加入角色表
+                                $this->db->table('admin_role_index')->insert([
+                                    'uid' => $id,
+                                    'roleid' => 1,
+                                ]);
+                            }
+
                             // 创建站点
-                            $this->db->table('site')->replace([
-                                'id' => 1,
-                                'name' => $data['name'],
-                                'domain' => DOMAIN_NAME,
-                                'setting' => '',
-                                'disabled' => 0,
-                                'displayorder' => 0,
-                            ]);
+                            if (\Phpcmf\Service::M()->table('site')->get(1)) {
+                                \Phpcmf\Service::M()->table('site')->update(1, [
+                                    'name' => $data['name'],
+                                    'domain' => DOMAIN_NAME,
+                                ]);
+                            } else {
+                                $this->db->table('site')->replace([
+                                    'id' => 1,
+                                    'name' => $data['name'],
+                                    'domain' => DOMAIN_NAME,
+                                    'setting' => '',
+                                    'disabled' => 0,
+                                    'displayorder' => 0,
+                                ]);
+                            }
+
                             \Phpcmf\Service::M()->site = $this->site = [ 1 => 1 ];
 
                             $ssl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == '443') ? 1 : 0;;
@@ -377,14 +411,19 @@ $db[\'default\']	= [
                                 }
                             }
 
-                            // 执行安装程序
-                            $sql = file_get_contents(MYPATH.'Config/Install.sql');
-                            $sql = str_replace('{dbprefix}', $data['db_prefix'], $sql);
+                            // 执行安装程序废除
+                            /*
+                            $sql = '';
+                            if (is_file(MYPATH.'Config/Install.sql')) {
+                                $sql = file_get_contents(MYPATH.'Config/Install.sql');
+                                $sql = str_replace('{dbprefix}', $data['db_prefix'], $sql);
+                            }
+
                             if (is_file(MYPATH.'Config/Install_site.sql')) {
                                 $s = file_get_contents(MYPATH.'Config/Install_site.sql');
                                 $sql.= PHP_EOL.str_replace('{dbprefix}', $data['db_prefix'].'1_', $s);
                             }
-                            $this->query($sql);
+                            $this->query($sql);*/
 
                             // 运行自定义安装脚本
                             if (is_file(MYPATH.'Config/Install.php')) {

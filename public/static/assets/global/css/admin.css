@@ -5777,8 +5777,8 @@ li [class*=" fa-"].icon-large,li [class*=" glyphicon-"].icon-large,li [class*=" 
     color: #fff;
     text-shadow: none!important;
     text-align: center;
-    padding: .325rem .5rem;
-    font-size: .85rem;
+    padding: .5rem .5rem;
+    font-size: .9rem;
     font-weight: 600;
     line-height: 1;
     white-space: nowrap;
