@@ -810,6 +810,8 @@ class Api extends \Phpcmf\Common {
             $this->_json(0, dr_lang('目录为空'));
         } elseif (strpos($v, ' ') === 0) {
             $this->_json(0, dr_lang('不能用空格开头'));
+        } elseif (strpos($v, '..') !== false) {
+            $this->_json(0, dr_lang('不能出现..符号'));
         }
 		
         $path = dr_get_dir_path($v);
@@ -890,6 +892,8 @@ class Api extends \Phpcmf\Common {
             $this->_json(0, dr_lang('目录不能包含/符号'));
         } elseif (!function_exists('stream_context_create')) {
             $this->_json(0, '函数没有被启用：stream_context_create');
+        } elseif (strpos($v, '..') !== false) {
+            $this->_json(0, dr_lang('不能出现..符号'));
         }
 
         // 生成手机目录
@@ -923,7 +927,10 @@ class Api extends \Phpcmf\Common {
             $this->_json(0, dr_lang('不能用空格开头'));
         } elseif (strpos($v, 'config') !== false) {
             $this->_json(0, dr_lang('不能包含config目录'));
+        } elseif (strpos($v, '..') !== false) {
+            $this->_json(0, dr_lang('不能出现..符号'));
         }
+
         $path = dr_get_dir_path($v);
         if (is_dir($path)) {
             $this->_json(1, dr_lang('目录正常'));
