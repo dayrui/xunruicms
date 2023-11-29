@@ -1086,12 +1086,15 @@ class Member extends \Phpcmf\Model {
                 'config' => [],
                 'pay' => [],
             ];
-            $result = $this->db->table('member_setting')->get()->getResultArray();
-            if ($result) {
-                foreach ($result as $t) {
-                    $cache[$t['name']] = dr_string2array($t['value']);
+            if ($this->db->tableExists($this->dbprefix('member_setting'))) {
+                $result = $this->db->table('member_setting')->get()->getResultArray();
+                if ($result) {
+                    foreach ($result as $t) {
+                        $cache[$t['name']] = dr_string2array($t['value']);
+                    }
                 }
             }
+
             \Phpcmf\Service::L('cache')->set_file('member', $cache);
         } else {
             \Phpcmf\Service::M('member', 'member')->member_cache();
