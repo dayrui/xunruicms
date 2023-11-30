@@ -282,186 +282,189 @@ $db[\'default\']	= [
                             // 出现错误了
                             $error = $errorlog;
                         } else {
-                            // 创建账号
-                            $pwd = md5(dr_safe_password($data['password']));
-                            $salt = substr(md5(rand(0, 999)), 0, 10);
-                            $prefix = \Phpcmf\Service::M()->prefix;
-
-                            if (\Phpcmf\Service::M()->table('member')->get(1)) {
-                                \Phpcmf\Service::M()->table('member')->update(1, [
-                                    'email' => $data['email'],
-                                    'username' => $data['username'],
-                                    'password' => md5($pwd.$salt.$pwd),
-                                    'salt' => $salt,
-                                    'name' => '创始人',
-                                    'phone' => '',
-                                    'money' => 1000000,
-                                    'freeze' => 0,
-                                    'spend' => 0,
-                                    'score' => 1000000,
-                                    'experience' => 1000000,
-                                    'regip' => '',
-                                    'regtime' => SYS_TIME,
-                                    'randcode' => 0,
-                                ]);
-                                $id = 1;
+                            if (!\Phpcmf\Service::M()->is_table_exists('member')) {
+                                $error = '数据表结构不完整，检查安装包sql文件是否合理';
                             } else {
-                                $this->db->table('member')->insert([
-                                    'email' => $data['email'],
-                                    'username' => $data['username'],
-                                    'password' => md5($pwd.$salt.$pwd),
-                                    'salt' => $salt,
-                                    'name' => '创始人',
-                                    'phone' => '',
-                                    'money' => 1000000,
-                                    'freeze' => 0,
-                                    'spend' => 0,
-                                    'score' => 1000000,
-                                    'experience' => 1000000,
-                                    'regip' => '',
-                                    'regtime' => SYS_TIME,
-                                    'randcode' => 0,
-                                ]);
-                                $id = $this->db->insertID();
-                                $this->db->table('member_data')->insert([
-                                    'id' => $id,
-                                    'is_lock' => 0,
-                                    'is_admin' => 1,
-                                    'is_verify' => 1,
-                                    'is_mobile' => 1,
-                                    'is_complete' => 1,
-                                ]);
-                            }
-
-                            // 加入管理员表
-                            if (!\Phpcmf\Service::M()->table('admin')->where('uid', $id)->counts()) {
-                                $this->db->table('admin')->insert([
-                                    'uid' => $id,
-                                    'setting' => '',
-                                    'usermenu' => '',
-                                ]);
-                                // 加入角色表
-                                $this->db->table('admin_role_index')->insert([
-                                    'uid' => $id,
-                                    'roleid' => 1,
-                                ]);
-                            }
-
-                            // 创建站点
-                            if (\Phpcmf\Service::M()->table('site')->get(1)) {
-                                \Phpcmf\Service::M()->table('site')->update(1, [
-                                    'name' => $data['name'],
-                                    'domain' => DOMAIN_NAME,
-                                ]);
-                            } else {
-                                $this->db->table('site')->replace([
-                                    'id' => 1,
-                                    'name' => $data['name'],
-                                    'domain' => DOMAIN_NAME,
-                                    'setting' => '',
-                                    'disabled' => 0,
-                                    'displayorder' => 0,
-                                ]);
-                            }
-
-                            \Phpcmf\Service::M()->site = $this->site = [ 1 => 1 ];
-
-                            $ssl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == '443') ? 1 : 0;;
-                            if (isset($_GET['protocol']) && trim($_GET['protocol'], ':') == 'https') {
-                                $ssl = 1;
-                            }
-
-                            // 写配置文件
-                            $sys = [
-                                'SYS_DEBUG'                     => '1',
-                                'SYS_ADMIN_CODE'                => '0',
-                                'SYS_ADMIN_LOG'                 => '0',
-                                'SYS_AUTO_FORM'                 => '0',
-                                'SYS_ADMIN_PAGESIZE'            => '10',
-                                'SYS_SMS_IMG_CODE'              => '0',
-                                'SYS_NOT_ADMIN_CACHE'           => '0',
-                                'SYS_URL_ONLY'                  => '0',
-                                'SYS_THEME_ROOT_PATH'           => '1',
-                                'SYS_URL_REL'                   => '1',
-                                'SYS_CRON_AUTH'                 => '0',
-                                'SYS_CSRF'                      => '0',
-                                'SYS_CSRF_TIME'                 => '0',
-                                'SYS_301'                       => '1',
-                                'SYS_NOT_UPDATE'                => '1',
-                                'SYS_KEY'                       => 'PHPCMF'.md5($data['name'].rand(1, 999999)), //安全密匙
-                                'SYS_HTTPS'                     => $ssl,
-                                'SYS_ATTACHMENT_DB'             => '',
-                                'SYS_ATTACHMENT_PATH'           => '',
-                                'SYS_ATTACHMENT_URL'            => '',
-                                'SYS_API_TOKEN'                 => '',
-                            ];
-                            if (is_file(MYPATH.'Config/License.php')) {
-                                $ls = require MYPATH.'Config/License.php';
-                                if (isset($ls['oem']) && $ls['oem']) {
-                                    $sys['SYS_DEBUG'] = 0;
+                                // 创建账号
+                                $pwd = md5(dr_safe_password($data['password']));
+                                $salt = substr(md5(rand(0, 999)), 0, 10);
+                                $prefix = \Phpcmf\Service::M()->prefix;
+                                if (\Phpcmf\Service::M()->table('member')->get(1)) {
+                                    \Phpcmf\Service::M()->table('member')->update(1, [
+                                        'email' => $data['email'],
+                                        'username' => $data['username'],
+                                        'password' => md5($pwd.$salt.$pwd),
+                                        'salt' => $salt,
+                                        'name' => '创始人',
+                                        'phone' => '',
+                                        'money' => 1000000,
+                                        'freeze' => 0,
+                                        'spend' => 0,
+                                        'score' => 1000000,
+                                        'experience' => 1000000,
+                                        'regip' => '',
+                                        'regtime' => SYS_TIME,
+                                        'randcode' => 0,
+                                    ]);
+                                    $id = 1;
+                                } else {
+                                    $this->db->table('member')->insert([
+                                        'email' => $data['email'],
+                                        'username' => $data['username'],
+                                        'password' => md5($pwd.$salt.$pwd),
+                                        'salt' => $salt,
+                                        'name' => '创始人',
+                                        'phone' => '',
+                                        'money' => 1000000,
+                                        'freeze' => 0,
+                                        'spend' => 0,
+                                        'score' => 1000000,
+                                        'experience' => 1000000,
+                                        'regip' => '',
+                                        'regtime' => SYS_TIME,
+                                        'randcode' => 0,
+                                    ]);
+                                    $id = $this->db->insertID();
+                                    $this->db->table('member_data')->insert([
+                                        'id' => $id,
+                                        'is_lock' => 0,
+                                        'is_admin' => 1,
+                                        'is_verify' => 1,
+                                        'is_mobile' => 1,
+                                        'is_complete' => 1,
+                                    ]);
                                 }
-                            }
-                            \Phpcmf\Service::M('System')->save_config($sys, $sys);
 
-                            // 删除app的install.lock
-                            $local = \Phpcmf\Service::Apps();
-                            foreach ($local as $dir => $path) {
-                                if (is_file($path.'install.lock')) {
-                                    unlink($path.'install.lock');
+                                // 加入管理员表
+                                if (!\Phpcmf\Service::M()->table('admin')->where('uid', $id)->counts()) {
+                                    $this->db->table('admin')->insert([
+                                        'uid' => $id,
+                                        'setting' => '',
+                                        'usermenu' => '',
+                                    ]);
+                                    // 加入角色表
+                                    $this->db->table('admin_role_index')->insert([
+                                        'uid' => $id,
+                                        'roleid' => 1,
+                                    ]);
                                 }
-                            }
 
-                            // 执行安装程序废除
-                            /*
-                            $sql = '';
-                            if (is_file(MYPATH.'Config/Install.sql')) {
-                                $sql = file_get_contents(MYPATH.'Config/Install.sql');
-                                $sql = str_replace('{dbprefix}', $data['db_prefix'], $sql);
-                            }
-
-                            if (is_file(MYPATH.'Config/Install_site.sql')) {
-                                $s = file_get_contents(MYPATH.'Config/Install_site.sql');
-                                $sql.= PHP_EOL.str_replace('{dbprefix}', $data['db_prefix'].'1_', $s);
-                            }
-                            $this->query($sql);*/
-
-                            // 运行自定义安装脚本
-                            if (is_file(MYPATH.'Config/Install.php')) {
-                                require MYPATH.'Config/Install.php';
-                            }
-
-                            // 运行自定义安装脚本②
-                            if (is_file(MYPATH.'Config/Install_tpl.php')) {
-                                require MYPATH.'Config/Install_tpl.php';
-                            }
-
-                            $errorlog = file_get_contents(WRITEPATH.'install.error');
-                            if ($errorlog && strlen($errorlog) > 10) {
-                                // 出现错误了
-                                $error = $errorlog;
-                            } else {
-                                // 安装完成
-                                file_put_contents($this->lock, time());
-                                file_put_contents(WRITEPATH.'update.txt', time());
-                                file_put_contents(WRITEPATH.'install.test', time());
-                                unlink(WRITEPATH.'install.info');
-                                unlink(WRITEPATH.'install.error');
-                                // 重命名后台入口
-                                $admin = 'admin'.substr(md5(SYS_TIME.rand(1, 999999)), 0, 12);
-                                $afile = WEBPATH.$admin.'.php';
-                                if (is_file(WEBPATH.'admin.php')) {
-                                    copy(WEBPATH.'admin.php', $afile);
+                                // 创建站点
+                                if (\Phpcmf\Service::M()->table('site')->get(1)) {
+                                    \Phpcmf\Service::M()->table('site')->update(1, [
+                                        'name' => $data['name'],
+                                        'domain' => DOMAIN_NAME,
+                                    ]);
+                                } else {
+                                    $this->db->table('site')->replace([
+                                        'id' => 1,
+                                        'name' => $data['name'],
+                                        'domain' => DOMAIN_NAME,
+                                        'setting' => '',
+                                        'disabled' => 0,
+                                        'displayorder' => 0,
+                                    ]);
                                 }
-                                if (!is_file($afile)) {
-                                    file_put_contents($afile, "<?php
+
+                                \Phpcmf\Service::M()->site = $this->site = [ 1 => 1 ];
+
+                                $ssl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == '443') ? 1 : 0;;
+                                if (isset($_GET['protocol']) && trim($_GET['protocol'], ':') == 'https') {
+                                    $ssl = 1;
+                                }
+
+                                // 写配置文件
+                                $sys = [
+                                    'SYS_DEBUG'                     => '1',
+                                    'SYS_ADMIN_CODE'                => '0',
+                                    'SYS_ADMIN_LOG'                 => '0',
+                                    'SYS_AUTO_FORM'                 => '0',
+                                    'SYS_ADMIN_PAGESIZE'            => '10',
+                                    'SYS_SMS_IMG_CODE'              => '0',
+                                    'SYS_NOT_ADMIN_CACHE'           => '0',
+                                    'SYS_URL_ONLY'                  => '0',
+                                    'SYS_THEME_ROOT_PATH'           => '1',
+                                    'SYS_URL_REL'                   => '1',
+                                    'SYS_CRON_AUTH'                 => '0',
+                                    'SYS_CSRF'                      => '0',
+                                    'SYS_CSRF_TIME'                 => '0',
+                                    'SYS_301'                       => '1',
+                                    'SYS_NOT_UPDATE'                => '1',
+                                    'SYS_KEY'                       => 'PHPCMF'.md5($data['name'].rand(1, 999999)), //安全密匙
+                                    'SYS_HTTPS'                     => $ssl,
+                                    'SYS_ATTACHMENT_DB'             => '',
+                                    'SYS_ATTACHMENT_PATH'           => '',
+                                    'SYS_ATTACHMENT_URL'            => '',
+                                    'SYS_API_TOKEN'                 => '',
+                                ];
+                                if (is_file(MYPATH.'Config/License.php')) {
+                                    $ls = require MYPATH.'Config/License.php';
+                                    if (isset($ls['oem']) && $ls['oem']) {
+                                        $sys['SYS_DEBUG'] = 0;
+                                    }
+                                }
+                                \Phpcmf\Service::M('System')->save_config($sys, $sys);
+
+                                // 删除app的install.lock
+                                $local = \Phpcmf\Service::Apps();
+                                foreach ($local as $dir => $path) {
+                                    if (is_file($path.'install.lock')) {
+                                        unlink($path.'install.lock');
+                                    }
+                                }
+
+                                // 执行安装程序废除
+                                /*
+                                $sql = '';
+                                if (is_file(MYPATH.'Config/Install.sql')) {
+                                    $sql = file_get_contents(MYPATH.'Config/Install.sql');
+                                    $sql = str_replace('{dbprefix}', $data['db_prefix'], $sql);
+                                }
+
+                                if (is_file(MYPATH.'Config/Install_site.sql')) {
+                                    $s = file_get_contents(MYPATH.'Config/Install_site.sql');
+                                    $sql.= PHP_EOL.str_replace('{dbprefix}', $data['db_prefix'].'1_', $s);
+                                }
+                                $this->query($sql);*/
+
+                                // 运行自定义安装脚本
+                                if (is_file(MYPATH.'Config/Install.php')) {
+                                    require MYPATH.'Config/Install.php';
+                                }
+
+                                // 运行自定义安装脚本②
+                                if (is_file(MYPATH.'Config/Install_tpl.php')) {
+                                    require MYPATH.'Config/Install_tpl.php';
+                                }
+
+                                $errorlog = file_get_contents(WRITEPATH.'install.error');
+                                if ($errorlog && strlen($errorlog) > 10) {
+                                    // 出现错误了
+                                    $error = $errorlog;
+                                } else {
+                                    // 安装完成
+                                    file_put_contents($this->lock, time());
+                                    file_put_contents(WRITEPATH.'update.txt', time());
+                                    file_put_contents(WRITEPATH.'install.test', time());
+                                    unlink(WRITEPATH.'install.info');
+                                    unlink(WRITEPATH.'install.error');
+                                    // 重命名后台入口
+                                    $admin = 'admin'.substr(md5(SYS_TIME.rand(1, 999999)), 0, 12);
+                                    $afile = WEBPATH.$admin.'.php';
+                                    if (is_file(WEBPATH.'admin.php')) {
+                                        copy(WEBPATH.'admin.php', $afile);
+                                    }
+                                    if (!is_file($afile)) {
+                                        file_put_contents($afile, "<?php
 define('IS_ADMIN', TRUE);
 define('SELF', pathinfo(__FILE__, PATHINFO_BASENAME));
 require('index.php');");
-                                }
-                                if (is_file($afile)) {
-                                    unlink(WEBPATH.'admin.php');
-                                } else {
-                                    $admin = 'admin';
+                                    }
+                                    if (is_file($afile)) {
+                                        unlink(WEBPATH.'admin.php');
+                                    } else {
+                                        $admin = 'admin';
+                                    }
                                 }
                             }
                         }

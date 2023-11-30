@@ -134,7 +134,6 @@ class Cache extends \Phpcmf\Model {
                require $path.'Config/Update.php';
             }
         }
-
     }
 
     // 更新全部项目缓存
@@ -259,8 +258,6 @@ class Cache extends \Phpcmf\Model {
                 file_put_contents($p.'/.htaccess', $cache_index);
             }
         }
-
-
 
         // 删除缓存保留24小时内的文件
         $path = [

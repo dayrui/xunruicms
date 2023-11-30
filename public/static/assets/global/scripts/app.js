@@ -1724,6 +1724,26 @@ function dr_url_module_search_page() {
     });
 }
 
+function dr_sync_cache(page) {
+    $.ajax({
+        type: "GET",
+        dataType: "json",
+        url: admin_file+"?c=api&m=cache_sync&page="+page,
+        success: function (json) {
+            console.log(json.msg);
+            if (json.code == 0) {
+            } else {
+                if (json.data == 0) {
+                } else {
+                    dr_sync_cache(json.data);
+                }
+            }
+        },
+        error: function(HttpRequest, ajax, thrownError) {
+        }
+    });
+}
+
 function dr_help(id) {
     if (is_oemcms) {
         dr_tips(1, '请联系开发商：'+is_oemcms);

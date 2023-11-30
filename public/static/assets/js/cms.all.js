@@ -897,10 +897,13 @@ function dr_post_submit(url, form, time, go) {
                     }
                     setTimeout("window.location.href = '"+gourl+"'", time);
                 }
+                // 判断是否来自后台
+                if (typeof admin_file != "undefined" && admin_file) {
+                    dr_sync_cache(0); // 自动更新缓存
+                }
             } else {
                 if (json.data.button) {
                     layer.alert(json.msg, {
-                        shade: 0,
                         shade: 0,
                         title: "",
                         btn: [json.data.button.name],

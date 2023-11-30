@@ -260,7 +260,6 @@ class Cloud extends \Phpcmf\Common {
 
         $rt = \Phpcmf\Service::M('App')->uninstall($dir);
 
-        \Phpcmf\Service::M('cache')->sync_cache('');
         $this->_json($rt['code'], $rt['msg']);
     }
 

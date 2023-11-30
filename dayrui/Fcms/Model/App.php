@@ -164,6 +164,9 @@ class App extends \Phpcmf\Model {
             }
             \Phpcmf\Service::M('module')->uninstall($dir, $config, 1);
         } else {
+            // 删除菜单
+            \Phpcmf\Service::M('Menu')->delete_app($dir);
+
             // 执行sql语句
             if (is_file($path.'Config/Uninstall.sql')) {
                 $rt = $this->query_all(file_get_contents($path.'Config/Uninstall.sql'));
@@ -189,9 +192,6 @@ class App extends \Phpcmf\Model {
             }
         }
 
-
-        // 删除菜单
-        \Phpcmf\Service::M('Menu')->delete_app($dir);
         @unlink($path.'install.lock');
 
         return dr_return_data(1, dr_lang('卸载成功'));

@@ -1,4 +1,5 @@
 <?php namespace Phpcmf\Control\Admin;
+
 /**
  * {{www.xunruicms.com}}
  * {{迅睿内容管理框架系统}}
@@ -423,6 +424,20 @@ class Api extends \Phpcmf\Common {
         $all = intval($_GET['all']);
         \Phpcmf\Service::M('cache')->update_data_cache($all);
         $this->_json(1, dr_lang('前台数据缓存已被更新'));
+	}
+
+	// 同步更新缓存
+	public function cache_sync() {
+
+        if (SYS_CACHE_CLEAR) {
+            // 自动缓存
+            \Phpcmf\Service::M('cache')->update_site_cache();
+        } else {
+            // 手动模式
+            \Phpcmf\Service::M('cache')->update_data_cache();
+        }
+
+        $this->_json(1, dr_lang('更新完成'));
 	}
 
 	// 执行更新缓存
