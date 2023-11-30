@@ -357,9 +357,6 @@ return [
         if (!\Phpcmf\Service::L('file')->unzip($file, $cmspath)) {
             $this->_json(0, '本站：文件解压失败');
         }
-        if (!IS_DEV) {
-            unlink($file);
-        }
 
         // 查询插件目录
         $is_app = $is_module_app = $is_tpl = 0;
@@ -489,6 +486,7 @@ return [
 
         // 开发者模式下保留目录
         if (!IS_DEV) {
+            unlink($file);
             dr_dir_delete($cmspath, 1);
         }
 
