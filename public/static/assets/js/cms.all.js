@@ -914,10 +914,10 @@ function dr_post_submit(url, form, time, go) {
                 } else {
                     dr_cmf_tips(0, json.msg, json.data.time);
                 }
-                $('.fc-code img').click();
+                $('#'+form+' .fc-code img').click();
                 if (json.data.field) {
-                    $('#dr_row_'+json.data.field).addClass('has-error');
-                    $('#dr_'+json.data.field).focus();
+                    $('#'+form+' #dr_row_'+json.data.field).addClass('has-error');
+                    $('#'+form+' #dr_'+json.data.field).focus();
                 }
             }
         },
