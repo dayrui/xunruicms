@@ -662,11 +662,9 @@ Page sidebar
     margin-right: -100%; }
 
 /* Page Sidebar */
-.page-sidebar,
-.page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover {
-    /* Default sidebar menu */
-    /* Compact sidebar menu */
-    /* Compact hoverable sidebar menu */ }
+.page-sidebar {
+    background: #40aae3;
+}
 .page-sidebar.navbar-collapse,
 .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover.navbar-collapse {
     padding: 0;
