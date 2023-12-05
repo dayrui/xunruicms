@@ -850,7 +850,7 @@ class View {
                 if ($var != 'cache' && $system[$var]) {
                     continue; // 防止重复记录
                 }
-                $system[$var] = dr_safe_replace($val);
+                $system[$var] = in_array($var, ['urlrule']) ? $val : dr_safe_replace($val);
             } else {
                 if (preg_match('/^([A-Z_]+)(.+)/', $var, $match)) { // 筛选修饰符参数
                     $_adj = '';
