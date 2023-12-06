@@ -1,3 +1,8 @@
+/**
+ * @author zhixin wen <wenzhixin2010@gmail.com>
+ * version: 1.22.1
+ * https://github.com/wenzhixin/bootstrap-table/
+ */
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('jquery')) :
         typeof define === 'function' && define.amd ? define(['jquery'], factory) :
