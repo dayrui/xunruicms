@@ -749,7 +749,7 @@ abstract class Common extends \Frame\Controller {
 
         \Phpcmf\Hooks::trigger('cms_404', $msg);
 
-        if (IS_API_HTTP) {
+        if (IS_API_HTTP || defined('SC_HTML_FILE')) {
             $this->_json(0, $msg);
         }
 
