@@ -1,4 +1,3 @@
-
 (function($) {
     $.fn.extend({
         insertContent: function(myValue, t) {
