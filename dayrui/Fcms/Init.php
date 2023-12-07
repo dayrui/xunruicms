@@ -366,6 +366,7 @@ if (is_cli()) {
         $routes = [];
         $routes['index\.html(.*)'] = 'index.php?c=home&m=index';
         $routes['404\.html(.*)'] = 'index.php?&c=home&m=s404&uri='.CMSURI;
+        $routes['cms-license(.*)'] = 'index.php?s=api&c=rewrite&m=license';
         $routes['rewrite-test.html(.*)'] = 'index.php?s=api&c=rewrite&m=test';
         if (is_file(WEBPATH.'config/rewrite.php')) {
             $my = require WEBPATH.'config/rewrite.php';

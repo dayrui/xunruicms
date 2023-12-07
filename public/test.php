@@ -24,7 +24,7 @@ if (!function_exists('declare')) {
 
 // 判断环境
 $min = '7.4.0';
-$max = '8.3.0';
+$max = '8.4.0';
 
 // 判断目录
 if (is_file(WEBPATH.'config/api.php')) {
