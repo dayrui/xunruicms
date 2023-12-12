@@ -42,6 +42,9 @@ class Editor extends \Phpcmf\Library\A_Field {
         if (!isset($option['image_ext']) || !$option['image_ext']) {
             $option['image_ext'] = 'jpg,gif,png,webp,jpeg';
         }
+        if (!isset($option['imagecut_ext']) || !$option['imagecut_ext']) {
+            $option['imagecut_ext'] = '';
+        }
         if (!isset($option['image_size']) || !$option['image_size']) {
             $option['image_size'] = 10;
         }
@@ -132,6 +135,13 @@ class Editor extends \Phpcmf\Library\A_Field {
                 </div>
 				'.$wm.
             '
+                  <div class="form-group">
+                    <label class="col-md-2 control-label">'.dr_lang('图片粘贴扩展名').'</label>
+                    <div class="col-md-9">
+                        <label><input type="text" class="form-control" name="data[setting][option][imagecut_ext]" value="'.$option['imagecut_ext'].'"></label>
+                        <span class="help-block">'.dr_lang('填写用于图片的扩展名格式，只能填写单个扩展名，用于截图粘贴时储存的扩展名').'</span>
+                    </div>
+                </div>
                   <div class="form-group">
                     <label class="col-md-2 control-label">'.dr_lang('图片上传扩展名').'</label>
                     <div class="col-md-9">
@@ -242,7 +252,7 @@ class Editor extends \Phpcmf\Library\A_Field {
                             continue;
                         }
                         $rt = \Phpcmf\Service::L('upload')->base64_image([
-                            'ext' => $ext,
+                            'ext' => isset($field['setting']['option']['imagecut_ext']) && $field['setting']['option']['imagecut_ext'] ? $field['setting']['option']['imagecut_ext'] : $ext,
                             'content' => $content,
                             'watermark' => \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'watermark', 'ueditor') || $field['setting']['option']['watermark'] ? 1 : 0,
                             'attachment' => \Phpcmf\Service::M('Attachment')->get_attach_info(intval($field['setting']['option']['attachment']), $field['setting']['option']['image_reduce']),
