@@ -13825,3 +13825,7 @@ td>.mt-table.mt-checkbox-single,th>.mt-table.mt-checkbox-single {
     max-width: 40px!important;
     overflow: visible!important
 }
+.fc-sku-table thead th {
+    position:sticky;
+    top:0;
+}
