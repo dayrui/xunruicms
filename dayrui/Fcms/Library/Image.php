@@ -454,8 +454,11 @@ class Image {
         {
             $this->thumb_marker = '';
         }
+        $xp = $this->explode_name($this->dest_image);
+        $filename = $xp['name'];
+        $file_ext = $xp['ext'];
         $this->full_src_path = $this->source_folder.$this->source_image;
-        $this->full_dst_path = $this->new_image;
+        $this->full_dst_path = $this->dest_folder.$filename.$this->thumb_marker.$file_ext;
         /* Should we maintain image proportions?
          *
          * When creating thumbs or copies, the target width/height
@@ -1284,7 +1287,12 @@ class Image {
     public function image_save_gd($resource)
     {
         if (!$this->full_dst_path) {
-            return;
+            if ($this->source_image) {
+                $this->full_dst_path = $this->source_image;
+            } else {
+                $this->error_msg = dr_lang('full_dst_path值为空，程序逻辑错误');
+                return;
+            }
         }
         if ($this->image_type != 18 && strpos($this->full_dst_path, '.webp')) {
             $this->image_type = 18;
@@ -1573,7 +1581,7 @@ class Image {
      */
     public function set_error($msg)
     {
-        return $msg[0] . ' - ' . $msg[1];
+        return is_array($msg) ? implode(' - ', $msg) : $msg;
     }
     // --------------------------------------------------------------------
     /**
@@ -1585,7 +1593,7 @@ class Image {
      */
     public function display_errors($open = '<p>', $close = '</p>')
     {
-        return (dr_count($this->error_msg) > 0) ? $open.implode($close.$open, $this->error_msg).$close : '';
+        return $this->error_msg;
     }
 
     public function get_file($id) {
