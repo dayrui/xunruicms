@@ -255,16 +255,24 @@ class Notice {
     // 获取通知模板内容
     protected function _get_tpl_content($siteid, $name, $type, $data) {
 
+        /*
         if ($siteid > 1) {
             $my = \Phpcmf\Service::L('html')->get_webpath($siteid, 'site', 'config/notice/'.$type.'/'.$name.'.html');
             $my = is_file($my) ? file_get_contents($my) : '';
         } else {
             $my = '';
+        }*/
+
+        $my = \Phpcmf\Service::L('html')->get_webpath($siteid, 'site', 'config/notice/'.$type.'/'.$name.'.html');
+        if (is_file($my)) {
+            $content_code = file_get_contents($my);
+        } else {
+            $my = CONFIGPATH.'notice/'.$type.'/'.$name.'.html';
+            $content_code = file_get_contents($my);
         }
 
-        $content_code = $my ? $my : file_get_contents(CONFIGPATH.'notice/'.$type.'/'.$name.'.html');
         if (!$content_code) {
-            return dr_return_data(0, '模板不存在【config/notice/'.$type.'/'.$name.'.html】');
+            return dr_return_data(0, '模板不存在【'.$my.'】');
         }
 
         // 替换多站点变量

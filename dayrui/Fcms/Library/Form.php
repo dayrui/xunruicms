@@ -339,20 +339,20 @@ class Form {
 
         $data = trim((string)\Phpcmf\Service::L('input')->post($id));
         if (!$data) {
-            IS_DEV && log_message('debug', '图片验证码验证失败：没有输入验证码');
+            IS_DEV && log_message('debug', '图片验证码验证失败：没有输入验证码'.dr_safe_replace(\Phpcmf\Service::L('input')->ip_address().':'.\Phpcmf\Service::L('input')->get_user_agent()));
             return false;
         }
 
         $code = \Phpcmf\Service::L('cache')->get_auth_data('web-captcha-'.USER_HTTP_CODE, SITE_ID, 300);
         if (!$code) {
-            IS_DEV && log_message('error', '图片验证码未生成（'.USER_HTTP_CODE.'）');
+            IS_DEV && log_message('error', '图片验证码未生成（'.USER_HTTP_CODE.'）'.dr_safe_replace(\Phpcmf\Service::L('input')->ip_address().':'.\Phpcmf\Service::L('input')->get_user_agent()));
             return false;
         } elseif (strtolower($data) == strtolower($code)) {
-            \Phpcmf\Service::L('cache')->del_auth_data('web-captcha', SITE_ID);
+            \Phpcmf\Service::L('cache')->del_auth_data('web-captcha-'.USER_HTTP_CODE, SITE_ID);
             return true;
         }
 
-        IS_DEV && log_message('debug', '图片验证码验证失败：你输入的是（'.$data.'），正确的是（'.$code.'）');
+        IS_DEV && log_message('debug', '图片验证码验证失败：你输入的是（'.$data.'），正确的是（'.$code.'）'.dr_safe_replace(\Phpcmf\Service::L('input')->ip_address().':'.\Phpcmf\Service::L('input')->get_user_agent()));
 
         return false;
     }
@@ -375,13 +375,13 @@ class Form {
 
         $code = \Phpcmf\Service::L('cache')->get_auth_data('web-captcha-'.USER_HTTP_CODE, SITE_ID, 300);
         if (!$code) {
-            IS_DEV && log_message('error', '图片验证码未生成（'.USER_HTTP_CODE.'）');
+            IS_DEV && log_message('error', '图片验证码未生成（'.USER_HTTP_CODE.'）'.dr_safe_replace(\Phpcmf\Service::L('input')->ip_address().':'.\Phpcmf\Service::L('input')->get_user_agent()));
             return false;
         } elseif (strtolower($data) == strtolower($code)) {
             return true;
         }
 
-        IS_DEV && log_message('debug', '图片验证码验证失败：你输入的是（'.$data.'），正确的是（'.$code.'）');
+        IS_DEV && log_message('debug', '图片验证码验证失败：你输入的是（'.$data.'），正确的是（'.$code.'）'.dr_safe_replace(\Phpcmf\Service::L('input')->ip_address().':'.\Phpcmf\Service::L('input')->get_user_agent()));
 
         return false;
     }
