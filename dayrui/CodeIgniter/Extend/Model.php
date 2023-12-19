@@ -26,7 +26,11 @@ class Model {
         }
 
         $dbConfig = config(\Config\Database::class);
-        self::$dbs[$name] = \Config\Database::connect($dbConfig->get_group($name),  false);
+        $dbName = $dbConfig->get_group($name);
+        if ($dbName != $name) {
+            log_message('error', '数据源（'.$name.'）加载失败');
+        }
+        self::$dbs[$name] = \Config\Database::connect($dbName,  false);
 
         return [self::$dbs[$name], self::$dbs[$name]->DBPrefix];
     }
