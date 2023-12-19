@@ -314,7 +314,7 @@ abstract class Common extends \Frame\Controller {
         if (defined('IS_API_HTTP_CODE') && IS_API_HTTP_CODE) {
             define('USER_HTTP_CODE', IS_API_HTTP_CODE);
         } else {
-            define('USER_HTTP_CODE', md5($this->uid.\Phpcmf\Service::L('input')->ip_address().\Phpcmf\Service::L('input')->get_user_agent()));
+            !defined('USER_HTTP_CODE') && define('USER_HTTP_CODE', md5($this->uid.\Phpcmf\Service::L('input')->ip_address().\Phpcmf\Service::L('input')->get_user_agent()));
         }
 
         if (IS_USE_MODULE && is_file(IS_USE_MODULE.'Config/Run.php')) {
