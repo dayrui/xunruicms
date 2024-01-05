@@ -4274,7 +4274,7 @@ if (!function_exists('dr_is_call_function')) {
             or strpos($func, 'cloud_') === 0) {
             return true;
         } else {
-            log_message('error', '回调函数【'.$func.'】必须以dr_或者my_开头');
+            log_message('error', '回调函数【'.$func.'】必须以dr_或者my_开头!');
         }
 
         return false;

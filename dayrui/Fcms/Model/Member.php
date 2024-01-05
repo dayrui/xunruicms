@@ -811,7 +811,7 @@ class Member extends \Phpcmf\Model {
 
         $file = WRITEPATH.'config/sms.php';
         if (!is_file($file)) {
-            log_message('error', '短信接口配置文件不存在');
+            log_message('error', '短信接口配置文件（'.$file.'）不存在');
             return dr_return_data(0, dr_lang('接口配置文件不存在'));
         }
 

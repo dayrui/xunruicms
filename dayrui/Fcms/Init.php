@@ -25,7 +25,7 @@ if (!defined('FRAMEPATH')) {
 
 // CMS公共程序目录
 !defined('CMSPATH') && define('CMSPATH', FCPATH.'Fcms/');
-!defined('MAX_CATEGORY') && define('MAX_CATEGORY', 200); // 老版本
+!defined('MAX_CATEGORY') && define('MAX_CATEGORY', 300); // 老版本
 define('COREPATH', CMSPATH); // 老版本别名
 define('BASEPATH', FRAMEPATH.'System/'); // 老版本别名
 // 主配置目录
