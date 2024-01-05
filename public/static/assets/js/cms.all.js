@@ -336,7 +336,7 @@ function dr_tips(code, msg, time) {
     var is_tip = 0;
     if (time < 0) {
         is_tip = 1;
-    } else if (code == 0 && msg.length > 15) {
+    } else if (code == 0) {
         is_tip = 1;
     }
 
@@ -355,16 +355,7 @@ function dr_tips(code, msg, time) {
             })
         }
     } else {
-        var tip = '<i class="fa fa-info-circle"></i>';
-        //var theme = 'teal';
-        if (code >= 1) {
-            tip = '<i class="fa fa-check-circle"></i>';
-            //theme = 'lime';
-        } else if (code == 0) {
-            tip = '<i class="fa fa-times-circle"></i>';
-            //theme = 'ruby';
-        }
-        layer.msg(tip+'&nbsp;&nbsp;'+msg, {time: time});
+        layer.msg(msg, {time: time});
     }
 
 }
