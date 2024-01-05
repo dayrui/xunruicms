@@ -5779,7 +5779,7 @@ li [class*=" fa-"].icon-large,li [class*=" glyphicon-"].icon-large,li [class*=" 
     text-shadow: none!important;
     text-align: center;
     padding: .5rem .5rem;
-    font-size: .9rem;
+    font-size: .98rem;
     font-weight: 600;
     line-height: 1;
     white-space: nowrap;
@@ -7443,7 +7443,7 @@ td>.mt-checkbox.mt-checkbox-single,td>.mt-radio.mt-radio-single,th>.mt-checkbox.
     text-shadow: none!important;
     color: #fff;
     padding: .325rem .5rem;
-    font-size: .85rem;
+    font-size: .98rem;
     font-weight: 600;
     line-height: 1;
 }
