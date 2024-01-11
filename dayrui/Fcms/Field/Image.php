@@ -97,7 +97,7 @@ class Image extends \Phpcmf\Library\A_Field {
      * 字段输出
      */
     public function output($value) {
-        return dr_string2array($value);
+        return dr_get_image($value);
     }
 
     /**

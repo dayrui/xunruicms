@@ -848,6 +848,7 @@ class Model {
 
     protected function _limit_where(&$select, $param, $field, $table) {
 
+        $table = $this->dbprefix($table);
         if ($param['field'] == $this->id) {
             // 按id查询
             $id = [];
@@ -855,7 +856,7 @@ class Model {
             foreach ($ids as $i) {
                 $id[] = (int)$i;
             }
-            dr_count($id) == 1 ? $select->where($this->dbprefix($table).'.'.$this->id, (int)$id[0]) : $select->whereIn($this->id, $id);
+            dr_count($id) == 1 ? $select->where($table.'.'.$this->id, (int)$id[0]) : $select->whereIn($this->id, $id);
             $param['keyword'] = htmlspecialchars($param['keyword']);
         } elseif (isset($field[$param['field']]['myfunc']) && $field[$param['field']]['myfunc']) {
             // 自定义的匹配模式
@@ -871,10 +872,10 @@ class Model {
             // 数字查询作为账号id
             $uid = is_numeric($param['keyword']) ? intval($param['keyword']) : 0;
             if ($uid && $this->db->table('member')->where('id', $uid)->countAllResults()) {
-                $select->where('`'.$param['field'].'` = '.intval($param['keyword']));
+                $select->where($table.'.`'.$param['field'].'` = '.intval($param['keyword']));
             } else {
                 // uid 非数字查询 账户查询
-                $select->where('`'.$param['field'].'` in (select id from '.$this->dbprefix('member').' where username LIKE "%'.$this->db->escapeString($param['keyword'], true).'%")');
+                $select->where($table.'.`'.$param['field'].'` in (select id from '.$this->dbprefix('member').' where username LIKE "%'.$this->db->escapeString($param['keyword'], true).'%")');
             }
         } elseif (in_array($field[$param['field']]['fieldtype'], ['INT'])) {
             // 数字类型
@@ -884,7 +885,7 @@ class Model {
             $key = addslashes($param['keyword']);
             $key2 = addslashes(str_replace ( '\u', '\\\\\\\\u', trim ( str_replace('\\', '|', json_encode($key)), '"' ) ));
             // 搜索用户表
-            $select->where("(".$param['field']." LIKE '%$key%' OR ".$param['field']." LIKE '%$key2%')");
+            $select->where("(".$table.".`".$param['field']."` LIKE '%$key%' OR ".$param['field']." LIKE '%$key2%')");
         } elseif (isset($field[$param['field']]['isint']) && $field[$param['field']]['isint']) {
             // 整数绝对匹配
             $select->where($param['field'], intval($param['keyword']));
@@ -892,7 +893,7 @@ class Model {
             // 准确匹配模式
             $select->where($param['field'], htmlspecialchars($param['keyword']));
         } else {
-            $where = $this->_where($this->dbprefix($table), $param['field'], htmlspecialchars($param['keyword']), $field[$param['field']], true);
+            $where = $this->_where($table, $param['field'], htmlspecialchars($param['keyword']), $field[$param['field']], true);
             if ($where) {
                 $select->where($where, null, false);
             }
