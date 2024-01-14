@@ -405,8 +405,8 @@ class View {
             if ($file == 'msg.html' || $file == '404.html') {
                 return COREPATH.'View/api_msg.html';
             }
-            if ($this->_is_mobile) {
-                $pc = str_replace('/mobile/', '/pc/', $default_file);
+            if ($this->_is_mobile && $default_file) {
+                $pc = dr_str_replace('/mobile/', '/pc/', (string)$default_file);
                 if (is_file($pc)) {
                     $this->show_error('移动端模板文件不存在', $error, $pc);exit;
                 }
