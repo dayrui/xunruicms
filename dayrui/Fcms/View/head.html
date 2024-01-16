@@ -11,6 +11,9 @@
     {if $is_min}
     <link href="{$THEME_PATH}assets/global/css/min{if !IS_XRDEV}.min{/if}.css?v={CMF_UPDATE_TIME}" rel="stylesheet" type="text/css" />
     {/if}
+    {if defined('SYS_FONT_SIZE') && SYS_FONT_SIZE}
+    <link href="{$THEME_PATH}assets/global/css/font-max.css?v={CMF_UPDATE_TIME}" rel="stylesheet" type="text/css" />
+    {/if}
     <link href="{php echo defined('MYCSS_FILE') ? MYCSS_FILE : $THEME_PATH.'assets/global/css/my.css';}?v={CMF_UPDATE_TIME}" rel="stylesheet" type="text/css" />
     <script type="text/javascript">
         var admin_file = '{SELF}';

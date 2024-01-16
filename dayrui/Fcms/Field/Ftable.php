@@ -439,7 +439,7 @@ class Ftable extends \Phpcmf\Library\A_Field {
             }
         }
         if ($field['setting']['option']['is_add']) {
-            $str.= ' <th width="50" style="text-align: center">';
+            $str.= ' <th width="70" style="text-align: center">';
             $str.= '<button type="button" class="btn blue btn-xs" onClick="dr_add_table_'.$name.'()"> <i class="fa fa-plus"></i> </button>';
             $str.'</th>';
         }

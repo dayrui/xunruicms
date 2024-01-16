@@ -1,0 +1,120 @@
+body,html {
+    font-size: 16px
+}
+.menu-top-icon {
+    height: 25px;
+}
+.top-txt-menu {
+    font-size: 16px!important;
+    font-style: normal!important
+}
+.page-header.navbar .top-menu .navbar-nav>li.dropdown>.dropdown-toggle {
+    padding-top: 12px!important;
+}
+.page-admin-min .page-header.navbar .top-menu .navbar-nav>li.dropdown>.dropdown-toggle {
+    padding-top: 18px!important;
+}
+.page-sidebar .page-sidebar-menu>li.open>a, .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu>li.open>a {
+    font-size: 16px!important;
+}
+.page-sidebar .page-sidebar-menu .sub-menu li>a, .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu .sub-menu li>a {
+    padding: 9px 15px 16px 23px!important;
+    font-size: 16px!important;
+}
+
+.page-sidebar .page-sidebar-menu .sub-menu li {
+    height: 38px!important;
+}
+.page-sidebar,.page-header.navbar .page-logo {
+    width: 178px;
+}
+.page-content-wrapper .page-content {
+    margin-left: 178px;
+}
+.page-sidebar .page-sidebar-menu .sub-menu li>a>i, .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu .sub-menu li>a>i {
+    font-size: 18px;
+}
+.page-sidebar .page-sidebar-menu>li>a>i, .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu>li>a>i {
+    font-size: 18px;
+}
+.page-bar .page-breadcrumb>li>a, .page-bar .page-breadcrumb>li>span {
+    font-size: 16px;
+}
+.note p, .page-loading, .panel .panel-body {
+    font-size: 15px;
+}
+.portlet.light>.portlet-title>.caption>.caption-subject, .portlet>.portlet-title>.caption>i {
+    font-size: 18px;
+}
+.portlet.light>.portlet-title>.nav-tabs>li>a {
+    font-size: 16px!important;
+}
+.btn-group-xs>.btn, .btn-xs,  .mt-checkbox, .mt-radio, .form-control, output{
+    font-size: 16px!important;
+}
+.tooltip {
+    font-size: 18px;
+}
+.bootstrap-table .toolbar label select {
+    height: 36px;
+    padding: 4px 12px;
+}
+.table thead tr th {
+    font-size: 18px;
+    font-weight: 900;
+}
+.table td, .table th, .table tr,.dropdown-menu, .nav-pills>li>a, .nav-tabs>li>a {
+
+    font-size: 16px;
+}
+.page-header.navbar .top-menu .navbar-nav>li.dropdown-user .dropdown-menu>li>a{
+    font-size: 16px!important;
+    font-weight: 600!important;
+}
+.page-sidebar .page-sidebar-menu > li > a, .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu > li > a {
+    font-size: 16px!important;
+}
+.portlet>.portlet-title>.actions>.btn, .portlet>.portlet-title>.actions>.btn-group>.btn, .portlet>.portlet-title>.actions>.btn-group>.btn.btn-sm, .portlet>.portlet-title>.actions>.btn.btn-sm {
+
+    font-size: 15px;
+}
+.bootstrap-tagsinput {
+    padding: 6px 6px;
+}
+.dropdown-menu>li>a {
+    padding: 12px 16px;
+}
+.pagination>li>a, .pagination>li>span {
+    padding: 8px 12px;
+}
+.feeds li .col2 {
+    width: 150px;
+    margin-left: -90px;
+}
+.el-input__inner,.el-cascader-node {
+    height: 38px!important;
+    line-height: 38px!important;
+}
+.el-cascader-panel {
+    font-size: 16px!important;
+}
+.btn {
+    font-weight: 800;
+
+    font-size: 16px;
+}
+.btn-group-sm>.btn, .btn-sm {
+
+    font-size: 14px;
+}
+.form-control {
+    height: 38px;
+}
+.mt-checkbox>span, .mt-radio>span {
+    height: 22px;
+    width: 22px;
+}
+.page-header.navbar .top-menu .navbar-nav > li.dropdown-tasks .dropdown-menu .dropdown-menu-list > li .task .desc {
+    font-size: 16px;
+    font-weight: 600;
+}

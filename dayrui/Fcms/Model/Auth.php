@@ -764,7 +764,7 @@ class Auth extends \Phpcmf\Model {
             }
             // 生成链接
             $name = \Phpcmf\Service::IS_PC_USER() ? dr_lang($name) : dr_strcut(dr_lang($name), 4, '');
-            $_link .= '<li class="' . $_li_class . '"> <a ' . $_attr . ' href="' . $url . '" class="' . $class . '">' . ($t[1] ? '<i class="' . $t[1] . '"></i> ' : '') . $name . '</a> <i class="fa fa-circle"></i> </li>';
+            $_link .= '<li class="' . $_li_class . '"> <a ' . $_attr . ' href="' . $url . '" class="' . $class . ' tooltips"  data-container="body" data-placement="bottom" data-original-title="'.$name.'" title="'.$name.'">' . ($t[1] ? '<i class="' . $t[1] . '"></i> ' : '') . $name . '</a> <i class="fa fa-circle"></i> </li>';
             $_i++;
         }
 

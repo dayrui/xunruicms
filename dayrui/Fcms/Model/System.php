@@ -21,6 +21,7 @@ class System extends \Phpcmf\Model {
         'SYS_SMS_IMG_CODE' => '发送短信验证码双重图形验证开关',
         'SYS_GO_404' => '404页面跳转开关',
         'SYS_301' => '内容地址唯一模式',
+        'SYS_FONT_SIZE' => '字号设置',
 
         'SYS_URL_ONLY' => '地址匹配规则',
         'SYS_URL_REL' => '地址相对模式',

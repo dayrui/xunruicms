@@ -166,7 +166,7 @@ class Property extends \Phpcmf\Library\A_Field {
             <th>'.dr_lang($field['setting']['option']['value_value'] ? $field['setting']['option']['value_value'] : '值').' </th>';
         if (!$field['setting']['option']['is_hang']) {
             $str.='
-            <th width="45" style="text-align: center"> ';
+            <th width="70" style="text-align: center"> ';
 
             $str.= '	<a href="javascript:;" class="btn blue btn-xs" onClick="dr_add_property_'.$name.'()"> <i class="fa fa-plus"></i></a>';
             $str.='</th>';
