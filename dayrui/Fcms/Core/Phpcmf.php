@@ -383,7 +383,14 @@ abstract class Common extends \Frame\Controller {
                 if (!$cname) {
                     $cname = '#'.$uri;
                 }
-                $this->_admin_msg(0, dr_lang('%s：没有%s权限', $cname, $name).(IS_DEV ? $uri : ''));
+                if (IS_DEV) {
+                    if (\Phpcmf\Service::M()->table('admin_menu')->where('mark', $uri)->getRow()) {
+                        $this->_admin_msg(0, dr_lang('%s：没有%s权限', $cname, $name). '<br>请在角色管理-操作权限-勾选');
+                    } else {
+                        $this->_admin_msg(0, dr_lang('%s：没有%s权限', $cname, $name). '<br>权限-后台菜单-没有找到'.$uri);
+                    }
+                }
+                $this->_admin_msg(0, dr_lang('%s：没有%s权限', $cname, $name));
             }
         }
 

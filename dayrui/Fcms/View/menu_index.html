@@ -40,7 +40,7 @@
                     {/if}
                     <th class="hidden-mobile" width="70" style="text-align:center"> {dr_lang('排序')} </th>
                     <th class="hidden-mobile" width="60" style="text-align:center"> {dr_lang('可用')} </th>
-                    <th width="300"> {dr_lang('名称')} </th>
+                    <th> {dr_lang('名称')} </th>
                     {if dr_count($ci->site_info) > 1}
                     <th width="100">
                         {if $ci->_is_admin_auth('add')}<a href="javascript:dr_iframe('add', '{dr_url('menu/add', ['pid'=>0])}', '600px', '500px');" class="btn btn-xs blue"> <i class="fa fa-plus"></i> {dr_lang('添加')} </a>{/if}
@@ -71,7 +71,7 @@
                         <a href="javascript:;" onclick="dr_ajax_open_close(this, '{dr_url('menu/use_edit', ['id'=>$t.id])}', 1);" class="badge badge-{if $t.hidden}no{else}yes{/if}"><i class="fa fa-{if $t.hidden}times{else}check{/if}"></i></a>
                     </td>
                     <td>
-                        {$t.spacer} <a href="javascript:dr_iframe('edit', '{dr_url('menu/edit', ['id'=>$t.id])}', '600px');"><i class="{$t.icon}"></i> {dr_lang($t.name)}</a>
+                        {$t.spacer} <a href="javascript:dr_iframe('edit', '{dr_url('menu/edit', ['id'=>$t.id])}', '600px');"><i class="{$t.icon}"></i> {dr_lang($t.name)} {if $t.uri}&nbsp;- {$t.uri}{/if}</a>
                     </td>
                     <td>
                         {if $ci->_is_admin_auth('add') && ($t.pid == 0 || dr_in_array($t.pid, (array)$top))}<a href="javascript:dr_iframe('add', '{dr_url('menu/add', ['pid'=>$t.id])}', '600px', '{if !in_array($t.pid, $top)}500px{/if}');" class="btn btn-xs blue"> <i class="fa fa-plus"></i> {dr_lang('添加')} </a>{/if}
