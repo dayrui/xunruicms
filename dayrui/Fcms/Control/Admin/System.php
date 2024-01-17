@@ -26,7 +26,6 @@ class System extends \Phpcmf\Common
                 'SYS_301' => intval($post['SYS_301']),
                 'SYS_THEME_ROOT_PATH' => intval($post['SYS_THEME_ROOT_PATH']),
                 'SYS_TABLE_ISFOOTER' => intval($post['SYS_TABLE_ISFOOTER']),
-                'SYS_FONT_SIZE' => intval($post['SYS_FONT_SIZE']),
 
                 'SYS_URL_ONLY' => (int)$post['SYS_URL_ONLY'],
                 'SYS_URL_REL' => (int)$post['SYS_URL_REL'],

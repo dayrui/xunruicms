@@ -222,6 +222,8 @@ class Api extends \Phpcmf\Common {
 		$color = ['default', 'blue', 'red', 'green', 'dark', 'yellow'];
         $target = [0 => dr_lang('内链'), 1 => dr_lang('外链')];
 
+        $setting = is_array($this->admin['setting']) ? $this->admin['setting'] : [];
+
 		if (IS_AJAX_POST) {
             if (!\Phpcmf\Service::L('form')->check_captcha('code')) {
                 $this->_json(0, dr_lang('验证码不正确'), ['field' => 'code']);
@@ -248,8 +250,10 @@ class Api extends \Phpcmf\Common {
                 \Phpcmf\Service::M('member')->edit_password($this->member, $password);
             }
 
+            $setting['font_size'] = (int)$data['font_size'];
 			\Phpcmf\Service::M()->db->table('admin')->where('id', $this->admin['id'])->update([
-				'usermenu' => dr_array2string($menu)
+				'setting' => dr_array2string($setting),
+				'usermenu' => dr_array2string($menu),
             ]);
 
 			$this->_json(1, dr_lang('操作成功'));
@@ -289,6 +293,7 @@ class Api extends \Phpcmf\Common {
 			),
             'color' => $color,
             'target' => $target,
+            'setting' => $setting,
             'oauth_data' => $oauth,
             'oauth_list' => IS_USE_MEMBER ? \Phpcmf\Service::M('member')->oauth($this->uid) : [],
             'select_color' => $select,

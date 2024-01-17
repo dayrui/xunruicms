@@ -78,7 +78,6 @@ $system = [
     'SYS_API_TOKEN' => '',
     'SYS_CSRF'  => 1,
     'SYS_CSRF_TIME'  => 0,
-    'SYS_FONT_SIZE'  => 0,
     'SYS_API_REL'  => 0,
     'SYS_HTTPS' => 0,
     'SYS_NOT_ADMIN_CACHE' => 0,

@@ -55,6 +55,16 @@
                         </div>
 
                         <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('后台字号')}</label>
+                            <div class="col-md-9">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[font_size]" value="0" {if empty($setting['font_size'])}checked{/if} /> {dr_lang('标准')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[font_size]" value="1" {if $setting['font_size']}checked{/if} /> {dr_lang('大字')} <span></span></label>
+                                </div>
+                                <span class="help-block">{dr_lang('针对后台的字体大小设置')}</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('登录密码')}</label>
                             <div class="col-md-9">
                                 <label><input type="text" class="form-control input-large" name="password"></label>
