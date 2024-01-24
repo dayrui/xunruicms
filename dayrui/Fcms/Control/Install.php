@@ -283,7 +283,13 @@ $db[\'default\']	= [
                             $error = $errorlog;
                         } else {
                             if (!\Phpcmf\Service::M()->is_table_exists('member')) {
-                                $error = '数据表结构不完整，检查安装包sql文件是否合理';
+                                if (is_file(MYPATH.'Config/Install.sql')) {
+                                    $sql = MYPATH.'Config/Install.sql';
+                                } else {
+                                    $sql = CMSPATH.'Config/Install.sql';
+                                }
+                                $error = 'SQL文件：'.$sql;
+                                $error.= '<br>关键数据表member结构不完整，检查安装包sql文件是否合理';
                             } else {
                                 // 创建账号
                                 $pwd = md5(dr_safe_password($data['password']));

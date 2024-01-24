@@ -188,15 +188,15 @@ class Api extends \Phpcmf\Common {
         $id = (int)\Phpcmf\Service::L('input')->get('id');
         $data = \Phpcmf\Service::M()->table('admin_notice')->get($id);
         if (!$data) {
-            $this->_admin_msg(0, dr_lang('该数据不存在'));
+            $this->_admin_msg(0, dr_lang('该通知数据不存在'));
         }
 
         // 权限判断
         if (!isset($this->admin['roleid'][1])) {
             if ($data['to_uid'] && !dr_in_array($this->uid, explode(',', (string)$data['to_uid']))) {
-                $this->_admin_msg(0, dr_lang('您无权限执行'));
+                $this->_admin_msg(0, dr_lang('需要指定账号才能执行，当前账号无法执行'));
             } elseif ($data['to_rid'] && !dr_array_intersect($this->admin['roleid'], explode(',', (string)$data['to_rid']))) {
-                $this->_admin_msg(0, dr_lang('您无权限执行'));
+                $this->_admin_msg(0, dr_lang('需要指定角色组才能执行，当前账号角色无法执行'));
             }
         }
 
