@@ -233,6 +233,51 @@ class Api extends \Phpcmf\Common {
         echo 'var linkage_'.$code.' ='.json_encode($linkage, JSON_UNESCAPED_UNICODE).';';exit;
     }
 
+    /**
+     * 联动菜单Api
+     */
+    public function linkage_json() {
+
+        $code = dr_safe_replace(\Phpcmf\Service::L('input')->get('code'));
+        if (!$code) {
+            $this->_json(0, dr_lang('联动菜单code参数没有值'));
+        }
+
+        $linkage = dr_linkage_json($code);
+        if (!$linkage) {
+            $this->_json(0, dr_lang('没有联动菜单数据'));
+        }
+
+        $this->_json(1, $code, $linkage);
+    }
+
+    /**
+     * 经典样式的联动菜单调用
+     */
+    public function linkage_data() {
+
+        $code = dr_safe_replace(\Phpcmf\Service::L('input')->get('code'));
+        if (!$code) {
+            $this->_json(0, dr_lang('联动菜单code参数没有值'));
+        }
+
+        $pid = (int)\Phpcmf\Service::L('input')->get('pid');
+        $linkage = dr_linkage_list($code, $pid);
+
+        $json = [];
+        foreach ($linkage as $v) {
+            if ($v['pid'] == $pid) {
+                $json[] = $v;
+            }
+        }
+
+        if (!$json) {
+            $this->_json(0, dr_lang('没有联动菜单数据'));
+        }
+
+        $this->_json(1, $code, $json);
+    }
+
 
     /**
      * 经典样式的联动菜单调用
