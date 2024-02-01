@@ -43,10 +43,10 @@ class Upload {
             "ERROR_HTTP_CONTENTTYPE" => dr_lang("链接contentType不正确")
         ];
         // 禁止以下文件上传
-        $this->notallowed = ['php', 'php3', 'asp', 'jsp', 'jspx', 'aspx', 'exe', 'sh', 'phtml'];
+        $this->notallowed = ['php', 'php3', 'asp', 'jsp', 'jspx', 'aspx', 'exe', 'sh', 'phtml', 'php5', 'pht'];
         // 下载文件扩展名白名单
         $this->down_file_ext = ['jpg', 'jpeg', 'gif', 'png', 'webp', 'zip', 'rar'];
-        // 自定义白名单文件
+        // 自定义上传扩展名和白名单文件
         if (is_file(WEBPATH.'config/fileext.php')) {
             require WEBPATH.'config/fileext.php';
         } elseif (is_file(CONFIGPATH.'fileext.php')) {
