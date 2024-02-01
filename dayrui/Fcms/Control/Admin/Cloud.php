@@ -953,6 +953,9 @@ return [
         if ($data) {
             $html = '';
             foreach ($data as $filename => $value) {
+                if (strpos($filename, 'Version.php')) {
+                    continue;
+                }
                 if (strpos($filename, '/dayrui') === 0) {
                     $cname = 'FCPATH'.substr($filename, 7);
                     $ofile = FCPATH.substr($filename, 8);
