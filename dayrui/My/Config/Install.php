@@ -4,22 +4,21 @@
  */
 
 // 不选择安装数据时不执行sql文件
-if (isset($_GET['is_install_db']) && $_GET['is_install_db']) {
-    if (is_file(APPSPATH.'Module/Config/App.php')) {
-        $rt = \Phpcmf\Service::M('app')->install('module');
-        if ($rt['code']) {
-            \Phpcmf\Service::M('module', 'module')->install('news', null, 0, 1);
-            $sql = file_get_contents(MYPATH.'Config/demo.sql');
-            if ($sql) {
-                $sql = str_replace('{dbprefix}', \Phpcmf\Service::M()->prefix, $sql);
-                \Phpcmf\Service::M()->query_all($sql);
-            }
-        }
-    }
+
+$apps = ['Module', 'Mbdy', 'Member', 'Tpl'];  // 预装哪些app，首字母大写
+foreach ($apps as $mid) {
+    \Phpcmf\Service::M('app')->install($mid);
 }
 
-if (is_file(APPSPATH.'Mbdy/Config/App.php')) {
-    \Phpcmf\Service::M('app')->install('mbdy');
+if (isset($_GET['is_install_db']) && $_GET['is_install_db']) {
+    if (is_file(APPSPATH.'Module/install.lock')) {
+        \Phpcmf\Service::M('module', 'module')->install('news', null, 0, 1);
+        $sql = file_get_contents(MYPATH.'Config/demo.sql');
+        if ($sql) {
+            $sql = str_replace('{dbprefix}', \Phpcmf\Service::M()->prefix, $sql);
+            \Phpcmf\Service::M()->query_all($sql);
+        }
+    }
 }
 
 // 默认站点信息字段
