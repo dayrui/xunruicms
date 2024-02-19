@@ -436,6 +436,9 @@ class Form {
             return dr_return_data(0, dr_lang('账号长度不能大于%s位，当前%s位', \Phpcmf\Service::C()->member_cache['config']['userlenmax'], mb_strlen($value)), ['field' => 'username']);
         }
         $notallow = \Phpcmf\Service::C()->member_cache['register']['notallow'];
+        if (!$notallow || !is_array($notallow)) {
+            $notallow = [];
+        }
         $notallow[] = dr_lang('游客');
         // 后台不允许注册的词语，放在最后一次比较
         foreach ($notallow as $a) {

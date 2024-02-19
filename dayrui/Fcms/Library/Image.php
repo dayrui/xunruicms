@@ -474,11 +474,11 @@ class Image {
          * If the destination width/height was not submitted we
          * will use the values from the actual file
          */
-        if ($this->width === '')
+        if (!$this->width)
         {
             $this->width = $this->orig_width;
         }
-        if ($this->height === '')
+        if (!$this->height)
         {
             $this->height = $this->orig_height;
         }
