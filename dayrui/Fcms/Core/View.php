@@ -42,6 +42,7 @@ class View {
 
     public $_is_mobile; // 是否是移动端模板
     private $_is_pc; // 是否是pc模板
+    private $_sql; // 最近运行的sql语句
 
     private $performanceData = []; // 用于调试栏数据
     private $loadjs = []; // 加载的js
@@ -1344,6 +1345,8 @@ class View {
             }
         }
 
+        $this->_sql = $sql;
+
         // 挂钩点 模板中的sql语句
         \Phpcmf\Hooks::trigger('cms_view_sql', $sql, $time, $this->_view_file, $this->_list_tag);
 
@@ -1355,6 +1358,11 @@ class View {
         $data = $all ? $query->getResultArray() : $query->getRowArray();
 
         return $data;
+    }
+
+    // 获取当前执行后的sql语句
+    public function get_sql_query() {
+        return $this->_sql;
     }
 
     // 设置分页参数
