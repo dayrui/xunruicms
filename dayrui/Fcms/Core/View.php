@@ -48,6 +48,7 @@ class View {
     private $loadjs = []; // 加载的js
 
     private $_page_config = []; // 分页参数
+    private $_page_config_file = ''; // 分页配置文件
     private $_page_urlrule = ''; // 分页地址参数
     private $_page_used = 0; // 是否开启分页
 
@@ -1383,22 +1384,24 @@ class View {
     public function _get_pagination($url, $pagesize, $total, $name = 'page', $first_url = '') {
 
         $this->_page_used = 1;
+        $this->_page_config_file = '';
         if ($name == 'admin') {
             // 使用后台分页规则
-            $config = require CMSPATH.'Config/Apage.php';
+            $this->_page_config_file =  CMSPATH.'Config/Apage.php';
         } else {
             // 这里要支持移动端分页条件
             !$name && $name = 'page';
             $file = 'page/'.($this->_is_mobile ? 'mobile' : 'pc').'/'.(dr_safe_filename($name)).'.php';
             if (is_file(WEBPATH.'config/'.$file)) {
-                $config = require WEBPATH.'config/'.$file;
+                $this->_page_config_file = WEBPATH.'config/'.$file;
             } elseif (is_file(CONFIGPATH.$file)) {
-                $config = require CONFIGPATH.$file;
+                $this->_page_config_file =  CONFIGPATH.$file;
             } else {
                 exit('无法找到分页配置文件【'.$file.'】');
             }
         }
 
+        $config = require $this->_page_config_file;
         if ($this->_page_config) {
             $config = dr_array22array($config, $this->_page_config);
         }
@@ -2110,6 +2113,7 @@ class View {
                     $debug.= '<p>总页数量：'.$nums. ($nums == 1 ? '（数据量未达到分页数据，因此只有一页）' : '').'</p>';
                     $debug.= '<p>每页数量：'.$pagesize.'</p>';
                     $debug.= '<p>分页地址：'.$this->_page_urlrule.'</p>';
+                    $debug.= '<p>分页配置：'.$this->page_config_file.'</p>';
                 } else {
                     $debug.= '<p>分页功能：未开启</p>';
                 }
