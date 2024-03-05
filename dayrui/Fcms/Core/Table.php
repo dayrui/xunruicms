@@ -47,6 +47,7 @@ class Table extends \Phpcmf\Common {
     protected $fix_table_list; //
     protected $is_ajax_list; // 是否作为ajax请求列表数据，不进行第一次查询
     protected $is_search; // 是否开启列表上方的搜索功能
+    protected $is_recycle; // 是否启用回收站
     protected $is_fixed_columns; // 是否开启列表右侧一行浮动固定
     protected $is_show_search_bar; // 是否默认显示搜索区域
 
@@ -95,20 +96,10 @@ class Table extends \Phpcmf\Common {
 
         // 栏目模型字段
         if ($this->is_category_data_field && $catid) {
-            $cat = dr_cat_value($this->module['mid'], $catid);
-            if (!$cat['ismain']) {
-                // 非主栏目继承上级
-                $cat = dr_cat_value(
-                    $this->module['mid'],
-                    \Phpcmf\Service::L('category', 'module')->get_ismain_id($this->module['mid'], $cat)
-                );
-            }
-            if ($cat && $cat['field']) {
-                foreach ($cat['field'] as $f) {
-                    if ($this->module['category_data_field'][$f]) {
-                        $field[$f] = $this->module['category_data_field'][$f];
-                    }
-                }
+            if (function_exists('dr_module_category_data_field')) {
+                $field = dr_module_category_data_field(dr_cat_value($this->module['mid'], $catid), $field, $this->module);
+            } else {
+                log_message('error', '内容建站系统插件版本需要升级');
             }
         }
 
@@ -140,20 +131,10 @@ class Table extends \Phpcmf\Common {
 
         // 栏目模型字段
         if ($this->is_category_data_field && $data['catid']) {
-            $cat = dr_cat_value($this->module['mid'], $data['catid']);
-            if (!$cat['ismain']) {
-                // 非主栏目继承上级
-                $cat = dr_cat_value(
-                    $this->module['mid'],
-                    \Phpcmf\Service::L('category', 'module')->get_ismain_id($this->module['mid'], $cat)
-                );
-            }
-            if ($cat && $cat['field']) {
-                foreach ($cat['field'] as $f) {
-                    if ($this->module['category_data_field'][$f]) {
-                        $field[$f] = $this->module['category_data_field'][$f];
-                    }
-                }
+            if (function_exists('dr_module_category_data_field')) {
+                $field = dr_module_category_data_field(dr_cat_value($this->module['mid'], $data['catid']), $field, $this->module);
+            } else {
+                log_message('error', '内容建站系统插件版本需要升级');
             }
         }
 
@@ -835,6 +816,20 @@ class Table extends \Phpcmf\Common {
      * */
     protected function _Call_List($data) {
         return $data;
+    }
+
+    /**
+     * 回收数据到回收站
+     * */
+    protected function _Recycle_Add($table, $data) {
+
+    }
+
+    /**
+     * 回收站数据
+     * */
+    protected function _Recycle_List() {
+
     }
 
     // 分页配置文件加载
