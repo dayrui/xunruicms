@@ -47,7 +47,10 @@ class Table extends \Phpcmf\Common {
     protected $fix_table_list; //
     protected $is_ajax_list; // 是否作为ajax请求列表数据，不进行第一次查询
     protected $is_search; // 是否开启列表上方的搜索功能
-    protected $is_recycle; // 是否启用回收站
+    protected $is_recycle = 0; // 是否启用回收站索功能
+    protected $is_recycle_init = 0; // 是否来自回收站操作
+    protected $is_iframe_post = 0; // 编辑新增是否采用弹窗模式
+    protected $iframe_post_area = ['', '']; // 弹窗模式尺寸
     protected $is_fixed_columns; // 是否开启列表右侧一行浮动固定
     protected $is_show_search_bar; // 是否默认显示搜索区域
 
@@ -180,6 +183,11 @@ class Table extends \Phpcmf\Common {
         $row = $this->_db()->init($this->init)->get($id);
         if (!$row) {
             return [];
+        }
+
+        if ($this->is_recycle_init) {
+            // 来自回收站的数据阅读
+            return dr_array22array(dr_string2array($row['content']), dr_string2array($row['content2']));
         }
 
         // 附表存储
@@ -572,7 +580,7 @@ class Table extends \Phpcmf\Common {
 
         \Phpcmf\Service::V()->assign($data);
 
-        return [$this->_tpl_filename('show'), $data];
+        return [$this->_tpl_filename('post', 'show'), $data];
     }
 
     /**
@@ -593,6 +601,12 @@ class Table extends \Phpcmf\Common {
             $this->_json(0, dr_lang('所选数据不存在'));
         }
 
+        if ($this->is_recycle) {
+            // 软删除加入回收站
+            $this->_Recycle_Add($rows);
+            $this->_json(1, dr_lang('操作成功'));
+        }
+
         // 删除之前执行
         if ($before) {
             $rt = call_user_func_array($before, [$rows]);
@@ -610,8 +624,8 @@ class Table extends \Phpcmf\Common {
             if (!$rt['code']) {
                 $this->_json(0, $rt['msg']);
             }
-            if ($this->is_data) {
-                // 附表存储
+            if ($this->is_data && !$this->is_recycle_init) {
+                // 附表存储 清空回收站时不删除附表因为已经无数据了
                 $rt = $this->_db()->init($this->init)->table($this->init['table'].'_data_'.intval($t['tableid']))->delete($id, $this->delete_where);
                 if (!$rt['code']) {
                     $this->_json(0, $rt['msg']);
@@ -790,12 +804,27 @@ class Table extends \Phpcmf\Common {
             ];
         }
 
-        !$this->mytable && $this->mytable = [
-            'foot_tpl' => $this->_is_admin_auth('del') ? '<label class="table_select_all"><input onclick="dr_table_select_all(this)" type="checkbox"><span></span></label>
-        <button type="button" onclick="dr_table_option(\''.(IS_ADMIN ? dr_url($uriprefix.'/del') : dr_member_url($uriprefix.'/del')).'\', \''.dr_lang('你确定要删除它们吗？').'\')" class="btn red btn-sm"> <i class="fa fa-trash"></i> '.dr_lang('删除').'</button>' : '',
-            'link_tpl' => $this->_is_admin_auth('edit') ? '<label><a href="'.(IS_ADMIN ? dr_url($uriprefix.'/edit') : dr_member_url($uriprefix.'/edit')).'&id={id}" class="btn btn-xs red"> <i class="fa fa-edit"></i> '.dr_lang('修改').'</a></label>' : '',
-            'link_var' => 'html = html.replace(/\{id\}/g, row.id);',
-        ];
+        if (!$this->mytable) {
+            $this->mytable = [
+                'foot_tpl' => $this->_is_admin_auth('del') ? '<label class="table_select_all"><input onclick="dr_table_select_all(this)" type="checkbox"><span></span></label>
+        <label><button type="button" onclick="dr_table_option(\''.(IS_ADMIN ? dr_url($uriprefix.'/del') : dr_member_url($uriprefix.'/del')).'\', \''.dr_lang('你确定要删除它们吗？').'\')" class="btn red btn-sm"> <i class="fa fa-trash"></i> '.dr_lang('删除').'</button></label>' : '',
+                'link_tpl' => '',
+                'link_var' => 'html = html.replace(/\{id\}/g, row.id);',
+            ];
+            if ($this->_is_admin_auth('del') && $this->is_recycle && method_exists($this, 'recycle_del')) {
+                // 回收站按钮
+                $this->mytable['foot_tpl'].= '<label><button type="button" onclick="javascript:dr_iframe_show(\''.dr_lang('回收站').'\', \''.dr_url($uriprefix.'/recycle_del').'\');" class="btn green btn-sm"> <i class="fa fa-recycle"></i> '.dr_lang('回收站').'</button></label>';
+            }
+            if ($this->_is_admin_auth('edit')) {
+                $lurl = (IS_ADMIN ? dr_url($uriprefix.'/edit') : dr_member_url($uriprefix.'/edit')).'&id={id}';
+                if ($this->is_iframe_post) {
+                    // 弹窗模式
+                    $lurl = 'javascript:dr_iframe(\'edit\', \''.$lurl.'\', \''.$this->iframe_post_area[0].'\', \''.$this->iframe_post_area[1].'\');';
+                }
+                $this->mytable['link_tpl'].= '<label><a href="'.$lurl.'" class="btn btn-xs red"> <i class="fa fa-edit"></i> '.dr_lang('修改').'</a></label>';
+            }
+        }
+
         $data['mytable'] = $this->mytable;
         $data['mytable_name'] = $this->name ? $this->name : 'mytable';
         $data['mytable_pagesize'] = $size;
@@ -803,8 +832,6 @@ class Table extends \Phpcmf\Common {
         $data['is_show_export'] = true;
         $data['is_fixed_columns'] =  $this->is_fixed_columns;
         $data['is_show_search_bar'] = $this->is_show_search_bar;
-
-
 
         \Phpcmf\Service::V()->assign($data);
 
@@ -819,10 +846,136 @@ class Table extends \Phpcmf\Common {
     }
 
     /**
+     * 回收站初始化表
+     * */
+    protected function _Recycle_Init() {
+        $table = $this->init['table'];
+        $rtable = $table.'_recyclex';//改名字优化
+        if (!$this->_db()->is_table_exists($rtable)) {
+            // 回收表不存在时创建新表
+            $this->_db()->query('
+CREATE TABLE IF NOT EXISTS `'.$this->_db()->dbprefix($rtable).'` (
+  `id` int(10) unsigned NOT NULL,
+  `uid` int(10) unsigned NOT NULL,
+  `content` mediumtext DEFAULT NULL,
+  `content2` mediumtext DEFAULT NULL,
+  `inputtime` int(10) unsigned NOT NULL,
+  UNIQUE KEY (`id`),
+  KEY `inputtime` (`inputtime`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT=\'回收站表\';            
+            ');
+        }
+        $this->init['table'] = $rtable;
+        $this->init['field'] = [
+            'content' => [
+                'name' => dr_lang('全文'),
+                'fieldname' => 'content',
+            ]
+        ];
+        $this->is_recycle_init = 1;
+        return [$rtable, $table];
+    }
+
+    /**
+     * 清空回收站前置执行
+     * */
+    protected function _Recycle_Clear() {
+        list($rtable) = $this->_Recycle_Init();
+        $rows = $this->_db()->table($rtable)->getAll();
+        if (!$rows) {
+            $this->_json(0, dr_lang('回收站已被清空'));
+        }
+        foreach ($rows as $t) {
+            $_POST['ids'][] = $t['id'];
+        }
+    }
+
+    /**
+     * 回收站恢复数据
+     * */
+    protected function _Recycle_Restore($ids) {
+
+        if (!$ids) {
+            $this->_json(0, dr_lang('所选数据不存在'));
+        }
+
+        list($rtable, $table) = $this->_Recycle_Init();
+
+        $rows = $this->_db()->table($rtable)->where_in('id', $ids)->getAll();
+        if (!$rows) {
+            $this->_json(0, dr_lang('所选数据不存在'));
+        }
+
+        foreach ($rows as $row) {
+            $content = dr_string2array($row['content']);
+            $content2 = dr_string2array($row['content2']);
+            $field = $this->_db()->db->getFieldNames($this->_db()->dbprefix($table));
+            foreach ($content as $i => $t) {
+                if (!dr_in_array($i, $field)) {
+                    unset($content[$i]);
+                }
+            }
+            if (!$content) {
+                $this->_json(0, dr_lang('数据异常无法恢复'));
+            }
+            $this->_db()->table($table)->replace($content);
+            if ($this->is_data) {
+                $table2 = $table.'_data_'.intval($row['tableid']);
+                $field = $this->_db()->db->getFieldNames($this->_db()->dbprefix($table2));
+                foreach ($content2 as $i => $t) {
+                    if (!dr_in_array($i, $field)) {
+                        unset($content2[$i]);
+                    }
+                }
+                if ($content2) {
+                    $this->_db()->table($table2)->replace($content);
+                }
+            }
+            $this->_db()->table($rtable)->delete($row['id']);
+        }
+
+        $this->_json(1, dr_lang('操作成功'));
+    }
+
+    /**
      * 回收数据到回收站
      * */
-    protected function _Recycle_Add($table, $data) {
+    protected function _Recycle_Add($rows) {
 
+        list($rtable, $table) = $this->_Recycle_Init();
+
+        foreach ($rows as $t) {
+            $id = intval($t['id']);
+            $save = [
+                'id' => $id,
+                'uid' => $this->uid,
+                'inputtime' => SYS_TIME,
+                'content' => dr_array2string($t),
+                'content2' => '',
+            ];
+            if ($this->is_data) {
+                $t2 = $this->_db()->table($table.'_data_'.intval($t['tableid']))->get($id);
+                if ($t2) {
+                    $save['content2'] = dr_array2string($t2);
+                }
+            }
+            $rt = $this->_db()->table($rtable)->replace($save);
+            if (!$rt['code']) {
+                $this->_json(0, $rt['msg']);
+            }
+            // 删除数据
+            $rt = $this->_db()->table($table)->delete($id, $this->delete_where);
+            if (!$rt['code']) {
+                $this->_json(0, $rt['msg']);
+            }
+            if ($this->is_data) {
+                // 附表存储
+                $rt = $this->_db()->table($table.'_data_'.intval($t['tableid']))->delete($id, $this->delete_where);
+                if (!$rt['code']) {
+                    $this->_json(0, $rt['msg']);
+                }
+            }
+        }
     }
 
     /**
@@ -830,6 +983,127 @@ class Table extends \Phpcmf\Common {
      * */
     protected function _Recycle_List() {
 
+        $this->_Recycle_Init();
+
+        // 分页数量控制
+        if (!$this->list_pagesize) {
+            if (IS_ADMIN) {
+                $size = (int)SYS_ADMIN_PAGESIZE;
+            } else {
+                $size = (int)$this->member_cache['config']['pagesize'];
+                if (IS_API_HTTP) {
+                    $size = (int)$this->member_cache['config']['pagesize_api'];
+                } elseif (\Phpcmf\Service::IS_MOBILE()) {
+                    $size = (int)$this->member_cache['config']['pagesize_mobile'];
+                }
+            }
+        } else {
+            $size = $this->list_pagesize;
+        }
+
+        // 按ajax返回
+        if (isset($_GET['is_ajax']) && $_GET['is_ajax']) {
+            // 按ajax分页
+            if (isset($_GET['pagesize']) && $_GET['pagesize']) {
+                $size = intval($_GET['pagesize']);
+            }
+            // 查询数据结果
+            list($list, $total, $param) = $this->_db()->init($this->init)->limit_page($size, $this->list_where);
+            $sql = $this->_db()->get_sql_query();
+            // 格式化字段
+            if ($this->init['list_field'] && $list) {
+                $field = $this->_field_save(0);
+                if ($this->not_field) {
+                    $field = dr_array22array($field, $this->not_field);
+                }
+                $dfield = \Phpcmf\Service::L('Field')->app(APP_DIR);
+                foreach ($list as $k => $v) {
+                    $list[$k] = $dfield->format_value($field, dr_string2array($v['content']), 1);
+                    foreach ($this->init['list_field'] as $i => $t) {
+                        if ($t['use']) {
+                            $list[$k][$i] = dr_list_function($t['func'], $list[$k][$i], $param, $list[$k], $field[$i], $i);
+                        }
+                    }
+                    $list[$k]['delete_uid'] = dr_list_function('uid', $v['uid']);
+                    $list[$k]['delete_time'] = dr_date($v['inputtime']);
+                }
+            }
+            // 存储当前页URL
+            unset($param['is_ajax']);
+            \Phpcmf\Service::L('Router')->set_back(\Phpcmf\Service::L('Router')->uri(), $param);
+            $this->_json(1, $total, $list, '', ['sql' => $sql]);
+        }
+
+        $uriprefix = trim(APP_DIR.'/'.\Phpcmf\Service::L('Router')->class, '/');
+
+        // 默认显示字段
+        $list_field = [
+            'delete_uid' => [
+                'use' => '1',
+                'name' => dr_lang('删除人'),
+                'width' => '120',
+            ],
+            'delete_time' => [
+                'use' => '1',
+                'name' => dr_lang('删除时间'),
+                'width' => '170',
+            ],
+        ];
+        if ($this->init['list_field']) {
+            $ii = 0;
+            foreach ($this->init['list_field'] as $i => $t) {
+                if ($ii > 2) {
+                    break;
+                }
+                $list_field[$i] = $t;
+                $ii++;
+            }
+        }
+
+        $param = \Phpcmf\Service::L('input')->get();
+        unset($param['s'], $param['c'], $param['m'], $param['d'], $param['page']);
+
+        // 默认以显示字段为搜索字段
+        $param['field'] = 'content';
+        if ($param['keyword']) {
+            $param['keyword'] = htmlspecialchars($param['keyword']);
+        }
+
+        // 返回数据
+        $data = [
+            'param' => dr_htmlspecialchars($param),
+            'my_file' => $this->_tpl_filename('table'),
+            'uriprefix' => trim(APP_DIR.'/'.\Phpcmf\Service::L('Router')->class, '/'), // uri前缀部分
+            'list_field' => $list_field, // 列表显示的可用字段
+        ];
+
+        $this->mytable = [
+            'foot_tpl' => $this->_is_admin_auth('del') ? '<label class="table_select_all"><input onclick="dr_table_select_all(this)" type="checkbox"><span></span></label>
+    <label><button type="button" onclick="dr_table_option(\''.(IS_ADMIN ? dr_url($uriprefix.'/recycle_all_del') : dr_member_url($uriprefix.'/recycle_all_del')).'\', \''.dr_lang('你确定要彻底销毁它们吗？').'\')" class="btn red btn-sm"> <i class="fa fa-trash"></i> '.dr_lang('销毁').'</button></label>' : '',
+            'link_tpl' => '',
+            'link_var' => 'html = html.replace(/\{id\}/g, row.id);',
+        ];
+        $this->mytable['foot_tpl'].= '<label><button type="button" onclick="dr_table_option(\''.(IS_ADMIN ? dr_url($uriprefix.'/recycle_restore_del') : dr_member_url($uriprefix.'/recycle_restore_del')).'\', \''.dr_lang('你确定要还原它们吗？').'\')" class="btn green btn-sm"> <i class="fa fa-rotate-left"></i> '.dr_lang('还原').'</button></label>';
+        $this->mytable['foot_tpl'].= '<label><button type="button" onclick="dr_ajax_confirm_url(\''.(IS_ADMIN ? dr_url($uriprefix.'/recycle_clear_del') : dr_member_url($uriprefix.'/recycle_clear_del')).'\', \''.dr_lang('你确定要清空回收站吗？').'\', \''.dr_now_url().'\')" class="btn red btn-sm"> <i class="fa fa-close"></i> '.dr_lang('清空回收站').'</button></label>';
+
+        $lurl = (IS_ADMIN ? dr_url($uriprefix.'/recycle_show_del') : dr_member_url($uriprefix.'/recycle_show_del')).'&id={id}';
+        $lurl = 'javascript:dr_iframe_show(\''.dr_lang('查看').'\', \''.$lurl.'\');';
+        $this->mytable['link_tpl'].= '<label><a href="'.$lurl.'" class="btn btn-xs red"> <i class="fa fa-edit"></i> '.dr_lang('查看').'</a></label>';
+
+
+        $data['mytable'] = $this->mytable;
+        $data['mytable_name'] = 'mytable';
+        $data['mytable_pagesize'] = $size;
+        $data['is_search'] = true;
+        $data['is_show_export'] = false;
+        $data['is_fixed_columns'] =  false;
+        $data['is_show_search_bar'] = true;
+        $data['menu'] = '';
+        $data['field'] = $this->init['field'];
+
+        \Phpcmf\Service::V()->assign($data);
+
+        \Phpcmf\Service::V()->display('table_list.html');
     }
 
     // 分页配置文件加载
