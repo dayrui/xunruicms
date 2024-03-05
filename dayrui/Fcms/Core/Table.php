@@ -850,7 +850,7 @@ class Table extends \Phpcmf\Common {
      * */
     protected function _Recycle_Init() {
         $table = $this->init['table'];
-        $rtable = $table.'_recyclex';//改名字优化
+        $rtable = $table.'_recycle';
         if (!$this->_db()->is_table_exists($rtable)) {
             // 回收表不存在时创建新表
             $this->_db()->query('
