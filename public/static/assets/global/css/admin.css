@@ -8778,7 +8778,8 @@ body[ng-controller] .modal {
 
 .tabbable-line>.nav-tabs>li.active>a {
     border: 0;
-    color: #333
+    color: #333;
+    font-weight: bold;
 }
 
 .tabbable-line>.nav-tabs>li.active>a>i {
@@ -9854,9 +9855,8 @@ body .ui-tooltip {
     border: 0 !important;
 }
 .fc-sku-table thead th {
-    background-color: #edf2f7
+    background-color: #edeff1
 }
-
 
 .form-horizontal .form-group .mt-checkbox-inline,.form-horizontal .form-group .mt-radio-inline {
     padding-bottom: 2px!important
@@ -9915,7 +9915,6 @@ body .ui-tooltip {
     padding-top: 30px!important;
     padding-bottom: 30px!important
 }
-
 
 .icon-caifua:before {
     content: "\e668"
@@ -9998,7 +9997,6 @@ body .ui-tooltip {
     height: 50px;
     overflow: hidden
 }
-
 
 .table tr {
     border-bottom-width: 1px;
@@ -10083,7 +10081,6 @@ code.form-control-static {
 
 }
 
-
 .fc-list-page {
     text-align: right
 }
@@ -10096,17 +10093,13 @@ code.form-control-static {
     body {
         background-color: #fff!important
     }
-
-
     .no-page-break {
         page-break-after: avoid
     }
-
     .page-container {
         margin: 0!important;
         padding: 0!important
     }
-
     .page-content {
         min-height: 300px!important;
         padding: 0 20px 20px!important;
@@ -11430,7 +11423,7 @@ code.form-control-static {
     height: 30px;
     line-height: 30px;
     border: unset;
-    background-color: #F7F7F7;
+    background-color: #edeff1;
     padding: 5px 9px;
 }
 
@@ -13006,7 +12999,7 @@ code.form-control-static {
     text-decoration:none;
 }
 .fc-mb-left-menu .active,.fc-mb-left-menu li:active,.fc-mb-left-menu li:active:focus,.fc-mb-left-menu li:active:hover,.fc-mb-left-menu li:focus,.fc-mb-left-menu li:hover {
-    background: #f1f4f6;
+    background: #edeff1;
 }
 .fc-mb-left-menu .active a {
     color: #3ea9e2;
@@ -13051,9 +13044,9 @@ code.form-control-static {
 
 /****************/
 
-body{background-color:#f5f6f8}
-.main-content {background: #f5f6f8}
-.index-content { background: #f5f6f8 }
+body{background-color:#edeff1}
+.main-content {background: #edeff1}
+.index-content { background: #edeff1 }
 .well { background-color: #ffffff}
 .page-header.navbar {
     background-color:#40aae3
@@ -13401,7 +13394,7 @@ body{background-color:#f5f6f8}
 }
 
 .page-admin-all .page-sidebar .page-sidebar-menu.page-sidebar-menu-light>li .sub-menu>li.active>a,.page-admin-all .page-sidebar .page-sidebar-menu.page-sidebar-menu-light>li .sub-menu>li.open>a,.page-admin-all .page-sidebar .page-sidebar-menu.page-sidebar-menu-light>li .sub-menu>li:hover>a,.page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu.page-sidebar-menu-light>li .sub-menu>li.active>a,.page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu.page-sidebar-menu-light>li .sub-menu>li.open>a,.page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu.page-sidebar-menu-light>li .sub-menu>li:hover>a {
-    background:#f5f6f8!important
+    background:#edeff1!important
 }
 .page-sidebar .sidebar-toggler,.page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .sidebar-toggler {
     background:#3b6992
@@ -13610,7 +13603,7 @@ body{background-color:#f5f6f8}
     background:#d9dee4
 }
 .page-admin-all .page-sidebar .page-sidebar-menu.page-sidebar-menu-light>li .sub-menu>li.active>a,.page-admin-all .page-sidebar .page-sidebar-menu.page-sidebar-menu-light>li .sub-menu>li.open>a,.page-admin-all .page-sidebar .page-sidebar-menu.page-sidebar-menu-light>li .sub-menu>li:hover>a,.page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu.page-sidebar-menu-light>li .sub-menu>li.active>a,.page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu.page-sidebar-menu-light>li .sub-menu>li.open>a,.page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu.page-sidebar-menu-light>li .sub-menu>li:hover>a {
-    background:#f5f6f8!important
+    background:#edeff1!important
 }
 
 .page-footer .page-footer-inner {
@@ -13655,7 +13648,7 @@ body{background-color:#f5f6f8}
 }
 
 .page-admin-all .page-sidebar .page-sidebar-menu > li.active > a > .selected, .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu > li.active > a > .selected {
-    border-right: 12px solid #f5f6f8!important;
+    border-right: 12px solid #edeff1!important;
 }
 .note.note-danger a {
     color: #666;
@@ -13690,7 +13683,7 @@ form .portlet.light .portlet-body {
     padding-bottom: 20px;
 }
 .myfooter .form-actions {
-    background-color: #ecf0f1 !important;
+    background-color: #fff !important;
     padding: 20px 15px 15px 15px !important;
 }
 .right-card-box .portlet.light {
@@ -13797,8 +13790,6 @@ select.form-control {
     float: left;
     width: 100px;
 }
-
-
 .table-bordered2 {
     border: 1px solid #eee;
 }
