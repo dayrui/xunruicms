@@ -329,6 +329,8 @@ class View {
             if (APP_DIR && is_file(MYPATH.'View/'.APP_DIR.'/'.$file)) {
                 return MYPATH . 'View/' . APP_DIR . '/' . $file;
             } elseif (is_file(MYPATH.'View/'.$file) && is_file(COREPATH.'View/'.$file)) {
+                return MYPATH.'View/'.$file;
+            } elseif ((!APP_DIR or $dir == 'admin') && is_file(MYPATH.'View/'.$file)) {
                 // 强制定位admin目录时验证my目录文件
                 return MYPATH.'View/'.$file;
             } elseif (is_file($this->_dir.$file)) {
