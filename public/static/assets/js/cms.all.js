@@ -418,15 +418,19 @@ function dr_iframe(type, url, width, height, rt) {
                         $(body).find("#myform input[name='"+token.name+"']").val(token.value);
                     }
                     if (json.code) {
-                        layer.close(index);
+                        if (rt == 'noclose') {
+                            // 不关闭动作
+                        } else {
+                            layer.close(index);
+                        }
                         if (json.data.jscode) {
                             eval(json.data.jscode);
                             return;
                         } else if (json.data.tourl) {
                             setTimeout("window.location.href = '"+json.data.tourl+"'", 2000);
                         } else {
-                            if (rt == 'nogo') {
-
+                            if (rt == 'nogo' || rt == 'noclose') {
+                                // 不刷新动作
                             } else {
                                 setTimeout("window.location.reload(true)", 2000);
                             }
