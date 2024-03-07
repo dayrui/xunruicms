@@ -21,9 +21,13 @@
                 {/if}
                 <div class="portlet-body">
                     <div class="form-body">
-
+                        {if !$is_iframe_post}
                         {$myfield}
                         {$diyfield}
+                        {else}
+                        {dr_rp($myfield, '<label class="control-label col-md-2">', '<label class="control-label col-md-1">')}
+                        {dr_rp($diyfield, '<label class="control-label col-md-2">', '<label class="control-label col-md-1">')}
+                        {/if}
 
                     </div>
                 </div>

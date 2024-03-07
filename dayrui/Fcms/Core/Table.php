@@ -818,8 +818,8 @@ class Table extends \Phpcmf\Common {
             if ($this->_is_admin_auth('edit')) {
                 $lurl = (IS_ADMIN ? dr_url($uriprefix.'/edit') : dr_member_url($uriprefix.'/edit')).'&id={id}';
                 if ($this->is_iframe_post) {
-                    // 弹窗模式
-                    $lurl = 'javascript:dr_iframe(\'edit\', \''.$lurl.'\', \''.$this->iframe_post_area[0].'\', \''.$this->iframe_post_area[1].'\');';
+                    // 弹窗模式修改
+                    $lurl = 'javascript:dr_iframe(\'edit\', \''.$lurl.'\', \''.$this->iframe_post_area[0].'\', \''.$this->iframe_post_area[1].'\', \'noclose\');';
                 }
                 $this->mytable['link_tpl'].= '<label><a href="'.$lurl.'" class="btn btn-xs red"> <i class="fa fa-edit"></i> '.dr_lang('修改').'</a></label>';
             }
