@@ -128,7 +128,7 @@ class Input {
 	
 	// 安全过滤
 	public function get_user_agent() {
-		return str_replace(['"', "'"], '', \Phpcmf\Service::L('Security')->xss_clean((string)$_SERVER['HTTP_USER_AGENT'], true));
+		return dr_safe_replace(str_replace(['"', "'"], '', \Phpcmf\Service::L('Security')->xss_clean((string)$_SERVER['HTTP_USER_AGENT'], true)));
 	}
 
     /**
