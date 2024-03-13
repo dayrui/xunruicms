@@ -43,6 +43,7 @@ class View {
     public $_is_mobile; // 是否是移动端模板
     private $_is_pc; // 是否是pc模板
     private $_sql; // 最近运行的sql语句
+    private $_sql_time; // 最近运行的sql语句的时间
 
     private $performanceData = []; // 用于调试栏数据
     private $loadjs = []; // 加载的js
@@ -1349,6 +1350,7 @@ class View {
         }
 
         $this->_sql = $sql;
+        $this->_sql_time = $time;
 
         // 挂钩点 模板中的sql语句
         \Phpcmf\Hooks::trigger('cms_view_sql', $sql, $time, $this->_view_file, $this->_list_tag);
@@ -2079,6 +2081,7 @@ class View {
                     }
                 }
                 $debug.= '<p>查询解析: '.$sql.'</p>';
+                $debug.= '<p>查询耗时: '.$this->_sql_time.'s</p>';
             }
 
             $debug.= '<p>当前路由：'.\Phpcmf\Service::L('router')->uri().'</p>';

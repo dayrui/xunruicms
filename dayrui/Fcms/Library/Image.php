@@ -1856,7 +1856,6 @@ class Image {
         // zoom
         imagecopyresampled($target_image, $cropped_image, 0, 0, 0, 0, $target_width, $target_height, $cropped_width, $cropped_height);
 
-        header('Content-Type:image/png');
         imagejpeg($target_image, $new_path, 100);
         imagedestroy($source_image);
         imagedestroy($target_image);
