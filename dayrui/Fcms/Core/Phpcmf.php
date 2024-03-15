@@ -756,7 +756,12 @@ abstract class Common extends \Frame\Controller {
 
         \Phpcmf\Hooks::trigger('cms_404', $msg);
 
-        if (IS_API_HTTP || defined('SC_HTML_FILE')) {
+        if (IS_API_HTTP) {
+            $this->_json(0, $msg);
+        } elseif (defined('SC_HTML_FILE')) {
+            if (isset($_GET['iframe'])) {
+                $this->_html_msg(0, $msg);
+            }
             $this->_json(0, $msg);
         }
 
@@ -789,7 +794,7 @@ abstract class Common extends \Frame\Controller {
     /**
      * 生成静态时的跳转提示
      */
-    protected function _html_msg($code, $msg, $url = '', $note = '') {
+    public function _html_msg($code, $msg, $url = '', $note = '') {
 
         if (\Phpcmf\Service::L('input')->get('is_ajax')) {
             $this->_json($code, $msg, $url);

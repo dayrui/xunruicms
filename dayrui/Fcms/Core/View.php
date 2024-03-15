@@ -2312,7 +2312,11 @@ class View {
             }
             log_message('error', $this->_options['my_web_url'].'：'.$msg);
             if (defined('SC_HTML_FILE')) {
-                \Phpcmf\Service::C()->_json(0, $this->_options['my_web_url'].'：'.$msg);
+                if (isset($_GET['iframe'])) {
+                    \Phpcmf\Service::C()->_html_msg(0, $this->_options['my_web_url'].'：'.$msg);
+                } else {
+                    \Phpcmf\Service::C()->_json(0, $this->_options['my_web_url'].'：'.$msg);
+                }
             }
         }
 
