@@ -752,7 +752,7 @@ abstract class Common extends \Frame\Controller {
     /**
      * 引用404页面
      */
-    public function goto_404_page($msg) {
+    public function goto_404_page() {
 
         \Phpcmf\Hooks::trigger('cms_404', $msg);
 
@@ -760,7 +760,7 @@ abstract class Common extends \Frame\Controller {
             $this->_json(0, $msg);
         } elseif (defined('SC_HTML_FILE')) {
             if (isset($_GET['iframe'])) {
-                $this->_html_msg(0, $msg);
+                return $msg;
             }
             $this->_json(0, $msg);
         }
