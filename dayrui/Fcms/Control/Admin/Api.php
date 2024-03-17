@@ -1087,8 +1087,8 @@ class Api extends \Phpcmf\Common {
      */
     public function test_https() {
         $url = str_replace('http://', 'https://', ROOT_URL);
-        $code = dr_catcher_data($url.'index.php?s=api&c=test', 5);
-        if ($code && strpos($code, 'This') !== false) {
+        $code = dr_catcher_data($url.'index.php?s=api&c=test&m=https', 5);
+        if ($code && strpos($code, 'xunruicms') !== false) {
             $this->_json(1, dr_lang('支持HTTPS访问'));
         } else {
             ob_start();

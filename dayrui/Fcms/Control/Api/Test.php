@@ -9,6 +9,11 @@
 class Test extends \Phpcmf\Common
 {
 
+    // test
+    public function https() {
+        echo 'xunruicms';
+    }
+
     public function index() {
 
         $license = \Phpcmf\Service::R(MYPATH.'Config/License.php');
