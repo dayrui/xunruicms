@@ -91,6 +91,8 @@ class Cache extends \Phpcmf\Model {
     // \Phpcmf\Service::M('cache')->sync_cache(); $is_site 表示是否作为项目来更新缓存
     public function sync_cache($name = '', $namepspace = '', $is_site_param = 0) {
 
+        \Phpcmf\Hooks::trigger('update_cache');
+
         if (!$this->is_sync_cache) {
             if (dr_is_use_module()) {
                 $this->site_cache = $this->table('site')->where('disabled', 0)->getAll();
@@ -125,7 +127,6 @@ class Cache extends \Phpcmf\Model {
 
     // 更新数据结构
     public function update_db() {
-
         // 执行插件自己的更新程序
         $local = \Phpcmf\Service::Apps();
         foreach ($local as $dir => $path) {
@@ -138,6 +139,9 @@ class Cache extends \Phpcmf\Model {
 
     // 更新全部项目缓存
     public function update_site_cache() {
+
+        \Phpcmf\Hooks::trigger('update_cache');
+
         if (dr_is_use_module()) {
             if (is_file(IS_USE_MODULE.'Models/Site.php')) {
                 \Phpcmf\Service::M('site', 'module')->update_site_cache();
@@ -189,6 +193,8 @@ class Cache extends \Phpcmf\Model {
 
     // 更新当前项目缓存
     public function update_cache() {
+
+        \Phpcmf\Hooks::trigger('update_cache');
 
         if (dr_is_use_module()) {
             if (is_file(IS_USE_MODULE.'Models/Site.php')) {
