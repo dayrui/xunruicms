@@ -34,6 +34,7 @@ class System extends \Phpcmf\Model {
         'SYS_ADMIN_MODE'	=> '禁用后台登录进行模式选择',
         'SYS_ADMIN_LOGINS'	=> '登录失败N次后，系统将锁定登录',
         'SYS_ADMIN_LOGIN_TIME'	=> '登录失败锁定后在x分钟内禁止登录',
+        'SYS_ADMIN_LOGIN_AES'	=> '登录密码加密处理',
         'SYS_ADMIN_OAUTH'    => '后台启用快捷登录',
 
         'SYS_ATTACHMENT_DB'	    => '附件归属开启模式',

@@ -58,6 +58,9 @@ class Login extends \Phpcmf\Common
 			} elseif (empty($data['username']) || empty($data['password'])) {
 				$this->_json(0, dr_lang('账号或密码必须填写'));
 			} else {
+                if (defined('SYS_ADMIN_LOGIN_AES') && SYS_ADMIN_LOGIN_AES && !isset($_POST['is_aes'])) {
+                    $this->_json(0, dr_lang('当前登录模板不支持AES加密传输'));
+                }
                 $data['username'] = trim($data['username']);
 				$login = \Phpcmf\Service::M('auth')->login($data['username'], $data['password']);
                 if (isset($this->admin) && is_array($this->admin)) {

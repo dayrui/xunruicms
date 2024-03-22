@@ -36,6 +36,7 @@ class System extends \Phpcmf\Common
                 'SYS_ADMIN_LOG' => intval($post['SYS_ADMIN_LOG']),
                 'SYS_ADMIN_CODE' => intval($post['SYS_ADMIN_CODE']),
                 'SYS_ADMIN_LOGINS' => intval($post['SYS_ADMIN_LOGINS']),
+                'SYS_LOGIN_AES' => intval($post['SYS_LOGIN_AES']),
                 'SYS_ADMIN_LOGIN_TIME' => intval($post['SYS_ADMIN_LOGIN_TIME']),
                 'SYS_ADMIN_PAGESIZE' => intval($post['SYS_ADMIN_PAGESIZE']),
                 'SYS_ADMIN_OAUTH' => intval($post['SYS_ADMIN_OAUTH']),
