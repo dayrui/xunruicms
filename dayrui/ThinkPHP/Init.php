@@ -39,7 +39,7 @@ if (! function_exists('csrf_hash')) {
      */
     function csrf_hash()
     {
-
+        return substr(SYS_KEY, 3, 10);
     }
 }
 
