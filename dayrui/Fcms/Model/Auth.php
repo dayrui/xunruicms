@@ -128,19 +128,6 @@ class Auth extends \Phpcmf\Model {
             ->get()
             ->getRowArray();
         $password = dr_safe_password($password);
-        if (!IS_API_HTTP && defined('SYS_ADMIN_LOGIN_AES') && SYS_ADMIN_LOGIN_AES) {
-            if (!function_exists('openssl_decrypt')) {
-                log_message('error', '由于服务器环境没有启用openssl_decrypt，因此后台登录密码加密验证不被启用');
-            } else {
-                $password = openssl_decrypt(
-                    $password,
-                    'AES-128-CBC',
-                    substr(md5(csrf_hash()), 0, 16), 0,
-                    substr(md5(csrf_hash()), 10, 16)
-                );
-            }
-            $password = md5($password);
-        }
         // 判断用户状态
         if (!$data) {
             return dr_return_data(0, IS_DEV ? dr_lang('账号[%s]不存在', $username) : dr_lang('登录失败'), 1);
@@ -149,7 +136,25 @@ class Auth extends \Phpcmf\Model {
         } elseif (IS_API_HTTP && md5(md5($password).$data['salt'].md5($password)) == $data['password']) {
             $password = md5($password);
         }
-        if (md5($password.$data['salt'].$password) != $data['password']) {
+        if (!IS_API_HTTP && defined('SYS_ADMIN_LOGIN_AES') && SYS_ADMIN_LOGIN_AES) {
+            if (!function_exists('openssl_decrypt')) {
+                log_message('error', '由于服务器环境没有启用openssl_decrypt，因此后台登录密码加密验证不被启用');
+                return dr_return_data(0, dr_lang('服务器环境不支持加密传输'));
+            } else {
+                $password = openssl_decrypt(
+                    $password,
+                    'AES-128-CBC',
+                    substr(md5(SYS_KEY), 0, 16), 0,
+                    substr(md5(SYS_KEY), 10, 16)
+                );
+                if (!$password) {
+                    return dr_return_data(0, dr_lang('密码解析失败').openssl_error_string());
+                }
+            }
+            if (md5(md5($password).$data['salt'].md5($password)) != $data['password']) {
+                return dr_return_data(0, IS_DEV ? dr_lang('密码[%s]不正确', $password) : dr_lang('登录失败'), 3);
+            }
+        } else if (md5($password.$data['salt'].$password) != $data['password']) {
             return dr_return_data(0, IS_DEV ? dr_lang('密码不正确') : dr_lang('登录失败'), 3);
         }
         $data['uid'] = $uid = (int)$data['id'];

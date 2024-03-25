@@ -186,6 +186,8 @@ class Login extends \Phpcmf\Common
 			'form' => dr_form_hidden(),
             'oauth' => $oauth,
 			'license' => $license,
+            'crypto_key' => substr(md5(csrf_hash()), 0, 16),
+            'crypto_iv' => substr(md5(csrf_hash()), 10, 16),
             'login_url' => '/'.SELF.'?c=login&go='.urlencode($url),
         ]);
         if (isset($_GET['is_cloud']) && $_GET['is_cloud']) {
