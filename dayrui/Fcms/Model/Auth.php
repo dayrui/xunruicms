@@ -141,6 +141,7 @@ class Auth extends \Phpcmf\Model {
                 log_message('error', '由于服务器环境没有启用openssl_decrypt，因此后台登录密码加密验证不被启用');
                 return dr_return_data(0, dr_lang('服务器环境不支持加密传输'));
             } else {
+                $old = $password;
                 $password = openssl_decrypt(
                     $password,
                     'AES-128-CBC',
@@ -148,7 +149,7 @@ class Auth extends \Phpcmf\Model {
                     substr(md5(SYS_KEY), 10, 16)
                 );
                 if (!$password) {
-                    return dr_return_data(0, dr_lang('密码解析失败').openssl_error_string());
+                    return dr_return_data(0, IS_DEV ? dr_lang('密码[%s]解析失败', $old).openssl_error_string() : dr_lang('密码解析失败'));
                 }
             }
             if (md5(md5($password).$data['salt'].md5($password)) != $data['password']) {

@@ -51,7 +51,7 @@
         </div>
     </div>
 </form>
-<script src="{THEME_PATH}assets/global/plugins/jquery.md5.js?v={CMF_UPDATE_TIME}" type="text/javascript"></script>
+<script src="{$THEME_PATH}assets/global/plugins/crypto-js.min.js?v={CMF_UPDATE_TIME}" type="text/javascript"></script>
 <script type="text/javascript">
     var is_admin = 2;
     if (typeof parent.layer == 'function') {
@@ -60,7 +60,31 @@
     function dr_submit() {
         // 这里进行md5加密存储
         var pwd = $('#dr_password').val();
-        pwd = $.md5(pwd); // 进行md5加密
+        {if defined('SYS_ADMIN_LOGIN_AES') && SYS_ADMIN_LOGIN_AES}
+        $('.login-form').append('<input type="hidden" name="is_aes" value="1">');
+        var key = CryptoJS.enc.Utf8.parse('{$crypto_key}');
+        var iv = CryptoJS.enc.Utf8.parse('{$crypto_iv}');
+        var pw = pwd;
+        pwd = CryptoJS.AES.encrypt(pwd, key, {
+            mode: CryptoJS.mode.CBC,
+            iv: iv,
+            padding: CryptoJS.pad.Pkcs7
+        });
+        {if IS_DEV}
+        pwd2 = CryptoJS.AES.decrypt(pwd, key, {
+            mode: CryptoJS.mode.CBC,
+            iv: iv,
+            padding: CryptoJS.pad.Pkcs7
+        });
+        pwd2 = pwd2.toString(CryptoJS.enc.Utf8);
+        if (pwd2 != pw) {
+            alert("CryptoJS密码解析失败");
+            return;
+        }
+        {/if}
+        {else}
+        pwd = CryptoJS.MD5(pwd);
+        {/if}
         $('#dr_password').val(pwd);
         $.ajax({type: "POST",dataType:"json", url: '{$login_url}', data: $(".login-form").serialize(),
             success: function(json) {
@@ -72,6 +96,9 @@
                 if (json.code == 1) {
                     window.location.href = json.data.url;
                 } else {
+                    {if defined('SYS_ADMIN_LOGIN_AES') && SYS_ADMIN_LOGIN_AES}
+                    $('#dr_password').val("");
+                    {/if}
                     $('.fc-code img').click();
                     dr_tips(0, json.msg);
                 }

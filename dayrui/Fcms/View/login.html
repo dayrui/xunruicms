@@ -100,7 +100,7 @@
         // 这里进行md5加密存储
         var pwd = $('#password').val();
         if (pwd.length == 32) {
-            // 已经加密过的
+            // 已经加密过
         } else {
             {if defined('SYS_ADMIN_LOGIN_AES') && SYS_ADMIN_LOGIN_AES}
             $('.login-form').append('<input type="hidden" name="is_aes" value="1">');
