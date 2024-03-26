@@ -2234,13 +2234,12 @@ Page Loading
     Boby
     ****/
 body {
-    background-color: #2890ff; }
+    background-color: #343e4d; }
 
 body.page-boxed {
     background-color: #C0C6C2; }
 
 
-/* here you can put your own css to customize and override the theme */
 /* Cubic Bezier Transition */
 /***
 New Profile Page
