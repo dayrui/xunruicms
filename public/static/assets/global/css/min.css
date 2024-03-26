@@ -663,7 +663,7 @@ Page sidebar
 
 /* Page Sidebar */
 .page-sidebar {
-    background: #40aae3;
+    background: #343e4d;
 }
 .page-sidebar.navbar-collapse,
 .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover.navbar-collapse {
@@ -1929,7 +1929,7 @@ Page Loading
     /* Top notification menu/bar */
     /* Header seaech box */ }
 .page-header.navbar .page-logo {
-    background: #40aae3; }
+    background: #2890ff; }
 .page-header.navbar .page-top {
     box-shadow: 0px 1px 10px 0px rgba(50, 50, 50, 0.2);
     background: #ffffff; }
@@ -1946,7 +1946,7 @@ Page Loading
 .page-header.navbar .top-menu .navbar-nav > li.dropdown .dropdown-toggle > i {
     color: #C0CDDC; }
 .page-header.navbar .top-menu .navbar-nav > li.dropdown .dropdown-toggle .badge.badge-default {
-    background-color: #40aae3;
+    background-color: #2890ff;
     color: #ffffff; }
 .page-header.navbar .top-menu .navbar-nav > li.dropdown.open .dropdown-toggle {
     background-color: #f9fafc; }
@@ -1977,10 +1977,10 @@ Page Loading
 .page-header.navbar .top-menu .navbar-nav > li.dropdown-notification .dropdown-menu .dropdown-menu-list > li > a:hover .time {
     background: #e4e4e4; }
 .page-header.navbar .top-menu .navbar-nav > li.dropdown-inbox > .dropdown-toggle > .circle {
-    background-color: #40aae3;
+    background-color: #2890ff;
     color: #ffffff; }
 .page-header.navbar .top-menu .navbar-nav > li.dropdown-inbox > .dropdown-toggle > .corner {
-    border-color: transparent transparent transparent #40aae3; }
+    border-color: transparent transparent transparent #2890ff; }
 .page-header.navbar .top-menu .navbar-nav > li.dropdown-inbox .dropdown-menu .dropdown-menu-list .subject .from {
     color: #5b9bd1; }
 .page-header.navbar .top-menu .navbar-nav > li.dropdown-tasks .dropdown-menu .dropdown-menu-list .progress {
@@ -2083,7 +2083,7 @@ Page Loading
 .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu > li.active > a, .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu > li.active.open > a,
 .page-sidebar .page-sidebar-menu > li.active > a,
 .page-sidebar .page-sidebar-menu > li.active.open > a {
-    background: #232f44;
+    background: #161c24;
     color: white; }
 .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu > li.active > a:hover, .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu > li.active.open > a:hover,
 .page-sidebar .page-sidebar-menu > li.active > a:hover,
@@ -2133,7 +2133,7 @@ Page Loading
 .page-sidebar .page-sidebar-menu .sub-menu > li:hover > a,
 .page-sidebar .page-sidebar-menu .sub-menu > li.open > a,
 .page-sidebar .page-sidebar-menu .sub-menu > li.active > a {
-    background: #2189be !important; }
+    background: #161c24 !important; }
 .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu .sub-menu > li:hover > a > i, .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu .sub-menu > li.open > a > i, .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu .sub-menu > li.active > a > i,
 .page-sidebar .page-sidebar-menu .sub-menu > li:hover > a > i,
 .page-sidebar .page-sidebar-menu .sub-menu > li.open > a > i,
@@ -2220,7 +2220,7 @@ Page Loading
 @media (max-width: 767px) {
     /* 767px */
     .page-header.navbar {
-        background: #40aae3;
+        background: #2890ff;
         /* Top menu */ }
     .page-header.navbar .top-menu .navbar-nav > li.dropdown > .dropdown-toggle:hover {
         background-color: #eff1f6; } }
@@ -2234,7 +2234,7 @@ Page Loading
     Boby
     ****/
 body {
-    background-color: #40aae3; }
+    background-color: #2890ff; }
 
 body.page-boxed {
     background-color: #C0C6C2; }
