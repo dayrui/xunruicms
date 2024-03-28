@@ -145,7 +145,7 @@ class Seo {
 
         // 自定义菜单显示
         if (function_exists('dr_my_member_menu')) {
-            $seo['menu'] = dr_my_member_menu( $seo['menu']);
+            $seo['menu'] = dr_my_member_menu($seo['menu']);
         }
 
         list($uri1, $uri2) = \Phpcmf\Service::L('router')->member_uri();
