@@ -117,7 +117,7 @@ class Login extends \Phpcmf\Common
                         }
                     } else {
                         // 写入日志
-                        \Phpcmf\Service::L('input')->system_log($login['msg'], 1, [], $data['username']);
+                        \Phpcmf\Service::L('input')->system_log($login['msg'], 1, [], dr_safe_replace($data['username']));
                     }
                     $this->_json(0, $login['msg']);
                 }
