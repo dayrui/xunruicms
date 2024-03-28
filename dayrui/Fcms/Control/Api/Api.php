@@ -104,40 +104,22 @@ class Api extends \Phpcmf\Common {
      * 搜索
      */
     public function search() {
-
-        $dir = dr_safe_filename(\Phpcmf\Service::L('input')->get('dir'));
-        if (!$dir) {
-            $this->_msg(0, dr_lang('模块参数不能为空'));
-        } elseif (!dr_is_module($dir)) {
-            $this->goto_404_page(dr_lang('模块[%s]未安装', $dir));
+        if (function_exists('dr_api_search')) {
+            dr_module_api_search();
+        } else {
+            exit('需要升级最新版的【内容建站系统】插件');
         }
-
-        // 跳转url
-        dr_redirect(\Phpcmf\Service::L('Router')->search_url([], 'keyword', dr_safe_replace(\Phpcmf\Service::L('input')->get('keyword')), $dir));
     }
 
     /**
      * 检查关键字
      */
     public function checktitle() {
-
-        // 获取参数
-        $id = (int)\Phpcmf\Service::L('input')->get('id');
-        $title = dr_safe_replace(htmlspecialchars((string)\Phpcmf\Service::L('input')->get('title')));
-        $module = dr_safe_filename(\Phpcmf\Service::L('input')->get('module'));
-        $cache = \Phpcmf\Service::L('cache')->get('module-'.SITE_ID.'-'.$module);
-
-        // 判断参数
-        if (!$title || !$module || !$cache) {
-            exit('');
+        if (function_exists('dr_module_checktitle')) {
+            dr_module_api_search();
+        } else {
+            exit('需要升级最新版的【内容建站系统】插件');
         }
-
-        // 判断是否重复存在
-        if (\Phpcmf\Service::M()->db->table(dr_module_table_prefix($module))->where('id<>'.$id)->where('title', $title)->countAllResults()) {
-            exit(dr_lang('已经有相同的%s存在', isset($cache['field']['title']['name']) ? $cache['field']['title']['name'] : dr_lang('主题')));
-        }
-
-        exit('');
     }
 
     /**
