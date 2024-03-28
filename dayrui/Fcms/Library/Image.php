@@ -1043,17 +1043,15 @@ class Image {
         $x_axis = intval($x_axis);
         $y_axis = intval($y_axis);
         // make a best guess as to whether we're dealing with an image with alpha transparency or no/binary transparency
-        if ($alpha > 0)
-        {
+        if ($alpha > 0 || $wm_img_type !== 3 ) {
             // copy the image directly, the image's alpha transparency being the sole determinant of blending
             imagecopy($src_img, $wm_img, $x_axis, $y_axis, 0, 0, $wm_width, $wm_height);
-        }
-        else
-        {
+        } else {
             // set our RGB value from above to be transparent and merge the images with the specified opacity
             imagecolortransparent($wm_img, imagecolorat($wm_img, $this->wm_x_transp, $this->wm_y_transp));
             imagecopymerge($src_img, $wm_img, $x_axis, $y_axis, 0, 0, $wm_width, $wm_height, $this->wm_opacity);
         }
+
         // We can preserve transparency for PNG images
         if ($this->image_type === 3)
         {
