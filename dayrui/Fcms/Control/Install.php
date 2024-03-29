@@ -512,6 +512,9 @@ require('index.php');");
             foreach($queries as $query) {
                 $ret.= $query[0] == '#' || $query[0].$query[1] == '--' ? '' : $query;
             }
+            if (strpos($ret, '/*') === 0 && preg_match('/\/\*(.+)\*\//U', $ret)) {
+                continue;
+            }
             if (!$ret) {
                 continue;
             }
@@ -541,6 +544,9 @@ require('index.php');");
                 $ret.= $query[0] == '#' || $query[0].$query[1] == '--' ? '' : $query;
             }
             if (!$ret) {
+                continue;
+            }
+            if (strpos($ret, '/*') === 0 && preg_match('/\/\*(.+)\*\//U', $ret)) {
                 continue;
             }
             if (!$this->db->simpleQuery($ret)) {

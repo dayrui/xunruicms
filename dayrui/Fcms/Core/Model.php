@@ -1197,6 +1197,9 @@ class Model {
             if (!$ret) {
                 continue;
             }
+            if (strpos($ret, '/*') === 0 && preg_match('/\/\*(.+)\*\//U', $ret)) {
+                continue;
+            }
             if (!$this->db->simpleQuery(dr_format_create_sql($ret))) {
                 $rt = $this->db->error();
                 $this->_clear();
