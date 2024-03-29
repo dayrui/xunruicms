@@ -116,7 +116,7 @@ class Api extends \Phpcmf\Common {
      */
     public function checktitle() {
         if (function_exists('dr_module_checktitle')) {
-            dr_module_api_search();
+            dr_module_checktitle();
         } else {
             exit('需要升级最新版的【内容建站系统】插件');
         }
