@@ -61,6 +61,10 @@ if (version_compare(PHP_VERSION, $max) > 0) {
     dr_echo_msg(1, 'PHP版本要求：'.$min.'及以上，当前'.PHP_VERSION.'');
 }
 
+if (strpos(PHP_VERSION, '7.2') === 0 && !extension_loaded('ionCube Loader')) {
+    dr_echo_msg(2, '试用插件安装：当前环境无法运行试用插件，PHP环境中的ionCube扩展没有安装成功');
+}
+
 
 dr_echo_msg(1, '当前脚本地址：'.$_SERVER['SCRIPT_NAME']);
 dr_echo_msg(1, '当前脚本路径：'.__FILE__);
@@ -115,12 +119,6 @@ if (! extension_loaded('curl')) {
 }
 if (! extension_loaded('json')) {
     dr_echo_msg(0, 'PHP扩展库：JSON未安装');
-}
-//if (! extension_loaded('intl')) {
-  //  dr_echo_msg(0, 'PHP扩展库：intl未安装');
-//}
-if (! extension_loaded('mbstring')) {
-    dr_echo_msg(0, 'PHP扩展库：mbstring未安装');
 }
 if (! extension_loaded('xml')) {
     dr_echo_msg(0, 'PHP扩展库：xml未安装');
@@ -246,6 +244,8 @@ function dr_echo_msg($code, $msg) {
         } else {
             echo '<a href="https://www.baidu.com/s?ie=UTF-8&wd=迅睿CMS'.urlencode(strip_tags($msg)).'" target="_blank" style="color:red;text-decoration:none;">'.$msg.'</a>';
         }
+    } elseif ($code == 2) {
+        echo '<font color=blue>'.$msg.'</font>';
     } else {
         echo '<font color=green>'.$msg.'</font>';
     }
