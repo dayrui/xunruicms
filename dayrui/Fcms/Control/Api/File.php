@@ -516,6 +516,17 @@ class File extends \Phpcmf\Common
                 // 不存在
                 $this->_msg(0, dr_lang('附件[%s]不存在', $id));
             }
+            if ($info['remote'] && !is_file($info['file'])
+                && defined('SYS_ATTACHMENT_DOWN_REMOTE') && SYS_ATTACHMENT_DOWN_REMOTE) {
+                // 远程附件，文件不存在，下载到本地缓存
+                $info['file'] = WRITEPATH.'temp/remote_down_'.md5($id).'.'.$info['fileext'];
+                if (!is_file($info['file'])) {
+                    $rs = dr_catcher_data($info['url'], 20);
+                    if ($rs) {
+                        file_put_contents($info['file'], $rs);
+                    }
+                }
+            }
             if (is_file($info['file'])) {
                 \Phpcmf\Service::L('file')->down(
                     $info['file'],
@@ -528,10 +539,30 @@ class File extends \Phpcmf\Common
             }
             exit;
         } else {
-            $info = dr_file($id);
+            $info = dr_file($id, 1);
             if (!$info) {
                 // 不存在
                 $this->_msg(0, dr_lang('附件[%s]不存在', $id));
+            }
+            if (defined('SYS_ATTACHMENT_DOWN_REMOTE') && SYS_ATTACHMENT_DOWN_REMOTE) {
+                // 远程附件，文件不存在，下载到本地缓存
+                $filename = \Phpcmf\Service::L('upload')->file_name($info);
+                $fileext = \Phpcmf\Service::L('upload')->file_ext($info);
+                $ifile = WRITEPATH.'temp/remote_down_url_'.md5($id).'.'.$fileext;
+                if (!is_file($ifile)) {
+                    $rs = dr_catcher_data($info, 20);
+                    if ($rs) {
+                        file_put_contents($ifile, $rs);
+                    }
+                }
+                if (is_file($ifile)) {
+                    \Phpcmf\Service::L('file')->down(
+                        $ifile,
+                        $info,
+                        (isset($rt['name']) && $rt['name'] ? $rt['name'] : $filename).'.'.$fileext
+                    );
+                    exit;
+                }
             }
             $this->_redirect_url($info);
         }
