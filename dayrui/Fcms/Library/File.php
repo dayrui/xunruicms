@@ -234,12 +234,12 @@ class File {
         if (FALSE === $handle) {
             \Phpcmf\Service::C()->_msg(0, dr_lang('文件已经损坏'));
         }
-
+        $size = min(defined('SYS_ATTACHMENT_DOWN_SIZE') ? SYS_ATTACHMENT_DOWN_SIZE : 50, 50);
         $filesize = filesize($file);
-        if ($filesize > 1024 * 1024 * 50) {
+        if ($filesize > 1024 * 1024 * $size) {
             // 大文件转向
             if (IS_DEV) {
-                log_message('debug', '由于文件大于50MB，重命名文件功能将失效，下载地址将跳转到文件本身的地址');
+                log_message('debug', '由于文件大于'.$size.'MB，重命名文件功能将失效，下载地址将跳转到文件本身的地址');
             }
             dr_redirect($url);
         } else {

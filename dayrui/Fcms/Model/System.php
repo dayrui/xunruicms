@@ -43,6 +43,8 @@ class System extends \Phpcmf\Model {
         'SYS_ATTACHMENT_CF'	=> '重复上传控制',
         'SYS_ATTACHMENT_REL'   => '相对于当前站点的域名',
         'SYS_ATTACHMENT_SAFE'	=> '附件上传安全模式',
+        'SYS_ATTACHMENT_DOWN_REMOTE' => '下载远程附件重命名方式',
+        'SYS_ATTACHMENT_DOWN_SIZE' => '下载附件重命名条件',
         'SYS_ATTACHMENT_PATH'	=> '附件上传路径',
         'SYS_ATTACHMENT_SAVE_TYPE'	=> '附件存储方式',
         'SYS_ATTACHMENT_SAVE_DIR'	=> '附件存储目录',

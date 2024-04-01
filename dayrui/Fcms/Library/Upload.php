@@ -345,12 +345,21 @@ class Upload {
         return !$this->error[$code] ? '上传错误('.$code.')' : $this->error[$code];
     }
 
+
+    public function file_name($name) {
+        return $this->_file_name($name);
+    }
+
     /**
      * 获取文件名
      */
     protected function _file_name($name) {
         strpos($name, '/') !== false && $name = trim(strrchr($name, '/'), '/');
         return substr($name, 0, strrpos($name, '.'));
+    }
+
+    public function file_ext($name) {
+        return $this->_file_ext($name);
     }
 
     /**

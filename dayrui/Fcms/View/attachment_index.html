@@ -9,6 +9,9 @@
                 <li class="{if $page==0}active{/if}">
                     <a href="#tab_0" data-toggle="tab" onclick="$('#dr_page').val('0')"> <i class="fa fa-cog"></i> {dr_lang('附件设置')} </a>
                 </li>
+                <li class="{if $page==3}active{/if}">
+                    <a href="#tab_3" data-toggle="tab" onclick="$('#dr_page').val('3')"> <i class="fa fa-download"></i> {dr_lang('下载设置')} </a>
+                </li>
                 <li class="{if $page==2}active{/if}">
                     <a href="#tab_2" data-toggle="tab" onclick="$('#dr_page').val('2')"> <i class="fa fa-user"></i> {dr_lang('头像存储')} </a>
                 </li>
@@ -22,7 +25,36 @@
         <div class="portlet-body">
             <div class="tab-content">
 
+                <div class="tab-pane {if $page==3}active{/if}" id="tab_3">
+                    <div class="form-body">
 
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('附件下载重命名')}</label>
+                            <div class="col-md-9">
+                                <div class="input-group input-small">
+                                    <input class="form-control " type="text" name="data[SYS_ATTACHMENT_DOWN_SIZE]" value="{php echo $data['SYS_ATTACHMENT_DOWN_SIZE']?$data['SYS_ATTACHMENT_DOWN_SIZE']:50;}" >
+                                    <span class="input-group-btn">
+                                            <button class="btn blue" onclick="dr_test_domain_dir('dr_attachment_dir')" type="button">MB</button>
+                                        </span>
+                                </div>
+                                <span class="help-block">{dr_lang('控制附件重命名条件，在多少MB以内才支持附件下载重命名，超出就按储存名显示，设置的参数越大可能会下载失败')}</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('远程附件下载命名')}</label>
+                            <div class="col-md-9">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_ATTACHMENT_DOWN_REMOTE]" value="0" {if empty($data['SYS_ATTACHMENT_DOWN_REMOTE'])}checked{/if} /> {dr_lang('储存名')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_ATTACHMENT_DOWN_REMOTE]" value="1" {if $data['SYS_ATTACHMENT_DOWN_REMOTE']}checked{/if} /> {dr_lang('文件名')} <span></span></label>
+                                </div>
+                                <span class="help-block">{dr_lang('下载附件时对远程储存的附件进行重命名，按储存名下载效率更高')}</span>
+                                <span class="help-block">{dr_lang('储存名指随机字符名字，文件名指后台可修改的名字')}</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
 
                 <div class="tab-pane {if $page==0}active{/if}" id="tab_0">
                     <div class="form-body">
@@ -92,7 +124,8 @@
                                         {/loop}
                                     </select>
                                 </label>
-                                <span class="help-block">{dr_lang('设置全局存储时，全站附件上传都会存储到此存储策略中；按字段设置时，需要手动为每个字段设置不同的存储策略')}</span>
+                                <span class="help-block">{dr_lang('设置全局存储时，全站附件上传都会存储到此存储策略中')}</span>
+                                <span class="help-block">{dr_lang('按字段设置时，需要手动为每个字段设置不同的存储策略')}</span>
                             </div>
                         </div>
 
