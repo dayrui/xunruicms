@@ -51,7 +51,11 @@
         </div>
     </div>
 </form>
+{if defined('SYS_ADMIN_LOGIN_AES') && SYS_ADMIN_LOGIN_AES}
 <script src="{$THEME_PATH}assets/global/plugins/crypto-js.min.js?v={CMF_UPDATE_TIME}" type="text/javascript"></script>
+{else}
+<script src="{$THEME_PATH}assets/global/plugins/jquery.md5.js?v={CMF_UPDATE_TIME}" type="text/javascript"></script>
+{/if}
 <script type="text/javascript">
     var is_admin = 2;
     if (typeof parent.layer == 'function') {
@@ -83,7 +87,7 @@
         }
         {/if}
         {else}
-        pwd = CryptoJS.MD5(pwd);
+        pwd = $.md5(pwd); // 进行md5加密
         {/if}
         $('#dr_password').val(pwd);
         $.ajax({type: "POST",dataType:"json", url: '{$login_url}', data: $(".login-form").serialize(),
