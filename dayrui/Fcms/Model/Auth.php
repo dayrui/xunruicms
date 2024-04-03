@@ -251,8 +251,8 @@ class Auth extends \Phpcmf\Model {
             'type' => $type,
             'msg' => dr_strcut(dr_clearhtml($msg), 100),
             'uri' => $uri,
-            'to_rid' => $to['to_rid'] ? $to['to_rid'] : 0,
-            'to_uid' => $to['to_uid'] ? $to['to_uid'] : 0,
+            'to_rid' => $this->_get_to_array($to['to_rid']),
+            'to_uid' => $this->_get_to_array($to['to_uid']),
             'status' => 0,
             'uid' => (int)$member['id'],
             'username' => $member['username'] ? $member['username'] : '',
@@ -265,6 +265,24 @@ class Auth extends \Phpcmf\Model {
 
         // 挂钩点
         \Phpcmf\Hooks::trigger('admin_notice', $data);
+    }
+
+    // 对入库格式化
+    private function _get_to_array($to) {
+
+        if (!$to) {
+            return 0;
+        } elseif (is_array($to)) {
+            $rt = '';
+            foreach ($to as $t) {
+                if ($t) {
+                    $rt.= ','.$t;
+                }
+            }
+            return trim($rt, ',');
+        }
+
+        return (string)$to;
     }
 
     // 执行提醒
