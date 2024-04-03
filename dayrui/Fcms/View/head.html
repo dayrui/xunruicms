@@ -28,7 +28,7 @@
     <script src="{$THEME_PATH}assets/global/scripts/app{if !IS_XRDEV}.min{/if}.js?v={CMF_UPDATE_TIME}" type="text/javascript"></script>
     <script src="{$THEME_PATH}assets/js/cms.js?v={CMF_UPDATE_TIME}" type="text/javascript"></script>
     {if $is_index}
-    <script src="{$THEME_PATH}assets/global/plugins/crypto-js.min.js?v={CMF_UPDATE_TIME}" type="text/javascript"></script>
+    <script src="{$THEME_PATH}assets/global/plugins/jquery.md5.js?v={CMF_UPDATE_TIME}" type="text/javascript"></script>
     {else}
     <script src="{$THEME_PATH}assets/js/my.js?v={CMF_UPDATE_TIME}" type="text/javascript"></script>
     {/if}
@@ -114,7 +114,7 @@
                  }
                 {/if}
 
-                var cmd = CryptoJS.MD5(url);
+                var cmd = $.md5(url);
                 $('#myiframe iframe').hide();
                 $('#myiframe').attr("cid", 'right_page_'+cmd);
 
