@@ -104,7 +104,7 @@ class Api extends \Phpcmf\Common {
      * 搜索
      */
     public function search() {
-        if (function_exists('dr_api_search')) {
+        if (function_exists('dr_module_api_search')) {
             dr_module_api_search();
         } else {
             exit('需要升级最新版的【内容建站系统】插件');
