@@ -138,7 +138,7 @@ if (CI_DEBUG) {
     define('ENVIRONMENT', 'development');
 } else {
     ini_set('display_errors', 0);
-    defined('ENVIRONMENT') && define('ENVIRONMENT', 'production');
+    !defined('ENVIRONMENT') && define('ENVIRONMENT', 'production');
 }
 
 // 缓存变量
