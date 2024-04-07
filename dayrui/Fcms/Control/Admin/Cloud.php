@@ -609,17 +609,18 @@ return [
             }
         }
 
+        $index = isset($_GET['isindex']) ? 1 : 0;
         $vid = dr_safe_replace($_GET['version']);
         $surl = $this->service_url.'&action=check_version&php='.PHP_VERSION
             .'&get_http=1&time='.strtotime((string)$this->cmf_version['downtime'])
-            .'&id='.$cid.'&version='
+            .'&id='.$cid.'&isindex='.$index.'&version='
             .$vid.'&license='.$this->cmf_license['license'];
         $json = dr_catcher_data($surl);
         if (!$json) {
             $this->_json(0, '本站：没有从服务端获取到数据，检查本地环境是否支持远程下载功能');
         }
         $rt = json_decode($json, true);
-        $this->_json($rt['code'], isset($_GET['isindex']) ? dr_clearhtml($rt['msg']) : $rt['msg']);
+        $this->_json($rt['code'], $index ? dr_clearhtml($rt['msg']) : $rt['msg']);
     }
 
     // 执行更新程序的界面
