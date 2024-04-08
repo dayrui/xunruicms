@@ -66,6 +66,14 @@ class Exceptions extends \CodeIgniter\Debug\Exceptions {
             if (CI_DEBUG) {
                 $message.= '<br>错误文件：'.$file.'（'.$exception->getLine().'）';
                 $message.= '<br>访问地址：'.\Phpcmf\Service::V()->now_php_url();
+                $trace = $exception->getTrace();
+                if ($trace) {
+                    foreach ($trace as $t) {
+                        if (strpos($t['file'], FRAMEPATH) === false) {
+                            $message.= '<br>'.$t['function'].'：'.$t['file'].'（'.$t['line'].'）';
+                        }
+                    }
+                }
             } else {
                 $message = str_replace([FCPATH, WEBPATH], ['/', '/'], $message);
             }

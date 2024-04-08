@@ -32,7 +32,7 @@ class App extends BaseConfig
 
 	public bool $forceGlobalSecureRequests = false;
 
-
+    public string $permittedURIChars = 'a-z 0-9~%.:_\-';
     public string $sessionDriver = FileHandler::class;
 
 	public string $sessionCookieName = 'xunruicms';
