@@ -156,13 +156,13 @@ trait ResponseTrait
         }
 
         // Unknown and no message?
-        if (! array_key_exists($code, static::$statusCodes) && empty($reason)) {
+        if (! array_key_exists($code, static::$statusCodes) && ($reason === '')) {
             throw HTTPException::forUnkownStatusCode($code);
         }
 
         $this->statusCode = $code;
 
-        $this->reason = ! empty($reason) ? $reason : static::$statusCodes[$code];
+        $this->reason = ($reason !== '') ? $reason : static::$statusCodes[$code];
 
         return $this;
     }
@@ -226,7 +226,7 @@ trait ResponseTrait
     public function setContentType(string $mime, string $charset = 'UTF-8')
     {
         // add charset attribute if not already there and provided as parm
-        if ((strpos($mime, 'charset=') < 1) && ! empty($charset)) {
+        if ((strpos($mime, 'charset=') < 1) && ($charset !== '')) {
             $mime .= '; charset=' . $charset;
         }
 
@@ -377,7 +377,7 @@ trait ResponseTrait
      */
     public function setCache(array $options = [])
     {
-        if (empty($options)) {
+        if ($options === []) {
             return $this;
         }
 
@@ -644,7 +644,7 @@ trait ResponseTrait
      * @param string $prefix Cookie prefix.
      *                       '': the default prefix
      *
-     * @return Cookie|Cookie[]|null
+     * @return array<string, Cookie>|Cookie|null
      */
     public function getCookie(?string $name = null, string $prefix = '')
     {
@@ -709,7 +709,7 @@ trait ResponseTrait
     /**
      * Returns all cookies currently set.
      *
-     * @return Cookie[]
+     * @return array<string, Cookie>
      */
     public function getCookies()
     {

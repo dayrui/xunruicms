@@ -281,7 +281,7 @@ class Connection extends BaseConnection
     /**
      * Returns an array of objects with field data
      *
-     * @return stdClass[]
+     * @return list<stdClass>
      *
      * @throws DatabaseException
      */
@@ -315,12 +315,8 @@ class Connection extends BaseConnection
 
             $retval[$i]->max_length = $length;
 
-            $default = $query[$i]->DATA_DEFAULT;
-            if ($default === null && $query[$i]->NULLABLE === 'N') {
-                $default = '';
-            }
-            $retval[$i]->default  = $default;
             $retval[$i]->nullable = $query[$i]->NULLABLE === 'Y';
+            $retval[$i]->default  = $query[$i]->DATA_DEFAULT;
         }
 
         return $retval;
@@ -329,7 +325,7 @@ class Connection extends BaseConnection
     /**
      * Returns an array of objects with index data
      *
-     * @return stdClass[]
+     * @return list<stdClass>
      *
      * @throws DatabaseException
      */
@@ -378,7 +374,7 @@ class Connection extends BaseConnection
     /**
      * Returns an array of objects with Foreign key data
      *
-     * @return stdClass[]
+     * @return list<stdClass>
      *
      * @throws DatabaseException
      */
@@ -582,7 +578,7 @@ class Connection extends BaseConnection
         $indexs     = $this->getIndexData($this->lastInsertedTableName);
         $fieldDatas = $this->getFieldData($this->lastInsertedTableName);
 
-        if (! $indexs || ! $fieldDatas) {
+        if ($indexs === [] || $fieldDatas === []) {
             return 0;
         }
 

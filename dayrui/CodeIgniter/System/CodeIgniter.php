@@ -54,7 +54,7 @@ class CodeIgniter
     /**
      * The current version of CodeIgniter Framework
      */
-    public const CI_VERSION = '4.4.3';
+    public const CI_VERSION = '4.4.7';
 
     /**
      * App startup time.
@@ -108,7 +108,7 @@ class CodeIgniter
     /**
      * Controller to use.
      *
-     * @var Closure|string
+     * @var (Closure(mixed...): ResponseInterface|string)|string|null
      */
     protected $controller;
 
@@ -138,7 +138,7 @@ class CodeIgniter
     /**
      * Request path to use.
      *
-     * @var string
+     * @var string|null
      *
      * @deprecated No longer used.
      */
@@ -302,7 +302,7 @@ class CodeIgniter
         Kint::$display_called_from = $config->displayCalledFrom;
         Kint::$expanded            = $config->expanded;
 
-        if (! empty($config->plugins) && is_array($config->plugins)) {
+        if (isset($config->plugins) && is_array($config->plugins)) {
             Kint::$plugins = $config->plugins;
         }
 
@@ -315,10 +315,10 @@ class CodeIgniter
         RichRenderer::$theme  = $config->richTheme;
         RichRenderer::$folder = $config->richFolder;
         RichRenderer::$sort   = $config->richSort;
-        if (! empty($config->richObjectPlugins) && is_array($config->richObjectPlugins)) {
+        if (isset($config->richObjectPlugins) && is_array($config->richObjectPlugins)) {
             RichRenderer::$value_plugins = $config->richObjectPlugins;
         }
-        if (! empty($config->richTabPlugins) && is_array($config->richTabPlugins)) {
+        if (isset($config->richTabPlugins) && is_array($config->richTabPlugins)) {
             RichRenderer::$tab_plugins = $config->richTabPlugins;
         }
 
@@ -449,6 +449,7 @@ class CodeIgniter
 
         $routeFilter = $this->tryToRouteIt($routes);
 
+        // $uri is URL-encoded.
         $uri = $this->determinePath();
 
         if ($this->enableFilters) {
@@ -592,16 +593,16 @@ class CodeIgniter
      */
     protected function bootstrapEnvironment()
     {
-        //if (is_file(APPPATH . 'Config/Boot/' . ENVIRONMENT . '.php')) {
-           // require_once APPPATH . 'Config/Boot/' . ENVIRONMENT . '.php';
-       // } else {
+        if (is_file(APPPATH . 'Config/Boot/' . ENVIRONMENT . '.php')) {
+            require_once APPPATH . 'Config/Boot/' . ENVIRONMENT . '.php';
+        } else {
             // @codeCoverageIgnoreStart
             header('HTTP/1.1 503 Service Unavailable.', true, 503);
             echo 'The application environment is not set correctly.';
 
             exit(EXIT_ERROR); // EXIT_ERROR
             // @codeCoverageIgnoreEnd
-        //}
+        }
     }
 
     /**
@@ -800,7 +801,7 @@ class CodeIgniter
      * @param RouteCollectionInterface|null $routes A collection interface to use in place
      *                                              of the config file.
      *
-     * @return string|string[]|null Route filters, that is, the filters specified in the routes file
+     * @return list<string>|string|null Route filters, that is, the filters specified in the routes file
      *
      * @throws RedirectException
      */
@@ -813,6 +814,7 @@ class CodeIgniter
         // $routes is defined in Config/Routes.php
         $this->router = Services::router($routes, $this->request);
 
+        // $path is URL-encoded.
         $path = $this->determinePath();
 
         $this->benchmark->stop('bootstrap');
@@ -848,11 +850,10 @@ class CodeIgniter
      */
     protected function determinePath()
     {
-        if (! empty($this->path)) {
-            return $this->path;
-        }
-
-        return method_exists($this->request, 'getPath') ? $this->request->getPath() : $this->request->getUri()->getPath();
+        return $this->path ??
+            (method_exists($this->request, 'getPath')
+                ? $this->request->getPath()
+                : $this->request->getUri()->getPath());
     }
 
     /**
@@ -892,7 +893,7 @@ class CodeIgniter
         }
 
         // No controller specified - we don't know what to do now.
-        if (empty($this->controller)) {
+        if (! isset($this->controller)) {
             throw PageNotFoundException::forEmptyController();
         }
 
@@ -986,7 +987,7 @@ class CodeIgniter
 
         // Throws new PageNotFoundException and remove exception message on production.
         throw PageNotFoundException::forPageNotFound(
-            (! $this->isWeb()) ? $e->getMessage() : null
+            (ENVIRONMENT !== 'production' || ! $this->isWeb()) ? $e->getMessage() : null
         );
     }
 
@@ -1091,7 +1092,7 @@ class CodeIgniter
 
         $method = $this->request->getPost('_method');
 
-        if (empty($method)) {
+        if ($method === null) {
             return;
         }
 

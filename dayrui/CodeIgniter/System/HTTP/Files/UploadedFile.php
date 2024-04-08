@@ -164,7 +164,7 @@ class UploadedFile extends File implements UploadedFileInterface
             throw HTTPException::forMoveFailed(basename($this->path), $targetPath, $message);
         }
 
-        //@chmod($targetPath, 0777 & ~umask());
+        @chmod($targetPath, 0777 & ~umask());
 
         // Success, so store our new information
         $this->path = $targetPath;

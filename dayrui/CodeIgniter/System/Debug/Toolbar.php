@@ -43,7 +43,7 @@ class Toolbar
     /**
      * Collectors to be used and displayed.
      *
-     * @var BaseCollector[]
+     * @var list<BaseCollector>
      */
     protected $collectors = [];
 
@@ -84,7 +84,6 @@ class Toolbar
         $data['startTime']       = $startTime;
         $data['totalTime']       = $totalTime * 1000;
         $data['totalMemory']     = number_format(memory_get_peak_usage() / 1024 / 1024, 3);
-
         $data['segmentDuration'] = $this->roundTo($data['totalTime'] / 7);
         $data['segmentCount']    = (int) ceil($data['totalTime'] / $data['segmentDuration']);
         $data['CI_VERSION']      = CodeIgniter::CI_VERSION;
@@ -122,7 +121,7 @@ class Toolbar
             $data['vars']['varData'][esc($heading)] = $varData;
         }
 
-        if (! empty($_SESSION)) {
+        if (isset($_SESSION)) {
             foreach ($_SESSION as $key => $value) {
                 // Replace the binary data with string to avoid json_encode failure.
                 if (is_string($value) && preg_match('~[^\x20-\x7E\t\r\n]~', $value)) {
@@ -198,12 +197,12 @@ class Toolbar
             $open = $row['name'] === 'Controller';
 
             if ($hasChildren || $isQuery) {
-                $output .= '<tr class="timeline-parent' . ($open ? ' timeline-parent-open' : '') . '" id="timeline-' . $styleCount . '_parent" onclick="ciDebugBar.toggleChildRows(\'timeline-' . $styleCount . '\');">';
+                $output .= '<tr class="timeline-parent' . ($open ? ' timeline-parent-open' : '') . '" id="timeline-' . $styleCount . '_parent" data-toggle="childrows" data-child="timeline-' . $styleCount . '">';
             } else {
                 $output .= '<tr>';
             }
 
-            $output .= '<td class="' . ($isChild ? 'debug-bar-width30' : '') . '" style="--level: ' . $level . ';">' . ($hasChildren || $isQuery ? '<nav></nav>' : '') . $row['name'] . '</td>';
+            $output .= '<td class="' . ($isChild ? 'debug-bar-width30' : '') . ' debug-bar-level-' . $level . '" >' . ($hasChildren || $isQuery ? '<nav></nav>' : '') . $row['name'] . '</td>';
             $output .= '<td class="' . ($isChild ? 'debug-bar-width10' : '') . '">' . $row['component'] . '</td>';
             $output .= '<td class="' . ($isChild ? 'debug-bar-width10 ' : '') . 'debug-bar-alignRight">' . number_format($row['duration'] * 1000, 2) . ' ms</td>';
             $output .= "<td class='debug-bar-noverflow' colspan='{$segmentCount}'>";
@@ -221,7 +220,7 @@ class Toolbar
 
             // Add children if any
             if ($hasChildren || $isQuery) {
-                $output .= '<tr class="child-row" id="timeline-' . ($styleCount - 1) . '_children" style="' . ($open ? '' : 'display: none;') . '">';
+                $output .= '<tr class="child-row ' . ($open ? '' : ' debug-bar-ndisplay') . '" id="timeline-' . ($styleCount - 1) . '_children" >';
                 $output .= '<td colspan="' . ($segmentCount + 3) . '" class="child-container">';
                 $output .= '<table class="timeline">';
                 $output .= '<tbody>';
@@ -229,7 +228,7 @@ class Toolbar
                 if ($isQuery) {
                     // Output query string if query
                     $output .= '<tr>';
-                    $output .= '<td class="query-container" style="--level: ' . ($level + 1) . ';">' . $row['query'] . '</td>';
+                    $output .= '<td class="query-container debug-bar-level-' . ($level + 1) . '" >' . $row['query'] . '</td>';
                     $output .= '</tr>';
                 } else {
                     // Recursively render children
@@ -293,7 +292,7 @@ class Toolbar
         $element = array_shift($elements);
 
         // If we have children behind us, collect and attach them to us
-        while (! empty($elements) && $elements[array_key_first($elements)]['end'] <= $element['end']) {
+        while ($elements !== [] && $elements[array_key_first($elements)]['end'] <= $element['end']) {
             $element['children'][] = array_shift($elements);
         }
 
@@ -303,7 +302,7 @@ class Toolbar
         }
 
         // If we have no younger siblings, we can return
-        if (empty($elements)) {
+        if ($elements === []) {
             return [$element];
         }
 
@@ -436,11 +435,12 @@ class Toolbar
      * @codeCoverageIgnore
      *
      * @return void
-     * @phpstan-return never|void
      */
     public function respond()
     {
-
+        if (ENVIRONMENT === 'testing') {
+            return;
+        }
 
         $request = Services::request();
 

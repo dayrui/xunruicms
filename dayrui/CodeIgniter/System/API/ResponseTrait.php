@@ -94,7 +94,7 @@ trait ResponseTrait
             $output = null;
             $this->format($data);
         } else {
-            $status = empty($status) ? 200 : $status;
+            $status ??= 200;
             $output = $this->format($data);
         }
 
@@ -234,7 +234,7 @@ trait ResponseTrait
     /**
      * Used when the data provided by the client cannot be validated on one or more fields.
      *
-     * @param string|string[] $errors
+     * @param list<string>|string $errors
      *
      * @return ResponseInterface
      */
@@ -318,7 +318,7 @@ trait ResponseTrait
 
         // Determine correct response type through content negotiation if not explicitly declared
         if (
-            (empty($this->format) || ! in_array($this->format, ['json', 'xml'], true))
+            ! in_array($this->format, ['json', 'xml'], true)
             && $this->request instanceof IncomingRequest
         ) {
             $mime = $this->request->negotiate(

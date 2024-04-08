@@ -170,7 +170,7 @@ class BaseService
     /**
      * A cache of the names of services classes found.
      *
-     * @var array<string>
+     * @var list<string>
      */
     private static array $serviceNames = [];
 
@@ -343,7 +343,7 @@ class BaseService
                 foreach ($files as $file) {
                     $classname = $locator->getClassname($file);
 
-                    if (! in_array($classname, [Services::class], true)) {
+                    if ($classname !== Services::class) {
                         static::$services[] = new $classname();
                     }
                 }

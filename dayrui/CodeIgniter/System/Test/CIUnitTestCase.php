@@ -50,7 +50,7 @@ abstract class CIUnitTestCase extends TestCase
      * WARNING: Do not override unless you know exactly what you are doing.
      *          This property may be deprecated in the future.
      *
-     * @var array of methods
+     * @var list<string> array of methods
      */
     protected $setUpMethods = [
         'resetFactories',
@@ -64,7 +64,7 @@ abstract class CIUnitTestCase extends TestCase
      *
      * WARNING: This property may be deprecated in the future.
      *
-     * @var array of methods
+     * @var list<string> array of methods
      */
     protected $tearDownMethods = [];
 
@@ -109,7 +109,7 @@ abstract class CIUnitTestCase extends TestCase
      * The seed file(s) used for all tests within this test case.
      * Should be fully-namespaced or relative to $basePath
      *
-     * @var array|string
+     * @var class-string<Seeder>|list<class-string<Seeder>>
      */
     protected $seed = '';
 
@@ -123,7 +123,7 @@ abstract class CIUnitTestCase extends TestCase
 
     /**
      * The namespace(s) to help us find the migration classes.
-     * Empty is equivalent to running `spark migrate --all`.
+     * `null` is equivalent to running `spark migrate --all`.
      * Note that running "all" runs migrations in date order,
      * but specifying namespaces runs them in namespace order (then date)
      *
@@ -135,8 +135,7 @@ abstract class CIUnitTestCase extends TestCase
      * The name of the database group to connect to.
      * If not present, will use the defaultGroup.
      *
-     * @var string
-     * @phpstan-var non-empty-string
+     * @var non-empty-string
      */
     protected $DBGroup = 'tests';
 

@@ -35,10 +35,9 @@ final class ControllerMethodReader
     }
 
     /**
-     * @phpstan-param class-string $class
+     * @param class-string $class
      *
-     * @return array<int, array{route: string, handler: string}>
-     * @phpstan-return list<array{route: string, handler: string}>
+     * @return list<array{route: string, handler: string}>
      */
     public function read(string $class, string $defaultController = 'Home', string $defaultMethod = 'index'): array
     {
@@ -128,7 +127,7 @@ final class ControllerMethodReader
     }
 
     /**
-     * @phpstan-param class-string $classname
+     * @param class-string $classname
      *
      * @return string URI path part from the folder(s) and controller
      */
@@ -160,19 +159,17 @@ final class ControllerMethodReader
         string $classname,
         string $methodName
     ): array {
-        $output = [];
-
-        if ($classShortname === $defaultController) {
-            $pattern                = '#' . preg_quote(lcfirst($defaultController), '#') . '\z#';
-            $routeWithoutController = rtrim(preg_replace($pattern, '', $uriByClass), '/');
-            $routeWithoutController = $routeWithoutController ?: '/';
-
-            $output[] = [
-                'route'   => $routeWithoutController,
-                'handler' => '\\' . $classname . '::' . $methodName,
-            ];
+        if ($classShortname !== $defaultController) {
+            return [];
         }
 
-        return $output;
+        $pattern                = '#' . preg_quote(lcfirst($defaultController), '#') . '\z#';
+        $routeWithoutController = rtrim(preg_replace($pattern, '', $uriByClass), '/');
+        $routeWithoutController = $routeWithoutController ?: '/';
+
+        return [[
+            'route'   => $routeWithoutController,
+            'handler' => '\\' . $classname . '::' . $methodName,
+        ]];
     }
 }

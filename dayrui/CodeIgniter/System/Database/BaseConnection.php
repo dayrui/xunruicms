@@ -18,33 +18,33 @@ use stdClass;
 use Throwable;
 
 /**
- * @property array      $aliasedTables
- * @property string     $charset
- * @property bool       $compress
- * @property float      $connectDuration
- * @property float      $connectTime
- * @property string     $database
- * @property string     $DBCollat
- * @property bool       $DBDebug
- * @property string     $DBDriver
- * @property string     $DBPrefix
- * @property string     $DSN
- * @property array|bool $encrypt
- * @property array      $failover
- * @property string     $hostname
- * @property Query      $lastQuery
- * @property string     $password
- * @property bool       $pConnect
- * @property int|string $port
- * @property bool       $pretend
- * @property string     $queryClass
- * @property array      $reservedIdentifiers
- * @property bool       $strictOn
- * @property string     $subdriver
- * @property string     $swapPre
- * @property int        $transDepth
- * @property bool       $transFailure
- * @property bool       $transStatus
+ * @property-read array      $aliasedTables
+ * @property-read string     $charset
+ * @property-read bool       $compress
+ * @property-read float      $connectDuration
+ * @property-read float      $connectTime
+ * @property-read string     $database
+ * @property-read string     $DBCollat
+ * @property-read bool       $DBDebug
+ * @property-read string     $DBDriver
+ * @property-read string     $DBPrefix
+ * @property-read string     $DSN
+ * @property-read array|bool $encrypt
+ * @property-read array      $failover
+ * @property-read string     $hostname
+ * @property-read Query      $lastQuery
+ * @property-read string     $password
+ * @property-read bool       $pConnect
+ * @property-read int|string $port
+ * @property-read bool       $pretend
+ * @property-read string     $queryClass
+ * @property-read array      $reservedIdentifiers
+ * @property-read bool       $strictOn
+ * @property-read string     $subdriver
+ * @property-read string     $swapPre
+ * @property-read int        $transDepth
+ * @property-read bool       $transFailure
+ * @property-read bool       $transStatus
  *
  * @template TConnection
  * @template TResult
@@ -195,7 +195,7 @@ abstract class BaseConnection implements ConnectionInterface
     /**
      * Connection ID
      *
-     * @var false|object|resource
+     * @var         false|object|resource
      * @phpstan-var false|TConnection
      */
     public $connID = false;
@@ -203,7 +203,7 @@ abstract class BaseConnection implements ConnectionInterface
     /**
      * Result ID
      *
-     * @var false|object|resource
+     * @var         false|object|resource
      * @phpstan-var false|TResult
      */
     public $resultID = false;
@@ -457,7 +457,7 @@ abstract class BaseConnection implements ConnectionInterface
     /**
      * Create a persistent database connection.
      *
-     * @return false|object|resource
+     * @return         false|object|resource
      * @phpstan-return false|TConnection
      */
     public function persistentConnect()
@@ -471,7 +471,7 @@ abstract class BaseConnection implements ConnectionInterface
      * get that connection. If you pass either alias in and only a single
      * connection is present, it must return the sole connection.
      *
-     * @return false|object|resource
+     * @return         false|object|resource
      * @phpstan-return TConnection
      */
     public function getConnection(?string $alias = null)
@@ -547,7 +547,7 @@ abstract class BaseConnection implements ConnectionInterface
     /**
      * Executes the query against the database.
      *
-     * @return false|object|resource
+     * @return         false|object|resource
      * @phpstan-return false|TResult
      */
     abstract protected function execute(string $sql);
@@ -562,7 +562,7 @@ abstract class BaseConnection implements ConnectionInterface
      *
      * @param array|string|null $binds
      *
-     * @return BaseResult|bool|Query BaseResult when “read” type query, bool when “write” type query, Query when prepared query
+     * @return         BaseResult|bool|Query                       BaseResult when “read” type query, bool when “write” type query, Query when prepared query
      * @phpstan-return BaseResult<TConnection, TResult>|bool|Query
      *
      * @todo BC set $queryClass default as null in 4.1
@@ -681,7 +681,7 @@ abstract class BaseConnection implements ConnectionInterface
      * is performed, nor are transactions handled. Simply takes a raw
      * query string and returns the database-specific result id.
      *
-     * @return false|object|resource
+     * @return         false|object|resource
      * @phpstan-return false|TResult
      */
     public function simpleQuery(string $sql)
@@ -1006,7 +1006,7 @@ abstract class BaseConnection implements ConnectionInterface
      * @param bool         $protectIdentifiers Protect table or column names?
      * @param bool         $fieldExists        Supplied $item contains a column name?
      *
-     * @return array|string
+     * @return         array|string
      * @phpstan-return ($item is array ? array : string)
      */
     public function protectIdentifiers($item, bool $prefixSingle = false, ?bool $protectIdentifiers = null, bool $fieldExists = true)
@@ -1166,7 +1166,7 @@ abstract class BaseConnection implements ConnectionInterface
      *
      * @param array|string $item
      *
-     * @return array|string
+     * @return         array|string
      * @phpstan-return ($item is array ? array : string)
      */
     public function escapeIdentifiers($item)
@@ -1251,7 +1251,7 @@ abstract class BaseConnection implements ConnectionInterface
      *
      * @param array|bool|float|int|object|string|null $str
      *
-     * @return array|float|int|string
+     * @return         array|float|int|string
      * @phpstan-return ($str is array ? array : float|int|string)
      */
     public function escape($str)
@@ -1279,10 +1279,10 @@ abstract class BaseConnection implements ConnectionInterface
     /**
      * Escape String
      *
-     * @param string|string[] $str  Input string
-     * @param bool            $like Whether or not the string will be used in a LIKE condition
+     * @param list<string>|string $str  Input string
+     * @param bool                $like Whether or not the string will be used in a LIKE condition
      *
-     * @return string|string[]
+     * @return list<string>|string
      */
     public function escapeString($str, bool $like = false)
     {
@@ -1322,9 +1322,9 @@ abstract class BaseConnection implements ConnectionInterface
      * Calls the individual driver for platform
      * specific escaping for LIKE conditions
      *
-     * @param string|string[] $str
+     * @param list<string>|string $str
      *
-     * @return string|string[]
+     * @return list<string>|string
      */
     public function escapeLikeString($str)
     {
@@ -1517,7 +1517,7 @@ abstract class BaseConnection implements ConnectionInterface
     /**
      * Returns an object with field data
      *
-     * @return stdClass[]
+     * @return list<stdClass>
      */
     public function getFieldData(string $table)
     {
@@ -1657,7 +1657,7 @@ abstract class BaseConnection implements ConnectionInterface
      */
     public function isWriteType($sql): bool
     {
-        return (bool) preg_match('/^\s*"?(SET|INSERT|UPDATE|DELETE|REPLACE|CREATE|DROP|TRUNCATE|LOAD|COPY|ALTER|RENAME|GRANT|REVOKE|LOCK|UNLOCK|REINDEX|MERGE)\s/i', $sql);
+        return (bool) preg_match('/^\s*(WITH\s.+(\s|[)]))?"?(SET|INSERT|UPDATE|DELETE|REPLACE|CREATE|DROP|TRUNCATE|LOAD|COPY|ALTER|RENAME|GRANT|REVOKE|LOCK|UNLOCK|REINDEX|MERGE)\s(?!.*\sRETURNING\s)/is', $sql);
     }
 
     /**
@@ -1665,7 +1665,7 @@ abstract class BaseConnection implements ConnectionInterface
      *
      * Must return an array with keys 'code' and 'message':
      *
-     * @return array<string, int|string|null>
+     * @return         array<string, int|string|null>
      * @phpstan-return array{code: int|string|null, message: string|null}
      */
     abstract public function error(): array;

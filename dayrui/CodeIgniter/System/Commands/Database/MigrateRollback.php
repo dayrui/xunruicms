@@ -54,7 +54,7 @@ class MigrateRollback extends BaseCommand
     /**
      * the Command's Options
      *
-     * @var array
+     * @var array<string, string>
      */
     protected $options = [
         '-b' => 'Specify a batch to roll back to; e.g. "3" to return to batch #3',
@@ -67,6 +67,7 @@ class MigrateRollback extends BaseCommand
      */
     public function run(array $params)
     {
+        if (ENVIRONMENT === 'production') {
             // @codeCoverageIgnoreStart
             $force = array_key_exists('f', $params) || CLI::getOption('f');
 
@@ -74,7 +75,7 @@ class MigrateRollback extends BaseCommand
                 return;
             }
             // @codeCoverageIgnoreEnd
-
+        }
 
         $runner = Services::migrations();
 

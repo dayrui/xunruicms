@@ -72,12 +72,8 @@ if (! function_exists('_array_search_dot')) {
             $answer = array_filter($answer, static fn ($value) => $value !== null);
 
             if ($answer !== []) {
-                if (count($answer) === 1) {
-                    // If array only has one element, we return that element for BC.
-                    return current($answer);
-                }
-
-                return $answer;
+                // If array only has one element, we return that element for BC.
+                return count($answer) === 1 ? current($answer) : $answer;
             }
 
             return null;
@@ -85,7 +81,7 @@ if (! function_exists('_array_search_dot')) {
 
         // If this is the last index, make sure to return it now,
         // and not try to recurse through things.
-        if (empty($indexes)) {
+        if ($indexes === []) {
             return $array[$currentIndex];
         }
 
@@ -152,7 +148,7 @@ if (! function_exists('array_sort_by_multiple_keys')) {
     function array_sort_by_multiple_keys(array &$array, array $sortColumns): bool
     {
         // Check if there really are columns to sort after
-        if (empty($sortColumns) || empty($array)) {
+        if ($sortColumns === [] || $array === []) {
             return false;
         }
 

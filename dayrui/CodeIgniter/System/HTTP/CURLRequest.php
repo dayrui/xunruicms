@@ -389,7 +389,7 @@ class CURLRequest extends OutgoingRequest
         // Set the string we want to break our response from
         $breakString = "\r\n\r\n";
 
-        if (strpos($output, 'HTTP/1.1 100 Continue') === 0) {
+        while (strpos($output, 'HTTP/1.1 100 Continue') === 0) {
             $output = substr($output, strpos($output, $breakString) + 4);
         }
 
@@ -549,16 +549,18 @@ class CURLRequest extends OutgoingRequest
         // SSL Verification
         if (isset($config['verify'])) {
             if (is_string($config['verify'])) {
-                $file = realpath($config['ssl_key']) ?: $config['ssl_key'];
+                $file = realpath($config['verify']) ?: $config['verify'];
 
                 if (! is_file($file)) {
-                    throw HTTPException::forInvalidSSLKey($config['ssl_key']);
+                    throw HTTPException::forInvalidSSLKey($config['verify']);
                 }
 
                 $curlOptions[CURLOPT_CAINFO]         = $file;
-                $curlOptions[CURLOPT_SSL_VERIFYPEER] = 1;
+                $curlOptions[CURLOPT_SSL_VERIFYPEER] = true;
+                $curlOptions[CURLOPT_SSL_VERIFYHOST] = 2;
             } elseif (is_bool($config['verify'])) {
                 $curlOptions[CURLOPT_SSL_VERIFYPEER] = $config['verify'];
+                $curlOptions[CURLOPT_SSL_VERIFYHOST] = $config['verify'] ? 2 : 0;
             }
         }
 

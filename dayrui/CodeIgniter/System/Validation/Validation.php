@@ -12,6 +12,7 @@
 namespace CodeIgniter\Validation;
 
 use Closure;
+use CodeIgniter\HTTP\Exceptions\HTTPException;
 use CodeIgniter\HTTP\IncomingRequest;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\Validation\Exceptions\ValidationException;
@@ -147,7 +148,7 @@ class Validation implements ValidationInterface
 
         // If no rules exist, we return false to ensure
         // the developer didn't forget to set the rules.
-        if (empty($this->rules)) {
+        if ($this->rules === []) {
             return false;
         }
 
@@ -168,12 +169,14 @@ class Validation implements ValidationInterface
             }
 
             if (strpos($field, '*') !== false) {
-                $values = array_filter(array_flatten_with_dots($data), static fn ($key) => preg_match(
-                    '/^'
-                    . str_replace(['\.\*', '\*\.'], ['\..+', '.+\.'], preg_quote($field, '/'))
-                    . '$/',
-                    $key
-                ), ARRAY_FILTER_USE_KEY);
+                $flattenedArray = array_flatten_with_dots($data);
+
+                $values = array_filter(
+                    $flattenedArray,
+                    static fn ($key) => preg_match(self::getRegex($field), $key),
+                    ARRAY_FILTER_USE_KEY
+                );
+
                 // if keys not found
                 $values = $values ?: [$field => null];
             } else {
@@ -212,12 +215,26 @@ class Validation implements ValidationInterface
     }
 
     /**
+     * Returns regex pattern for key with dot array syntax.
+     */
+    private static function getRegex(string $field): string
+    {
+        return '/\A'
+            . str_replace(
+                ['\.\*', '\*\.'],
+                ['\.[^.]+', '[^.]+\.'],
+                preg_quote($field, '/')
+            )
+            . '\z/';
+    }
+
+    /**
      * Runs the validation process, returning true or false determining whether
      * validation was successful or not.
      *
      * @param array|bool|float|int|object|string|null $value   The data to validate.
      * @param array|string                            $rules   The validation rules.
-     * @param string[]                                $errors  The custom error message.
+     * @param list<string>                            $errors  The custom error message.
      * @param string|null                             $dbGroup The database group to use.
      */
     public function check($value, $rules, array $errors = [], $dbGroup = null): bool
@@ -480,6 +497,10 @@ class Validation implements ValidationInterface
         if (strpos($request->getHeaderLine('Content-Type'), 'application/json') !== false) {
             $this->data = $request->getJSON(true);
 
+            if (! is_array($this->data)) {
+                throw HTTPException::forUnsupportedJSONFormat();
+            }
+
             return $this;
         }
 
@@ -605,7 +626,7 @@ class Validation implements ValidationInterface
      *
      * @param string $group Group.
      *
-     * @return string[] Rule group.
+     * @return list<string> Rule group.
      *
      * @throws ValidationException If group not found.
      */
@@ -686,7 +707,7 @@ class Validation implements ValidationInterface
      */
     protected function loadRuleSets()
     {
-        if (empty($this->ruleSetFiles)) {
+        if ($this->ruleSetFiles === [] || $this->ruleSetFiles === null) {
             throw ValidationException::forNoRuleSets();
         }
 
@@ -703,13 +724,15 @@ class Validation implements ValidationInterface
      * same format used with setRules(). Additionally, check
      * for {group}_errors for an array of custom error messages.
      *
+     * @param non-empty-string|null $group
+     *
      * @return array<int, array> [rules, customErrors]
      *
      * @throws ValidationException
      */
     public function loadRuleGroup(?string $group = null)
     {
-        if (empty($group)) {
+        if ($group === null || $group === '') {
             return [];
         }
 
@@ -767,7 +790,9 @@ class Validation implements ValidationInterface
                         // Check if the validation rule for the placeholder exists
                         if ($placeholderRules === null) {
                             throw new LogicException(
-                                'No validation rules for the placeholder: ' . $field
+                                'No validation rules for the placeholder: "' . $field
+                                . '". You must set the validation rules for the field.'
+                                . ' See <https://codeigniter4.github.io/userguide/libraries/validation.html#validation-placeholders>.'
                             );
                         }
 
@@ -814,9 +839,7 @@ class Validation implements ValidationInterface
      */
     public function hasError(string $field): bool
     {
-        $pattern = '/^' . str_replace('\.\*', '\..+', preg_quote($field, '/')) . '$/';
-
-        return (bool) preg_grep($pattern, array_keys($this->getErrors()));
+        return (bool) preg_grep(self::getRegex($field), array_keys($this->getErrors()));
     }
 
     /**
@@ -829,10 +852,11 @@ class Validation implements ValidationInterface
             $field = array_key_first($this->rules);
         }
 
-        $errors = array_filter($this->getErrors(), static fn ($key) => preg_match(
-            '/^' . str_replace(['\.\*', '\*\.'], ['\..+', '.+\.'], preg_quote($field, '/')) . '$/',
-            $key
-        ), ARRAY_FILTER_USE_KEY);
+        $errors = array_filter(
+            $this->getErrors(),
+            static fn ($key) => preg_match(self::getRegex($field), $key),
+            ARRAY_FILTER_USE_KEY
+        );
 
         return $errors === [] ? '' : implode("\n", $errors);
     }
@@ -868,7 +892,8 @@ class Validation implements ValidationInterface
     /**
      * Attempts to find the appropriate error message
      *
-     * @param string|null $value The value that caused the validation to fail.
+     * @param non-empty-string|null $label
+     * @param string|null           $value The value that caused the validation to fail.
      */
     protected function getErrorMessage(
         string $rule,
@@ -892,10 +917,10 @@ class Validation implements ValidationInterface
             $message = lang('Validation.' . $rule);
         }
 
-        $message = str_replace('{field}', empty($label) ? $field : lang($label), $message);
+        $message = str_replace('{field}', ($label === null || $label === '') ? $field : lang($label), $message);
         $message = str_replace(
             '{param}',
-            empty($this->rules[$param]['label']) ? $param : lang($this->rules[$param]['label']),
+            (! isset($this->rules[$param]['label'])) ? $param : lang($this->rules[$param]['label']),
             $message
         );
 

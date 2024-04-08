@@ -27,7 +27,7 @@ final class AutoRouterImproved implements AutoRouterInterface
     /**
      * List of controllers in Defined Routes that should not be accessed via this Auto-Routing.
      *
-     * @var class-string[]
+     * @var list<class-string>
      */
     private array $protectedControllers;
 
@@ -49,7 +49,7 @@ final class AutoRouterImproved implements AutoRouterInterface
     /**
      * An array of params to the controller method.
      *
-     * @phpstan-var list<string>
+     * @var list<string>
      */
     private array $params = [];
 
@@ -77,7 +77,7 @@ final class AutoRouterImproved implements AutoRouterInterface
     /**
      * The URI segments.
      *
-     * @phpstan-var list<string>
+     * @var list<string>
      */
     private array $segments = [];
 
@@ -100,8 +100,8 @@ final class AutoRouterImproved implements AutoRouterInterface
     private ?int $paramPos = null;
 
     /**
-     * @param class-string[] $protectedControllers
-     * @param string         $defaultController    Short classname
+     * @param list<class-string> $protectedControllers
+     * @param string             $defaultController    Short classname
      *
      * @deprecated $httpVerb is deprecated. No longer used.
      */
@@ -286,7 +286,7 @@ final class AutoRouterImproved implements AutoRouterInterface
         }
 
         // The first item may be a method name.
-        /** @phpstan-var list<string> $params */
+        /** @var list<string> $params */
         $params = $this->params;
 
         $methodParam = array_shift($params);

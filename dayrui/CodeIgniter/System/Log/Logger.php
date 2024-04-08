@@ -37,7 +37,7 @@ class Logger implements LoggerInterface
      * Used by the logThreshold Config setting to define
      * which errors to show.
      *
-     * @var array<string, integer>
+     * @var array<string, int>
      */
     protected $logLevels = [
         'emergency' => 1,
@@ -93,8 +93,7 @@ class Logger implements LoggerInterface
      * value is an associative array of configuration
      * items.
      *
-     * @var array
-     * @phpstan-var array<class-string, array<string, list<string>|string|int>>
+     * @var array<class-string, array<string, int|list<string>|string>>
      */
     protected $handlerConfig = [];
 
@@ -138,7 +137,7 @@ class Logger implements LoggerInterface
 
         $this->dateFormat = $config->dateFormat ?? $this->dateFormat;
 
-        if (! is_array($config->handlers) || empty($config->handlers)) {
+        if (! is_array($config->handlers) || $config->handlers === []) {
             throw LogException::forNoHandlers('LoggerConfig');
         }
 
@@ -338,7 +337,7 @@ class Logger implements LoggerInterface
         // Add special placeholders
         $replace['{post_vars}'] = '$_POST: ' . print_r($_POST, true);
         $replace['{get_vars}']  = '$_GET: ' . print_r($_GET, true);
-        $replace['{env}']       = '';
+        $replace['{env}']       = ENVIRONMENT;
 
         // Allow us to log the file/line that we are logging from
         if (strpos($message, '{file}') !== false) {

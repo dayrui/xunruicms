@@ -110,8 +110,6 @@ interface ResponseInterface extends MessageInterface
      * to understand and satisfy the request.
      *
      * @return int Status code.
-     *
-     * @deprecated To be replaced by the PSR-7 version (compatible)
      */
     public function getStatusCode(): int;
 
@@ -352,7 +350,7 @@ interface ResponseInterface extends MessageInterface
     /**
      * Returns the cookie
      *
-     * @return Cookie|Cookie[]|null
+     * @return array<string, Cookie>|Cookie|null
      */
     public function getCookie(?string $name = null, string $prefix = '');
 
@@ -366,7 +364,7 @@ interface ResponseInterface extends MessageInterface
     /**
      * Returns all cookies currently set.
      *
-     * @return Cookie[]
+     * @return array<string, Cookie>
      */
     public function getCookies();
 

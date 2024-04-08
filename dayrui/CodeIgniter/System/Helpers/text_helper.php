@@ -98,7 +98,7 @@ if (! function_exists('ascii_to_entities')) {
 
                 $out .= $str[$i];
             } else {
-                if (empty($temp)) {
+                if ($temp === []) {
                     $count = ($ordinal < 224) ? 2 : 3;
                 }
 
@@ -172,7 +172,7 @@ if (! function_exists('word_censor')) {
      */
     function word_censor(string $str, array $censored, string $replacement = ''): string
     {
-        if (empty($censored)) {
+        if ($censored === []) {
             return $str;
         }
 
@@ -701,8 +701,6 @@ if (! function_exists('excerpt')) {
      * @param string $phrase   Phrase that will be searched for.
      * @param int    $radius   The amount of characters returned around the phrase.
      * @param string $ellipsis Ending that will be appended
-     *
-     * @return string
      *
      * If no $phrase is passed, will generate an excerpt of $radius characters
      * from the beginning of $text.

@@ -25,9 +25,7 @@ use CodeIgniter\HTTP\Exceptions\RedirectException;
 use CodeIgniter\HTTP\IncomingRequest;
 use CodeIgniter\HTTP\RedirectResponse;
 use CodeIgniter\HTTP\RequestInterface;
-use CodeIgniter\HTTP\Response;
 use CodeIgniter\HTTP\ResponseInterface;
-use CodeIgniter\HTTP\URI;
 use CodeIgniter\Model;
 use CodeIgniter\Session\Session;
 use CodeIgniter\Test\TestLogger;
@@ -66,7 +64,7 @@ if (! function_exists('cache')) {
      *    cache()->save('foo', 'bar');
      *    $foo = cache('bar');
      *
-     * @return array|bool|CacheInterface|float|int|object|string|null
+     * @return         array|bool|CacheInterface|float|int|object|string|null
      * @phpstan-return ($key is null ? CacheInterface : array|bool|float|int|object|string|null)
      */
     function cache(?string $key = null)
@@ -209,7 +207,7 @@ if (! function_exists('config')) {
      *
      * @param class-string<ConfigTemplate>|string $name
      *
-     * @return ConfigTemplate|null
+     * @return         ConfigTemplate|null
      * @phpstan-return ($name is class-string<ConfigTemplate> ? ConfigTemplate : object|null)
      */
     function config(string $name, bool $getShared = true)
@@ -238,8 +236,8 @@ if (! function_exists('cookies')) {
     /**
      * Fetches the global `CookieStore` instance held by `Response`.
      *
-     * @param Cookie[] $cookies   If `getGlobal` is false, this is passed to CookieStore's constructor
-     * @param bool     $getGlobal If false, creates a new instance of CookieStore
+     * @param list<Cookie> $cookies   If `getGlobal` is false, this is passed to CookieStore's constructor
+     * @param bool         $getGlobal If false, creates a new instance of CookieStore
      */
     function cookies(array $cookies = [], bool $getGlobal = true): CookieStore
     {
@@ -290,20 +288,24 @@ if (! function_exists('csrf_hash')) {
 if (! function_exists('csrf_field')) {
     /**
      * Generates a hidden input field for use within manually generated forms.
+     *
+     * @param non-empty-string|null $id
      */
     function csrf_field(?string $id = null): string
     {
-        return '<input type="hidden"' . (! empty($id) ? ' id="' . esc($id, 'attr') . '"' : '') . ' name="' . csrf_token() . '" value="' . csrf_hash() . '"' . _solidus() . '>';
+        return '<input type="hidden"' . ($id !== null ? ' id="' . esc($id, 'attr') . '"' : '') . ' name="' . csrf_token() . '" value="' . csrf_hash() . '"' . _solidus() . '>';
     }
 }
 
 if (! function_exists('csrf_meta')) {
     /**
      * Generates a meta tag for use within javascript calls.
+     *
+     * @param non-empty-string|null $id
      */
     function csrf_meta(?string $id = null): string
     {
-        return '<meta' . (! empty($id) ? ' id="' . esc($id, 'attr') . '"' : '') . ' name="' . csrf_header() . '" content="' . csrf_hash() . '"' . _solidus() . '>';
+        return '<meta' . ($id !== null ? ' id="' . esc($id, 'attr') . '"' : '') . ' name="' . csrf_header() . '" content="' . csrf_hash() . '"' . _solidus() . '>';
     }
 }
 
@@ -412,11 +414,11 @@ if (! function_exists('esc')) {
      * If $data is an array, then it loops over it, escaping each
      * 'value' of the key/value pairs.
      *
-     * @param array|string $data
+     * @param         array|string                         $data
      * @phpstan-param 'html'|'js'|'css'|'url'|'attr'|'raw' $context
-     * @param string|null $encoding Current encoding for escaping.
-     *                              If not UTF-8, we convert strings from this encoding
-     *                              pre-escaping and back to this encoding post-escaping.
+     * @param         string|null                          $encoding Current encoding for escaping.
+     *                                                               If not UTF-8, we convert strings from this encoding
+     *                                                               pre-escaping and back to this encoding post-escaping.
      *
      * @return array|string
      *
@@ -424,6 +426,15 @@ if (! function_exists('esc')) {
      */
     function esc($data, string $context = 'html', ?string $encoding = null)
     {
+        $context = strtolower($context);
+
+        // Provide a way to NOT escape data since
+        // this could be called automatically by
+        // the View library.
+        if ($context === 'raw') {
+            return $data;
+        }
+
         if (is_array($data)) {
             foreach ($data as &$value) {
                 $value = esc($value, $context);
@@ -431,15 +442,6 @@ if (! function_exists('esc')) {
         }
 
         if (is_string($data)) {
-            $context = strtolower($context);
-
-            // Provide a way to NOT escape data since
-            // this could be called automatically by
-            // the View library.
-            if ($context === 'raw') {
-                return $data;
-            }
-
             if (! in_array($context, ['html', 'js', 'css', 'url', 'attr'], true)) {
                 throw new InvalidArgumentException('Invalid escape context provided.');
             }
@@ -502,27 +504,11 @@ if (! function_exists('force_https')) {
             Services::session()->regenerate(); // @codeCoverageIgnore
         }
 
-        $baseURL = config(App::class)->baseURL;
-
-        if (strpos($baseURL, 'https://') === 0) {
-            $authority = substr($baseURL, strlen('https://'));
-        } elseif (strpos($baseURL, 'http://') === 0) {
-            $authority = substr($baseURL, strlen('http://'));
-        } else {
-            $authority = $baseURL;
-        }
-
-        $uri = URI::createURIString(
-            'https',
-            $authority,
-            $request->getUri()->getPath(), // Absolute URIs should use a "/" for an empty path
-            $request->getUri()->getQuery(),
-            $request->getUri()->getFragment()
-        );
+        $uri = $request->getUri()->withScheme('https');
 
         // Set an HSTS header
         $response->setHeader('Strict-Transport-Security', 'max-age=' . $duration)
-            ->redirect($uri)
+            ->redirect((string) $uri)
             ->setStatusCode(307)
             ->setBody('')
             ->getCookieStore()
@@ -755,7 +741,7 @@ if (! function_exists('lang')) {
      * A convenience method to translate a string or array of them and format
      * the result with the intl extension's MessageFormatter.
      *
-     * @return string
+     * @return list<string>|string
      */
     function lang(string $line, array $args = [], ?string $locale = null)
     {
@@ -819,7 +805,7 @@ if (! function_exists('model')) {
      *
      * @param class-string<ModelTemplate>|string $name
      *
-     * @return ModelTemplate|null
+     * @return         ModelTemplate|null
      * @phpstan-return ($name is class-string<ModelTemplate> ? ModelTemplate : object|null)
      */
     function model(string $name, bool $getShared = true, ?ConnectionInterface &$conn = null)
@@ -833,8 +819,8 @@ if (! function_exists('old')) {
      * Provides access to "old input" that was set in the session
      * during a redirect()->withInput().
      *
-     * @param string|null  $default
-     * @param false|string $escape
+     * @param         string|null                                $default
+     * @param         false|string                               $escape
      * @phpstan-param false|'attr'|'css'|'html'|'js'|'raw'|'url' $escape
      *
      * @return array|string|null
@@ -868,13 +854,13 @@ if (! function_exists('redirect')) {
      *
      * If more control is needed, you must use $response->redirect explicitly.
      *
-     * @param string|null $route Route name or Controller::method
+     * @param non-empty-string|null $route Route name or Controller::method
      */
     function redirect(?string $route = null): RedirectResponse
     {
         $response = Services::redirectresponse(null, true);
 
-        if (! empty($route)) {
+        if ($route !== null) {
             return $response->route($route);
         }
 
@@ -988,7 +974,7 @@ if (! function_exists('session')) {
      *    session()->set('foo', 'bar');
      *    $foo = session('bar');
      *
-     * @return array|bool|float|int|object|Session|string|null
+     * @return         array|bool|float|int|object|Session|string|null
      * @phpstan-return ($val is null ? Session : array|bool|float|int|object|string|null)
      */
     function session(?string $val = null)
@@ -1139,15 +1125,17 @@ if (! function_exists('timer')) {
      * returns its return value if any.
      * Otherwise will start or stop the timer intelligently.
      *
-     * @phpstan-param (callable(): mixed)|null $callable
+     * @param non-empty-string|null    $name
+     * @param (callable(): mixed)|null $callable
      *
-     * @return Timer
+     * @return         mixed|Timer
+     * @phpstan-return ($name is null ? Timer : ($callable is (callable(): mixed) ? mixed : Timer))
      */
     function timer(?string $name = null, ?callable $callable = null)
     {
         $timer = Services::timer();
 
-        if (empty($name)) {
+        if ($name === null) {
             return $timer;
         }
 

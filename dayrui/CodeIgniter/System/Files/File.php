@@ -140,7 +140,7 @@ class File extends SplFileInfo
     public function move(string $targetPath, ?string $name = null, bool $overwrite = false)
     {
         $targetPath = rtrim($targetPath, '/') . '/';
-        $name ??= $this->getBaseName();
+        $name ??= $this->getBasename();
         $destination = $overwrite ? $targetPath . $name : $this->getDestination($targetPath . $name);
 
         $oldName = $this->getRealPath() ?: $this->__toString();
@@ -151,7 +151,7 @@ class File extends SplFileInfo
             throw FileException::forUnableToMove($this->getBasename(), $targetPath, strip_tags($error['message']));
         }
 
-        # @chmod($destination, 0777 & ~umask());
+        @chmod($destination, 0777 & ~umask());
 
         return new self($destination);
     }

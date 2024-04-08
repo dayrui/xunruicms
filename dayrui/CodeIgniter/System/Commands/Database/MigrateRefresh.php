@@ -52,7 +52,7 @@ class MigrateRefresh extends BaseCommand
     /**
      * the Command's Options
      *
-     * @var array
+     * @var array<string, string>
      */
     protected $options = [
         '-n'    => 'Set migration namespace',
@@ -69,6 +69,7 @@ class MigrateRefresh extends BaseCommand
     {
         $params['b'] = 0;
 
+        if (ENVIRONMENT === 'production') {
             // @codeCoverageIgnoreStart
             $force = array_key_exists('f', $params) || CLI::getOption('f');
 
@@ -78,6 +79,7 @@ class MigrateRefresh extends BaseCommand
 
             $params['f'] = null;
             // @codeCoverageIgnoreEnd
+        }
 
         $this->call('migrate:rollback', $params);
         $this->call('migrate', $params);

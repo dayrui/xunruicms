@@ -93,7 +93,7 @@ class Negotiate
 
         // If no charset is shown as a match, ignore the directive
         // as allowed by the RFC, and tell it a default value.
-        if (empty($match)) {
+        if ($match === '') {
             return 'utf-8';
         }
 
@@ -154,11 +154,11 @@ class Negotiate
         bool $strictMatch = false,
         bool $matchLocales = false
     ): string {
-        if (empty($supported)) {
+        if ($supported === []) {
             throw HTTPException::forEmptySupportedNegotiations();
         }
 
-        if (empty($header)) {
+        if ($header === null || $header === '') {
             return $strictMatch ? '' : $supported[0];
         }
 
@@ -274,7 +274,7 @@ class Negotiate
     protected function match(array $acceptable, string $supported, bool $enforceTypes = false, $matchLocales = false): bool
     {
         $supported = $this->parseHeader($supported);
-        if (is_array($supported) && count($supported) === 1) {
+        if (count($supported) === 1) {
             $supported = $supported[0];
         }
 

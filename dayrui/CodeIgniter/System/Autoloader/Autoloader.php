@@ -61,7 +61,7 @@ class Autoloader
     /**
      * Stores namespaces as key, and path as values.
      *
-     * @var array<string, array<string>>
+     * @var array<string, list<string>>
      */
     protected $prefixes = [];
 
@@ -75,8 +75,7 @@ class Autoloader
     /**
      * Stores files as a list.
      *
-     * @var string[]
-     * @phpstan-var list<string>
+     * @var list<string>
      */
     protected $files = [];
 
@@ -84,8 +83,7 @@ class Autoloader
      * Stores helper list.
      * Always load the URL helper, it should be used in most apps.
      *
-     * @var string[]
-     * @phpstan-var list<string>
+     * @var list<string>
      */
     protected $helpers = ['url'];
 
@@ -119,12 +117,12 @@ class Autoloader
             $this->files = $config->files;
         }
 
-        if (isset($config->helpers)) { // @phpstan-ignore-line
+        if (isset($config->helpers)) {
             $this->helpers = [...$this->helpers, ...$config->helpers];
         }
 
         //if (is_file(COMPOSER_PATH)) {
-            //$this->loadComposerAutoloader($modules);
+           // $this->loadComposerAutoloader($modules);
         //}
 
         return $this;
@@ -185,8 +183,7 @@ class Autoloader
     /**
      * Registers namespaces with the autoloader.
      *
-     * @param array<string, array<int, string>|string>|string $namespace
-     * @phpstan-param array<string, list<string>|string>|string $namespace
+     * @param array<string, list<string>|string>|string $namespace
      *
      * @return $this
      */
@@ -283,11 +280,13 @@ class Autoloader
         }
 
         foreach ($this->prefixes as $namespace => $directories) {
-            foreach ($directories as $directory) {
-                $directory = rtrim($directory, '\\/');
+            if (strpos($class, $namespace) === 0) {
+                $relativeClassPath = str_replace('\\', DIRECTORY_SEPARATOR, substr($class, strlen($namespace)));
 
-                if (strpos($class, $namespace) === 0) {
-                    $filePath = $directory . str_replace('\\', DIRECTORY_SEPARATOR, substr($class, strlen($namespace))) . '.php';
+                foreach ($directories as $directory) {
+                    $directory = rtrim($directory, '\\/');
+
+                    $filePath = $directory . $relativeClassPath . '.php';
                     $filename = $this->includeFile($filePath);
 
                     if ($filename) {
@@ -347,11 +346,7 @@ class Autoloader
             );
         }
         if ($result === false) {
-            if (version_compare(PHP_VERSION, '8.0.0', '>=')) {
-                $message = preg_last_error_msg();
-            } else {
-                $message = 'Regex error. error code: ' . preg_last_error();
-            }
+            $message = PHP_VERSION_ID >= 80000 ? preg_last_error_msg() : 'Regex error. error code: ' . preg_last_error();
 
             throw new RuntimeException($message . '. filename: "' . $filename . '"');
         }

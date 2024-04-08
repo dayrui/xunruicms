@@ -71,7 +71,7 @@ class Email
     public $protocol = 'mail';
 
     /**
-     * STMP Server host
+     * STMP Server Hostname
      *
      * @var string
      */
@@ -296,7 +296,7 @@ class Email
     /**
      * Raw debug messages
      *
-     * @var string[]
+     * @var list<string>
      */
     private array $debugMessageRaw = [];
 
@@ -352,8 +352,7 @@ class Email
      * Character sets valid for 7-bit encoding,
      * excluding language suffix.
      *
-     * @var array<int, string>
-     * @phpstan-var list<string>
+     * @var list<string>
      */
     protected $baseCharsets = [
         'us-ascii',
@@ -706,10 +705,20 @@ class Email
     public function setAttachmentCID($filename)
     {
         foreach ($this->attachments as $i => $attachment) {
+            // For file path.
             if ($attachment['name'][0] === $filename) {
                 $this->attachments[$i]['multipart'] = 'related';
 
                 $this->attachments[$i]['cid'] = uniqid(basename($attachment['name'][0]) . '@', true);
+
+                return $this->attachments[$i]['cid'];
+            }
+
+            // For buffer string.
+            if ($attachment['name'][1] === $filename) {
+                $this->attachments[$i]['multipart'] = 'related';
+
+                $this->attachments[$i]['cid'] = uniqid(basename($attachment['name'][1]) . '@', true);
 
                 return $this->attachments[$i]['cid'];
             }
@@ -732,7 +741,7 @@ class Email
     }
 
     /**
-     * @param string $email
+     * @param array|string $email
      *
      * @return array
      */
@@ -1237,13 +1246,13 @@ class Email
                     . $this->prepQuotedPrintable($this->body) . $this->newline . $this->newline
                     . '--' . $altBoundary . '--' . $this->newline . $this->newline;
 
-                if (! empty($relBoundary)) {
+                if (isset($relBoundary)) {
                     $body .= $this->newline . $this->newline;
                     $this->appendAttachments($body, $relBoundary, 'related');
                 }
 
                 // multipart/mixed attachments
-                if (! empty($atcBoundary)) {
+                if (isset($atcBoundary)) {
                     $body .= $this->newline . $this->newline;
                     $this->appendAttachments($body, $atcBoundary, 'mixed');
                 }
@@ -1656,7 +1665,9 @@ class Email
     /**
      * Strip line-breaks via callback
      *
-     * @param string $matches
+     * @used-by unwrapSpecials()
+     *
+     * @param list<string> $matches
      *
      * @return string
      */

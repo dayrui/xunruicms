@@ -16,8 +16,8 @@ use CodeIgniter\View\ViewDecoratorInterface;
 /**
  * View configuration
  *
- * @phpstan-type ParserCallable (callable(mixed): mixed)
- * @phpstan-type ParserCallableString (callable(mixed): mixed)&string
+ * @phpstan-type parser_callable (callable(mixed): mixed)
+ * @phpstan-type parser_callable_string (callable(mixed): mixed)&string
  */
 class View extends BaseConfig
 {
@@ -39,8 +39,8 @@ class View extends BaseConfig
      *
      * @psalm-suppress UndefinedDocblockClass
      *
-     * @var array<string, string>
-     * @phpstan-var array<string, ParserCallableString>
+     * @var         array<string, string>
+     * @phpstan-var array<string, parser_callable_string>
      */
     public $filters = [];
 
@@ -51,16 +51,18 @@ class View extends BaseConfig
      *
      * @psalm-suppress UndefinedDocblockClass
      *
-     * @var array<string, array<string>|callable|string>
-     * @phpstan-var array<string, array<ParserCallableString>|ParserCallableString|ParserCallable>
+     * @var         array<string, callable|list<string>|string>
+     * @phpstan-var array<string, list<parser_callable_string>|parser_callable_string|parser_callable>
      */
     public $plugins = [];
 
     /**
      * Built-in View filters.
      *
-     * @var array<string, string>
-     * @phpstan-var array<string, ParserCallableString>
+     * @psalm-suppress UndefinedDocblockClass
+     *
+     * @var         array<string, string>
+     * @phpstan-var array<string, parser_callable_string>
      */
     protected $coreFilters = [
         'abs'            => '\abs',
@@ -89,8 +91,10 @@ class View extends BaseConfig
     /**
      * Built-in View plugins.
      *
-     * @var array<string, array<string>|callable|string>
-     * @phpstan-var array<string, array<ParserCallableString>|ParserCallableString|ParserCallable>
+     * @psalm-suppress UndefinedDocblockClass
+     *
+     * @var         array<string, callable|list<string>|string>
+     * @phpstan-var array<string, array<parser_callable_string>|parser_callable_string|parser_callable>
      */
     protected $corePlugins = [
         'csp_script_nonce'  => '\CodeIgniter\View\Plugins::cspScriptNonce',
@@ -112,7 +116,7 @@ class View extends BaseConfig
      *
      * All classes must implement CodeIgniter\View\ViewDecoratorInterface
      *
-     * @var class-string<ViewDecoratorInterface>[]
+     * @var list<class-string<ViewDecoratorInterface>>
      */
     public array $decorators = [];
 
