@@ -511,7 +511,7 @@ class Pays extends \Phpcmf\Library\A_Field  {
 
             $tpl_value = $this->_get_tpl_value('data['.$field['fieldname'].'_sku]');
 
-            $image_url ='/index.php?s=api&c=file&m=input_file_list&token='.dr_get_csrf_token().'&siteid='.SITE_ID.'&p='.dr_authcode([
+            $image_url ='/'.(IS_ADMIN ? SELF.'?c=api' : 'index.php?s=api&c=file').'&m=input_file_list&token='.dr_get_csrf_token().'&siteid='.SITE_ID.'&p='.dr_authcode([
                 'size' => 10,
                 'count' => 1,
                 'exts' => 'jpg,gif,png',

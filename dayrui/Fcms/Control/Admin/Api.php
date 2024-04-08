@@ -159,6 +159,34 @@ class Api extends \Phpcmf\Common {
         dr_redirect(dr_url('cloud/template'));
     }
 
+    /**
+     * Ajax调用字段属性表单
+     */
+    public function field() {
+        \Phpcmf\Service::L('api')->field();
+    }
+
+    /**
+     * 附件改名
+     */
+    public function name_edit() {
+        \Phpcmf\Service::L('api')->name_edit();
+    }
+
+    /**
+     * 输入一个附件
+     */
+    public function input_file_url() {
+        \Phpcmf\Service::L('api')->input_file_url();
+    }
+
+    /**
+     * 图片编辑
+     */
+    public function image_edit() {
+        \Phpcmf\Service::L('api')->image_edit();
+    }
+
     // 测试字段回调方法
     public function field_call() {
 
@@ -1306,5 +1334,86 @@ class Api extends \Phpcmf\Common {
             'member' => $member,
         ]);
         \Phpcmf\Service::V()->display('api_avatar.html');exit;
+    }
+
+    // 验证权限脚本
+    public function _check_upload_auth($editor = 0) {
+        return \Phpcmf\Service::L('api')->check_upload_auth($editor);
+    }
+
+    /**
+     * 文件上传
+     */
+    public function upload() {
+        \Phpcmf\Service::L('api')->upload();
+    }
+
+    /**
+     * 浏览文件
+     */
+    public function input_file_list() {
+        \Phpcmf\Service::L('api')->input_file_list();
+    }
+
+    /**
+     * 浏览文件
+     */
+    public function file_list() {
+        \Phpcmf\Service::L('api')->file_list();
+    }
+
+    /**
+     * 删除文件
+     */
+    public function file_delete() {
+
+        $rt = \Phpcmf\Service::M('Attachment')->file_delete(
+            $this->member,
+            (int)\Phpcmf\Service::L('input')->get('id')
+        );
+
+        $this->_json($rt['code'], $rt['msg']);
+    }
+
+    /**
+     * 下载文件
+     */
+    public function down() {
+        \Phpcmf\Service::L('api')->down();
+    }
+
+    /**
+     * 百度编辑器处理接口
+     */
+    public function ueditor() {
+        require ROOTPATH.'api/ueditor/php/controller.php';exit;
+    }
+
+    /**
+     * base64图片上传
+     */
+    public function upload_base64_image() {
+        \Phpcmf\Service::L('api')->upload_base64_image();
+    }
+
+    /**
+     * 下载远程图片
+     */
+    public function down_img_list() {
+        \Phpcmf\Service::L('api')->down_img_list();
+    }
+
+    /**
+     * 下载远程图片
+     */
+    public function down_img_url() {
+        \Phpcmf\Service::L('api')->down_img_url();
+    }
+
+    /**
+     * 下载远程图片
+     */
+    public function down_img() {
+        \Phpcmf\Service::L('api')->down_img();
     }
 }

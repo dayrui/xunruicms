@@ -266,7 +266,7 @@
     $(function() {
         set_required({intval($data['setting']['validate']['required'])});
         $("#dr_loading").show();
-        $.ajax({type: "GET",dataType:"json", url: '/index.php?s=api&c=api&m=field&rand='+Math.random(),
+        $.ajax({type: "GET",dataType:"json", url: '{dr_url('api/field')}&rand='+Math.random(),
             data: {type:'{$data['fieldtype']}', relatedid:'{$rid}', relatedname:'{$rname}', app:'{$namespace}', id:{intval($data.id)}},
             success: function(data) {
                 $('#dr_css').html(data.style);
@@ -287,7 +287,7 @@
                 success: function(json) {
                     if (json.code==1) {
                         $("#dr_loading").show();
-                        $.ajax({type: "GET",dataType:"json", url: '/index.php?s=api&c=api&m=field&rand='+Math.random(),
+                        $.ajax({type: "GET",dataType:"json", url: '{dr_url('api/field')}&rand='+Math.random(),
                             data: {type:type, relatedid:'{$rid}', relatedname:'{$rname}', app:'{$namespace}', id:{intval($data.id)}},
                             success: function(data) {
                                 $('#dr_css').html(data.style);
@@ -310,7 +310,7 @@
                                 btn: [lang['ok'], lang['esc']]
                             }, function(index) {
                                 $("#dr_loading").show();
-                                $.ajax({type: "GET",dataType:"json", url: '/index.php?s=api&c=api&m=field&rand='+Math.random(),
+                                $.ajax({type: "GET",dataType:"json", url: '{dr_url('api/field')}&rand='+Math.random(),
                                     data: {type:type, relatedid:'{$rid}', relatedname:'{$rname}', app:'{$namespace}', id:{intval($data.id)}},
                                     success: function(data) {
                                         $('#dr_css').html(data.style);
@@ -334,7 +334,7 @@
         }
         {else}
         $("#dr_loading").show();
-        $.ajax({type: "GET",dataType:"json", url: '/index.php?s=api&c=api&m=field&rand='+Math.random(),
+        $.ajax({type: "GET",dataType:"json", url: '{dr_url('api/field')}&rand='+Math.random(),
             data: {type:type, relatedid:'{$rid}', relatedname:'{$rname}', app:'{$namespace}', id:{intval($data.id)}},
             success: function(data) {
                 $('#dr_css').html(data.style);

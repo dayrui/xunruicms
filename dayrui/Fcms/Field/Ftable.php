@@ -193,7 +193,7 @@ class Ftable extends \Phpcmf\Library\A_Field {
                 $size = 10;
                 $exts =  $config['option'];
             }
-            $url = '/index.php?s=api&c=file&m=input_file_list&token='.dr_get_csrf_token().'&siteid='.SITE_ID.'&p='.dr_authcode([
+            $url = '/'.(IS_ADMIN ? SELF.'?c=api' : 'index.php?s=api&c=file').'&m=input_file_list&token='.dr_get_csrf_token().'&siteid='.SITE_ID.'&p='.dr_authcode([
                 'size' => $size ? $size : 10,
                 'exts' => $exts ? $exts : 'jpg,gif,png,jpeg',
                 'count' => 1,

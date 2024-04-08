@@ -282,7 +282,6 @@ class Api extends \Phpcmf\Common {
             }
         }
 
-
         echo json_encode([
             'data' => $json,
             'html' => $html,
@@ -291,32 +290,9 @@ class Api extends \Phpcmf\Common {
 
     /**
      * Ajax调用字段属性表单
-     *
-     * @return void
      */
     public function field() {
-
-        $id = (int)\Phpcmf\Service::L('input')->get('id');
-        $app = dr_safe_replace(\Phpcmf\Service::L('input')->get('app'));
-        $type = dr_safe_replace(\Phpcmf\Service::L('input')->get('type'));
-
-        // 关联表
-        \Phpcmf\Service::M('field')->relatedid = dr_safe_replace(\Phpcmf\Service::L('input')->get('relatedid'));
-        \Phpcmf\Service::M('field')->relatedname = dr_safe_replace(\Phpcmf\Service::L('input')->get('relatedname'));
-
-        // 获取全部字段
-        $all = \Phpcmf\Service::M('field')->get_all_field();
-        $data = $id ? $all[$id] : null;
-        $value = $data ? $data['setting']['option'] : []; // 当前字段属性信息
-
-        $obj = \Phpcmf\Service::L('field')->app($app);
-        if (!$obj) {
-            exit(json_encode(['option' => '', 'style' => '']));
-        }
-
-        list($option, $style) = $obj->option($type, $value, $all);
-
-        exit(json_encode(['option' => $option, 'style' => $style], JSON_UNESCAPED_UNICODE));
+        \Phpcmf\Service::L('api')->field();
     }
 
     /**

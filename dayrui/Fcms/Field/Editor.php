@@ -506,9 +506,9 @@ class Editor extends \Phpcmf\Library\A_Field {
             dr_is_auto_description_".$field['fieldname']."();
                 $('#dr_".$name."').summernote({
                 isMobileWidth: '".(\Phpcmf\Service::IS_MOBILE_USER() ? '95%' : '80%')."',
-                llVideoUrl: '".dr_web_prefix('index.php?s=api&c=file&m=input_file_list&is_iframe=1&p=' . $p)."',
-                llImageUrl: '".dr_web_prefix('index.php?s=api&c=file&m=input_file_list&is_iframe=1&p=' . $p2."&is_wm=".$wm)."',
-                attachUrl: '".dr_web_prefix('index.php?s=api&c=file&m=input_file_list&is_iframe=1&p=' . $p3)."',
+                llVideoUrl: '".dr_web_prefix(''.(IS_ADMIN ? SELF.'?c=api' : 'index.php?s=api&c=file').'&m=input_file_list&is_iframe=1&p=' . $p)."',
+                llImageUrl: '".dr_web_prefix(''.(IS_ADMIN ? SELF.'?c=api' : 'index.php?s=api&c=file').'&m=input_file_list&is_iframe=1&p=' . $p2."&is_wm=".$wm)."',
+                attachUrl: '".dr_web_prefix(''.(IS_ADMIN ? SELF.'?c=api' : 'index.php?s=api&c=file').'&m=input_file_list&is_iframe=1&p=' . $p3)."',
                 isImageTitle:'".$title."',
                 isImageAlt:'".$alt."',
                 height:'".$height."',
@@ -521,7 +521,7 @@ var index = layer.load(2, {
 });
 $.ajax({
     type: 'POST',
-    url: '".dr_web_prefix('index.php?s=api&c=file&m=down_img&is_iframe=1&token='.dr_get_csrf_token().'&rid='.$this->rid.'&p=' . $p2."&is_wm=".$wm)."',
+    url: '".dr_web_prefix(''.(IS_ADMIN ? SELF.'?c=api' : 'index.php?s=api&c=file').'&m=down_img&is_iframe=1&token='.dr_get_csrf_token().'&rid='.$this->rid.'&p=' . $p2."&is_wm=".$wm)."',
     dataType: 'json',
     data: { value: $('#dr_".$field['fieldname']."').summernote('code') },
     success: function (json) {

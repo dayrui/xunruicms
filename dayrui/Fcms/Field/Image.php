@@ -240,7 +240,7 @@ class Image extends \Phpcmf\Library\A_Field {
             'attachment' => $field['setting']['option']['attachment'],
             'image_reduce' => $field['setting']['option']['image_reduce'],
         ], 'ENCODE');
-        $url = WEB_DIR.'index.php?s=api&c=file&token='.dr_get_csrf_token().'&siteid=' . SITE_ID . '&m=upload&p=' . $p . '&fid=' . $field['id'];
+        $url = WEB_DIR.''.(IS_ADMIN ? SELF.'?c=api' : 'index.php?s=api&c=file').'&token='.dr_get_csrf_token().'&siteid=' . SITE_ID . '&m=upload&p=' . $p . '&fid=' . $field['id'];
 
         // 显示模板
         $i = 0;
@@ -253,7 +253,7 @@ class Image extends \Phpcmf\Library\A_Field {
                     if ($file) {
                         $editname = '';
                         if ($file['uid'] == \Phpcmf\Service::C()->uid || IS_ADMIN) {
-                            $editname = ' onclick="dr_iframe(\''.dr_lang('修改名称').'\', \''.dr_web_prefix('index.php?s=api&c=file&m=name_edit&id='.$file['id']).'\', \'350px\', \'220px\');" title="'.dr_lang('修改名称').'"';
+                            $editname = ' onclick="dr_iframe(\''.dr_lang('修改名称').'\', \''.dr_web_prefix((IS_ADMIN ? SELF.'?c=api' : 'index.php?s=api&c=file').'&m=name_edit&id='.$file['id']).'\', \'350px\', \'220px\');" title="'.dr_lang('修改名称').'"';
                         }
                         $tpl.= '<div id="image-'.$name.'-'.$id.'" class="dz-preview dz-processing dz-success dz-complete dz-image-preview">';
                         $tpl.=     '<div class="dz-image">';
