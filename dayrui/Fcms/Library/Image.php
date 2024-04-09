@@ -364,7 +364,7 @@ class Image {
         // Is there a source image? If not, there's no reason to continue
         if ($this->source_image === '')
         {
-            $this->set_error('imglib_source_image_required');
+            $this->set_error('源图片参数不能为空');
             return FALSE;
         }
         /* Is getimagesize() available?
@@ -375,7 +375,7 @@ class Image {
          */
         if ( ! function_exists('getimagesize'))
         {
-            $this->set_error('imglib_gd_required_for_props');
+            $this->set_error('getimagesize函数不可用');
             return FALSE;
         }
         $this->image_library = strtolower($this->image_library);
@@ -553,7 +553,7 @@ class Image {
         $degs = array(90, 180, 270, 'vrt', 'hor');
         if ($this->rotation_angle === '' OR ! in_array($this->rotation_angle, $degs))
         {
-            $this->set_error('imglib_rotation_angle_required');
+            $this->set_error('旋转角度参数有误');
             return FALSE;
         }
         // Reassign the width and height
@@ -680,7 +680,7 @@ class Image {
         // Do we have a vaild library path?
         if ($this->library_path === '')
         {
-            $this->set_error('imglib_libpath_invalid');
+            $this->set_error('图片路径不能为空');
             return FALSE;
         }
         if ( ! preg_match('/convert$/i', $this->library_path))
@@ -720,7 +720,7 @@ class Image {
         // Did it work?
         if ($retval > 0)
         {
-            $this->set_error('imglib_image_process_failed');
+            $this->set_error('imglib_image进程失败');
             return FALSE;
         }
         //chmod($this->full_dst_path, $this->file_permissions);
@@ -739,7 +739,7 @@ class Image {
     {
         if ($this->library_path === '')
         {
-            $this->set_error('imglib_libpath_invalid');
+            $this->set_error('源图片路径不能为空');
             return FALSE;
         }
         // Build the resizing command
@@ -793,7 +793,7 @@ class Image {
         // Did it work?
         if ($retval > 0)
         {
-            $this->set_error('imglib_image_process_failed');
+            $this->set_error('imglib_image进程失败');
             return FALSE;
         }
         // With NetPBM we have to create a temporary image.
@@ -983,7 +983,7 @@ class Image {
     {
         if ( ! function_exists('imagecolortransparent'))
         {
-            $this->set_error('imglib_gd_required');
+            $this->set_error('imagecolortransparent函数不支持');
             return FALSE;
         }
         // Fetch source image properties
@@ -1085,7 +1085,7 @@ class Image {
         }
         if ($this->wm_use_truetype === TRUE && ! file_exists($this->wm_font_path))
         {
-            $this->set_error('imglib_missing_font');
+            $this->set_error(IS_DEV ? '字体文件（'.$this->wm_font_path.'）不存在' : '字体文件不存在');
             return FALSE;
         }
         // Fetch source image properties
@@ -1242,33 +1242,33 @@ class Image {
             case 1:
                 if ( ! function_exists('imagecreatefromgif'))
                 {
-                    $this->set_error(array('imglib_unsupported_imagecreate', 'imglib_gif_not_supported'));
+                    $this->set_error('imagecreatefromgif函数不存在');
                     return FALSE;
                 }
                 return imagecreatefromgif($path);
             case 2:
                 if ( ! function_exists('imagecreatefromjpeg'))
                 {
-                    $this->set_error(array('imglib_unsupported_imagecreate', 'imglib_jpg_not_supported'));
+                    $this->set_error('imagecreatefromjpeg函数不存在');
                     return FALSE;
                 }
                 return imagecreatefromjpeg($path);
             case 18:
                 if ( ! function_exists('imagecreatefromwebp'))
                 {
-                    $this->set_error(array('imglib_unsupported_imagecreate', 'imglib_webp_not_supported'));
+                    $this->set_error('imagecreatefromwebp函数不存在');
                     return FALSE;
                 }
                 return imagecreatefromwebp($path);
             case 3:
                 if ( ! function_exists('imagecreatefrompng'))
                 {
-                    $this->set_error(array('imglib_unsupported_imagecreate', 'imglib_png_not_supported'));
+                    $this->set_error('imagecreatefrompng函数不存在');
                     return FALSE;
                 }
                 return imagecreatefrompng($path);
             default:
-                $this->set_error(array('imglib_unsupported_imagecreate'));
+                $this->set_error('不支持的图片类型');
                 return FALSE;
         }
     }
@@ -1300,53 +1300,53 @@ class Image {
             case 1:
                 if ( ! function_exists('imagegif'))
                 {
-                    $this->set_error(array('imglib_unsupported_imagecreate', 'imglib_gif_not_supported'));
+                    $this->set_error('imagegif函数不存在');
                     return FALSE;
                 }
                 if ( ! @imagegif($resource, $this->full_dst_path))
                 {
-                    $this->set_error('imglib_save_failed');
+                    $this->set_error('图片储存失败');
                     return FALSE;
                 }
                 break;
             case 2:
                 if ( ! function_exists('imagejpeg'))
                 {
-                    $this->set_error(array('imglib_unsupported_imagecreate', 'imglib_jpg_not_supported'));
+                    $this->set_error('imagejpeg函数不存在');
                     return FALSE;
                 }
                 if ( ! imagejpeg($resource, $this->full_dst_path, $this->quality))
                 {
-                    $this->set_error('imglib_save_failed');
+                    $this->set_error('图片储存失败');
                     return FALSE;
                 }
                 break;
             case 18:
                 if ( ! function_exists('imagewebp'))
                 {
-                    $this->set_error(array('imglib_unsupported_imagecreate', 'imglib_jpg_not_supported'));
+                    $this->set_error('imagewebp函数不存在');
                     return FALSE;
                 }
                 if ( ! imagewebp($resource, $this->full_dst_path, $this->quality))
                 {
-                    $this->set_error('imglib_save_failed');
+                    $this->set_error('图片储存失败');
                     return FALSE;
                 }
                 break;
             case 3:
                 if ( ! function_exists('imagepng'))
                 {
-                    $this->set_error(array('imglib_unsupported_imagecreate', 'imglib_png_not_supported'));
+                    $this->set_error('imagepng函数不存在');
                     return FALSE;
                 }
                 if ( ! @imagepng($resource, $this->full_dst_path))
                 {
-                    $this->set_error('imglib_save_failed');
+                    $this->set_error('图片储存失败');
                     return FALSE;
                 }
                 break;
             default:
-                $this->set_error(array('imglib_unsupported_imagecreate'));
+                $this->set_error('不支持的图片类型');
                 return FALSE;
                 break;
         }
@@ -1449,7 +1449,7 @@ class Image {
         }
         if ( ! file_exists($path))
         {
-            $this->set_error('imglib_invalid_path');
+            $this->set_error(IS_DEV ? '文件（'.$path.'）不存在' : '图片路径不存在');
             return FALSE;
         }
         $vals = getimagesize($path);
@@ -1579,7 +1579,7 @@ class Image {
      */
     public function set_error($msg)
     {
-        return is_array($msg) ? implode(' - ', $msg) : $msg;
+        $this->error_msg = is_array($msg) ? implode(' - ', dr_lang($msg)) : dr_lang($msg);
     }
     // --------------------------------------------------------------------
     /**
