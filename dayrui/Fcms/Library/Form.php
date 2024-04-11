@@ -386,14 +386,12 @@ class Form {
         return false;
     }
 
-    // 验证手机号码
+    // 验证手机号码长度
     public function check_phone($value) {
 
         if (!$value) {
             return false;
-        } elseif (!is_numeric($value)) {
-            return false;
-        } elseif (strlen($value) != 11) {
+        } elseif (dr_strlen($value) > 30) {
             return false;
         }
 
