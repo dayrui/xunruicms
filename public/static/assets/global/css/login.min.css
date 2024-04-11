@@ -2,5 +2,6 @@
 .login-oauth { text-align: center; }
 .login-form {padding-bottom: 50px}
 .login-form .form-actions .btn{background-color: #2890ff;border-color: #2890ff;}
-.login-oauth a {  font-size: 18px; margin-right: 10px; }
+.login-oauth a { font-size: 18px; margin-right: 10px; }
 .login .logo img {padding: 10px 0;}
+.login-form .form-actions .btn.active,.login-form .form-actions .btn:hover { background-color: #555555;border-color: #555555 }
