@@ -75,6 +75,7 @@ class Sql_log extends \Phpcmf\Common
         } else {
             $size = file_put_contents($file, 'ok');
             if (!$size) {
+                dr_mkdirs(dirname($file));
                 $this->_json(0, dr_lang('Cache目录权限不可写入'));
             }
         }
