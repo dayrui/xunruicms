@@ -73,7 +73,10 @@ class Sql_log extends \Phpcmf\Common
         if (is_file($file)) {
             unlink($file);
         } else {
-            file_put_contents($file, 'ok');
+            $size = file_put_contents($file, 'ok');
+            if (!$size) {
+                $this->_json(0, dr_lang('Cache目录权限不可写入'));
+            }
         }
 
 		$this->_json(1, dr_lang('操作成功'));
@@ -85,6 +88,5 @@ class Sql_log extends \Phpcmf\Common
 
 		$this->_json(1, dr_lang('操作成功'));
 	}
-	
 
 }
