@@ -238,7 +238,8 @@ class Api {
             if (strpos(FC_NOW_URL, 'ueditor') !== false) {
                 $error = '本图标功能已禁用，请使用截图软件截图后，再粘贴进编辑器中';
             }
-        } elseif ($this->member && $this->member['is_admin']) {
+        } elseif (($this->member && $this->member['is_admin']) || IS_ADMIN) {
+            // 后台跳过权限
             return;
         } elseif (IS_USE_MEMBER && !\Phpcmf\Service::L('member_auth', 'member')->member_auth('uploadfile', $this->member)) {
             $error = '您的用户组不允许上传文件';
