@@ -139,6 +139,10 @@ class Upload {
         if (!$rt['code']) {
             return dr_return_data(0, $rt['msg']);
         }
+        if (isset($rt['fixpath']) && $rt['fixpath']) {
+            // 是否返回新路径
+            $file_path = $rt['fixpath'];
+        }
 
         if ($diy) {
             $url = '自定义存储地址不提供URL';
@@ -247,6 +251,10 @@ class Upload {
         if (!$rt['code']) {
             return dr_return_data(0, $rt['msg']);
         }
+        if (isset($rt['fixpath']) && $rt['fixpath']) {
+            // 是否返回新路径
+            $file_path = $rt['fixpath'];
+        }
 
         // 上传成功
         if ($diy) {
@@ -289,6 +297,10 @@ class Upload {
         if (!$rt['code']) {
             return dr_return_data(0, $rt['msg']);
         }
+        if (isset($rt['fixpath']) && $rt['fixpath']) {
+            // 是否返回新路径
+            $file_path = $rt['fixpath'];
+        }
 
         // 上传成功
         if ($diy) {
@@ -325,6 +337,10 @@ class Upload {
         $storage = new \Phpcmf\Library\Storage();
         $rt = $storage->upload($type == 'upload' ? 1 : 0, $data, $file_path, $attachment, $watermark);
         if ($rt['code']) {
+            if (isset($rt['fixpath']) && $rt['fixpath']) {
+                // 是否返回新路径
+                $file_path = $rt['fixpath'];
+            }
             \Phpcmf\Hooks::trigger('upload_file', [
                 'type' => $type,
                 'data' => $data,
