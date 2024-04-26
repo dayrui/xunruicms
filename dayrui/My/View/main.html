@@ -6,7 +6,7 @@
 </div>
 {/if}
 
-{if $admin.adminid==1 && !IS_OEM_CMS}
+{if IS_DEV && $admin.adminid==1 && !IS_OEM_CMS}
     {if is_file(CMSPATH.'Config/vip.lock') && !is_file(WRITEPATH.'config/safe.php')}
     <div class="note note-danger">
         {if !dr_is_app('safe')}
