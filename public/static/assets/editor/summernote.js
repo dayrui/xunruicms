@@ -9518,7 +9518,7 @@ var HelpDialog_HelpDialog = /*#__PURE__*/function () {
                   if (_this.options.isImageAlt == 'none') {
 
                   } else if (_this.options.isImageAlt) {
-                    html+= ' alt="'+_this.options.isImageTitle+'"';
+                    html+= ' alt="'+_this.options.isImageAlt+'"';
                   } else {
                     if (v.name) {
                       html+= ' alt="'+v.name+'"';
