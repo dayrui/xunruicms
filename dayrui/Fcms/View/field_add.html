@@ -58,7 +58,7 @@
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('字段类别')}</label>
                             <div class="col-md-9">
-                                <label><select class="form-control" {if $id && !$is_edit} readonly="readonly"{/if} id="dr_fieldtype" name="data[fieldtype]" onChange="show_field_option(this.value)">
+                                <label><select class="form-control bs-select" data-live-search="true" data-actions-box="true" {if $id && !$is_edit} readonly="readonly"{/if} id="dr_fieldtype" name="data[fieldtype]" onChange="show_field_option(this.value)">
                                     <option value=""> -- </option>
                                     {loop $ftype $t}
                                     <option value="{$t.id}" {if $t.id==$data.fieldtype} selected="selected"{/if}> {$t.name}（{$t.id}） </option>
