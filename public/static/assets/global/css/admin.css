@@ -2434,7 +2434,8 @@ tbody.collapse.in {
 }
 
 .btn .caret,.btn-group>.btn:first-child {
-    margin-left: 0
+    margin-left: 0;
+    border-right: 2px solid #E4E6EF;
 }
 
 .btn-group .dropdown-toggle:active,.btn-group.open .dropdown-toggle {
