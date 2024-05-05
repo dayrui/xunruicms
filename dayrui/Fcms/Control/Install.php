@@ -220,6 +220,9 @@ $db[\'default\']	= [
                         if ($page) {
                             if (is_file(MYPATH.'Config/Install.sql')) {
                                 $sql = file_get_contents(MYPATH.'Config/Install.sql');
+                                if (strlen($sql) < 100) {
+                                    $sql = file_get_contents(CMSPATH.'Config/Install.sql');
+                                }
                             } else {
                                 $sql = file_get_contents(CMSPATH.'Config/Install.sql');
                             }
