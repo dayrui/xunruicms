@@ -9,8 +9,12 @@ if (!is_file(FRAMEPATH . 'System/vendor/autoload.php')) {
 
 require FRAMEPATH . 'System/vendor/autoload.php';
 
+$app = new App();
+$app->debug(CI_DEBUG ? true : false);
+$app->setRuntimePath(WRITEPATH.'thinkphp_runtime/');
+
 // 执行HTTP应用并响应
-$http = (new App())->debug(CI_DEBUG ? true : false)->http;
+$http = $app->http;
 
 // 挂钩点 程序运行之前
 \Phpcmf\Hooks::trigger('cms_run');
