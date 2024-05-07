@@ -639,7 +639,7 @@ class Menu extends \Phpcmf\Model {
      */
     public function parent_select($table, $level, $id = NULL, $name = NULL) {
 
-        $select = $name ? $name : '<select class="form-control" name="data[pid]">';
+        $select = $name ? $name : '<select class="form-control bs-select" data-live-search="true" name="data[pid]">';
 
         switch ($level) {
             case 1: // 顶级菜单
@@ -665,6 +665,7 @@ class Menu extends \Phpcmf\Model {
         }
 
         $select.= '</select>';
+        $select.= \Phpcmf\Service::L('Field')->get('select')->get_select_search_code();
 
         return $select;
     }
