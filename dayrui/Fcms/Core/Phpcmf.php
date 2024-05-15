@@ -513,6 +513,7 @@ abstract class Common extends \Frame\Controller {
             $data = \Phpcmf\Service::L('cache')->get_file('attach-info-'.$id, 'attach');
             if ($data) {
                 $data['url'] = dr_get_file_url($data);
+                $data['iscache'] = 1;
                 return $data;
             }
         }

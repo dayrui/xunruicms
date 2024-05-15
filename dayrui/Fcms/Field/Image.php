@@ -249,7 +249,7 @@ class Image extends \Phpcmf\Library\A_Field {
             $value = dr_string2array($value);
             if ($value) {
                 foreach ($value as $id) {
-                    $file = \Phpcmf\Service::C()->get_attachment($id);
+                    $file = \Phpcmf\Service::C()->get_attachment($id, 1);
                     if ($file) {
                         $editname = '';
                         if ($file['uid'] == \Phpcmf\Service::C()->uid || IS_ADMIN) {

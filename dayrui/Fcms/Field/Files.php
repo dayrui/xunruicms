@@ -183,7 +183,7 @@ class Files extends \Phpcmf\Library\A_Field {
             if (isset($_field['thumb']) && $_field['thumb']['fieldtype'] == 'File' && !\Phpcmf\Service::L('Field')->data[intval($_field['thumb']['ismain'])]['thumb']) {
                 $one = array_key_first($data['file']);
                 if ($data['file'][$one]) {
-                    $info = \Phpcmf\Service::C()->get_attachment($data['file'][$one]);
+                    $info = \Phpcmf\Service::C()->get_attachment($data['file'][$one], 1);
                     if ($info && in_array($info['fileext'], ['jpg', 'jpeg', 'png', 'gif'])) {
                         \Phpcmf\Service::L('Field')->data[intval($_field['thumb']['ismain'])]['thumb'] = $data['file'][$one];
                     }
@@ -330,7 +330,7 @@ class Files extends \Phpcmf\Library\A_Field {
         if ($value) {
             foreach ($value as $i => $t) {
                 $id = $t['id'] ? $t['id'] : $t['file'];
-                $file = \Phpcmf\Service::C()->get_attachment($id);
+                $file = \Phpcmf\Service::C()->get_attachment($id, 1);
                 $description = $t['description'] ? htmlspecialchars($t['description']) : '';
                 if ($file) {
                     $disabled = 'readonly';
@@ -468,7 +468,7 @@ class Files extends \Phpcmf\Library\A_Field {
             $html.= '<tbody class="files">';
             foreach ($value as $i => $t) {
                 $id = $t['id'] ? $t['id'] : $t['file'];
-                $file = \Phpcmf\Service::C()->get_attachment($id);
+                $file = \Phpcmf\Service::C()->get_attachment($id, 1);
                 $description = $t['description'] ? $t['description'] : '';
                 if ($file) {
                     $preview = dr_file_preview_html($file['url'], $file['id']);

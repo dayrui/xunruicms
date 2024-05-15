@@ -177,7 +177,7 @@ class Ftable extends \Phpcmf\Library\A_Field {
             $link = '';
             $preview = ROOT_THEME_PATH.'assets/images/ext/url.png';
             if ($value[$hang][$lie]) {
-                $file = \Phpcmf\Service::C()->get_attachment((string)$value[$hang][$lie]);
+                $file = \Phpcmf\Service::C()->get_attachment((string)$value[$hang][$lie], 1);
                 if ($file) {
                     $link = $file['url'];
                     if (dr_is_image($file['fileext'])) {

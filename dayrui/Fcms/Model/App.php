@@ -194,6 +194,10 @@ class App extends \Phpcmf\Model {
 
         @unlink($path.'install.lock');
 
+        if (is_file($path.'install.lock')) {
+            return dr_return_data(0, dr_lang('目录%s权限写入', $path));
+        }
+
         return dr_return_data(1, dr_lang('卸载成功'));
     }
 

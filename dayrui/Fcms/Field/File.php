@@ -185,7 +185,7 @@ class File extends \Phpcmf\Library\A_Field {
         if ($value && $field['setting']['option']['stslt']) {
             $_field = \Phpcmf\Service::L('form')->fields;
             if (isset($_field['thumb']) && $_field['thumb']['fieldtype'] == 'File' && !\Phpcmf\Service::L('Field')->data[$_field['thumb']['ismain']]['thumb']) {
-                $info = \Phpcmf\Service::C()->get_attachment($value);
+                $info = \Phpcmf\Service::C()->get_attachment($value, 1);
                 if ($info && in_array($info['fileext'], ['jpg', 'jpeg', 'png', 'gif'])) {
                     \Phpcmf\Service::L('Field')->data[$_field['thumb']['ismain']]['thumb'] = $value;
                 }
@@ -239,7 +239,7 @@ class File extends \Phpcmf\Library\A_Field {
 		$file_url = '';
 		$show_delete = 0;
 		if ($value) {
-			$file = \Phpcmf\Service::C()->get_attachment($value);
+			$file = \Phpcmf\Service::C()->get_attachment($value, 1);
 			if ($file) {
                 $preview = dr_file_preview_html($file['url'], $file['id']);
 				$filepath = $file['attachment'];
@@ -348,7 +348,7 @@ class File extends \Phpcmf\Library\A_Field {
 
         if ($value) {
             // 显示模板
-            $file = \Phpcmf\Service::C()->get_attachment($value);
+            $file = \Phpcmf\Service::C()->get_attachment($value, 1);
             if ($file) {
                 $preview = dr_file_preview_html($file['url'], $file['id']);
             } else {
