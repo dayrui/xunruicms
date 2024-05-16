@@ -247,6 +247,10 @@ class Date extends \Phpcmf\Library\A_Field {
      */
     public function show($field, $value = null) {
 
+        if (!is_numeric($value)) {
+            $value = strtotime($value);
+        }
+
         $value = (int)$field['setting']['option']['format2'] ? dr_date($value, 'Y-m-d') : dr_date($value, 'Y-m-d H:i:s');
 
         return $this->input_format($field['fieldname'], $field['name'], '<div class="form-control-static"><span> '.$value.' </span></div>');
