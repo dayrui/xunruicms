@@ -231,7 +231,7 @@ class File {
         if (FALSE === $handle) {
             \Phpcmf\Service::C()->_msg(0, dr_lang('文件已经损坏'));
         }
-        $size = min(defined('SYS_ATTACHMENT_DOWN_SIZE') ? SYS_ATTACHMENT_DOWN_SIZE : 50, 50);
+        $size = min(defined('SYS_ATTACHMENT_DOWN_SIZE') ? (int)SYS_ATTACHMENT_DOWN_SIZE : 50, 50);
         $filesize = filesize($file);
         if ($filesize > 1024 * 1024 * $size) {
             // 大文件转向
