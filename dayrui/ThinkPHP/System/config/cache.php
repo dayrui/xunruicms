@@ -67,6 +67,7 @@ if (is_file(CONFIGPATH.'redis.php')) {
         'type'   => 'redis',
         // 服务器地址
         'host'       => $my['host'],
+        'password'   => $my['password'],
         // 缓存前缀
         'prefix'     => SYS_KEY,
     ];
