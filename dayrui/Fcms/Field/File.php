@@ -296,11 +296,11 @@ class File extends \Phpcmf\Library\A_Field {
 		$str = '
 			<div class="row fileupload-buttonbar" id="fileupload_'.$name.'">
 				<div class="col-lg-12">
-					<span class="btn blue btn-sm fileinput-button">
+					<button class="btn blue btn-sm fileinput-button">
 						<i class="fa fa-plus"></i>
 						<span> '.dr_lang('上传').' </span>
 						<input type="file" name="file_data"> 
-					</span>
+					</button>
 					
 					'.$use.'
 					

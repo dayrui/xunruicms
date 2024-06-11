@@ -753,7 +753,7 @@ abstract class Common extends \Frame\Controller {
     /**
      * 引用404页面
      */
-    public function goto_404_page() {
+    public function goto_404_page($msg = '') {
 
         \Phpcmf\Hooks::trigger('cms_404', $msg);
 
