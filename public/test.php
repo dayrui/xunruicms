@@ -105,6 +105,28 @@ if (isset($_GET['log']) && $_GET['log']) {
 
 dr_echo_msg(1, '客户端字符串：'.$_SERVER['HTTP_USER_AGENT']);
 
+
+$url = 'http';
+if ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on')
+    || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == '443')
+    || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https')
+    || (isset($_SERVER['HTTP_FROM_HTTPS']) && $_SERVER['HTTP_FROM_HTTPS'] == 'on')
+    || (!empty($_SERVER['HTTP_FRONT_END_HTTPS']) && strtolower($_SERVER['HTTP_FRONT_END_HTTPS']) != 'off')
+) {
+    $url.= 's';
+}
+$host = strtolower($_SERVER['HTTP_HOST']);
+if (strpos($host, ':') !== false) {
+    list($nhost, $port) = explode(':', $host);
+    if ($port == 80) {
+        $host = $nhost; // 排除80端口
+    }
+}
+$url.= '://'.$host.'/';
+if (filter_var($url, FILTER_VALIDATE_URL) === false) {
+    dr_echo_msg(0, 'FILTER_VALIDATE_URL检测：'.$url.' 不合法');
+}
+
 if (is_file(CONFIGPATH.'database.php')) {
     require CONFIGPATH.'database.php';
     dr_echo_msg(1, '数据库配置文件：'.CONFIGPATH.'database.php');
