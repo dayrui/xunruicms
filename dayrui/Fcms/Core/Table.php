@@ -722,9 +722,9 @@ class Table extends \Phpcmf\Common {
         // 默认显示字段
         !$list_field && $this->init['show_field'] && $list_field = [
             $this->init['show_field'] => [
-                'name' => dr_lang('主题'),
-                'func' => 'title',
-                'width' => 0,
+                'name' => 'Id',
+                'func' => '',
+                'width' => 100,
             ],
         ];
 
@@ -842,6 +842,60 @@ class Table extends \Phpcmf\Common {
      * 回调结果集
      * */
     protected function _Call_List($data) {
+        return $data;
+    }
+
+    /**
+     * 配置属性
+     * */
+    public function _Config($table) {
+
+        $data = \Phpcmf\Service::L('cache')->get_file('table-config-'.$table, 'table');
+        if (IS_POST) {
+            $post = \Phpcmf\Service::L('input')->post('data');
+            \Phpcmf\Service::L('cache')->set_file('table-config-'.$table, $post, 'table');
+            $this->_json(1, dr_lang('操作成功'));
+        }
+
+        if ($data['list_field']) {
+            $arr = [];
+            $field = \Phpcmf\Service::V()->get_value('field');
+            if (!$field || !isset($field['id'])) {
+                $field['id'] = [
+                    'name' => 'Id',
+                    'fieldname' => 'id',
+                    'fieldtype' => 'Text',
+                ];
+            }
+            foreach ($data['list_field'] as $f => $v) {
+                $arr[] = $f;
+            }
+            foreach ($field as $f) {
+                if (!dr_in_array($f['fieldname'], $arr)) {
+                    $arr[] = $f['fieldname'];
+                }
+            }
+            $new = [];
+            foreach ($arr as $f) {
+                if ($f && !is_array($f) && isset($field[$f]) && $field[$f]) {
+                    $new[$f] = $field[$f];
+                }
+            }
+            \Phpcmf\Service::V()->assign('field', $new);
+        }
+
+        $field = \Phpcmf\Service::V()->get_value('field');
+        if (!$field || !isset($field['id'])) {
+            $field['id'] = [
+                'name' => 'Id',
+                'fieldname' => 'id',
+                'fieldtype' => 'Text',
+            ];
+            \Phpcmf\Service::V()->assign('field', $field);
+        }
+
+        \Phpcmf\Service::V()->assign('data', $data);
+
         return $data;
     }
 

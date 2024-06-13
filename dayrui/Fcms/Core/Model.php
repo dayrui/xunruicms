@@ -893,7 +893,13 @@ class Model {
             // 准确匹配模式
             $select->where($param['field'], htmlspecialchars($param['keyword']));
         } else {
-            $where = $this->_where($table, $param['field'], htmlspecialchars($param['keyword']), $field[$param['field']], true);
+            $where = $this->_where(
+                $table,
+                $param['field'],
+                htmlspecialchars($param['keyword']),
+                $field[$param['field']],
+                true
+            );
             if ($where) {
                 $select->where($where, null, false);
             }
