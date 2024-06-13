@@ -1481,6 +1481,55 @@ function dr_field_options($id) {
     return $data;
 }
 
+/**
+ * 任意字段的属性数组
+ *
+ * @param   intval  $id
+ * @return  array
+ */
+function dr_field_setting(...$param) {
+
+    if (empty($param)) {
+        return [];
+    }
+
+    // 取第一个作为字段id
+    $id = $param[0];
+    unset($param[0]);
+
+    if (!$id) {
+        return [];
+    }
+
+    $data = \Phpcmf\Service::L('cache')->get_data('field-setting-'.$id);
+    if (!$data) {
+        $field = \Phpcmf\Service::C()->get_cache('table-field', $id);
+        if (!$field) {
+            return [];
+        }
+        $data = dr_string2array($field['setting']);
+        if (!$data) {
+            return [];
+        }
+        // 存储缓存
+        \Phpcmf\Service::L('cache')->set_data('field-setting-'.$id, $data, 10000);
+    }
+
+    if (!$param) {
+        return $data;
+    }
+
+    $var = '';
+    foreach ($param as $v) {
+        $var.= '[\''.(!$v ? 0 : dr_safe_replace($v)).'\']';
+    }
+
+    $return = null;
+    eval('$return = $data'.$var.';');
+
+    return $return;
+}
+
 // 提醒说明
 function dr_notice_info() {
 
