@@ -111,7 +111,13 @@ class db_mysql {
         $builder = Db::name($this->param['table']);
 
         if ($this->param['select']) {
-            $builder->field(($this->param['select']));
+            if (strpos($this->param['select'], '.') !== false) {
+                foreach ($this->param['join'] as $table => $v) {
+                    $this->param['select'] = str_replace($table.'.', ''.$this->prefix.$table.'.', $this->param['select']);
+                }
+                $this->param['select'] = str_replace($this->param['table'].'.', ''.$this->prefix.$this->param['table'].'.', $this->param['select']);
+            }
+            $builder->field($this->param['select']);
         }
 
         if ($this->param['join']) {
