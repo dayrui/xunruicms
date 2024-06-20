@@ -205,8 +205,24 @@ class File {
             /*目标目录路径(相对路径)*/
             $newTemp = $newRelat=='' ? $file : $newRelat.'/'.$file;
             if (is_dir($sourceTemp)) {
-                if ($remove && in_array($sourceTemp, $remove)) {
-                    continue;
+                if ($remove) {
+                    $rk = 0;
+                    foreach ($remove as $r) {
+                        if (substr($r, 0, 1) == '*') {
+                            if (strpos($sourceTemp, trim($r,'*')) !== false) {
+                                $rk = 1;
+                                break;
+                            }
+                        } else {
+                            if ($sourceTemp == $r) {
+                                $rk = 1;
+                                break;
+                            }
+                        }
+                    }
+                    if ($rk) {
+                        continue;
+                    }
                 }
                 //echo '创建'.$newTemp.'文件夹<br/>';
                 $zipObj->addEmptyDir($newTemp);/*这里注意：php只需传递一个文件夹名称路径即可*/
