@@ -687,18 +687,24 @@ class Api extends \Phpcmf\Common {
      */
     public function slogin() {
 
-        $url = \Phpcmf\Service::M('member')->sso($this->member);
+        $arr = \Phpcmf\Service::M('member')->sso($this->member);
         $sso = '';
-        foreach ($url as $u) {
-            $sso.= '<script src="'.$u.'"></script>';
+
+        $url = urldecode(\Phpcmf\Service::L('input')->get('url', true));
+        !$url && $url = SITE_URL;
+
+        $info = parse_url($url);
+
+        foreach ($arr as $u) {
+            if (strpos($u, $info['host']) !== false) {
+                $sso.= '<script src="'.$u.'"></script>';
+                break;
+            }
         }
 
         \Phpcmf\Service::V()->assign([
             'menu' => '',
         ]);
-
-        $url = urldecode(\Phpcmf\Service::L('input')->get('url', true));
-        !$url && $url = SITE_URL;
 
         return $this->_msg(1, dr_lang('正在授权登录...').$sso,$url, 0, true);
     }
