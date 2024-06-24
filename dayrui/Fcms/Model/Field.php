@@ -348,6 +348,32 @@ class Field extends \Phpcmf\Model {
             || $data['setting']['option']['fieldlength'] != $_data['setting']['option']['fieldlength'])
         && $this->update_table($sql, $_data['ismain']);
 
+        // 判断关联字段权限
+        if (in_array($data['fieldtype'], ['Merge', 'Group'])) {
+            $setting = dr_string2array($data['setting']);
+            if ($setting['show_admin']) {
+                if (preg_match_all('/\{(.+)\}/U', $setting['option']['value'], $value)) {
+                    foreach ($value[1] as $v) {
+                        $gl = $this->table('field')
+                            ->where('fieldname', $v)
+                            ->where('relatedid', $this->relatedid)
+                            ->where('relatedname', $this->relatedname)
+                            ->getRow();
+                        if (!$gl) {
+                            return dr_return_data(0, dr_lang('关联字段【%s】未定义', $v));
+                        }
+                        $gl_setting = dr_string2array($gl['setting']);
+                        if (!$gl_setting['show_admin']) {
+                            $gl_setting['show_admin'] = $setting['show_admin'];
+                            $this->table('field')->update($gl['id'], [
+                                'setting' => dr_array2string($gl_setting),
+                            ]);
+                        }
+                    }
+                }
+            }
+        }
+
         // 自定义属性不变
         if (isset($_data['setting']['diy'])) {
             $data['setting']['diy'] = $_data['setting']['diy'];
@@ -360,7 +386,6 @@ class Field extends \Phpcmf\Model {
 
         // 更新字段表
         return $this->table('field')->update($_data['id'], $data);
-
     }
 
     /**
