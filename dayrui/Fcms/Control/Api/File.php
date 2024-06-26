@@ -66,7 +66,7 @@ class File extends \Phpcmf\Common
      * 百度编辑器处理接口
      */
     public function ueditor() {
-        require ROOTPATH.'api/ueditor/phpuedito/controller.php';exit;
+        require ROOTPATH.'api/ueditor/php/uedito/controller.php';exit;
     }
 
     /**
