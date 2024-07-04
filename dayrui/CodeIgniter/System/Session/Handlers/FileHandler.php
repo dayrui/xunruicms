@@ -144,7 +144,7 @@ class FileHandler extends BaseHandler
             }
 
             if ($this->fileNew) {
-                chmod($this->filePath . $id, 0600);
+                //chmod($this->filePath . $id, 0600);
                 $this->fingerprint = md5('');
 
                 return '';
