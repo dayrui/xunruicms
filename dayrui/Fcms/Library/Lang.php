@@ -34,6 +34,7 @@ class Lang {
             return $text;
         }
 
+        $text = (string)$text;
         if (isset($this->lang[$text])) {
             return $this->lang[$text];
         } else {
