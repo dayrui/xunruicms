@@ -207,8 +207,17 @@ class Attachment extends \Phpcmf\Model {
         $index = $this->table('attachment')->get($id);
         if (!$index) {
             return dr_return_data(0, dr_lang('文件记录不存在'));
-        } elseif (!$member['adminid'] && $index['uid'] && $member['id'] != $index['uid']) {
-            return dr_return_data(0, dr_lang('不能删除他人的文件'));
+        }
+        if (IS_ADMIN) {
+            // 后台删除
+            if (!\Phpcmf\Service::M('auth')->_is_admin_auth('attachments/del')) {
+                return dr_return_data(0, dr_lang('无权限操作'));
+            }
+        } else {
+            // 前端删除自己的
+           if ($member['id'] != $index['uid']) {
+                return dr_return_data(0, dr_lang('不能删除他人的文件'));
+           }
         }
 
         return $this->_delete_file($index);
