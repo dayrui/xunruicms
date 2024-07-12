@@ -1277,7 +1277,14 @@ function dr_block($id, $type = 0, $site = 0) {
 
 // 是否是微信公众号
 function dr_is_weixin_app() {
-    return strpos((string)$_SERVER['HTTP_USER_AGENT'], 'MicroMessenger');
+    $user = (string)$_SERVER['HTTP_USER_AGENT'];
+    if (strpos($user, 'MicroMessenger')) {
+        if (strpos($user, 'WindowsWechat')) {
+            return 0;
+        }
+        return 1;
+    }
+    return 0;
 }
 
 /**
@@ -1519,17 +1526,43 @@ function dr_field_setting(...$param) {
         return $data;
     }
 
-    $var = '';
-    foreach ($param as $v) {
-        $var.= '[\''.(!$v ? 0 : dr_safe_replace($v)).'\']';
+    return dr_get_param_var($data, $param);
+}
+
+function dr_get_param_var($return, $param = []) {
+
+    if (!$param) {
+        return $return;
     }
 
-    $return = null;
-    eval('$return = $data'.$var.';');
+    foreach ($param as $v) {
+        $var = (!$v ? 0 : dr_safe_replace($v));
+        if (isset($return[$var])) {
+            $return = $return[$var];
+        } else {
+            return null;
+        }
+    }
 
     return $return;
 }
 
+function dr_rp_param_var($tpl, $param) {
+
+    if (empty($param)) {
+        return $tpl;
+    }
+
+    foreach ($param as $var => $val) {
+        if (is_array($val)) {
+            continue;
+        }
+        $tpl = str_replace('$'.$var, (string)$val, $tpl);
+        $tpl = str_replace('{'.$var.'}', (string)$val, $tpl);
+    }
+
+    return $tpl;
+}
 // 提醒说明
 function dr_notice_info() {
 
@@ -1966,7 +1999,7 @@ function dr_array22array($a1, $a2) {
 }
 
 /**
- * 判断是否启用了内容系统插件
+ * 判断是否启用了建站系统插件
  */
 function dr_is_use_module() {
 
@@ -3898,7 +3931,8 @@ function dr_web_prefix($url) {
     if ($url && dr_is_url($url)) {
         return dr_url_rel($url);
     } else {
-        return WEB_DIR.ltrim($url, '/');
+        $url = (string)$url;
+        return WEB_DIR.($url ? ltrim($url, '/') : '');
     }
 }
 
@@ -4225,10 +4259,16 @@ class php5replace {
 
     // 替换常量值
     function php55_replace_var($value) {
-        $v = '';
-        $val = (defined($value[1]) ? $value[1] : \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'config', $value[1]));
-        eval('$v = '.($val ? $val : '""').';');
-        return $v;
+        if (defined($value[1])) {
+            // 常量
+            return constant($value[1]);
+        } else {
+            // 数组
+            $val = \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'config', $value[1]);
+            return call_user_func(function($arg) {
+                return $arg;
+            }, ($val ? $val : '""'));
+        }
     }
 
     // 替换数组变量值
