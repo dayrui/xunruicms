@@ -47,6 +47,10 @@ if (! function_exists('csrf_hash')) {
 $loader = new \Phpcmf\Auto();
 $loader->initialize(\Phpcmf\Service::Auto(new \Phpcmf\AutoConfig()))->register();
 
+// apache环境参数修正
+if (isset($_SERVER['REDIRECT_URL']) && $_SERVER['REDIRECT_URL']) {
+    $_SERVER['REDIRECT_URL'] = '';
+}
 
 require FRAMEPATH.'Extend/Run.php';
 
