@@ -213,8 +213,18 @@
                 if ($(document).width() < 900) {
                     $('.page-sidebar .sidebar-toggler').click();
                 }
+
             });
 
         {/if}
+            $(function(){
+                //防止回车提交表单
+                document.onkeydown = function(e){
+                    var ev = document.all ? window.event : e;
+                    if (ev.keyCode==13) {
+                        return false;
+                    }
+                }
+            });
     </script>
 </head>
