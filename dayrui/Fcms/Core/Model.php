@@ -849,6 +849,9 @@ class Model {
     protected function _limit_where(&$select, $param, $field, $table) {
 
         $table = $this->dbprefix($table);
+        if (isset($param['keyword']) && $param['keyword']) {
+            $param['keyword'] = urldecode($param['keyword']);
+        }
         if ($param['field'] == $this->id) {
             // 按id查询
             $id = [];
@@ -857,7 +860,7 @@ class Model {
                 $id[] = (int)$i;
             }
             dr_count($id) == 1 ? $select->where($table.'.'.$this->id, (int)$id[0]) : $select->whereIn($this->id, $id);
-            $param['keyword'] = htmlspecialchars($param['keyword']);
+            $param['keyword'] = $param['keyword'];
         } elseif (isset($field[$param['field']]['myfunc']) && $field[$param['field']]['myfunc']) {
             // 自定义的匹配模式
             if (function_exists($field[$param['field']]['myfunc'])) {
@@ -891,12 +894,12 @@ class Model {
             $select->where($param['field'], intval($param['keyword']));
         } elseif (isset($field[$param['field']]['iswhere']) && $field[$param['field']]['iswhere']) {
             // 准确匹配模式
-            $select->where($param['field'], htmlspecialchars($param['keyword']));
+            $select->where($param['field'], $param['keyword']);
         } else {
             $where = $this->_where(
                 $table,
                 $param['field'],
-                htmlspecialchars($param['keyword']),
+                $param['keyword'],
                 $field[$param['field']],
                 true
             );
