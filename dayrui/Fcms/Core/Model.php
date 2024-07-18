@@ -850,7 +850,7 @@ class Model {
 
         $table = $this->dbprefix($table);
         if (isset($param['keyword']) && $param['keyword']) {
-            $param['keyword'] = urldecode($param['keyword']);
+            $param['keyword'] = htmlspecialchars(urldecode($param['keyword']));
         }
         if ($param['field'] == $this->id) {
             // 按id查询
