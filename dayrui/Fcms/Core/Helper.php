@@ -1535,6 +1535,10 @@ function dr_get_param_var($return, $param = []) {
         return $return;
     }
 
+    if (!is_array($param)) {
+        $param = [$param];
+    }
+
     foreach ($param as $v) {
         $var = (!$v ? 0 : dr_safe_replace($v));
         if (isset($return[$var])) {
@@ -1549,7 +1553,7 @@ function dr_get_param_var($return, $param = []) {
 
 function dr_rp_param_var($tpl, $param) {
 
-    if (empty($param)) {
+    if (empty($param) || !is_array($param)) {
         return $tpl;
     }
 
@@ -1563,6 +1567,7 @@ function dr_rp_param_var($tpl, $param) {
 
     return $tpl;
 }
+
 // 提醒说明
 function dr_notice_info() {
 
