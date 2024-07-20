@@ -569,7 +569,7 @@ abstract class Common extends \Frame\Controller {
         if (is_file(IS_USE_MODULE.'Config/Module_init.php')) {
             require_once IS_USE_MODULE.'Config/Module_init.php';
         } else {
-            $this->_msg(0, '请升级内容系统插件');
+            $this->_msg(0, '请升级建站系统插件');
         }
 
         return 1;
