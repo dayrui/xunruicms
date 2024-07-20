@@ -330,6 +330,10 @@ class View {
             if (APP_DIR && is_file(MYPATH.'View/'.APP_DIR.'/'.$file)) {
                 return MYPATH . 'View/' . APP_DIR . '/' . $file;
             } elseif (is_file(MYPATH.'View/'.$file) && is_file(COREPATH.'View/'.$file)) {
+                if (APP_DIR && is_file($this->_dir.$file)) {
+                    // 防止app目录加载主目录的模板
+                    return $this->_dir.$file;
+                }
                 return MYPATH.'View/'.$file;
             } elseif ((!APP_DIR or $dir == 'admin') && is_file(MYPATH.'View/'.$file)) {
                 // 强制定位admin目录时验证my目录文件
@@ -1018,8 +1022,8 @@ class View {
                 }
 
                 if ($_param) {
-                    $data = [];
-                    eval('$data=$cache'.$this->_get_var($_param).';');
+                    $data = dr_get_param_var($cache, $_param);
+                    //eval('$data=$cache'.$this->_get_var($_param).';');
                     if (!$data) {
                         return $this->_return($system['return'], "缓存({$_name})参数不存在!!");
                     }
