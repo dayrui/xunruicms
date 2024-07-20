@@ -13,7 +13,7 @@ class Table extends \Phpcmf\Model {
     public function cache($siteid = SITE_ID, $module = null) {
 
         $cache = [];
-        $paytable = []; // 付款表名
+        $paytable = []; // 付款表名 支持模块和表单 后期淘汰
         // 生成模块表结构
         if (dr_is_use_module()) {
             $obj = \Phpcmf\Service::M('module', 'module');

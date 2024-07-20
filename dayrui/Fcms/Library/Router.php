@@ -298,7 +298,7 @@ class Router {
         if (function_exists('dr_module_category_url')) {
             return dr_module_category_url($mod, $data, $page, $fid);
         } else {
-            return '需要升级内容系统插件';
+            return '需要升级建站系统插件';
         }
     }
 
@@ -314,7 +314,7 @@ class Router {
         if (function_exists('dr_module_show_url')) {
             return dr_module_show_url($mod, $data, $page);
         } else {
-            return '需要升级内容系统插件';
+            return '需要升级建站系统插件';
         }
     }
 
@@ -378,7 +378,7 @@ class Router {
         if (function_exists('dr_module_index_url')) {
             return dr_module_index_url($mod, $sid);
         } else {
-            return '需要升级内容系统插件';
+            return '需要升级建站系统插件';
         }
     }
 
@@ -397,7 +397,7 @@ class Router {
         if (function_exists('dr_module_search_url')) {
             return dr_module_search_url($params, $name, $value, $mid, $fid);
         } else {
-            return '需要升级内容系统插件';
+            return '需要升级建站系统插件';
         }
     }
 
@@ -745,6 +745,6 @@ class Router {
     }
 
     public function get_rewrite_code() {
-        return dr_return_data(0, '请升级内容系统插件');
+        return dr_return_data(0, '请升级建站系统插件');
     }
 }

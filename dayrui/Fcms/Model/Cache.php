@@ -146,7 +146,7 @@ class Cache extends \Phpcmf\Model {
             if (is_file(IS_USE_MODULE.'Models/Site.php')) {
                 \Phpcmf\Service::M('site', 'module')->update_site_cache();
             } else {
-                \Phpcmf\Service::C()->_json(0, dr_lang('请升级内容系统插件'));
+                \Phpcmf\Service::C()->_json(0, dr_lang('请升级建站系统插件'));
             }
         } else {
             // 按项目更新的缓存
@@ -200,7 +200,7 @@ class Cache extends \Phpcmf\Model {
             if (is_file(IS_USE_MODULE.'Models/Site.php')) {
                 \Phpcmf\Service::M('site', 'module')->update_cache();
             } else {
-                \Phpcmf\Service::C()->_json(0, dr_lang('请升级内容系统插件'));
+                \Phpcmf\Service::C()->_json(0, dr_lang('请升级建站系统插件'));
             }
         } else {
             // 全局缓存

@@ -336,7 +336,7 @@ class Api extends \Phpcmf\Common {
      * 内容关联字段数据读取
      */
     public function related() {
-        $this->_json(0, dr_lang('需要安装最新版的【内容系统】插件'));
+        $this->_json(0, dr_lang('需要安装最新版的【建站系统】插件'));
     }
 
     /**

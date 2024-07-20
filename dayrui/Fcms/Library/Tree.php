@@ -210,10 +210,15 @@ class Tree {
                 }
 
                 $spacer = $this->_get_spacer($adds ? $adds.$j : '');
-                $selected = $this->_have($sid, $id) ? 'selected' : '';
-                extract($phpcmf_a);
+                #$selected = $this->_have($sid, $id) ? 'selected' : '';
+                $selected = $phpcmf_a['selected'];
 
-                eval("\$this->ret.= \"$str\";");
+                $this->ret.= dr_rp_param_var($str, [
+                    'spacer' => $spacer,
+                    'selected' => $selected,
+                    'id' => $id,
+                    'name' => $phpcmf_a['name'],
+                ]);
 
                 $number++;
 
@@ -364,7 +369,10 @@ class Tree {
                 }
             }
 
-            $string.= $this->icon()->_data($tree)->_category_tree_result(0, "<option \$selected value='\$id'>\$spacer\$name</option>".PHP_EOL);
+            $string.= $this->icon()->_data($tree)->_category_tree_result(
+                0,
+                "<option \$selected value='\$id'>\$spacer\$name</option>".PHP_EOL
+            );
             $string.= '</select>'.PHP_EOL;
 
             if ($is_first) {
@@ -440,19 +448,22 @@ class Tree {
                 }
 
                 $spacer = $this->_get_spacer($adds ? $adds.$j : '');
-                $selected = $this->_have($sid, $id) ? 'selected' : '';
-                $html_disabled = '';
-                extract($phpcmf_a);
-
+                #$selected = $this->_have($sid, $id) ? 'selected' : '';
+                $selected = $phpcmf_a['selected'];
                 //$now = $this->get_child($id);
                 // 如果没有子栏目且当前禁用就不再显示
                 //if (!$now && $html_disabled) continue;
 
-                if ($html_disabled) {
+                if ($phpcmf_a['html_disabled']) {
                     $selected = ' disabled';
                 }
 
-                eval("\$this->ret.= \"$str\";");
+                $this->ret.= dr_rp_param_var($str, [
+                    'spacer' => $spacer,
+                    'selected' => $selected,
+                    'id' => $id,
+                    'name' => $phpcmf_a['name'],
+                ]);
 
                 $number++;
 
@@ -503,10 +514,20 @@ class Tree {
                 $childs = isset($phpcmf_a['childids']) ? $phpcmf_a['childids'] : (implode(',', $phpcmf_a['catids']));
                 $parent = defined('SYS_CAT_ZSHOW') && SYS_CAT_ZSHOW ? (!$phpcmf_a['child'] ? '' : '<a href="javascript:void();" class="blue select-cat" childs="'.$childs.'" action="open" catid='.$id.'>[-]</a>&nbsp;') : '';
 
-                extract($phpcmf_a);
-
-                $pid == 0 && $str_group ? eval("\$nstr = \"$str_group\";") : eval("\$nstr = \"$str\";");
-                $this->ret.= $nstr;
+                $rp = [
+                    'spacer' => $spacer,
+                    'selected' => $selected,
+                    'id' => $id,
+                    'class' => $class,
+                    'name' => $phpcmf_a['name'],
+                    'parent' => $parent,
+                    'childs' => $childs,
+                ];
+                if ($pid == 0 && $str_group) {
+                    $this->ret.= dr_rp_param_var($str_group, $rp);
+                } else {
+                    $this->ret.= dr_rp_param_var($str, $rp);
+                }
                 $this->get_tree($id, $str, $sid, $adds.$k.$this->nbsp, $str_group);
                 $number++;
             }
@@ -578,12 +599,15 @@ class Tree {
                 }
 
                 $spacer = $this->_get_spacer($adds ? $adds.$j : '');
-                $selected = $this->_have($sid, $id) ? 'selected' : '';
+                #$selected = $this->_have($sid, $id) ? 'selected' : '';
+                $selected = $phpcmf_a['selected'];
 
-                extract($phpcmf_a);
-
-                eval("\$nstr = \"$str\";");
-                $this->ret.= $nstr;
+                $this->ret.= dr_rp_param_var($str, [
+                    'spacer' => $spacer,
+                    'selected' => $selected,
+                    'id' => $id,
+                    'name' => $phpcmf_a['name'],
+                ]);
                 $this->get_tree_multi($id, $str, $sid, $adds.$k.$this->nbsp);
                 $number++;
 

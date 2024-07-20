@@ -79,7 +79,7 @@ class App extends \Phpcmf\Model {
         if (isset($config['ftype']) && $config['ftype'] == 'module') {
             // 如果是内容模块，就进入内容模块安装模式
             if (!IS_USE_MODULE) {
-                return dr_return_data(0, dr_lang('没有安装<内容系统>插件'));
+                return dr_return_data(0, dr_lang('没有安装<建站系统>插件'));
             }
             $config['share'] = $type ? 0 : 1;
             $rt = \Phpcmf\Service::M('module', 'module')->install($dir, $config, 1);
@@ -160,7 +160,7 @@ class App extends \Phpcmf\Model {
         if (isset($config['ftype']) && $config['ftype'] == 'module') {
             // 如果是内容模块，就进入内容模块安装模式
             if (!IS_USE_MODULE) {
-                return dr_return_data(0, dr_lang('没有安装<内容系统>插件'));
+                return dr_return_data(0, dr_lang('没有安装<建站系统>插件'));
             }
             \Phpcmf\Service::M('module')->uninstall($dir, $config, 1);
         } else {

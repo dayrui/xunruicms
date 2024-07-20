@@ -846,7 +846,7 @@ class Auth extends \Phpcmf\Model {
     // 模块后台菜单
     public function _module_menu($module, $list_name, $list_url, $post_url) {
 
-        return '_module_menu函数已弃用，请升级内容系统插件';
+        return '_module_menu函数已弃用，请升级建站系统插件';
     }
 
     // 导航后台菜单

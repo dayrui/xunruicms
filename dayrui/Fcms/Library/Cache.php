@@ -279,14 +279,6 @@ class Cache {
             return $result;
         }
 
-        $var = '';
-        foreach ($param as $v) {
-            $var.= '[\''.(!$v ? 0 : dr_safe_replace($v)).'\']';
-        }
-
-        $return = null;
-        eval('$return = $result'.$var.';');
-
-        return $return;
+        return dr_get_param_var($result, $param);
     }
 }
