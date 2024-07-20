@@ -343,28 +343,28 @@ class Service {
 
                 case 'Content':
                     if (!IS_USE_MODULE) {
-                        \dr_exit_msg(0, '没有安装「内容系统」插件');
+                        \dr_exit_msg(0, '没有安装「建站系统」插件');
                     }
                     $namespace = 'module';
                     break;
 
                 case 'Search':
                     if (!IS_USE_MODULE) {
-                        \dr_exit_msg(0, '没有安装「内容系统」插件');
+                        \dr_exit_msg(0, '没有安装「建站系统」插件');
                     }
                     $namespace = 'module';
                     break;
 
                 case 'Category':
                     if (!IS_USE_MODULE) {
-                        \dr_exit_msg(0, '没有安装「内容系统」插件');
+                        \dr_exit_msg(0, '没有安装「建站系统」插件');
                     }
                     $namespace = 'module';
                     break;
 
                 case 'Module':
                     if (!IS_USE_MODULE) {
-                        \dr_exit_msg(0, '没有安装「内容系统」插件');
+                        \dr_exit_msg(0, '没有安装「建站系统」插件');
                     }
                     $namespace = 'module';
                     break;
