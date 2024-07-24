@@ -219,10 +219,14 @@
         {/if}
             $(function(){
                 //防止回车提交表单
-                document.querySelectorAll('input').onkeydown = function(e){
+                document.onkeydown = function(e){
                     var ev = document.all ? window.event : e;
                     if (ev.keyCode==13) {
-                        return false;
+                        var div = ev.target.toString();
+                        if (div.indexOf('TextArea') == -1) {
+                            return false;
+                        }
+                        return true;
                     }
                 }
             });
