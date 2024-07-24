@@ -520,6 +520,7 @@ class Tree {
                     'id' => $id,
                     'class' => $class,
                     'name' => $phpcmf_a['name'],
+                    'option' => $phpcmf_a['option'],
                     'parent' => $parent,
                     'childs' => $childs,
                 ];
