@@ -13819,3 +13819,6 @@ td>.mt-table.mt-checkbox-single,th>.mt-table.mt-checkbox-single {
     position:sticky;
     top:0;
 }
+label .btn {
+    margin-bottom: 4px;
+}

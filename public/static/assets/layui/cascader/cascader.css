@@ -1421,12 +1421,13 @@
     color: #606266;
     display: inline-block;
     font-size: inherit;
-    height: 34px;
-    line-height: 34px;
+    height: 32px;
+    line-height: 32px;
     outline: none;
     padding: 0 15px;
     transition: border-color .2s cubic-bezier(.645,.045,.355,1);
-    width: 100%
+    width: 100%;
+    margin-bottom: 4px;
 }
 
 .el-input__inner::-ms-reveal {
