@@ -7441,8 +7441,8 @@ td>.mt-checkbox.mt-checkbox-single,td>.mt-radio.mt-radio-single,th>.mt-checkbox.
 .label {
     text-shadow: none!important;
     color: #fff;
-    padding: .325rem .5rem;
-    font-size: .98rem;
+    padding: .4rem .5rem;
+    font-size: 1.2rem;
     font-weight: 600;
     line-height: 1;
 }
