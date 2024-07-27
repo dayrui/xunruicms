@@ -209,16 +209,8 @@ class Tree {
                     $k = $adds ? $this->icon[0] : '';
                 }
 
-                $spacer = $this->_get_spacer($adds ? $adds.$j : '');
-                #$selected = $this->_have($sid, $id) ? 'selected' : '';
-                $selected = $phpcmf_a['selected'];
-
-                $this->ret.= dr_rp_param_var($str, [
-                    'spacer' => $spacer,
-                    'selected' => $selected,
-                    'id' => $id,
-                    'name' => $phpcmf_a['name'],
-                ]);
+                $phpcmf_a['spacer'] = $this->_get_spacer($adds ? $adds.$j : '');
+                $this->ret.= dr_rp_param_var($str, $phpcmf_a);
 
                 $number++;
 
@@ -447,23 +439,12 @@ class Tree {
                     $k = $adds ? $this->icon[0] : '';
                 }
 
-                $spacer = $this->_get_spacer($adds ? $adds.$j : '');
-                #$selected = $this->_have($sid, $id) ? 'selected' : '';
-                $selected = $phpcmf_a['selected'];
-                //$now = $this->get_child($id);
-                // 如果没有子栏目且当前禁用就不再显示
-                //if (!$now && $html_disabled) continue;
-
+                $phpcmf_a['spacer'] = $this->_get_spacer($adds ? $adds.$j : '');
                 if ($phpcmf_a['html_disabled']) {
-                    $selected = ' disabled';
+                    $phpcmf_a['selected'] = ' disabled';
                 }
 
-                $this->ret.= dr_rp_param_var($str, [
-                    'spacer' => $spacer,
-                    'selected' => $selected,
-                    'id' => $id,
-                    'name' => $phpcmf_a['name'],
-                ]);
+                $this->ret.= dr_rp_param_var($str, $phpcmf_a);
 
                 $number++;
 
@@ -508,26 +489,16 @@ class Tree {
                     $k = $adds ? $this->nbsp : '';
                 }
 
-                $spacer = $this->_get_spacer($adds ? $adds.$j : '');
-                $selected = $id == $sid ? 'selected' : '';
-                $class = 'dr_catid_'.$phpcmf_a['id'];
-                $childs = isset($phpcmf_a['childids']) ? $phpcmf_a['childids'] : (implode(',', $phpcmf_a['catids']));
-                $parent = defined('SYS_CAT_ZSHOW') && SYS_CAT_ZSHOW ? (!$phpcmf_a['child'] ? '' : '<a href="javascript:void();" class="blue select-cat" childs="'.$childs.'" action="open" catid='.$id.'>[-]</a>&nbsp;') : '';
+                $phpcmf_a['spacer'] = $this->_get_spacer($adds ? $adds.$j : '');
+                $phpcmf_a['selected'] = $id == $sid ? 'selected' : '';
+                $phpcmf_a['class'] = 'dr_catid_'.$phpcmf_a['id'];
+                $phpcmf_a['childs'] = isset($phpcmf_a['childids']) ? $phpcmf_a['childids'] : (implode(',', $phpcmf_a['catids']));
+                $phpcmf_a['parent'] = defined('SYS_CAT_ZSHOW') && SYS_CAT_ZSHOW ? (!$phpcmf_a['child'] ? '' : '<a href="javascript:void();" class="blue select-cat" childs="'.$phpcmf_a['childs'].'" action="open" catid='.$id.'>[-]</a>&nbsp;') : '';
 
-                $rp = [
-                    'spacer' => $spacer,
-                    'selected' => $selected,
-                    'id' => $id,
-                    'class' => $class,
-                    'name' => $phpcmf_a['name'],
-                    'option' => $phpcmf_a['option'],
-                    'parent' => $parent,
-                    'childs' => $childs,
-                ];
                 if ($pid == 0 && $str_group) {
-                    $this->ret.= dr_rp_param_var($str_group, $rp);
+                    $this->ret.= dr_rp_param_var($str_group, $phpcmf_a);
                 } else {
-                    $this->ret.= dr_rp_param_var($str, $rp);
+                    $this->ret.= dr_rp_param_var($str, $phpcmf_a);
                 }
                 $this->get_tree($id, $str, $sid, $adds.$k.$this->nbsp, $str_group);
                 $number++;
@@ -599,16 +570,8 @@ class Tree {
                     $k = $adds ? $this->icon[0] : '';
                 }
 
-                $spacer = $this->_get_spacer($adds ? $adds.$j : '');
-                #$selected = $this->_have($sid, $id) ? 'selected' : '';
-                $selected = $phpcmf_a['selected'];
-
-                $this->ret.= dr_rp_param_var($str, [
-                    'spacer' => $spacer,
-                    'selected' => $selected,
-                    'id' => $id,
-                    'name' => $phpcmf_a['name'],
-                ]);
+                $phpcmf_a['spacer'] = $this->_get_spacer($adds ? $adds.$j : '');
+                $this->ret.= dr_rp_param_var($str, $phpcmf_a);
                 $this->get_tree_multi($id, $str, $sid, $adds.$k.$this->nbsp);
                 $number++;
 
