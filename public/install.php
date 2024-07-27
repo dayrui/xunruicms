@@ -11,13 +11,13 @@ $min = '7.4.0';
 
 !defined('WEBPATH') && define('WEBPATH', dirname(__FILE__).'/');
 if (is_file(WEBPATH.'config/api.php')) {
-    define('CONFIGPATH',WEBPATH.'config/');
+    !defined('CONFIGPATH') && define('CONFIGPATH',WEBPATH.'config/');
     if (is_dir(WEBPATH.'/dayrui/CodeIgniter72/')) {
         $min = '7.2.0';
     }
 } else {
-    define('CONFIGPATH',dirname(dirname(__FILE__)).'/config/');
-	define('WRITEPATH', dirname(dirname(__FILE__)).'/cache/');
+    !defined('CONFIGPATH') && define('CONFIGPATH', dirname(dirname(__FILE__)).'/config/');
+    !defined('WRITEPATH') && define('WRITEPATH', dirname(dirname(__FILE__)).'/cache/');
     if (is_dir(dirname(dirname(__FILE__)).'/CodeIgniter72/')) {
         $min = '7.2.0';
     }

@@ -183,7 +183,7 @@ class Cache extends \Phpcmf\Common {
                 ];
                 $app_name = [
                     'module' => '建站系统',
-                    'form' => '全局表单',
+                    'form' => '表单系统',
                     'mform' => '模块内容表单',
                     'notice' => '提醒消息',
                     'pay' => '支付系统',
