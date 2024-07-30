@@ -73,7 +73,7 @@ class Site_param extends \Phpcmf\Common {
             }
             // 附件归档
             if (SYS_ATTACHMENT_DB) {
-                list($post, $return, $attach) = \Phpcmf\Service::L('form')->validation($config, null, $logo);
+                list($post, $return, $attach) = \Phpcmf\Service::L('form')->validation($config, null, []);
                 $attach && \Phpcmf\Service::M('Attachment')->handle($this->member['id'], \Phpcmf\Service::M()->dbprefix('site'), $attach);
             }
 

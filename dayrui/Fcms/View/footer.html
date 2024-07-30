@@ -5,6 +5,14 @@
 <div class="scroll-to-top">
     <i class="bi bi-arrow-up-circle-fill"></i>
 </div>
+{if isset($_GET['show_field']) && $_GET['show_field']}
+<script>
+    $(function (){
+        $('#dr_row_{dr_safe_replace($_GET['show_field'])}').addClass('has-error');
+        $('#dr_{dr_safe_replace($_GET['show_field'])}').focus();
+    });
+</script>
+{/if}
 {if is_file(WRITEPATH.'update.lock')}
 <script>
     dr_iframe_show('{dr_lang('升级程序脚本')}', '{dr_url('cache/update_index')}');
