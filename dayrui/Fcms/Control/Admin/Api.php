@@ -761,7 +761,8 @@ class Api extends \Phpcmf\Common {
         } elseif ($type == 0) {
             if (substr($value['path'],-1, 1) != '/') {
                 $this->_json(0, dr_lang('存储路径目录一定要以“/”结尾'));
-            } elseif ((dr_strpos($value['path'], '/') === 0 || dr_strpos($value['path'], ':') !== false)) {
+            } elseif ((dr_strpos($value['path'], '/') === 0
+                || dr_strpos($value['path'], ':') === 1)) {
 				if (!is_dir($value['path'])) {
 					$this->_json(0, dr_lang('本地路径[%s]不存在', $value['path']));
 				}
