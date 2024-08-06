@@ -249,6 +249,12 @@ class Api {
             $error = '用户存储空间已满';
         }
 
+        // 挂钩点 验证格式
+        $rt2 = \Phpcmf\Hooks::trigger_callback('check_upload_auth', $this->member, $error);
+        if ($rt2 && isset($rt2['code'])) {
+            $error = $rt2['code'] ? '' : $rt2['msg'];
+        }
+
         if ($error) {
             if ($editor) {
                 return dr_lang($error);

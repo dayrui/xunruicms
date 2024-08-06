@@ -18,18 +18,29 @@ class Attachment extends \Phpcmf\Model {
 
     // 验证用户权限
     public function check($member, $siteid) {
-        
+
         $this->member = $member;
         $this->siteid = $siteid;
 
+        $error = '';
         if ($member['is_admin']) {
-            return dr_return_data(1); // 管理员不验证
+            // 管理员不验证
         } elseif (IS_USE_MEMBER && !\Phpcmf\Service::L('member_auth', 'member')->member_auth('uploadfile', $this->member)) {
-            return dr_return_data(0, dr_lang('您的用户组不允许上传文件'));
+            $error = dr_lang('您的用户组不允许上传文件');
         } elseif (!IS_USE_MEMBER && (!defined('SYS_ATTACHMENT_GUEST') || !SYS_ATTACHMENT_GUEST)) {
-            return dr_return_data(0, dr_lang('游客不允许上传文件'));
+            $error = dr_lang('游客不允许上传文件');
         }
-        
+
+        // 挂钩点 验证格式
+        $rt2 = \Phpcmf\Hooks::trigger_callback('check_upload_auth', $this->member, $error);
+        if ($rt2 && isset($rt2['code'])) {
+            $error = $rt2['code'] ? '' : $rt2['msg'];
+        }
+
+        if ($error) {
+            return dr_return_data(0, $error);
+        }
+
         return dr_return_data(1);
     }
     
