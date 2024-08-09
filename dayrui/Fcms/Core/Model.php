@@ -546,7 +546,12 @@ class Model {
 
         // 数量控制
         if ($this->param['limit']) {
-            $builder->limit($this->param['limit']);
+            list($a, $b) = explode(',', $this->param['limit']);
+            if ($b) {
+                $builder->limit($a, $b);
+            } else {
+                $builder->limit($a);
+            }
         } elseif ($num) {
             $builder->limit($num);
         }
@@ -615,6 +620,14 @@ class Model {
         $this->_clear();
 
         return $data;
+    }
+
+    /*
+     * 获取单个字段值
+     * */
+    public function getField($name) {
+        $data = $this->getRow();
+        return isset($data[$name]) ? $data[$name] : '';
     }
 
     /*
@@ -1082,6 +1095,9 @@ class Model {
     }
 
     // 条件
+    public function field($field) {
+        return $this->select($field);
+    }
     public function select($field) {
 
         if (!$field) {
@@ -1152,7 +1168,7 @@ class Model {
     }
 
     // 排序
-    public function order_by($value, $value2= null) {
+    public function order_by($value, $value2 = null) {
 
         $this->param['order'] = $value2 ? $value.' '.$value2 : $value;
 
