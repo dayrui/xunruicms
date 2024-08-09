@@ -209,6 +209,21 @@ class Function_list {
         return '<a href="'.$value.'" target="_blank">'.$value.'</a>';
     }
 
+    // 用于列表显示单个图片
+    public function img($value, $param = [], $data = []) {
+
+        if ($value) {
+            $file = \Phpcmf\Service::C()->get_attachment($value);
+            if ($file) {
+                $value = $file['url'];
+            }
+            $url = 'javascript:dr_preview_image(\''.dr_file($value).'\');';
+            return '<a class="thumbnail" style="display: inherit;" href="'.$url.'"><img style="width:30px" src="'.dr_thumb($value, 100, 100).'"></a>';
+        }
+
+        return dr_lang('无');
+    }
+
     // 用于列表显示图片专用
     public function image($value, $param = [], $data = []) {
 
@@ -246,7 +261,7 @@ class Function_list {
                 }
                 $ext = trim(strtolower(strrchr($value, '.')), '.');
                 if (dr_is_image($ext)) {
-                    $url = 'javascript:dr_preview_image(\''.$value.'\');';
+                    $url = 'javascript:dr_preview_image(\''.dr_file($value).'\');';
                     $rt[] = '<a href="'.$url.'"><img width="25" src="'.ROOT_THEME_PATH.'assets/images/ext/jpg.png'.'"></a>';
                 } elseif (is_file(ROOTPATH.'static/assets/images/ext/'.$ext.'.png')) {
                     $file = ROOT_THEME_PATH.'assets/images/ext/'.$ext.'.png';
@@ -273,10 +288,12 @@ class Function_list {
             $file = \Phpcmf\Service::C()->get_attachment($value);
             if ($file) {
                 $value = $file['url'];
+            } else {
+                $value = (string)$value;
             }
             $ext = trim(strtolower(strrchr($value, '.')), '.');
             if (dr_is_image($ext)) {
-                $url = 'javascript:dr_preview_image(\''.$value.'\');';
+                $url = 'javascript:dr_preview_image(\''.dr_file($value).'\');';
                 return '<a href="'.$url.'"><img width="25" src="'.ROOT_THEME_PATH.'assets/images/ext/jpg.png'.'"></a>';
             } elseif (is_file(ROOTPATH.'static/assets/images/ext/'.$ext.'.png')) {
                 $file = ROOT_THEME_PATH.'assets/images/ext/'.$ext.'.png';
