@@ -19,13 +19,13 @@ class Input {
     // post解析
     public function post($name, $xss = true) {
         $value = isset($_POST[$name]) ? $_POST[$name] : false;
-        return $xss ? $this->xss_clean($value) : $value;
+        return $xss ? $this->xss_clean($value, true) : $value;
     }
 
     // get解析
     public function get($name = '', $xss = true) {
         $value = !$name ? $_GET : (isset($_GET[$name]) ? $_GET[$name] : false);
-        return $xss ? $this->xss_clean($value) : $value;
+        return $xss ? $this->xss_clean($value, true) : $value;
     }
 
     // 通过post格式化ids

@@ -56,6 +56,10 @@ class Notice extends \Phpcmf\Common
 			'order' => 'inputtime desc'
 		])->limit_page();
 
+        if ($param['keyword']) {
+            $param['keyword'] = htmlspecialchars($param['keyword']);
+        }
+
 		\Phpcmf\Service::V()->assign([
 			'list' => $list,
 			'total' => $total,
@@ -82,6 +86,10 @@ class Notice extends \Phpcmf\Common
 			'order' => 'inputtime desc'
 		])->limit_page();
 
+        if ($param['keyword']) {
+            $param['keyword'] = htmlspecialchars($param['keyword']);
+        }
+
 		\Phpcmf\Service::V()->assign([
 			'list' => $list,
 			'total' => $total,
@@ -105,6 +113,10 @@ class Notice extends \Phpcmf\Common
 			'where_list' =>  '(site=0 or site='.SITE_ID.')',
 			'order' => 'inputtime desc'
 		])->limit_page();
+
+        if ($param['keyword']) {
+            $param['keyword'] = htmlspecialchars($param['keyword']);
+        }
 
 		\Phpcmf\Service::V()->assign([
 			'list' => $list,

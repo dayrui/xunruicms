@@ -1826,6 +1826,10 @@ function dr_level_next_value($array, $id) {
  */
 function dr_html_auth($ip = 0) {
 
+    if (is_cli()) {
+        return 1;//
+    }
+
     if ($ip) {
         // 存储值
         return \Phpcmf\Service::L('cache')->set_auth_data(md5('html_auth'.(strlen($ip) > 5 ? $ip : \Phpcmf\Service::L('input')->ip_address())), 1);

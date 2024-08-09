@@ -284,7 +284,7 @@ class Security {
 		 *
 		 * So this: <blink>
 		 * Becomes: &lt;blink&gt;
-
+        */
 		$pattern = '#'
 			.'<((?<slash>/*\s*)((?<tagName>[a-z0-9]+)(?=[^a-z0-9]|$)|.+)' // tag start and name, followed by a non-tag character
 			.'[^\s\042\047a-z0-9>/=]*' // a valid attribute character immediately after the tag would count as a separator
@@ -307,7 +307,7 @@ class Security {
 			$str = preg_replace_callback($pattern, array($this, '_sanitize_naughty_html'), $str);
 		}
 		while ($old_str !== $str);
-		unset($old_str);*/
+		unset($old_str);
 
 		/*
 		 * Sanitize naughty scripting elements
@@ -341,7 +341,6 @@ class Security {
         //
         ////有东西通过了上面的过滤器
 		$str = $this->_do_never_allowed($str);
-
 
         // now the only remaining whitespace attacks are \t, \n, and \r
         $ra = ['onabort', 'onactivate', 'onafterprint', 'onafterupdate', 'onbeforeactivate', 'onbeforecopy', 'onbeforecut', 'onbeforedeactivate', 'onbeforeeditfocus', 'onbeforepaste', 'onbeforeprint', 'onbeforeunload', 'onbeforeupdate', 'onblur', 'onbounce', 'oncellchange', 'onchange', 'onclick', 'oncontextmenu', 'oncontrolselect', 'oncopy', 'oncut', 'ondataavailable', 'ondatasetchanged', 'ondatasetcomplete', 'ondblclick', 'ondeactivate', 'ondrag', 'ondragend', 'ondragenter', 'ondragleave', 'ondragover', 'ondragstart', 'ondrop', 'onerror', 'onerrorupdate', 'onfilterchange', 'onfinish', 'onfocus', 'onfocusin', 'onfocusout', 'onhelp', 'onkeydown', 'onkeypress', 'onkeyup', 'onlayoutcomplete', 'onload', 'onlosecapture', 'onmousedown', 'onmouseenter', 'onmouseleave', 'onmousemove', 'onmouseout', 'onmouseover', 'onmouseup', 'onmousewheel', 'onmove', 'onmoveend', 'onmovestart', 'onpaste', 'onpropertychange', 'onreadystatechange', 'onreset', 'onresize', 'onresizeend', 'onresizestart', 'onrowenter', 'onrowexit', 'onrowsdelete', 'onrowsinserted', 'onscroll', 'onselect', 'onselectionchange', 'onselectstart', 'onstart', 'onstop', 'onsubmit', 'onunload'];
@@ -637,8 +636,6 @@ class Security {
 	 */
 	protected function _sanitize_naughty_html($matches)
 	{
-
-
 
 		// First, escape unclosed tags
 		if (empty($matches['closeTag']))
