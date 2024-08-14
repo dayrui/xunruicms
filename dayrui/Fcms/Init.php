@@ -222,7 +222,13 @@ function log_message($level, $message, array $context = []) {
 }
 
 // 兼容错误提示
-function dr_show_error($msg) {
+function dr_show_error($msg, $dev = '') {
+
+    log_message('error', $msg . '（'.FC_NOW_URL.'）');
+
+    if ($dev && !CI_DEBUG) {
+        $msg = $dev;
+    }
 
     if (!IS_ADMIN) {
         // 前端不显示错误详情
@@ -267,10 +273,12 @@ function dr_exit_msg($code, $msg, $data = [], $token = []) {
     if (isset($_GET['callback'])) {
         // jsonp
         header('HTTP/1.1 200 OK');
+        log_message('error', $msg . '（'.FC_NOW_URL.'）');
         echo ($_GET['callback'] ? $_GET['callback'] : 'callback').'('.json_encode($rt, JSON_UNESCAPED_UNICODE).')';
     } else if (($_GET['is_ajax'] || (defined('IS_API_HTTP') && IS_API_HTTP) || IS_AJAX)) {
         // json
         header('HTTP/1.1 200 OK');
+        log_message('error', $msg . '（'.FC_NOW_URL.'）');
         echo json_encode($rt, JSON_UNESCAPED_UNICODE);
     } else {
         // html
@@ -447,7 +455,7 @@ if (!IS_API && isset($_GET['s']) && preg_match('/^[a-z_]+$/i', $_GET['s'])) {
     if (!IS_ADMIN && $dir == 'Member') {
         // 用户系统
         if (!IS_USE_MEMBER) {
-            dr_show_error(CI_DEBUG ? '用户系统插件未安装' : '无权限使用用户系统');
+            dr_show_error('用户系统插件未安装', '无权限使用用户系统');
         }
         if ($_GET['app'] && dr_is_app_dir($_GET['app'])) {
             // 模块应用
@@ -466,7 +474,7 @@ if (!IS_API && isset($_GET['s']) && preg_match('/^[a-z_]+$/i', $_GET['s'])) {
         define('IS_MEMBER', FALSE);
     } else {
         // 不存在的应用
-        dr_show_error(CI_DEBUG ? '应用程序('.dr_get_app_dir($dir).')不存在' : '应用程序('.strtolower($dir).')不存在');
+        dr_show_error('应用程序('.dr_get_app_dir($dir).')不存在', '应用程序('.strtolower($dir).')不存在');
     }
 } else {
     // 系统主目录

@@ -128,7 +128,7 @@ class Attachment extends \Phpcmf\Common {
             $rt = \Phpcmf\Service::M()->table('attachment_remote')->insert([
                 'type' => intval($data['type']),
                 'name' => (string)$data['name'],
-                'url' => (string)$data['url'],
+                'url' => trim((string)$data['url']),
                 'value' => dr_array2string($data['value']),
             ]);
             if (!$rt['code']) {
@@ -163,7 +163,7 @@ class Attachment extends \Phpcmf\Common {
                 [
                     'type' => intval($data['type']),
                     'name' => (string)$data['name'],
-                    'url' => (string)$data['url'],
+                    'url' => trim((string)$data['url']),
                     'value' => dr_array2string($data['value']),
                 ]
             );
