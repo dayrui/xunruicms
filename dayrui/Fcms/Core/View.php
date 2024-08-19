@@ -1997,7 +1997,7 @@ class View {
         foreach ($array as $i => $t) {
             $a = explode('_', $t);
             $b = end($a);
-            if (in_array(strtolower($b), ['desc', 'asc', 'instr'])) {
+            if (in_array(strtolower($b), ['desc', 'asc', 'instr', 'field'])) {
                 $a = str_replace('_'.$b, '', $t);
             } else {
                 $a = $t;
@@ -2008,8 +2008,14 @@ class View {
                 if (is_array($field)) {
                     if (dr_in_array($a, $field)) {
                         if ($b == 'INSTR') {
+                            if (isset($this->_list_where['IN_' . $a]) && $this->_list_where['IN_' . $a]) {
+                                $my[$i] = "instr(\"" . $this->_list_where['IN_' . $a]['value'] . "\",`$a`)";
+                            } else {
+                                $this->_list_error[] = '无法找到字段' . $a . '的IN通配符参数，order参数将会无效';
+                            }
+                        } elseif ($b == 'FIELD') {
                             if (isset($this->_list_where['IN_'.$a]) && $this->_list_where['IN_'.$a]) {
-                                $my[$i] = "instr(\"".$this->_list_where['IN_'.$a]['value']."\",`$a`)";
+                                $my[$i] = "FIELD(`$a`, ".$this->_list_where['IN_'.$a]['value'].")";
                             } else {
                                 $this->_list_error[] = '无法找到字段'.$a.'的IN通配符参数，order参数将会无效';
                             }
