@@ -179,7 +179,10 @@ abstract class Common extends \Frame\Controller {
         } else {
             // 本地资源
             define('HOME_THEME_PATH', trim(THEME_PATH == '/static/' ? '/' : ROOT_URL).'static/'.SITE_THEME.'/'); // 站点风格
-            if (!defined('IS_MOBILE') && (\Phpcmf\Service::IS_MOBILE_USER() && $this->site_info[SITE_ID]['SITE_AUTO']) && SITE_URL == SITE_MURL) {
+            if (!defined('IS_MOBILE')
+                && \Phpcmf\Service::IS_MOBILE_USER()
+                && $this->site_info[SITE_ID]['SITE_AUTO']
+                && SITE_URL == SITE_MURL) {
                 // 当开启自适应移动端，没有绑定域名时
                 define('MOBILE_THEME_PATH', SITE_URL.SITE_MOBILE_DIR.'/static/'.SITE_THEME.'/'); // 移动端站点风格
             } else {
