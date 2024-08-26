@@ -760,8 +760,14 @@ function dr_lang(...$param) {
 
     // 调用语言包内容
     $string = \Phpcmf\Service::L('lang')->text($string);
+    if ($param) {
+        foreach ($param as $k => $t) {
+            $param[$k] = \Phpcmf\Service::L('lang')->text($t);
+        }
+        return vsprintf($string, $param);
+    }
 
-    return $param ? vsprintf($string, $param) : $string;
+    return $string;
 }
 
 /**

@@ -430,6 +430,37 @@ class db_mysql {
         return $str;
     }
 
+    public function escape($str)
+    {
+
+        if (is_array($str))
+        {
+            return array_map([&$this, 'escape'], $str);
+        }
+
+        if (is_string($str) || (is_object($str) && method_exists($str, '__toString')))
+        {
+            return "'" . $this->escapeString($str) . "'";
+        }
+
+        if (is_bool($str))
+        {
+            return ($str === false) ? 0 : 1;
+        }
+
+        if (is_numeric($str) && $str < 0)
+        {
+            return "'{$str}'";
+        }
+
+        if ($str === null)
+        {
+            return 'NULL';
+        }
+
+        return $str;
+    }
+
     public function insertBatch($values) {
 
         if (!$values) {
