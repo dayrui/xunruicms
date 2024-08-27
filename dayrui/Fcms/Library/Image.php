@@ -430,7 +430,7 @@ class Image {
                 $full_dest_path = $this->new_image;
             }
             // Is there a file name?
-            if ( ! preg_match('#\.(jpg|jpeg|gif|png)$#i', $full_dest_path))
+            if ( ! preg_match('#\.(jpg|jpeg|gif|png|webp)$#i', $full_dest_path))
             {
                 $this->dest_folder = $full_dest_path.'/';
                 $this->dest_image = $this->source_image;

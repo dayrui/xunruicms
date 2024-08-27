@@ -13,13 +13,13 @@ $app = new App();
 $app->debug(CI_DEBUG ? true : false);
 $app->setRuntimePath(WRITEPATH.'thinkphp_runtime/');
 
+// 挂钩点 程序运行之前
+\Phpcmf\Hooks::trigger('cms_run');
+
 // 执行HTTP应用并响应
 $http = $app->http;
 
 $response = $http->run();
-
-// 挂钩点 程序运行之前
-\Phpcmf\Hooks::trigger('cms_run');
 
 $response->send();
 
