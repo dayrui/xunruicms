@@ -209,9 +209,9 @@ class Field extends \Phpcmf\Common {
 			} elseif (empty($data['fieldname'])) {
 				$this->_json(0, dr_lang('字段名称不能为空'));
 			} elseif (!preg_match('/^[a-z]+[a-z0-9\_]+$/i', $data['fieldname'])) {
-				$this->_json(0, dr_lang('字段名称不规范'));
-			} elseif (strlen($data['fieldname']) > 20) {
-				$this->_json(0, dr_lang('字段名称太长'));
+				$this->_json(0, dr_lang('字段（%s）名称不规范', $data['fieldname']));
+			} elseif (strlen($data['fieldname']) > 30) {
+				$this->_json(0, dr_lang('字段（%s）名称太长', $data['fieldname']));
             } elseif (\Phpcmf\Service::M('Field')->exitsts($data['fieldname'])) {
                 $this->_json(0, dr_lang('字段（%s）已经存在', $data['fieldname']));
 			} else {
@@ -491,12 +491,14 @@ class Field extends \Phpcmf\Common {
                         $this->_json(0, dr_lang('字段类别（%s）文件不存在', $data['fieldtype']));
                     } elseif (empty($data['name'])) {
                         $this->_json(0, dr_lang('字段显示名称不能为空'));
-                    } elseif (empty($data['fieldname'])) {
-                        $this->_json(0, dr_lang('字段名称不能为空'));
-                    } elseif (!preg_match('/^[a-z]+[a-z0-9\_]+$/i', $data['fieldname'])) {
-                        $this->_json(0, dr_lang('字段名称不规范'));
-                    } elseif (strlen($data['fieldname']) > 20) {
-                        $this->_json(0, dr_lang('字段名称太长'));
+                    }
+                    if (empty($data['fieldname'])) {
+                        $data['fieldname'] = $data['name'];
+                    }
+                    if (!preg_match('/^[a-z]+[a-z0-9\_]+$/i', $data['fieldname'])) {
+                        $this->_json(0, dr_lang('字段（%s）名称不规范', $data['fieldname']));
+                    } elseif (strlen($data['fieldname']) > 30) {
+                        $this->_json(0, dr_lang('字段（%s）名称太长', $data['fieldname']));
                     } elseif (\Phpcmf\Service::M('Field')->exitsts($data['fieldname'])) {
                         $this->_json(0, dr_lang('字段（%s）已经存在', $data['fieldname']));
                     } else {

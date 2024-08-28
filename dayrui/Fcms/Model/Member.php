@@ -467,7 +467,7 @@ class Member extends \Phpcmf\Model {
 
         if (!IS_USE_MEMBER) {
             log_message('debug', '没有安装【用户系统】插件，无法执行函数：login');
-            return dr_return_data(0, dr_lang('没有权限'));
+            return dr_return_data(0, dr_lang('没有安装【用户系统】插件'));
         }
 
         return \Phpcmf\Service::M('member', 'member')->login($username, $password, $remember);
@@ -478,7 +478,7 @@ class Member extends \Phpcmf\Model {
 
         if (!IS_USE_MEMBER) {
             log_message('debug', '没有安装【用户系统】插件，无法执行函数：login_sms');
-            return dr_return_data(0, dr_lang('没有权限'));
+            return dr_return_data(0, dr_lang('没有安装【用户系统】插件'));
         }
 
         return \Phpcmf\Service::M('member', 'member')->login_sms($phone, $remember);
@@ -501,7 +501,7 @@ class Member extends \Phpcmf\Model {
 
         if (!IS_USE_MEMBER) {
             log_message('debug', '没有安装【用户系统】插件，无法执行函数：register_oauth_bang');
-            return dr_return_data(0, dr_lang('没有权限'));
+            return dr_return_data(0, dr_lang('没有安装【用户系统】插件'));
         }
 
         return \Phpcmf\Service::M('member', 'member')->register_oauth_bang($oauth, $groupid, $member, $data);
@@ -532,7 +532,7 @@ class Member extends \Phpcmf\Model {
 
         if (!IS_USE_MEMBER) {
             log_message('debug', '没有安装【用户系统】插件，无法执行函数：register_oauth_bang');
-            return dr_return_data(0, dr_lang('没有权限'));
+            return dr_return_data(0, dr_lang('没有安装【用户系统】插件'));
         }
 
         return \Phpcmf\Service::M('member', 'member')->register_oauth($groupid, $oauth);

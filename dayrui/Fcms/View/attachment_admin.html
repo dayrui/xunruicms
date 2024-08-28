@@ -62,7 +62,8 @@
                 <label><button type="button" onclick="dr_ajax_option('{dr_url($uriprefix.'/del')}', '{dr_lang('你确定要删除它们吗？')}', 1)" class="btn red btn-sm"> <i class="fa fa-trash"></i> {dr_lang('删除')}</button>
                 </label>
                 {/if}
-                {if $ci->_is_admin_auth('edit') && $remote}
+                {if $ci->_is_admin_auth('edit')}
+                {if $remote}
                 <label style="margin-right: 5px">
                     <select name="remote" class="form-control">
                         <option value="-1"> -- </option>
@@ -75,9 +76,66 @@
                 <label><button type="button" onclick="dr_ajax_option('{dr_url($uriprefix.'/type_edit', ['table'=>$table])}', '{dr_lang('需要手动将这些附件复制到储存策略的目录中，你确定要变更吗？')}', 1)" class="btn green btn-sm "> <i class="fa fa-cloud"></i> {dr_lang('变更储存策略')}</button>
                 </label>
                 {/if}
-                {if $ci->_is_admin_auth('edit') && $table != 'data'}
+                {if $table == 'data'}
+                <link href="{ROOT_THEME_PATH}assets/global/plugins/jquery-fileupload/css/jquery.fileupload.css" rel="stylesheet" type="text/css" />
+                <script src="{ROOT_THEME_PATH}assets/global/plugins/jquery-fileupload/js/jquery.fileupload.js" type="text/javascript"></script>
+                <label class="dev" id="fileupload">
+                    <a href="JavaScript:;" class="fileinput-button  btn blue"> <i class="fa fa-upload"></i> {dr_lang('上传')}<input type="file" multiple name="file_data"> </a>
+                </label>
+                <label class="dev">
+                    <input id="dr_file_count" value="0" type="hidden">
+                    <a class="fileupload-progress"></a>
+                </label>
+                <script type="text/javascript">
+                    $(function() {
+                        $("#fileupload").fileupload({
+                            disableImageResize: false,
+                            autoUpload: true,
+                            maxFileSize: "{$upload.param.size}",
+                            url: "{$upload.url}",
+                            dataType: "json",
+                            acceptFileTypes: "{$upload.param.exts}",
+                            maxChunkSize: '{$upload.param.chunk}',
+                            progressall: function (e, data) {
+                                // 上传进度条 all
+                                var progress = parseInt(data.loaded / data.total * 100, 10);
+                                $(".fileupload-progress").show();
+                                $(".fileupload-progress").html(""+progress+"%");
+                            },
+                            add: function (e, data) {
+                                $(".fileupload-progress").hide();
+                                data.submit();
+
+                            },
+                            done: function (e, data) {
+                                var count = parseInt($('#dr_file_count').val()) + 1;
+                                $('#dr_file_count').val(count);
+                                $(".fileupload-progress").hide();
+                                if (data.result.code > 0) {
+                                    dr_tips(data.result.code, data.result.msg);
+                                    if (count == data.originalFiles.length) {
+                                        setTimeout("window.location.href = '{$upload.back}'", 2000);
+                                    }
+                                    //setTimeout("window.location.href = '{$field.back}'", 2000);
+                                } else {
+                                    dr_tips(data.result.code, data.result.msg, -1);
+                                }
+                            },
+                            fail: function (e, data) {
+                                //console.log(data.errorThrown);
+                                dr_tips(0, "系统故障："+data.errorThrown, -1);
+                                layer.closeAll('tips');
+                                $(".fileupload-progress").hide();
+
+                            },
+                        });
+                    });
+                </script>
+
+                {else}
                 <label><button type="button" onclick="dr_ajax_option('{dr_url($uriprefix.'/edit')}', '{dr_lang('你确定要强制归档它们吗？')}', 1)" class="btn blue btn-sm "> <i class="fa fa-database"></i> {dr_lang('归档')}</button>
                 </label>
+                {/if}
                 {/if}
             </div>
 

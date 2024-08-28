@@ -72,10 +72,27 @@ class Attachments extends \Phpcmf\Table {
 
         $this->_List();
 
+        // 快捷上传字段参数
+        $p = [
+            'size' => 9999,
+            'exts' => '*',
+            'count' => 20,
+            'attachment' => $remote,
+            'image_reduce' => 0,
+            'chunk' => 10 * 1024 * 1024,
+        ];
+        $upload = [
+            'url' => dr_web_prefix(SELF.'?c=api&token='.dr_get_csrf_token())
+                .'&siteid='.SITE_ID.'&m=upload&p='.dr_authcode($p, 'ENCODE'),
+            'param' => $p,
+            'back' => dr_now_url(),
+        ];
+
         \Phpcmf\Service::V()->assign([
             'field' => $field,
             'table' => 'data',
             'remote' => \Phpcmf\Service::M()->table('attachment_remote')->getAll(0, 'id'),
+            'upload' => $upload,
         ]);
         \Phpcmf\Service::V()->display('attachment_admin.html');
     }
