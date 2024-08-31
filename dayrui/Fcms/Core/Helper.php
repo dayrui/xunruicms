@@ -3980,7 +3980,7 @@ function dr_url_rel($url, $prefix = '') {
             // 静态生成，移动端域名模式下
             $surl = SITE_MURL;
         }
-        $url = str_replace($surl, '/', $url);
+        $url = str_replace([$surl, SITE_URL], '/', $url);
         if (IS_DEV && dr_is_url($url)) {
             $url.= '#系统开启了相对路径模式，本地址是站外域名，不能转为相对路径（在关闭开发者模式后不显示这句话）';
         }
@@ -4013,6 +4013,8 @@ function dr_text_rel($text, $prefix = '', $attr = ['href', 'src']) {
         foreach ($attr as $a) {
             $text = str_replace($a.'="'.$surl, $a.'="/', $text);
             $text = str_replace($a.'=\''.$surl, $a.'="/', $text);
+            $text = str_replace($a.'="'.SITE_URL, $a.'="/', $text);
+            $text = str_replace($a.'=\''.SITE_URL, $a.'="/', $text);
         }
         if ($prefix) {
             $surl = $prefix;
@@ -4369,14 +4371,12 @@ if (!function_exists('dr_is_safe_function')) {
 if (!function_exists('dr_is_call_function')) {
     function dr_is_call_function($func) {
 
-        if (!function_exists($func)) {
-            return false;
-        }
-
         if (strpos($func, 'dr_') === 0
             or strpos($func, 'my_') === 0
             or strpos($func, 'cloud_') === 0) {
-            return true;
+            if (function_exists($func)) {
+                return true;
+            }
         } else {
             log_message('error', '回调函数【'.$func.'】必须以dr_或者my_开头!');
         }
