@@ -1319,6 +1319,11 @@ class Api extends \Phpcmf\Common {
                 if (strlen($content) > 30000000) {
                     $this->_json(0, dr_lang('图片太大了'));
                 }
+                // 头像上传成功之前
+                \Phpcmf\Hooks::trigger('upload_avatar_before', [
+                    'member' => $member,
+                    'base64_image' => $content,
+                ]);
                 $rt = \Phpcmf\Service::L('upload')->base64_image([
                     'content' => $content,
                     'ext' => 'jpg',
@@ -1328,6 +1333,11 @@ class Api extends \Phpcmf\Common {
                 if (!$rt['code']) {
                     $this->_json(0, $rt['msg']);
                 }
+                // 头像上传成功之后
+                \Phpcmf\Hooks::trigger('upload_avatar_after', [
+                    'member' => $member,
+                    'base64_image' => $content,
+                ]);
                 \Phpcmf\Service::M()->db->table('member_data')->where('id', $uid)->update(['is_avatar' => 1]);
                 \Phpcmf\Service::M('member')->clear_cache($uid);
                 $this->_json(1, dr_lang('上传成功'));

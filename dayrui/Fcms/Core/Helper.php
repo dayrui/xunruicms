@@ -913,9 +913,14 @@ if (!function_exists('dr_avatar')) {
 
         if ($uid) {
             list($cache_path, $cache_url) = dr_avatar_path();
-            $dir = dr_avatar_dir($uid);
-            if (is_file($cache_path.$dir.$uid.'.jpg')) {
-                return $cache_url.$dir.$uid.'.jpg'.($fix ? '?time='.filemtime($cache_path.$uid.'.jpg') : '');
+            $file = dr_avatar_dir($uid).$uid.'.jpg';
+            // 钩子处理
+            $rs = \Phpcmf\Hooks::trigger_callback('avatar_get', $cache_path, $file);
+            if ($rs && isset($rs['code']) && $rs['code'] && $rs['msg']) {
+                return $rs['msg'];
+            }
+            if (is_file($cache_path.$file)) {
+                return $cache_url.$file.($fix ? '?time='.filemtime($cache_path.$file) : '');
             } elseif (is_file($cache_path.$uid.'.jpg')) {
                 return $cache_url.$uid.'.jpg'.($fix ? '?time='.filemtime($cache_path.$uid.'.jpg') : '');
             }
@@ -1378,6 +1383,12 @@ function dr_thumb($img, $width = 0, $height = 0, $water = 0, $mode = 'auto', $we
             if (is_file($cache_path.$cache_file)) {
                 return dr_url_rel($cache_url.$cache_file);
             }
+        }
+
+        // 钩子处理
+        $rs = \Phpcmf\Hooks::trigger_callback('thumb_get', $cache_path, $cache_file);
+        if ($rs && isset($rs['code']) && $rs['code'] && $rs['msg']) {
+            return $rs['msg'];
         }
 
         return dr_url_rel(\Phpcmf\Service::L('image')->thumb($img, $width, $height, $water, $mode, $webimg));

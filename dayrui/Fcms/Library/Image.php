@@ -1739,6 +1739,12 @@ class Image {
             }
         }
 
+        // 钩子处理
+        $rs = \Phpcmf\Hooks::trigger_callback('thumb_save', $cache_path, $cache_file);
+        if ($rs && isset($rs['code']) && $rs['code'] && $rs['msg']) {
+            return $rs['msg'];
+        }
+
         return $cache_url.$cache_file;
     }
 
