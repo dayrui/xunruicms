@@ -148,6 +148,10 @@ class Root extends \Phpcmf\Table
             $data = \Phpcmf\Service::M()->db->table('member')->where('username', $name)->get()->getRowArray();
             if (!$data) {
                 // 注册账号
+                $rt = \Phpcmf\Service::L('form')->check_username($name);
+                if (!$rt['code']) {
+                    $this->_json(0, $rt['msg'], ['field' => 'username']);
+                }
                 if (!\Phpcmf\Service::L('Form')->check_email($post['email'])) {
                     $this->_json(0, dr_lang('邮箱格式不正确'), ['field' => 'email']);
                 } elseif (!\Phpcmf\Service::L('Form')->check_phone($post['phone'])) {

@@ -86,7 +86,7 @@
                     {/if}
 
                 </td>
-                <td><a href="javascript:;" class="fc_member_show" member="{$t.username}">{$t.username}</a></td>
+                <td><a href="javascript:;" class="fc_member_show" member="{$t.username}">{dr_html2code($t.username)}</a></td>
                 <td>
                     {loop $t.role $c}
                     <span class="badge badge-blue"> {dr_lang($c)} </span>

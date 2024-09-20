@@ -421,7 +421,11 @@ class Form {
             && !preg_match(\Phpcmf\Service::C()->member_cache['register']['preg'], $value)) {
             // 验证账号的组成格式
             return dr_return_data(0, dr_lang('账号格式不正确'), ['field' => 'username']);
-        } elseif (strpos($value, '"') !== false || strpos($value, '\'') !== false) {
+        } elseif (strpos($value, '"') !== false
+            || strpos($value, '<') !== false
+            || strpos($value, '>') !== false
+            || strpos($value, '\'') !== false
+        ) {
             // 引号判断
             return dr_return_data(0, dr_lang('账号名存在非法字符'), ['field' => 'username']);
         } elseif (\Phpcmf\Service::C()->member_cache['config']['userlen']
