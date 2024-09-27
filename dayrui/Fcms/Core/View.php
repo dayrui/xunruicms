@@ -691,8 +691,8 @@ class View {
             $regex_array[] = '#{'.$name.'\s+(.+?)return=([\w]+)}#i';// 去掉\s，win平台
             $regex_array[] = '#{'.$name.'\s+(.+?)\s?}#i';
             // 替换直接变量输出
-            $replace_array[] = "<?php \$return_".$name."_\\2 = [];\$list_return_".$name."_\\2 = \$this->list_tag(\"".$name." \\1 return=\\2\"); if (\$list_return_".$name."_\\2 && is_array(\$list_return_".$name."_\\2)) { extract(\$list_return_".$name."_\\2, EXTR_OVERWRITE);   \$\\2_".$name."=intval(\$return_".$name." ? \$return_".$name."[0]['ct'] : 0); } else { \$\\2_".$name."= 0; } ?>";
-            $replace_array[] = "<?php \$return_".$name." = [];\$list_return_".$name." = \$this->list_tag(\"".$name." \\1\"); if (\$list_return_".$name." && is_array(\$list_return_".$name.")) { extract(\$list_return_".$name.", EXTR_OVERWRITE); echo intval(\$return_".$name." ? \$return_".$name."[0]['ct'] : 0); } else { echo 0; }   ?>";
+            $replace_array[] = "<?php \$return_".$name."_\\2 = [];\$list_return_".$name."_\\2 = \$this->list_tag(\"".$name." \\1 return=\\2\"); if (\$list_return_".$name."_\\2 && is_array(\$list_return_".$name."_\\2)) { extract(\$list_return_".$name."_\\2, EXTR_OVERWRITE);   \$\\2_".$name."=(\$return_".$name." ? \$return_".$name."[0]['ct'] : 0); } else { \$\\2_".$name."= 0; } ?>";
+            $replace_array[] = "<?php \$return_".$name." = [];\$list_return_".$name." = \$this->list_tag(\"".$name." \\1\"); if (\$list_return_".$name." && is_array(\$list_return_".$name.")) { extract(\$list_return_".$name.", EXTR_OVERWRITE); echo (\$return_".$name." ? \$return_".$name."[0]['ct'] : 0); } else { echo 0; }   ?>";
         }
 
         // list标签别名
