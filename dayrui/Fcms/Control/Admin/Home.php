@@ -189,6 +189,12 @@ class Home extends \Phpcmf\Common
 			$my_menu = $menu;
 		}
 
+        // 挂钩点
+        $rt = \Phpcmf\Hooks::trigger_callback('admin_menu', $menu, $my_menu);
+        if ($rt && isset($rt['code']) && $rt['code']) {
+            $my_menu = $rt['msg'];
+        }
+
         // 默认的首页内容
         $main_url = dr_url('home/main');
         $main_link = '';
@@ -283,11 +289,6 @@ class Home extends \Phpcmf\Common
                                 unset($my_menu[$tid]['left'][$if]['link'][$i]);
                                 continue;
                             }
-                        } elseif (SITE_ID > 1 && !dr_in_array(SITE_ID, $link['site'])) {
-                            // 没有划分本站点就不显示
-                            unset($left['link'][$i]);
-                            unset($my_menu[$tid]['left'][$if]['link'][$i]);
-                            continue;
                         } elseif (SITE_ID > 1 && $link['uri'] && $link['uri'] == 'cloud/local') {
                             // 多站点不显示应用
                             unset($left['link'][$i]);
