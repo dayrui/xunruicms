@@ -2759,6 +2759,9 @@ function dr_search_rewrite_encode($params, $search) {
                 break;
             }
             $v = isset($params[$name]) ? $params[$name] : $default;
+            if (is_array($v)) {
+                continue;
+            }
             $url.= $join.urlencode($v);
         }
         return trim($url, $join);
@@ -2817,6 +2820,9 @@ function dr_rewrite_encode($params, $join = '-', $field = []) {
     $field = array_flip(dr_format_option_array($field));
     $url = '';
     foreach ($params as $i => $t) {
+        if (is_array($t)) {
+            continue;
+        }
         $i = isset($field[$i]) && $field[$i] ? $field[$i] : $i;
         $url.= $join.$i.$join.urlencode($t);
     }
