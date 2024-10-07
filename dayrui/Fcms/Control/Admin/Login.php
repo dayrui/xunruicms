@@ -188,7 +188,7 @@ class Login extends \Phpcmf\Common
 			'license' => $license,
             'crypto_key' => substr(md5(SYS_KEY), 0, 16),
             'crypto_iv' => substr(md5(SYS_KEY), 10, 16),
-            'login_url' => '/'.SELF.'?c=login&go='.urlencode($url),
+            'login_url' => WEB_DIR.SELF.'?c=login&go='.urlencode($url),
         ]);
         if (isset($_GET['is_cloud']) && $_GET['is_cloud']) {
             \Phpcmf\Service::V()->display('cloud_login_admin.html');exit;
