@@ -161,9 +161,17 @@ class Auth extends \Phpcmf\Model {
         $data['uid'] = $uid = (int)$data['id'];
         // 查询角色组
         $data['role'] = $role = $this->_role($uid);
-        if (!$role) {
+
+        // 挂钩点 非创始人验证登录权限
+        $rt = \Phpcmf\Hooks::trigger_callback('sites_admin_login_auth', $data);
+        if ($rt && isset($rt['code'])) {
+            if (!$rt['code']) {
+                return dr_return_data(0, $rt['msg'], 4);
+            }
+        } elseif (!$role) {
             return dr_return_data(0, IS_DEV ? dr_lang('此账号不是管理员') : dr_lang('登录失败'), 4);
         }
+
 
         // 保存会话
         $this->login_session($data);
@@ -219,7 +227,6 @@ class Auth extends \Phpcmf\Model {
             }
             $sql = 'select * from `'.$this->dbprefix('admin_notice').'` where ( FIND_IN_SET('.$this->uid.',`to_uid`) '.(' or ('.implode(' OR ', $rid).')').' or (`to_uid`=0 and `to_rid`=0)) and (`site`='.SITE_ID.' or `site`=0) and '.$zt.' order by `status` asc, `inputtime` desc limit '.$num;
         }
-
         $query = $this->db->query($sql);
         return $query ? $query->getResultArray() : [];
     }
@@ -327,67 +334,81 @@ class Auth extends \Phpcmf\Model {
         $uid = (int)$member['uid'];
         $data = $this->db->table('admin')->where('uid', $uid)->get()->getRowArray();
         if (!$data) {
-            return dr_return_data(0, dr_lang('管理员账号不存在'));
-        } elseif ($member['is_lock'] && !IS_DEV) {
+            // 挂钩点
+            $rt = \Phpcmf\Hooks::trigger_callback('sites_admin_login_check', $member, $verify);
+            if ($rt && isset($rt['code'])) {
+                if (!$rt['code']) {
+                    // 注销账号
+                    \Phpcmf\Service::C()->session()->remove('uid');
+                    \Phpcmf\Service::C()->session()->remove('admin');
+                    \Phpcmf\Service::C()->session()->remove('siteid');
+                    return dr_return_data(0, $rt['msg']);
+                }
+                $data = $rt['msg'];
+            } else {
+                // 注销账号
+                \Phpcmf\Service::C()->session()->remove('uid');
+                \Phpcmf\Service::C()->session()->remove('admin');
+                \Phpcmf\Service::C()->session()->remove('siteid');
+                return dr_return_data(0, dr_lang('管理员账号不存在'));
+            }
+        } else {
+            // 查询角色组
+            $role_id = $this->_role($uid);
+            if (!$role_id) {
+                // 注销账号
+                \Phpcmf\Service::C()->session()->remove('uid');
+                \Phpcmf\Service::C()->session()->remove('admin');
+                \Phpcmf\Service::C()->session()->remove('siteid');
+                return dr_return_data(0, dr_lang('此账号不是管理员组成员'));
+            }
+
+            // 角色权限缓存
+            $role = \Phpcmf\Service::C()->get_cache('auth');
+
+            // 角色信息
+            $data['role'] = $data['roleid'] = $data['site'] = $data['module'] = [];
+            $data['system'] = [ 'uri' => [], 'mark' => []];
+
+            // 把多个管理员权限合并到一起
+            foreach ($role_id as $i) {
+                $data['role'][$i] = $role[$i]['name'] ? $role[$i]['name'] : [];
+                $data['roleid'][$i] = $i;
+                $data['site'] = dr_array2array($data['site'], $role[$i]['site']);
+                $data['module'] = dr_array2array($data['module'], $role[$i]['module']);
+                $data['system']['uri'] = dr_array2array($data['system']['uri'], $role[$i]['system']['uri']);
+                $data['system']['mark'] = dr_array2array($data['system']['mark'], $role[$i]['system']['mark']);
+            }
+
+            $data['adminid'] = $data['roleid'][1] ? 1 : 9;
+            if ($member['is_admin'] != $data['adminid']) {
+                $this->db->table('member_data')->where('id', $member['id'])->update([
+                    'is_admin' => $data['adminid']
+                ]);
+            }
+
+            $data['uid'] = $uid;
+            $data['email'] = $member['email'];
+            $data['phone'] = $member['phone'];
+            $data['username'] = $member['username'];
+            $data['password'] = $member['password'];
+            $data['history'] = dr_string2array($data['history']);
+            $data['setting'] = dr_string2array($data['setting']);
+            $data['usermenu'] = dr_string2array($data['usermenu']);
+
+            $rt = \Phpcmf\Hooks::trigger_callback('admin_login_check', $data, $verify);
+            if ($rt && isset($rt['code']) && !$rt['code']) {
+                return dr_return_data(0, $rt['msg']);
+            }
+        }
+
+        if ($member['is_lock'] && !IS_DEV) {
             // 注销账号
             \Phpcmf\Service::C()->session()->remove('uid');
             \Phpcmf\Service::C()->session()->remove('admin');
             \Phpcmf\Service::C()->session()->remove('siteid');
             return dr_return_data(0, dr_lang('账号被锁定，禁止登陆'));
         }
-
-        // 查询角色组
-        $role_id = $this->_role($uid);
-        if (!$role_id) {
-            // 注销账号
-            \Phpcmf\Service::C()->session()->remove('uid');
-            \Phpcmf\Service::C()->session()->remove('admin');
-            \Phpcmf\Service::C()->session()->remove('siteid');
-            return dr_return_data(0, dr_lang('此账号不是管理员组成员'));
-        }
-
-        // 角色权限缓存
-        $role = \Phpcmf\Service::C()->get_cache('auth');
-
-        // 角色信息
-        $data['role'] = $data['roleid'] = $data['site'] = $data['module'] = [];
-        $data['system'] = [ 'uri' => [], 'mark' => []];
-
-        // 把多个管理员权限合并到一起
-        foreach ($role_id as $i) {
-            $data['role'][$i] = $role[$i]['name'] ? $role[$i]['name'] : [];
-            $data['roleid'][$i] = $i;
-            $data['site'] = dr_array2array($data['site'], $role[$i]['site']);
-            $data['module'] = dr_array2array($data['module'], $role[$i]['module']);
-            $data['system']['uri'] = dr_array2array($data['system']['uri'], $role[$i]['system']['uri']);
-            $data['system']['mark'] = dr_array2array($data['system']['mark'], $role[$i]['system']['mark']);
-        }
-
-        // 非创始人验证登录权限
-        if (defined('IS_SITES') && IS_SITES
-            && $verify && !isset($data['role'][1]) && !dr_in_array(SITE_ID, $data['site'])) {
-            // 注销账号
-            \Phpcmf\Service::C()->session()->remove('uid');
-            \Phpcmf\Service::C()->session()->remove('admin');
-            \Phpcmf\Service::C()->session()->remove('siteid');
-            return dr_return_data(0, dr_lang('无权限登录此站点'));
-        }
-
-        $data['adminid'] = $data['roleid'][1] ? 1 : 9;
-        if ($member['is_admin'] != $data['adminid']) {
-            $this->db->table('member_data')->where('id', $member['id'])->update([
-                'is_admin' => $data['adminid']
-            ]);
-        }
-
-        $data['uid'] = $uid;
-        $data['email'] = $member['email'];
-        $data['phone'] = $member['phone'];
-        $data['username'] = $member['username'];
-        $data['password'] = $member['password'];
-        $data['history'] = dr_string2array($data['history']);
-        $data['setting'] = dr_string2array($data['setting']);
-        $data['usermenu'] = dr_string2array($data['usermenu']);
 
         return dr_return_data(1, '', $data);
     }
@@ -508,6 +529,11 @@ class Auth extends \Phpcmf\Model {
 
         if (dr_in_array(1, \Phpcmf\Service::C()->admin['roleid'])) {
             $this->_is_post_user = 0;
+            return $this->_is_post_user;
+        }
+
+        if (isset(\Phpcmf\Service::C()->admin['is_post_user']) && \Phpcmf\Service::C()->admin['is_post_user']) {
+            $this->_is_post_user = 1;
             return $this->_is_post_user;
         }
 
