@@ -284,7 +284,7 @@ class Tree {
             $data = \Phpcmf\Service::L('category', 'module')->get_category($mid);
             $dir = 'module/category-'.SITE_ID.'-'.$mid.'-select/';
         } else {
-            $mid = md5(dr_array2string($data));
+            $mid = 'share';
             $dir = 'module/category-'.SITE_ID.'-share-select/';
         }
         $name = 'tree2_cache_'.md5(dr_array2string($data).$this->ismain.$mid.$str.$default.$onlysub.$is_push.$is_first);
@@ -301,7 +301,6 @@ class Tree {
                 $string = '<select class="bs-select form-control" '.$str.'>'.PHP_EOL;
             }
             $default && $string.= "<option value='0'>$default</option>".PHP_EOL;
-
             $tree = [];
             $first = 0; // 第一个可用栏目
             $is_cks = 0;
@@ -320,9 +319,22 @@ class Tree {
                         continue;
                     }
                     // 验证权限
-                    if (IS_ADMIN && dr_is_app('cqx') && \Phpcmf\Service::M('content', 'cqx')->is_edit($t['id'])) {
-                        $is_cks = 1;
-                        continue;
+                    if (IS_ADMIN) {
+                        $ck = 0;
+                        $rs = \Phpcmf\Hooks::trigger_callback('module_auth_category', $mid, $t['id']);
+                        if ($rs && isset($rs['code'])) {
+                            if (!$rs['code']) {
+                                $is_cks = 1;
+                                continue;
+                            } else {
+                                $ck = 1;
+                            }
+                        }
+                        if (!$ck && dr_is_app('cqx')
+                            && \Phpcmf\Service::M('content', 'cqx')->is_edit($t['id'])) {
+                            $is_cks = 1;
+                            continue;
+                        }
                     }
 
                     // 栏目发布权限判断,主要筛选栏目下是否有空白选项
