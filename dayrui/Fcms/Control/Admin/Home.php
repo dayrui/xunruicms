@@ -270,7 +270,11 @@ class Home extends \Phpcmf\Common
                     // 链接菜单开始
                     $link_string = '';
                     foreach ($left['link'] as $i => $link) {
-                        if ($link['uri'] && !$this->_is_admin_auth($link['uri'])) {
+                        if (SITE_ID > 1 && !dr_in_array(SITE_ID, $link['site'])) {
+                            unset($left['link'][$i]);
+                            unset($my_menu[$tid]['left'][$if]['link'][$i]);
+                            continue; // 没有划分本站点就不显示
+                        } elseif ($link['uri'] && !$this->_is_admin_auth($link['uri'])) {
                             // 判断权限
                             unset($left['link'][$i]);
                             unset($my_menu[$tid]['left'][$if]['link'][$i]);
