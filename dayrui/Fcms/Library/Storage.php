@@ -66,10 +66,11 @@ class Storage {
             $filesize = filesize($fullname);
         } else {
             $filesize = file_put_contents($fullname, $data);
-            if (!$filesize || !is_file($fullname)) {
-                log_message('error', '文件创建失败：'.$fullname);
-                return dr_return_data(0, dr_lang('文件创建失败'));
-            }
+        }
+        
+        if (!$filesize || !is_file($fullname)) {
+            log_message('error', '文件创建失败：'.$fullname);
+            return dr_return_data(0, dr_lang('文件创建失败'));
         }
 
         $info = [];
