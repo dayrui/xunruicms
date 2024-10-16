@@ -43,21 +43,20 @@
                 <div class="portlet light bordered" id="dr_default">
                     <div class="portlet-body">
                         <div class="form-body">
+                            <div class="form-group" id="dr_row_logo">
+                                <label class="col-md-2 control-label">{dr_lang('LOGO')}</label>
+                                <div class="col-md-9">
+                                    {$logofield}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">{dr_lang('系统名称')}</label>
+                                <div class="col-md-9">
+                                    <label><input class="form-control input-large" type="text" name="data[SITE_NAME]" id="dr_name" value="{htmlspecialchars((string)$data['SITE_NAME'])}"></label>
+                                 </div>
+                            </div>
 
-                        <div class="form-group">
-                            <label class="col-md-2 control-label">{dr_lang('项目名称')}</label>
-                            <div class="col-md-9">
-                                <label><input class="form-control input-large" type="text" name="data[SITE_NAME]" id="dr_name" value="{htmlspecialchars((string)$data['SITE_NAME'])}"></label>
-                             </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-md-2 control-label">{dr_lang('项目域名')}</label>
-                            <div class="col-md-9">
-                                <label><input class="form-control input-large" type="text" name="data[SITE_DOMAIN]" value="{htmlspecialchars((string)$data['SITE_DOMAIN'])}"></label>
-                             </div>
-                        </div>
-
-                        {$myfield}
+                            {$myfield}
 
                         </div>
                     </div>

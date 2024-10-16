@@ -1,5 +1,4 @@
 <?php namespace Phpcmf\Control\Admin;
-use Phpcmf\Service;
 
 /**
  * {{www.xunruicms.com}}

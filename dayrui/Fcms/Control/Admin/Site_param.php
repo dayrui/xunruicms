@@ -14,7 +14,14 @@ class Site_param extends \Phpcmf\Common {
             exit;
         }
 
-
+        $logo = [
+            'logo' => [
+                'ismain' => 1,
+                'fieldtype' => 'File',
+                'fieldname' => 'logo',
+                'setting' => ['option' => ['ext' => 'jpg,gif,png,jpeg,webp,svg', 'size' => 10, 'input' => 1]]
+            ]
+        ];
 
         $data = \Phpcmf\Service::M('Site')->config(SITE_ID);
         $field = \Phpcmf\Service::M('field')->get_mysite_field(SITE_ID);
@@ -98,6 +105,7 @@ class Site_param extends \Phpcmf\Common {
             'field' => $field,
             'myfield' => $field ? \Phpcmf\Service::L('Field')->toform(0, $field, $data['param']) : '',
             'mymerge' => $field ? \Phpcmf\Service::L('Field')->merge : '',
+            'logofield' => dr_fieldform($logo['logo'], $data['config']['logo']),
 		]);
 
 		\Phpcmf\Service::V()->display('site_param.html');
