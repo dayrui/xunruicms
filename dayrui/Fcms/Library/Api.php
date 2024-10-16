@@ -634,10 +634,15 @@ class Api {
                     if (!in_array($ext, $exts)) {
                         continue;
                     }
+                    $url = SYS_UPLOAD_URL.$dir.'/'.$file;
+                    $icon = '<i class="fa fa-file-text"></i>';
+                    if (in_array($ext, ['jpg', 'gif', 'png', 'jpeg', 'webp'])) {
+                        $icon = '<img src="'.$url.'" width=30>';
+                    }
                     $file_data[] = [
                         'file' => $dir.'/'.$file,
-                        'icon' => '<i class="fa fa-file-text"></i>',
-                        'name' => '<a href="javascript:dr_preview_image(\''.SYS_UPLOAD_URL.$dir.'/'.$file.'\');">'.$file.'</a>',
+                        'icon' => $icon,
+                        'name' => '<a href="javascript:dr_preview_image(\''.$url.'\');">'.$file.'</a>',
                     ];
                 }
             }
