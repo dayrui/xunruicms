@@ -233,9 +233,11 @@ class Linkage extends \Phpcmf\Library\A_Field {
             $default = '';
             if ($value) {
                 $link = dr_linkage($field['setting']['option']['linkage'], $value);
-                $pids = substr($link['pids'], 2);
-                $level = substr_count($pids, ',') + 1;
-                $default = !$pids ? '["'.$value.'"]' : '["'.str_replace(',', '","', $pids).'","'.$value.'"]';
+                if ($link) {
+                    $pids = substr($link['pids'], 2);
+                    $level = substr_count($pids, ',') + 1;
+                    $default = !$pids ? '["'.$value.'"]' : '["'.str_replace(',', '","', $pids).'","'.$value.'"]';
+                }
             }
             // 输出默认菜单
             $str.= '<span id="dr_linkage_'.$name.'_select" style="'.($value ? 'display:none' : '').'">';
