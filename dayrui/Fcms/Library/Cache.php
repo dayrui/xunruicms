@@ -88,7 +88,7 @@ class Cache {
                 $this->data[$cache_file] = json_decode(file_get_contents($cache_file), true);
             } else {
                 $this->data[$cache_file] = false;
-                log_message('debug', '缓存文件['.$cache_file.']不存在');
+                #log_message('debug', '缓存文件['.$cache_file.']不存在');
             }
 
         }
