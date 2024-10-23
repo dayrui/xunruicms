@@ -442,6 +442,14 @@ class Table extends \Phpcmf\Common {
             if ($return) {
                 $this->_json(0, $return['error'], ['field' => $return['name']]);
             }
+            if ($this->not_field && $data) {
+                // 将无权限的字段赋值为老数据
+                foreach ($this->not_field as $key => $val) {
+                    if (isset($data) && $data[$key]) {
+                        $post[$val['ismain']][$key] = is_array($data[$key]) ? dr_array2string($data[$key]) : $data[$key];
+                    }
+                }
+            }
             // 格式化数据
             $post = $this->_Format_Data($id, $post, $id ? $data : []);
             // 保存数据

@@ -2009,13 +2009,13 @@ class View {
                     if (dr_in_array($a, $field)) {
                         if ($b == 'INSTR') {
                             if (isset($this->_list_where['IN_' . $a]) && $this->_list_where['IN_' . $a]) {
-                                $my[$i] = "instr(\"" . $this->_list_where['IN_' . $a]['value'] . "\",`$a`)";
+                                $my[$i] = "instr(\"" . $this->_list_where['IN_' . $a]['value'] . "\",`$prefix`.`$a`)";
                             } else {
                                 $this->_list_error[] = '无法找到字段' . $a . '的IN通配符参数，order参数将会无效';
                             }
                         } elseif ($b == 'FIELD') {
                             if (isset($this->_list_where['IN_'.$a]) && $this->_list_where['IN_'.$a]) {
-                                $my[$i] = "FIELD(`$a`, ".$this->_list_where['IN_'.$a]['value'].")";
+                                $my[$i] = "FIELD(`$prefix`.`$a`, ".$this->_list_where['IN_'.$a]['value'].")";
                             } else {
                                 $this->_list_error[] = '无法找到字段'.$a.'的IN通配符参数，order参数将会无效';
                             }
@@ -2024,7 +2024,7 @@ class View {
                         }
                     } elseif (dr_in_array($a.'_lat', $field) && dr_in_array($a.'_lng', $field)) {
                         if ($this->pos_map) {
-                            $my[$i] = $a.'_map ASC';
+                            $my[$i] = `$prefix`.$a.'_map ASC';
                             $this->pos_order = $a;
                         } else {
                             $this->_list_error[] = '没有定位到您的坐标，order参数将会无效';
