@@ -19,6 +19,11 @@ class Attachment extends \Phpcmf\Model {
     // 验证用户权限
     public function check($member, $siteid) {
 
+        if (IS_ADMIN) {
+            // 后台不验证
+            return dr_return_data(1);
+        }
+
         $this->member = $member;
         $this->siteid = $siteid;
 
