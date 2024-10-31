@@ -36,6 +36,8 @@ class System extends \Phpcmf\Model {
         'SYS_ADMIN_LOGIN_TIME'	=> '登录失败锁定后在x分钟内禁止登录',
         'SYS_ADMIN_LOGIN_AES'	=> '登录密码加密处理',
         'SYS_ADMIN_OAUTH'    => '后台启用快捷登录',
+        'SYS_ADMIN_SMS_LOGIN'    => '后台启用短信登录',
+        'SYS_ADMIN_SMS_CHECK'    => '后台启用短信二次验证登录',
 
         'SYS_ATTACHMENT_DB'	    => '附件归属开启模式',
         'SYS_ATTACHMENT_GUEST'	=> '游客是否附件上传',

@@ -119,45 +119,62 @@ class Auth extends \Phpcmf\Model {
     }
 
     // 后台管理员登录
-    public function login($username, $password) {
+    public function login($username, $password, $check = 0) {
 
-        $data = $this->db
-            ->table('member')
-            ->where('username', $username)
-            ->limit(1)
-            ->get()
-            ->getRowArray();
-        $password = dr_safe_password($password);
-        // 判断用户状态
-        if (!$data) {
-            return dr_return_data(0, IS_DEV ? dr_lang('账号[%s]不存在', $username) : dr_lang('登录失败'), 1);
-        } elseif (!$password) {
-            return dr_return_data(0, IS_DEV ? dr_lang('密码不能为空') : dr_lang('登录失败'), 2);
-        } elseif (IS_API_HTTP && md5(md5($password).$data['salt'].md5($password)) == $data['password']) {
-            $password = md5($password);
-        }
-        if (!IS_API_HTTP && defined('SYS_ADMIN_LOGIN_AES') && SYS_ADMIN_LOGIN_AES) {
-            if (!function_exists('openssl_decrypt')) {
-                log_message('error', '由于服务器环境没有启用openssl_decrypt，因此后台登录密码加密验证不被启用');
-                return dr_return_data(0, dr_lang('服务器环境不支持加密传输'));
-            } else {
-                $old = $password;
-                $password = openssl_decrypt(
-                    $password,
-                    'AES-128-CBC',
-                    substr(md5(SYS_KEY), 0, 16), 0,
-                    substr(md5(SYS_KEY), 10, 16)
-                );
-                if (!$password) {
-                    return dr_return_data(0, IS_DEV ? dr_lang('密码[%s]解析失败', $old).openssl_error_string() : dr_lang('密码解析失败'));
+        if ($username != 'cms_sms_00001') {
+            $data = $this->db
+                ->table('member')
+                ->where('username', $username)
+                ->limit(1)
+                ->get()
+                ->getRowArray();
+            $password = dr_safe_password($password);
+            // 判断用户状态
+            if (!$data) {
+                return dr_return_data(0, IS_DEV ? dr_lang('账号[%s]不存在', $username) : dr_lang('登录失败'), 1);
+            } elseif (!$password) {
+                return dr_return_data(0, IS_DEV ? dr_lang('密码不能为空') : dr_lang('登录失败'), 2);
+            } elseif (IS_API_HTTP && md5(md5($password).$data['salt'].md5($password)) == $data['password']) {
+                $password = md5($password);
+            }
+            if (!IS_API_HTTP && defined('SYS_ADMIN_LOGIN_AES') && SYS_ADMIN_LOGIN_AES) {
+                if (!function_exists('openssl_decrypt')) {
+                    log_message('error', '由于服务器环境没有启用openssl_decrypt，因此后台登录密码加密验证不被启用');
+                    return dr_return_data(0, dr_lang('服务器环境不支持加密传输'));
+                } else {
+                    $old = $password;
+                    $password = openssl_decrypt(
+                        $password,
+                        'AES-128-CBC',
+                        substr(md5(SYS_KEY), 0, 16), 0,
+                        substr(md5(SYS_KEY), 10, 16)
+                    );
+                    if (!$password) {
+                        return dr_return_data(0, IS_DEV ? dr_lang('密码[%s]解析失败', $old).openssl_error_string() : dr_lang('密码解析失败'));
+                    }
                 }
+                if (md5(md5($password).$data['salt'].md5($password)) != $data['password']) {
+                    return dr_return_data(0, IS_DEV ? dr_lang('密码[%s]不正确', $password) : dr_lang('登录失败'), 3);
+                }
+            } else if (md5($password.$data['salt'].$password) != $data['password']) {
+                return dr_return_data(0, IS_DEV ? dr_lang('密码不正确') : dr_lang('登录失败'), 3);
             }
-            if (md5(md5($password).$data['salt'].md5($password)) != $data['password']) {
-                return dr_return_data(0, IS_DEV ? dr_lang('密码[%s]不正确', $password) : dr_lang('登录失败'), 3);
+            if ($check && $data['phone']) {
+                return dr_return_data(9, $data['phone'], $data);
             }
-        } else if (md5($password.$data['salt'].$password) != $data['password']) {
-            return dr_return_data(0, IS_DEV ? dr_lang('密码不正确') : dr_lang('登录失败'), 3);
+        } else {
+            $data = $this->db
+                ->table('member')
+                ->where('phone', $password)
+                ->limit(1)
+                ->get()
+                ->getRowArray();
+            // 判断用户状态
+            if (!$data) {
+                return dr_return_data(0, IS_DEV ? dr_lang('手机[%s]不存在', $password) : dr_lang('登录失败'), 1);
+            }
         }
+
         $data['uid'] = $uid = (int)$data['id'];
         // 查询角色组
         $data['role'] = $role = $this->_role($uid);
