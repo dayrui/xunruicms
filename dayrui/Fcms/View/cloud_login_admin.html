@@ -24,6 +24,30 @@
                                 <input type="password" id="dr_password" class="form-control" name="data[password]">
                             </div>
                         </div>
+                        <div class="form-group dr_check " style="display: none">
+                            <label class="col-md-3 control-label ">&nbsp;</label>
+                            <div class="col-md-7 dr_check_phone">
+
+                            </div>
+                        </div>
+                        <div class="form-group dr_check" style="display: none">
+                            <input type="hidden" name="data[phone]" id="dr_check_phone">
+                            <input type="hidden" name="is_check" id="is_check">
+                            <label class="col-md-3 control-label ">&nbsp;</label>
+                            <div class="col-md-7">
+                            <div class="input-icon">
+                                <div class="input-inline " style="margin-right: 0px;">
+                                    <div class="input-group">
+                                        <input type="text" name="data[sms]" placeholder="{dr_lang('手机验证码')}" id="dr_sms" class="form-control">
+                                        <span class="input-group-btn">
+                            <a class="btn default" onclick="dr_send_sms()">获取验证码</a>
+                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+
                         {if SYS_ADMIN_CODE}
                         <div class="form-group">
                             <label class="col-md-3 control-label ">{dr_lang('图片验证码')}</label>
@@ -61,6 +85,33 @@
     if (typeof parent.layer == 'function') {
         parent.layer.closeAll('loading');
     }
+
+    function dr_send_sms() {
+        $.ajax({type: "POST",dataType:"json", url: '{$sms_url}', data: $(".login-form").serialize(),
+            success: function(json) {
+                // token 更新
+                if (json.token) {
+                    var token = json.token;
+                    $(".login-form input[name='"+token.name+"']").val(token.value);
+                }
+                if (json.code == 1) {
+                    dr_tips(1, json.msg);
+                } else {
+                    $('.fc-code img').click();
+                    dr_tips(0, json.msg);
+                }
+            },
+            error: function(HttpRequest, ajaxOptions, thrownError) {
+                $('.fc-code img').click();
+                var msg = HttpRequest.responseText;
+                if (!msg) {
+                    dr_tips(0, "{dr_lang('系统错误')}");
+                } else {
+                    dr_tips(0, msg);
+                }
+            }
+        });
+    }
     function dr_submit() {
         // 这里进行md5加密存储
         var pwd = $('#dr_password').val();
@@ -97,7 +148,16 @@
                     var token = json.token;
                     $(".login-form input[name='"+token.name+"']").val(token.value);
                 }
-                if (json.code == 1) {
+                if (json.code == 9) {
+                    // 二次验证
+                    $(".dr_row_username").hide();
+                    $(".dr_row_password").hide();
+                    $(".dr_check").show();
+                    $(".dr_check_phone").html(json.msg);
+                    $("#dr_check_phone").val(json.data);
+                    $("#is_check").val("yes");
+                    $('.fc-code img').click();
+                } else if (json.code == 1) {
                     window.location.href = json.data.url;
                 } else {
                     {if defined('SYS_ADMIN_LOGIN_AES') && SYS_ADMIN_LOGIN_AES}
