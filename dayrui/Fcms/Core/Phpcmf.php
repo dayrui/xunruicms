@@ -886,116 +886,9 @@ abstract class Common extends \Frame\Controller {
     /**
      * 插件的clink值
      */
-    protected function _app_clink($type = '', $data = []) {
-
-        if (!$type) {
-            // 表示模块部分
-            $endfix = '';
-        } else {
-            $endfix = '_'.$type;
-        }
-
-        // 加载模块自身的
-        if (is_file(APPPATH.'Config/Clink'.$endfix.'.php')) {
-            $_clink = require APPPATH.'Config/Clink'.$endfix.'.php';
-            if ($_clink) {
-                if (is_file(APPPATH.'Models/Auth'.$endfix.'.php')) {
-                    $obj = \Phpcmf\Service::M('auth'.$endfix.'', APP_DIR);
-                    foreach ($_clink as $k => $v) {
-                        // 动态名称
-                        if (strpos($v['name'], '_') === 0 && method_exists($obj, substr($v['name'], 1))) {
-                            $_clink[$k]['name'] = call_user_func(array($obj, substr($v['name'], 1)), APP_DIR);
-                        }
-                        // 对象存储
-                        $_clink[$k]['model'] = $obj;
-                    }
-                    // 权限验证
-                    if (method_exists($obj, 'is_link_auth') && $obj->is_link_auth(APP_DIR)) {
-                        $data = $_clink;
-                    } else {
-                        CI_DEBUG && log_message('debug', 'Auth类（'.APPPATH.'Models/Auth'.$endfix.'.php'.'）没有定义is_link_auth或者is_link_auth验证失败');
-                    }
-                } else {
-                    $data = $_clink;
-                }
-            }
-        }
-
-        // 加载全部插件的
-        $local = \Phpcmf\Service::Apps(true);
-        foreach ($local as $dir => $path) {
-            // 排除模块自身
-            if (strtolower($dir) == APP_DIR) {
-                continue;
-            }
-            // 判断插件目录
-            if (is_file($path.'Config/Clink'.$endfix.'.php') && is_file($path.'Config/App.php')) {
-                $cfg = require $path.'Config/App.php';
-                if ($cfg['type'] == 'app' && !$cfg['ftype']) {
-                    // 表示插件非模块
-                    $_clink = require $path.'Config/Clink'.$endfix.'.php';
-                    if ($_clink) {
-                        if (is_file($path.'Models/Auth'.$endfix.'.php')) {
-                            $obj = \Phpcmf\Service::M('auth'.$endfix, $dir);
-                            foreach ($_clink as $k => $v) {
-                                if (defined('IS_MODULE_VERIFY') && (!isset($v['is_verify']) || !$v['is_verify'])) {
-                                    // 审核界面
-                                    unset($_clink[$k]);
-                                    continue;
-                                }
-                                // 动态名称
-                                if (strpos($v['name'], '_') === 0 && method_exists($obj, substr($v['name'], 1))) {
-                                    $_clink[$k]['name'] = call_user_func(array($obj, substr($v['name'], 1)), APP_DIR);
-                                }
-                                // 对象存储
-                                $_clink[$k]['model'] = $obj;
-                            }
-                            // 权限验证
-                            if (method_exists($obj, 'is_link_auth') && $obj->is_link_auth(APP_DIR)) {
-                                $data = array_merge($data , $_clink) ;
-                            } else {
-                                CI_DEBUG && log_message('debug', 'Auth类（'.$path.'Models/Auth'.$endfix.'.php'.'）没有定义is_link_auth或者is_link_auth验证失败');
-                            }
-                        } else {
-                            $data = array_merge($data , $_clink) ;
-                            CI_DEBUG && log_message('debug', '配置文件（'.$path.'Config/Clink'.$endfix.'.php'.'）没有定义权限验证类（'.$path.'Models/Auth'.$endfix.'.php'.'）');
-                        }
-                    }
-                }
-            }
-        }
-
-        if ($data) {
-            foreach ($data as $i => $t) {
-                $data[$i]['displayorder'] = $i + ($t['displayorder'] ? (int)$t['displayorder'] : 0);
-                if (IS_ADMIN) {
-                    if (!$t['url']) {
-                        unset($data[$i]); // 没有url
-                        CI_DEBUG && !$t['murl'] && log_message('error', 'Clink（'.$t['name'].'）没有设置url参数');
-                        continue;
-                    } elseif ($t['uri'] && !$this->_is_admin_auth($t['uri'])) {
-                        unset($data[$i]); // 无权限的不要
-                        continue;
-                    }
-                    $data[$i]['url'] = urldecode($data[$i]['url']);
-                } else {
-                    if (!$t['murl']) {
-                        unset($data[$i]); // 非后台必须验证murl
-                        CI_DEBUG && !$t['url'] && log_message('error', 'Clink（'.$t['name'].'）没有设置murl参数');
-                        continue;
-                    }
-                    $data[$i]['url'] = urldecode($data[$i]['murl']);
-                }
-            }
-            uasort($data, function($a, $b){
-                if($a['displayorder'] == $b['displayorder']){
-                    return 0;
-                }
-                return($a['displayorder']<$b['displayorder']) ? -1 : 1;
-            });
-        }
-
-        return $data;
+    protected function _app_clink($type = '', $data = [])
+    {
+        return $this->_app_click('link', $type, $data);
     }
 
     /**
@@ -1003,6 +896,10 @@ abstract class Common extends \Frame\Controller {
      */
     protected function _app_cbottom($type = '', $data = [])
     {
+        return $this->_app_click('bottom', $type, $data);
+    }
+
+    private function _app_click($pos, $type, $row) {
 
         if (!$type) {
             // 表示模块部分
@@ -1011,49 +908,73 @@ abstract class Common extends \Frame\Controller {
             $endfix = '_'.$type;
         }
 
+        // 加载全部插件的
+        $local = \Phpcmf\Service::Apps(true);
+
         // 加载模块自身的
-        if (APP_DIR && is_file(APPPATH.'Config/Cbottom'.$endfix.'.php')) {
-            $_clink = require APPPATH.'Config/Cbottom'.$endfix.'.php';
-            if ($_clink) {
-                if (is_file(APPPATH.'Models/Auth'.$endfix.'.php')) {
-                    $obj = \Phpcmf\Service::M('auth'.$endfix, APP_DIR);
-                    if (method_exists($obj, 'is_bottom_auth') && $obj->is_bottom_auth(APP_DIR)) {
-                        $data = array_merge($data , $_clink);
-                    } else {
-                        CI_DEBUG && log_message('debug', 'Auth类（'.APPPATH.'Models/Auth'.$endfix.'.php'.'）没有定义is_bottom_auth或者is_bottom_auth验证失败');
-                    }
-                } else {
-                    $data = array_merge($data , $_clink);
+        if (APP_DIR) {
+            if (is_file(APPPATH.'Config/C'.$pos.$endfix.'.php')) {
+                $local[APP_DIR] = [APPPATH.'Config/C'.$pos.$endfix.'.php'];
+            } else {
+                // 排除模块自身
+                if (isset($local[APP_DIR])) {
+                    unset($local[APP_DIR]);
                 }
             }
         }
 
-        // 加载全部插件的
-        $local = \Phpcmf\Service::Apps();
+        $data = [];
         foreach ($local as $dir => $path) {
-            // 排除模块自身
-            if (strtolower($dir) == APP_DIR) {
-                continue;
-            }
+            $ck = 0;
             // 判断插件目录
-            if (is_file($path.'install.lock')
-                && is_file($path.'Config/Cbottom'.$endfix.'.php')
+            if (is_array($path)) {
+                $ck = 1;
+                $path = array_shift($path);
+            } elseif (is_file($path.'Config/C'.$pos.$endfix.'.php')
                 && is_file($path.'Config/App.php')) {
                 $cfg = require $path.'Config/App.php';
                 if ($cfg['type'] == 'app' && !$cfg['ftype']) {
                     // 表示插件非模块
-                    $_clink = require $path.'Config/Cbottom'.$endfix.'.php';
-                    if ($_clink) {
-                        if (is_file($path.'Models/Auth'.$endfix.'.php')) {
-                            $obj = \Phpcmf\Service::M('auth'.$endfix, $dir);
-                            if (method_exists($obj, 'is_bottom_auth') && $obj->is_bottom_auth(APP_DIR)) {
-                                $data = array_merge($data , $_clink);
-                            } else {
-                                CI_DEBUG && log_message('debug', 'Auth类（'.$path.'Models/Auth'.$endfix.'.php'.'）没有定义is_bottom_auth或者is_bottom_auth验证失败');
+                    $ck = 1;
+                }
+            }
+            if ($ck) {
+                $_clink = require $path.'Config/C'.$pos.$endfix.'.php';
+                if ($_clink) {
+                    if (is_file($path.'Models/Auth'.$endfix.'.php')) {
+                        $obj = \Phpcmf\Service::M('auth'.$endfix, $dir);
+                        foreach ($_clink as $k => $v) {
+                            if (defined('IS_MODULE_VERIFY')
+                                && (!isset($v['is_verify']) || !$v['is_verify'])) {
+                                // 审核界面
+                                unset($_clink[$k]);
+                                continue;
                             }
-                        } else {
-                            $data = array_merge($data , $_clink);
+                            // 动态名称
+                            if (strpos($v['name'], '_') === 0
+                                && method_exists($obj, substr($v['name'], 1))) {
+                                $_clink[$k]['name'] = call_user_func(array($obj, substr($v['name'], 1)), APP_DIR);
+                            }
+                            // check权限验证
+                            if (isset($v['check']) && $v['check'] && method_exists($obj, $v['check'])
+                                && !call_user_func(array($obj, $v['check']), APP_DIR, $row)) {
+                                unset($_clink[$k]);
+                                continue;
+                            }
+                            // 对象存储不返回出去了
+                            $_clink[$k]['model'] = NULL;
                         }
+                        // 权限验证
+                        if ($pos == 'link' && method_exists($obj, 'is_link_auth') && $obj->is_link_auth(APP_DIR)) {
+                            $data = array_merge($data, $_clink);
+                        } elseif ($pos == 'bottom' && method_exists($obj, 'is_bottom_auth') && $obj->is_bottom_auth(APP_DIR)) {
+                            $data = array_merge($data , $_clink) ;
+                        } else {
+                            CI_DEBUG && log_message('debug', 'Auth类（'.$path.'Models/Auth'.$endfix.'.php'.'）没有定义is_'.$pos.'_auth或者is_'.$pos.'_auth验证失败');
+                        }
+                    } else {
+                        $data = array_merge($data , $_clink) ;
+                        CI_DEBUG && log_message('debug', '配置文件（'.$path.'Config/C'.$pos.$endfix.'.php'.'）没有定义权限验证类（'.$path.'Models/Auth'.$endfix.'.php'.'）');
                     }
                 }
             }
@@ -1065,7 +986,7 @@ abstract class Common extends \Frame\Controller {
                 if (IS_ADMIN) {
                     if (!$t['url']) {
                         unset($data[$i]); // 没有url
-                        CI_DEBUG && log_message('debug', 'Cbottom（'.$t['name'].'）没有设置url参数');
+                        CI_DEBUG && !$t['murl'] && log_message('error', 'C'.$pos.'（'.$t['name'].'）没有设置url参数');
                         continue;
                     } elseif ($t['uri'] && !$this->_is_admin_auth($t['uri'])) {
                         unset($data[$i]); // 无权限的不要
@@ -1075,7 +996,7 @@ abstract class Common extends \Frame\Controller {
                 } else {
                     if (!$t['murl']) {
                         unset($data[$i]); // 非后台必须验证murl
-                        CI_DEBUG && log_message('debug', 'Cbottom（'.$t['name'].'）没有设置murl参数');
+                        CI_DEBUG && !$t['url'] && log_message('error', 'C'.$pos.'（'.$t['name'].'）没有设置murl参数');
                         continue;
                     }
                     $data[$i]['url'] = urldecode($data[$i]['murl']);

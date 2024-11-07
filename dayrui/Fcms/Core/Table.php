@@ -15,6 +15,7 @@ class Table extends \Phpcmf\Common {
 
     public $mytable; // 表格列表属性
     protected $my_field; // 预定义变量
+    protected $my_clink; // 自定义clink按钮html
 
     protected $model; // 模型类
     protected $db_source; // 数据源
@@ -682,6 +683,8 @@ class Table extends \Phpcmf\Common {
             $size = $this->list_pagesize;
         }
 
+        $uriprefix = trim(APP_DIR.'/'.\Phpcmf\Service::L('Router')->class, '/');
+
         // 按ajax返回
         if (isset($_GET['is_ajax']) && $_GET['is_ajax']) {
             // 按ajax分页
@@ -699,6 +702,7 @@ class Table extends \Phpcmf\Common {
                 }
                 $dfield = \Phpcmf\Service::L('Field')->app(APP_DIR);
                 foreach ($list as $k => $v) {
+                    $this->my_clink && $v['link_tpl'] = $this->_Clink_tpl($uriprefix, $v);
                     $list[$k] = $dfield->format_value($field, $v, 1);
                     foreach ($this->init['list_field'] as $i => $t) {
                         if ($t['use']) {
@@ -724,8 +728,6 @@ class Table extends \Phpcmf\Common {
                 $t['use'] && $list_field[$i] = $t;
             }
         }
-
-        $uriprefix = trim(APP_DIR.'/'.\Phpcmf\Service::L('Router')->class, '/');
 
         // 默认显示字段
         !$list_field && $this->init['show_field'] && $list_field = [
@@ -791,6 +793,7 @@ class Table extends \Phpcmf\Common {
                 }
                 $dfield = \Phpcmf\Service::L('Field')->app(APP_DIR);
                 foreach ($list as $k => $v) {
+                    $this->my_clink && $v['link_tpl'] = $this->_Clink_tpl($uriprefix, $v);
                     $list[$k] = $dfield->format_value($field, $v, 1);
                 }
             }
@@ -823,7 +826,7 @@ class Table extends \Phpcmf\Common {
                 // 回收站按钮
                 $this->mytable['foot_tpl'].= '<label><button type="button" onclick="javascript:dr_iframe_show(\''.dr_lang('回收站').'\', \''.dr_url($uriprefix.'/recycle_del').'\');" class="btn green btn-sm"> <i class="fa fa-recycle"></i> '.dr_lang('回收站').'</button></label>';
             }
-            if ($this->_is_admin_auth('edit')) {
+            if (!$this->my_clink && $this->_is_admin_auth('edit')) {
                 $lurl = (IS_ADMIN ? dr_url($uriprefix.'/edit') : dr_member_url($uriprefix.'/edit')).'&id={id}';
                 if ($this->is_iframe_post) {
                     // 弹窗模式修改
@@ -831,6 +834,11 @@ class Table extends \Phpcmf\Common {
                 }
                 $this->mytable['link_tpl'].= '<label><a href="'.$lurl.'" class="btn btn-xs red"> <i class="fa fa-edit"></i> '.dr_lang('修改').'</a></label>';
             }
+        }
+
+        if ($this->my_clink) {
+            // 防止右边链接菜单不显示
+            $this->mytable['link_tpl'] = '&nbsp;';
         }
 
         $data['mytable'] = $this->mytable;
@@ -844,6 +852,13 @@ class Table extends \Phpcmf\Common {
         \Phpcmf\Service::V()->assign($data);
 
         return [$this->_tpl_filename('list'), $data];
+    }
+
+    /**
+     * Clink内容右侧部分
+     * */
+    protected function _Clink_tpl($uriprefix, $data) {
+        return '';
     }
 
     /**

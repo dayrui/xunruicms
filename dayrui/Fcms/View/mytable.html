@@ -44,13 +44,16 @@
         // 记录右侧操作按钮
         if (mytable.link_tpl) {
             field_columns.push({
-                field: 'operation',
-                title: '操作',
+                field: 'link_tpl',
+                title: '{dr_lang('操作')}',
                 formatter: function formatter (value, row, index) {
-                    var html = mytable.link_tpl;
-                    eval(mytable.link_var);
-
-                    return html;
+                    if (typeof row.link_tpl === "undefined") {
+                        var html = mytable.link_tpl;
+                        eval(mytable.link_var);
+                        return html;
+                    } else {
+                        return row.link_tpl;
+                    }
                 },
                 visible: true
             });
