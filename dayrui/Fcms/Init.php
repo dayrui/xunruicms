@@ -226,12 +226,14 @@ function log_message($level, $message, array $context = []) {
 // 兼容错误提示
 function dr_show_error($msg, $dev = '') {
 
-    $log = 'ERROR - '.date('Y-m-d H:i:s'). ' --> '.$msg . '（'.FC_NOW_URL.'）';
-    $file = WRITEPATH . 'error/log-'.date('Y-m-d').'.php';
-    if (!is_file($file)) {
-        file_put_contents($file, "<?php if (!defined('BASEPATH')) exit('No direct script access allowed');?>".PHP_EOL.$log);
-    } else {
-        file_put_contents($file, $log.PHP_EOL, FILE_APPEND);
+    if (CI_DEBUG) {
+        $log = 'ERROR - '.date('Y-m-d H:i:s'). ' --> '.$msg . '（'.FC_NOW_URL.'）';
+        $file = WRITEPATH . 'error/log-'.date('Y-m-d').'.php';
+        if (!is_file($file)) {
+            file_put_contents($file, "<?php if (!defined('BASEPATH')) exit('No direct script access allowed');?>".PHP_EOL.$log);
+        } else {
+            file_put_contents($file, $log.PHP_EOL, FILE_APPEND);
+        }
     }
 
     if ($dev && !CI_DEBUG) {
