@@ -914,7 +914,7 @@ abstract class Common extends \Frame\Controller {
         // 加载模块自身的
         if (APP_DIR) {
             if (is_file(APPPATH.'Config/C'.$pos.$endfix.'.php')) {
-                $local[APP_DIR] = [APPPATH.'Config/C'.$pos.$endfix.'.php'];
+                $local[APP_DIR] = [APPPATH];
             } else {
                 // 排除模块自身
                 if (isset($local[APP_DIR])) {
