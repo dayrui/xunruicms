@@ -305,7 +305,8 @@ class Attachments extends \Phpcmf\Table {
         if (!$rt['code']) {
             exit(dr_array2string($rt));
         }
-
+        \Phpcmf\Service::M()->table('attachment_data')->update($id, ['filesize' => $rt['data']['size']]);
+        \Phpcmf\Service::M()->table('attachment_unused')->update($id, ['filesize' => $rt['data']['size']]);
         $this->_json(1, dr_lang('上传成功'), $rt['data']);
     }
 }
