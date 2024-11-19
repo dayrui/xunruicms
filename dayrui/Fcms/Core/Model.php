@@ -5,7 +5,11 @@
  * 本文件是框架系统文件，二次开发时不可以修改本文件
  **/
 
-require FRAMEPATH.'Extend/Model.php';
+if (is_file(MYPATH.'Extend/Model.php')) {
+    require MYPATH.'Extend/Model.php';
+} else {
+    require FRAMEPATH.'Extend/Model.php';
+}
 
 // 模型类
 class Model {
@@ -1149,6 +1153,27 @@ class Model {
         if (is_array($value) && $value) {
             $this->param['where_in'][] = [$name, $value];
         }
+
+        return $this;
+    }
+
+    // 时间戳条件
+    public function where_date($name, $value) {
+
+        if (!$name) {
+            return $this;
+        }
+
+        //$where = 'DATEDIFF(from_unixtime('.$name.'),now())='.$value;
+        $where = '';
+        if (!$value) {
+            // 今天
+            $stime = strtotime(date('Y-m-d', SYS_TIME).' 00:00:00');
+            $etime = strtotime(date('Y-m-d 23:59:59', $stime));
+            $where = $name." BETWEEN ".$stime." AND ".$etime;
+        }
+
+        $this->param['where'][] = $where;
 
         return $this;
     }
