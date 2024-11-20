@@ -924,6 +924,9 @@ abstract class Common extends \Frame\Controller {
         }
 
         $data = [];
+        if ($pos == 'bottom') {
+            $data = $row; // 底部自定义菜单写入
+        }
         foreach ($local as $dir => $path) {
             $ck = 0;
             // 判断插件目录
