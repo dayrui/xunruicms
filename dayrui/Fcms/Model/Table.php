@@ -9,6 +9,71 @@
 // 数据表
 class Table extends \Phpcmf\Model {
 
+    // 字段修改
+    public function edit_field($table, $name, $type, $info, $note) {
+
+        if (method_exists($this->db, 'editField')) {
+            return $this->db->editField($table, $name, $type, $info, $note);
+        }
+
+        $sql = 'ALTER TABLE `' . $table . '` CHANGE `'.$name.'` `'.$name.'` '.$type.' '.$info.' COMMENT \''.$note.'\';';
+
+        return $this->db->query($sql);
+    }
+
+    // 添加字段
+    public function add_field($table, $name, $type, $info, $note) {
+
+        if (method_exists($this->db, 'addField')) {
+            return $this->db->addField($table, $name, $type, $info, $note);
+        }
+
+        $sql = 'ALTER TABLE `' . $table . '` `'.$name.'` '.$type.' '.$info.' COMMENT \''.$note.'\';';
+
+        return $this->db->query($sql);
+    }
+
+
+    // 创建表
+    public function create_table($table, $fields, $indexs, $note) {
+
+        if (method_exists($this->db, 'createTable')) {
+            return $this->db->createTable($table, $fields, $indexs, $note);
+        }
+
+    }
+    // 创建表的sql
+    public function create_table_sql($table) {
+
+        if (method_exists($this->db, 'createTableSql')) {
+            $sql = $this->db->createTableSql($table);
+        } else {
+            $osql = $this->db->query("SHOW CREATE TABLE `".$table."`")->getRowArray();
+            $sql = $osql['Create Table'];
+        }
+
+        $arr = explode(PHP_EOL, $sql);
+        $sql = [];
+        foreach ($arr as $t) {
+            if (preg_match('/`(.+)`/U', $t, $mt) && strpos($t, ' KEY ') === false) {
+                $sql[$mt[1]] = trim($t, ',');
+            }
+        }
+
+        return array($osql['Create Table'], $sql);
+    }
+
+    public function show_full_colunms($table) {
+
+        if (method_exists($this->db, 'showFullColunms')) {
+            return $this->db->showFullColunms($table);
+        } else {
+            return \Phpcmf\Service::M()->db->query('SHOW FULL COLUMNS FROM `'.$table.'`')->getResultArray();
+        }
+
+    }
+
+
     // 表结构缓存
     public function cache($siteid = SITE_ID, $module = null) {
 
@@ -76,7 +141,7 @@ class Table extends \Phpcmf\Model {
 
         return isset($tableinfo[$this->dbprefix($table)]) ? $tableinfo[$this->dbprefix($table)] : [];
     }
-    
+
     // 执行批量sql
     public function _query($sql, $replace = []) {
 
@@ -109,7 +174,7 @@ class Table extends \Phpcmf\Model {
                 }
             }
         }
-        
+
         return dr_return_data(1, '', [$count, $todo]);
     }
 
@@ -137,7 +202,7 @@ class Table extends \Phpcmf\Model {
             \Phpcmf\Service::M('mform', 'mform')->create_module_form($data);
         }
     }
-    
+
     // 删除模块表单
     public function delete_module_form($data) {
         if (dr_is_app('mform')) {
@@ -153,5 +218,5 @@ class Table extends \Phpcmf\Model {
 
 
     }
-    
+
 }

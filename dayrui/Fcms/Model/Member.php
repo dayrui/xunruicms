@@ -375,7 +375,13 @@ class Member extends \Phpcmf\Model {
 
         if (is_file(WRITEPATH.'config/domain_sso.php')) {
             $sso = require WRITEPATH.'config/domain_sso.php';
+            $rts = [];
             foreach ($sso as $u) {
+                list($a) = explode(',', $u);
+                if (in_array($a, $rts)) {
+                    continue;
+                }
+                $rts[] = $a;
                 $this->sso_url[] = $u ? dr_http_prefix($u).'/' : '/';
             }
         }
