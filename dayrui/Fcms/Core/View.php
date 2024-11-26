@@ -295,6 +295,7 @@ class View {
             if (!$is_dev) {
                 unset($this->_options);
             }
+            \Phpcmf\Service::M()->close();
         }
     }
 
@@ -1549,7 +1550,7 @@ class View {
                                    } else {
                                        $value = '%'.trim($value, '%').'%'; // 首尾%查询
                                    }
-                                   $vals[]= "{$t['name']} LIKE \"".$value."\"";
+                                   $vals[]= "{$t['name']} LIKE '".$value."'";
                                }
                            }
                         }
