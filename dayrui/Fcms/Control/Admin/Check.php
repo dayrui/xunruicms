@@ -168,12 +168,7 @@ class Check extends \Phpcmf\Common
 
             case '05':
 
-                $list = \Phpcmf\Service::M()->db->query('show table status')->getResultArray();
-                if (!$list) {
-                    $this->halt(dr_lang("无法获取到数据表结构，需要为Mysql账号开启SHOW TABLE STATUS权限"), 0);
-                }
-
-                $field = \Phpcmf\Service::M()->db->query('SHOW FULL COLUMNS FROM `'.\Phpcmf\Service::M()->dbprefix('admin').'`')->getResultArray();
+                $field = \Phpcmf\Service::M('table')->show_full_colunms(\Phpcmf\Service::M()->dbprefix('admin'));
                 if (!$field) {
                     $this->halt(dr_lang("无法通获取到数据表字段结构，需要为Mysql账号开启SHOW FULL COLUMNS权限"), 0);
                 }
