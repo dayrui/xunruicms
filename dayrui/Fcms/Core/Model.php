@@ -1157,7 +1157,6 @@ class Model {
         return $this;
     }
 
-    // 时间戳条件
     public function where_date($name, $value) {
 
         if (!$name) {
@@ -1286,6 +1285,13 @@ class Model {
         $this->_clear();
 
         return $rt;
+    }
+
+    // 关闭数据库
+    public function close() {
+        if (method_exists($this->db, 'close')) {
+            $this->db->close();
+        }
     }
 
     private function _clear() {
