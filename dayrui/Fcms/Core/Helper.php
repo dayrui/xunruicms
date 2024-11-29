@@ -2516,7 +2516,7 @@ function dr_now_url() {
  */
 function dr_code($width, $height, $url = '') {
     $url = dr_web_prefix('index.php?s=api&c=api&m=captcha&width='.$width.'&height='.$height);
-    return '<img align="absmiddle" style="cursor:pointer;" onclick="this.src=\''.$url.'&\'+Math.random();" src="'.$url.'" />';
+    return '<img align="absmiddle" style="cursor:pointer;" onclick="this.src=\''.$url.'&t=\'+Math.random();" src="'.$url.'" />';
 }
 
 /**
