@@ -116,6 +116,7 @@ class db_mysql {
                     $this->param['select'] = str_replace($table.'.', ''.$this->prefix.$table.'.', $this->param['select']);
                 }
                 $this->param['select'] = str_replace($this->param['table'].'.', ''.$this->prefix.$this->param['table'].'.', $this->param['select']);
+                $this->param['select'] = str_replace($this->prefix.$this->prefix, $this->prefix, $this->param['select']);
             }
             $builder->field($this->param['select']);
         }
