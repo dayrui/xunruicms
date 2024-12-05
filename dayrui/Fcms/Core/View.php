@@ -1565,7 +1565,7 @@ class View {
                         $str = '';
                         foreach ($arr as $a) {
                             if (!is_numeric($a)) {
-                                $str.= ',"'.$a.'"';
+                                $str.= ',\''.$a.'\'';
                             } else {
                                 $str.= ','.$a;
                             }
@@ -1578,7 +1578,7 @@ class View {
                         $str = '';
                         foreach ($arr as $a) {
                             if (!is_numeric($a)) {
-                                $str.= ',"'.$a.'"';
+                                $str.= ',\''.$a.'\'';
                             } else {
                                 $str.= ','.$a;
                             }

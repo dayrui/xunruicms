@@ -509,7 +509,7 @@ class Api {
             if ($name == 'id') {
                 $where[] = 'id='.intval($value);
             } else {
-                $where[] = $name.' LIKE "%'.$value.'%"';
+                $where[] = $name.' LIKE \'%'.$value.'%\'';
             }
             $list['used'] = urlencode(implode(' AND ', $where));
         } else {
