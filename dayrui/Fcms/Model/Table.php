@@ -48,8 +48,8 @@ class Table extends \Phpcmf\Model {
         if (method_exists($this->db, 'createTableSql')) {
             $sql = $this->db->createTableSql($table);
         } else {
-            $osql = $this->db->query("SHOW CREATE TABLE `".$table."`")->getRowArray();
-            $sql = $osql['Create Table'];
+            $row = $this->db->query("SHOW CREATE TABLE `".$table."`")->getRowArray();
+            $sql = $row['Create Table'];
         }
 
         $arr = explode(PHP_EOL, $sql);
@@ -60,7 +60,7 @@ class Table extends \Phpcmf\Model {
             }
         }
 
-        return array($osql['Create Table'], $sql);
+        return array($row['Create Table'], $sql, $row['Table']);
     }
 
     public function show_full_colunms($table) {
