@@ -12,14 +12,6 @@ define('WEBPATH', dirname(__FILE__).'/');
 define('SYSTEMPATH', true);
 
 // 部分虚拟主机禁用函数时
-if (!function_exists('declare')) {
-    $code = file_get_contents(WEBPATH.'index.php');
-    $code = str_replace('declare(strict_types=1);', '//declare(strict_types=1);', $code);
-    $code = file_put_contents(WEBPATH.'index.php', $code);
-    if (!$code) {
-        exit('文件index.php修改失败，请给目录可写入的权限');
-    }
-}
 
 
 // 判断环境

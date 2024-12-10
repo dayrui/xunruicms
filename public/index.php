@@ -5,7 +5,7 @@
  * 开发者可在这里定义系统目录变量
  */
 
-declare(strict_types=1);
+declare(strict_types=1); // 部分虚拟主机禁用函数时 时可以删除本行
 header('Content-Type: text/html; charset=utf-8');
 //header('X-Frame-Options: SAMEORIGIN'); // 防止被站外加入iframe中浏览
 
