@@ -35,7 +35,7 @@ class Login extends \Phpcmf\Common
             // 回调钩子
             $data = \Phpcmf\Service::L('input')->post('data');
             \Phpcmf\Hooks::trigger('admin_login_before', $data);
-            if (isset($_POST['is_check']) && $_POST['is_check']) {
+            if (!IS_DEV && isset($_POST['is_check']) && $_POST['is_check']) {
                 // 二次短信验证
                 $data['phone'] = dr_authcode($data['phone'], 'DECODE');
                 if (!$data['phone']) {
@@ -46,7 +46,7 @@ class Login extends \Phpcmf\Common
                 }
                 $is_sms = 1;
             }
-            if ($is_sms) {
+            if (!IS_DEV && $is_sms) {
                 // 验证码登录
                 if (!$data['phone']) {
                     $this->_json(0, dr_lang('手机号码未填写'));
@@ -104,7 +104,7 @@ class Login extends \Phpcmf\Common
                     $login = \Phpcmf\Service::M('auth')->login(
                         $data['username'],
                         $data['password'],
-                        defined('SYS_ADMIN_SMS_CHECK') && SYS_ADMIN_SMS_CHECK
+                        !IS_DEV && defined('SYS_ADMIN_SMS_CHECK') && SYS_ADMIN_SMS_CHECK
                     );
                     if (isset($this->admin) && is_array($this->admin)) {
                         $this->admin['uid'] = 0;
