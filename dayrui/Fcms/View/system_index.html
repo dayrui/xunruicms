@@ -212,26 +212,7 @@
                                 <span class="help-block">{dr_lang('登录后台时使用快捷方式登录，需要提前在用户设置中开通快捷登录参数')}</span>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label class="col-md-2 control-label">{dr_lang('手机验证码登录')}</label>
-                            <div class="col-md-9">
-                                <div class="mt-radio-inline">
-                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_ADMIN_SMS_LOGIN]" value="1" {if $data['SYS_ADMIN_SMS_LOGIN']}checked{/if} /> {dr_lang('开启')} <span></span></label>
-                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_ADMIN_SMS_LOGIN]" value="0" {if empty($data['SYS_ADMIN_SMS_LOGIN'])}checked{/if} /> {dr_lang('关闭')} <span></span></label>
-                                </div>
-                                <span class="help-block">{dr_lang('登录后台时使用手机验证码登录，需要提前给账号设置手机号码并设置短信发送功能')}</span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-md-2 control-label">{dr_lang('账号登录后手机验证')}</label>
-                            <div class="col-md-9">
-                                <div class="mt-radio-inline">
-                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_ADMIN_SMS_CHECK]" value="1" {if $data['SYS_ADMIN_SMS_CHECK']}checked{/if} /> {dr_lang('开启')} <span></span></label>
-                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_ADMIN_SMS_CHECK]" value="0" {if empty($data['SYS_ADMIN_SMS_CHECK'])}checked{/if} /> {dr_lang('关闭')} <span></span></label>
-                                </div>
-                                <span class="help-block">{dr_lang('用账号登录后台，是否使用手机验证码二次验证登录，需要提前给账号设置手机号码并设置短信发送功能')}</span>
-                            </div>
-                        </div>
+
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('密码最大错误次数')}</label>
                             <div class="col-md-9">
@@ -248,6 +229,8 @@
                         </div>
                         <input type="hidden" name="data[SYS_ADMIN_LOGIN_TIME]" value="{$data['SYS_ADMIN_LOGIN_TIME']}" class="form-control">
                         <input type="hidden" name="data[SYS_ADMIN_LOGIN_AES]" value="{$data['SYS_ADMIN_LOGIN_AES']}" class="form-control">
+                        <input type="hidden" name="data[SYS_ADMIN_SMS_LOGIN]" value="{$data['SYS_ADMIN_SMS_LOGIN']}" class="form-control">
+                        <input type="hidden" name="data[SYS_ADMIN_SMS_CHECK]" value="{$data['SYS_ADMIN_SMS_CHECK']}" class="form-control">
                     </div>
                 </div>
 
