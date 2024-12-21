@@ -824,7 +824,7 @@ class Table extends \Phpcmf\Common {
             ];
             if ($this->_is_admin_auth('del') && $this->is_recycle && method_exists($this, 'recycle_del')) {
                 // 回收站按钮
-                $this->mytable['foot_tpl'].= '<label><button type="button" onclick="javascript:dr_iframe_show(\''.dr_lang('回收站').'\', \''.dr_url($uriprefix.'/recycle_del').'\');" class="btn green btn-sm"> <i class="fa fa-recycle"></i> '.dr_lang('回收站').'</button></label>';
+                $this->mytable['foot_tpl'].= '<label><button type="button" onclick="javascript:dr_iframe_show(\''.dr_lang('回收站').'\', \''.(IS_ADMIN ? dr_url($uriprefix.'/recycle_del') : dr_member_url($uriprefix.'/recycle_del')).'\');" class="btn green btn-sm"> <i class="fa fa-recycle"></i> '.dr_lang('回收站').'</button></label>';
             }
             if (!$this->my_clink && $this->_is_admin_auth('edit')) {
                 $lurl = (IS_ADMIN ? dr_url($uriprefix.'/edit') : dr_member_url($uriprefix.'/edit')).'&id={id}';
