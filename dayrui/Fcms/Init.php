@@ -130,7 +130,7 @@ unset($my, $system);
 !defined('IS_FB_DEBUG') && define('IS_FB_DEBUG', CI_DEBUG ? 0 : 1);
 
 // 显示错误提示
-IS_ADMIN || IS_DEV ? error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING ^ E_STRICT ^ E_DEPRECATED) : error_reporting(0);
+IS_ADMIN || IS_DEV ? error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING ^ E_DEPRECATED) : error_reporting(0);
 
 // 显示错误提示
 if (CI_DEBUG) {

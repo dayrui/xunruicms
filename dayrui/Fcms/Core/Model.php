@@ -1184,7 +1184,7 @@ class Model {
      * @param int $length 查询数量
      * @return $this
      */
-    public function limit(int $offset, int $length = null) {
+    public function limit($offset, $length = 0) {
 
         $this->param['limit'] = $offset . ($length ? ',' . $length : '');
 
