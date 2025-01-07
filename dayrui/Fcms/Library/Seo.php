@@ -38,7 +38,7 @@ class Seo {
 
         !$seo['meta_title'] && $seo['meta_title'] = SITE_NAME;
 
-        if (strpos($seo['meta_title'], '{page}') !== false) {
+        if ($seo['meta_title'] && strpos($seo['meta_title'], '{page}') !== false) {
             $page = max(1, intval($_GET['page']));
             if ($page > 1) {
                 $seo['meta_title'] = str_replace(array('[', ']'), '', $seo['meta_title']);
