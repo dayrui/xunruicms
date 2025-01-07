@@ -839,7 +839,7 @@ class Model {
             if ($s == $e && $s == 0) {
                 return '`'.$table.'`.`'.$name.'` = 0';
             }
-            if (!$e) {
+            if (!$e && $s > 0) {
                 return '`'.$table.'`.`'.$name.'` > '.$s;
             } else {
                 return '`'.$table.'`.`'.$name.'` BETWEEN '.$s.' AND '.$e;
