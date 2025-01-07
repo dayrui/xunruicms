@@ -201,6 +201,60 @@ class App extends \Phpcmf\Model {
         return dr_return_data(1, dr_lang('卸载成功'));
     }
 
+    // 安装自定义table控制器表
+    public function install_table($file) {
+
+        if (!is_file($file)) {
+            $file = WEBPATH.$file;
+            if (!is_file($file)) {
+                return dr_return_data(0, dr_lang('配置文件不存在'));
+            }
+        }
+
+        $data = dr_string2array(file_get_contents($file));
+        if (!$data) {
+            return dr_return_data(0, dr_lang('配置文件格式错误'));
+        } elseif (!$data['table']) {
+            return dr_return_data(0, dr_lang('配置文件格式错误，缺少table值'));
+        } elseif (!$data['config']) {
+            return dr_return_data(0, dr_lang('配置文件格式错误，缺少config值'));
+        } elseif (!$data['table_sql']) {
+            return dr_return_data(0, dr_lang('配置文件格式错误，缺少table_sql值'));
+        }
+
+        $rt = $this->query_all(str_replace('{dbprefix}',  $this->dbprefix(''), $data['table_sql']));
+        if ($rt) {
+            return dr_return_data(0, $rt);
+        }
+
+        $rname = 'table-'.$data['table'];
+        foreach ($data['field'] as $field) {
+            if ($this->db->table('field')
+                ->where('fieldname', $field['fieldname'])
+                ->where('relatedid', 0)
+                ->where('relatedname', $rname)->countAllResults()) {
+                continue;
+            }
+            $this->db->table('field')->insert(array(
+                'name' => (string)($field['name'] ? $field['name'] : $field['textname']),
+                'ismain' => 1,
+                'setting' => dr_array2string($field['setting']),
+                'issystem' => isset($field['issystem']) ? (int)$field['issystem'] : 1,
+                'ismember' => isset($field['ismember']) ? (int)$field['ismember'] : 1,
+                'disabled' => isset($field['disabled']) ? (int)$field['disabled'] : 0,
+                'fieldname' => $field['fieldname'],
+                'fieldtype' => $field['fieldtype'],
+                'relatedid' => 0,
+                'relatedname' => $rname,
+                'displayorder' => (int)$field['displayorder'],
+            ));
+        }
+
+        \Phpcmf\Service::L('cache')->set_file('table-config-'.$data['table'], $data['config'], 'table');
+
+        return dr_return_data(1, dr_lang('导入成功'));
+    }
+
     // 读取配置信息
     public function get_config($dir) {
 
