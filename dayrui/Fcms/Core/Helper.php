@@ -4547,7 +4547,7 @@ if (! function_exists('dr_redirect'))
      */
     function dr_redirect($url = '', $method = 'auto', $code = 0) {
 
-        if ($url == FC_NOW_URl) {
+        if ($url == FC_NOW_URL) {
             return; // 防止重复定向
         }
 
