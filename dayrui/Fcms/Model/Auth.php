@@ -415,6 +415,9 @@ class Auth extends \Phpcmf\Model {
 
             $rt = \Phpcmf\Hooks::trigger_callback('admin_login_check', $data, $verify);
             if ($rt && isset($rt['code']) && !$rt['code']) {
+                \Phpcmf\Service::C()->session()->remove('uid');
+                \Phpcmf\Service::C()->session()->remove('admin');
+                \Phpcmf\Service::C()->session()->remove('siteid');
                 return dr_return_data(0, $rt['msg']);
             }
         }
