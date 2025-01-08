@@ -2701,6 +2701,14 @@ function dr_catcher_data($url, $timeout = 0, $is_log = true, $ct = 0) {
         } else {
             if (!$ct) {
                 // 尝试重试
+                if (preg_match_all('/[\x{4e00}-\x{9fa5}]/u', $url, $mt)) {
+                    foreach ($mt[0] as $t) {
+                        $url = str_replace($t, urlencode($t), $url);
+                    }
+                }
+                if (strpos($url, ' ')) {
+                    $url = str_replace(' ', '%20', $url);
+                }
                 return dr_catcher_data($url, $timeout, $is_log, 1);
             } elseif (CI_DEBUG && $code && $is_log) {
                 log_message('error', '获取远程数据失败['.$url.']http状态：'.$code);
