@@ -295,7 +295,9 @@ class View {
             if (!$is_dev) {
                 unset($this->_options);
             }
-            \Phpcmf\Service::M()->close();
+            if (CI_DEBUG || !defined('SC_HTML_FILE')) {
+                \Phpcmf\Service::M()->close();
+            }
         }
     }
 
