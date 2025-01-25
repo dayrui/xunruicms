@@ -77,7 +77,7 @@ class Upload {
         }
 
         // 验证伪装图片
-        if (in_array($file_ext, ['jpg', 'jpeg', 'png', 'gif', 'webp'])) {
+        if (in_array($file_ext, ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'])) {
             $data = strlen($data) < 50 && @is_file($data) ? file_get_contents($data) : strtolower($data);
             if (strlen($data) < 50) {
                 return dr_return_data(0, dr_lang('图片文件不规范'). (IS_DEV ? '后台-系统-附件设置-可选择附件验证为宽松模式' : ''));
@@ -88,6 +88,8 @@ class Upload {
             } elseif (strpos($data, '.php') !== false) {
                 return dr_return_data(0, dr_lang('此图片不安全，禁止上传'). (IS_DEV ? '后台-系统-附件设置-可选择附件验证为宽松模式' : ''));
             } elseif (strpos($data, 'base64_decode(') !== false) {
+                return dr_return_data(0, dr_lang('此图片不安全，禁止上传'). (IS_DEV ? '后台-系统-附件设置-可选择附件验证为宽松模式' : ''));
+            } elseif (strpos($data, '<script') !== false) {
                 return dr_return_data(0, dr_lang('此图片不安全，禁止上传'). (IS_DEV ? '后台-系统-附件设置-可选择附件验证为宽松模式' : ''));
             }
         }
