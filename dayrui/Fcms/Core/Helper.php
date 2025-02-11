@@ -3315,7 +3315,23 @@ function dr_string2array($data, $limit = '') {
  * @return  string
  */
 function dr_array2string($data) {
-    return $data ? json_encode($data, JSON_UNESCAPED_UNICODE | 320) : '';
+
+    if (!$data) {
+        return '';
+    }
+
+    if (is_array($data)) {
+        $str = json_encode($data, JSON_UNESCAPED_UNICODE | 320);
+        if (!$str) {
+            if (IS_DEV) {
+                log_message('debug', 'json_encode转换失败：'.json_last_error_msg());
+            }
+            return '';
+        }
+        return $str;
+    } else {
+        return $data;
+    }
 }
 
 /**
