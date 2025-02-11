@@ -218,7 +218,7 @@ class Menu extends \Phpcmf\Model {
                                 if (!$afirst && $link['uri']) {
                                     $afirst = $link['uri']; // 第一个菜单
                                 }
-                                if ($this->counts('admin_menu', 'pid='.$left_id.' and `uri`="'.$link['uri'].'"')) {
+                                if ($this->counts('admin_menu', 'pid='.$left_id.' and `uri`=\''.$link['uri'].'\'')) {
                                     continue;
                                 }
                                 $id = $this->_add('admin', $left_id, $link, $link['mark'], 1);
@@ -244,7 +244,7 @@ class Menu extends \Phpcmf\Model {
                 // 插入链接菜单
                 if ($top_id && $top['link'] && is_array($top['link'])) {
                     foreach ($top['link'] as $mark2 => $link) {
-                        if ($this->counts('member_menu', 'pid='.$top_id.' and `uri`="'.$link['uri'].'"')) {
+                        if ($this->counts('member_menu', 'pid='.$top_id.' and `uri`=\''.$link['uri'].'\'')) {
                             continue;
                         }
                         $id = $this->_add('member', $top_id, $link, $link['mark'], 1);
@@ -267,7 +267,7 @@ class Menu extends \Phpcmf\Model {
                 // 插入链接菜单
                 if ($top_id && $top['link'] && is_array($top['link'])) {
                     foreach ($top['link'] as $mark2 => $link) {
-                        if ($this->counts('admin_min_menu', 'pid='.$top_id.' and `uri`="'.$link['uri'].'"')) {
+                        if ($this->counts('admin_min_menu', 'pid='.$top_id.' and `uri`=\''.$link['uri'].'\'')) {
                             continue;
                         }
                         $id = $this->_add('admin_min', $top_id, $link, $link['mark'], 1);
@@ -311,7 +311,7 @@ class Menu extends \Phpcmf\Model {
                         // 插入链接菜单
                         if ($left_id) {
                             foreach ($left['link'] as $link) {
-                                $this->db->table('admin_menu')->where('pid='.$left_id.' and `uri`="'.$link['uri'].'"')->delete();
+                                $this->db->table('admin_menu')->where('pid='.$left_id.' and `uri`=\''.$link['uri'].'\'')->delete();
                             }
                             // 判断当前分组菜单是否为空
                             if (!$this->db->table('admin_menu')->where('pid='.$left_id)->countAllResults()) {
@@ -336,7 +336,7 @@ class Menu extends \Phpcmf\Model {
                 // 插入链接菜单
                 if ($top_id && $top['link']) {
                     foreach ($top['link'] as $link) {
-                        $this->db->table('member_menu')->where('pid='.$top_id.' and `uri`="'.$link['uri'].'"')->delete();
+                        $this->db->table('member_menu')->where('pid='.$top_id.' and `uri`=\''.$link['uri'].'\'')->delete();
                     }
                     //
                 }
@@ -356,7 +356,7 @@ class Menu extends \Phpcmf\Model {
                 // 插入链接菜单
                 if ($top_id && $top['link']) {
                     foreach ($top['link'] as $link) {
-                        $this->db->table('admin_min_menu')->where('pid='.$top_id.' and `uri`="'.$link['uri'].'"')->delete();
+                        $this->db->table('admin_min_menu')->where('pid='.$top_id.' and `uri`=\''.$link['uri'].'\'')->delete();
                     }
                     //
                 }
@@ -410,7 +410,7 @@ class Menu extends \Phpcmf\Model {
                     if ($cfg['type'] == 'app' && !is_file($path.'install.lock')) {
                         // 表示应用插件
                         continue;
-                    } elseif ($cfg['type'] == 'module' && IS_USE_MODULE && !$this->counts('module', '`dirname`="'.strtolower($dir).'"')) {
+                    } elseif ($cfg['type'] == 'module' && IS_USE_MODULE && !$this->counts('module', '`dirname`=\''.strtolower($dir).'\'')) {
                         // 表示模块
                         continue;
                     }
@@ -479,7 +479,7 @@ class Menu extends \Phpcmf\Model {
         } elseif ($this->is_table_exists('member_menu') && $table == 'member') {
             // 清空表
             $site = $group = $client = [];
-            $old = $this->table('member_menu')->where('`site`<>"" or `group`<>"" or `client`<>""')->getAll();
+            $old = $this->table('member_menu')->where('`site`<>"" or `group`<>\'\' or `client`<>\'\'')->getAll();
             if ($old) {
                 foreach ($old as $t) {
                     $key = ($t['name'].$t['mark'].$t['uri'].$t['url']);
