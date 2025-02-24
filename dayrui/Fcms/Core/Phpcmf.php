@@ -198,7 +198,7 @@ abstract class Common extends \Frame\Controller {
             // 附件上传目录
             define('SYS_UPLOAD_PATH', rtrim(SYS_ATTACHMENT_PATH, DIRECTORY_SEPARATOR).'/');
             // 附件访问URL
-            define('SYS_UPLOAD_URL', trim(SYS_ATTACHMENT_URL, '/').'/');
+            define('SYS_UPLOAD_URL', trim(SYS_ATTACHMEATTNT_URL, '/').'/');
         } else {
             // 在当前网站目录
             $path = trim(SYS_ATTACHMENT_PATH ? SYS_ATTACHMENT_PATH : 'uploadfile', '/');

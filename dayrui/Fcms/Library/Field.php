@@ -567,9 +567,11 @@
             $name = ucfirst(strtolower($name));
             if (!isset($this->objects[$name])) {
                 $class = '';
-                if (is_file(MYPATH.'Field/'.$name.'.php')) {
+                $file1 = MYPATH.'Field/'.$name.'.php';
+                $file2 = CMSPATH.'Field/'.$name.'.php';
+                if (is_file($file1)) {
                     $class = '\\My\\Field\\'.$name; // my目录继承类别
-                } elseif (is_file(CMSPATH.'Field/'.$name.'.php')) {
+                } elseif (is_file($file2)) {
                     $class = '\\Phpcmf\\Field\\'.$name; // 系统类别
                 } else {
                     if ($name == 'Ueditor') {
@@ -587,7 +589,7 @@
                             log_message('error', '字段类别['.$name.']所属插件['.$app.']未安装');
                             return;
                         } elseif (!$app) {
-                            log_message('error', '字段类别['.$name.']不存在');
+                            log_message('error', '字段类别['.$name.']不存在-'.$file1.'-'.$file2);
                             return;
                         }
                         $file = dr_get_app_dir($app).'Fields/'.ucfirst($fname).'.php';
@@ -595,7 +597,7 @@
                             $class = '\\My\\Field\\'.$app.'\\'.ucfirst($fname);
                             require $file;
                         } else {
-                            log_message('error', '字段类别['.$name.']所属插件['.$app.']的字段文件不存在');
+                            log_message('error', '字段类别['.$name.']所属插件['.$app.']的字段文件不存在-'.$file.'-'.$file1.'-'.$file2);
                             return;
                         }
                     }

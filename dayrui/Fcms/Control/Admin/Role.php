@@ -174,7 +174,7 @@ class Role extends \Phpcmf\Common {
 			'data' => $data,
 			'page' => $page,
 			'form' => dr_form_hidden(['page' => $page]),
-			'menu_data' => \Phpcmf\Service::M('Menu')->gets('admin', 'mark<>"cloud"'),
+			'menu_data' => \Phpcmf\Service::M('Menu')->gets('admin', 'mark<>\'cloud\''),
 			'module_auth' => $module_auth,
 		]);
 		\Phpcmf\Service::V()->display('role_auth.html');

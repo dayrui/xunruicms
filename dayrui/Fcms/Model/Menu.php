@@ -427,7 +427,7 @@ class Menu extends \Phpcmf\Model {
         if ($table == 'admin' || !$table) {
             // 清空表
             $rp = [];
-            $old = $this->table('admin_menu')->where('site<>""')->getAll();
+            $old = $this->table('admin_menu')->where('site<>\'\'')->getAll();
             if ($old) {
                 foreach ($old as $t) {
                     $key = ($t['name'].$t['mark'].$t['uri'].$t['url']);
@@ -479,7 +479,7 @@ class Menu extends \Phpcmf\Model {
         } elseif ($this->is_table_exists('member_menu') && $table == 'member') {
             // 清空表
             $site = $group = $client = [];
-            $old = $this->table('member_menu')->where('`site`<>"" or `group`<>\'\' or `client`<>\'\'')->getAll();
+            $old = $this->table('member_menu')->where('`site`<>\'\' or `group`<>\'\' or `client`<>\'\'')->getAll();
             if ($old) {
                 foreach ($old as $t) {
                     $key = ($t['name'].$t['mark'].$t['uri'].$t['url']);
