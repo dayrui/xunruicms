@@ -85,7 +85,12 @@ class Cache {
         $cache_file = self::parse_cache_file(strtolower($key), $cache_dir); // 分析缓存文件
         if (!isset($this->data[$cache_file]) || !$is_cache) {
             if (is_file($cache_file)) {
-                $this->data[$cache_file] = json_decode(file_get_contents($cache_file), true);
+                $code = file_get_contents($cache_file);
+                $json = json_decode($code, true);
+                if ($code && !$json) {
+                    $json = $code;
+                }
+                $this->data[$cache_file] = $json;
             } else {
                 $this->data[$cache_file] = false;
                 #log_message('debug', '缓存文件['.$cache_file.']不存在');
