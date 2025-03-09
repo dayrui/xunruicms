@@ -55,7 +55,10 @@ class Table extends \Phpcmf\Model {
         $arr = explode(PHP_EOL, $sql);
         $sql = [];
         foreach ($arr as $t) {
-            if (preg_match('/`(.+)`/U', $t, $mt) && strpos($t, ' KEY ') === false) {
+            if (preg_match('/`(.+)`/U', $t, $mt)
+                && strpos($t, ' KEY ') === false
+                && strpos($t, '`'.$this->dbprefix()) === false
+            ) {
                 $sql[$mt[1]] = trim($t, ',');
             }
         }

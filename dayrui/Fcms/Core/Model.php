@@ -143,7 +143,7 @@ class Model {
             $this->db->query(str_replace(
                 array($name, 'CREATE TABLE '),
                 array($this->dbprefix($table.$tid), 'CREATE TABLE IF NOT EXISTS '),
-                $sql
+                $a
             ));
         }
         $this->_clear();
