@@ -28,7 +28,7 @@ class Table extends \Phpcmf\Model {
             return $this->db->addField($table, $name, $type, $info, $note);
         }
 
-        $sql = 'ALTER TABLE `' . $table . '` `'.$name.'` '.$type.' '.$info.' COMMENT \''.$note.'\';';
+        $sql = 'ALTER TABLE `' . $table . '` ADD `'.$name.'` '.$type.' '.$info.' COMMENT \''.$note.'\';';
 
         return $this->db->query($sql);
     }

@@ -739,23 +739,11 @@ class Model {
                         $ids = explode(',', $data['childids']);
                         foreach ($ids as $id) {
                             if ($id) {
-                                if (version_compare(\Phpcmf\Service::M()->db->getVersion(), '5.7.0') < 0) {
-                                    // 兼容写法
-                                    $where[] = '`'.$table.'`.`'.$name.'` LIKE \'%\"'.intval($id).'\"%\'';
-                                } else {
-                                    // 高版本写法
-                                    $where[] = "(CASE WHEN JSON_VALID(`{$table}`.`{$name}`) THEN JSON_CONTAINS (`{$table}`.`{$name}`->'$[*]', '\"".intval($id)."\"', '$') ELSE null END)";
-                                }
+                                $where[] = $this->where_json($table, $name, $id);
                             }
                         }
                     } else {
-                        if (version_compare(\Phpcmf\Service::M()->db->getVersion(), '5.7.0') < 0) {
-                            // 兼容写法
-                            $where[] = '`'.$table.'`.`'.$name.'` LIKE \'%\"'.intval($data['ii']).'\"%\'';
-                        } else {
-                            // 高版本写法
-                            $where[] = "(CASE WHEN JSON_VALID(`{$table}`.`{$name}`) THEN JSON_CONTAINS (`{$table}`.`{$name}`->'$[*]', '\"".intval($data['ii'])."\"', '$') ELSE null END)";
-                        }
+                        $where[] = $this->where_json($table, $name, intval($data['ii']));
                     }
                 }
             }
@@ -783,13 +771,7 @@ class Model {
             }
             foreach ($arr as $val) {
                 if ($val) {
-                    if (version_compare(\Phpcmf\Service::M()->db->getVersion(), '5.7.0') < 0) {
-                        // 兼容写法
-                        $where[] = '`'.$table.'`.`'.$name.'` LIKE \'%\"'.$this->db->escapeString(dr_safe_replace($val), true).'\"%\'';
-                    } else {
-                        // 高版本写法
-                        $where[] = "(CASE WHEN JSON_VALID(`{$table}`.`{$name}`) THEN JSON_CONTAINS (`{$table}`.`{$name}`->'$[*]', '\"".$this->db->escapeString(dr_safe_replace($val), true)."\"', '$') ELSE null END)";
-                    }
+                    $where[] = $this->where_json($table, $name, $this->db->escapeString(dr_safe_replace($val), true));
                 }
             }
             return $where ? '('.implode(strpos($value,  '||') !== false ? ' AND ' : ' OR ', $where).')' : '`'.$table.'`.`id` = 0';
@@ -1143,6 +1125,24 @@ class Model {
         return $this;
     }
 
+    // json
+    public function where_json($table, $name, $value) {
+
+        if (method_exists($this->db, 'whereJson')) {
+            return $this->db->whereJson($table, $name, $value);
+        }
+
+        $name = $table ? '`'.$table.'`.`'.$name.'`' : '`'.$name.'`';
+        if (version_compare($this->db->getVersion(), '5.7.0') < 0) {
+            // 兼容写法
+            return $name.' LIKE \'%"'.$value.'"%\'';
+        } else {
+            // 高版本写法
+            $name = $table ? "`{$table}`.`{$name}`" : "`{$name}`";
+            return "(CASE WHEN JSON_VALID({$name}) THEN JSON_CONTAINS ({$name}->'$[*]', '\"".$value."\"', '$') ELSE null END)";
+        }
+    }
+
     // in条件
     public function where_in($name, $value) {
 
@@ -1199,7 +1199,6 @@ class Model {
         return $this;
     }
 
-    // 分组
     public function group_by($value) {
 
         $this->param['group'] = $value;

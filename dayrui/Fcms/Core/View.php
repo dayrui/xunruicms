@@ -1499,13 +1499,7 @@ class View {
                             if ($arr) {
                                 foreach ($arr as $value) {
                                     if ($value) {
-                                        if (version_compare(\Phpcmf\Service::M()->db->getVersion(), '5.7.0') < 0) {
-                                            // 兼容写法
-                                            $vals[] = "{$t['name']} LIKE \"%\\\"".\Phpcmf\Service::M()->db->escapeString(dr_safe_replace($value), true)."\\\"%\"";
-                                        } else {
-                                            // 高版本写法
-                                            $vals[] = "(CASE WHEN JSON_VALID({$t['name']}) THEN JSON_CONTAINS ({$t['name']}->'$[*]', '\"".dr_safe_replace($value)."\"', '$') ELSE null END)";
-                                        }
+                                        $vals[] = \Phpcmf\Service::M()->where_json('', $t['name'], \Phpcmf\Service::M()->db->escapeString(dr_safe_replace($value), true));
                                     }
                                 }
                             }
