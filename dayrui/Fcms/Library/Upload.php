@@ -278,12 +278,14 @@ class Upload {
         ]);
     }
 
-    // base64模式
+    /**
+     * base64模式
+     */
     public function base64_image($config) {
 
         $data = $config['content'];
         $file_ext = $config['ext'] ? $config['ext'] : 'jpg'; // 扩展名
-        $file_name = 'base64_image'; // 文件实际名字
+        $file_name = isset($config['save_name']) && $config['save_name'] ? $config['save_name'] : 'base64_image'; // 文件实际名字
 
         // 安全验证
         $rt = $this->_safe_check($file_ext, $data);
@@ -363,7 +365,9 @@ class Upload {
         return !$this->error[$code] ? '上传错误('.$code.')' : $this->error[$code];
     }
 
-
+    /**
+     * 获取文件名
+     */
     public function file_name($name) {
         return $this->_file_name($name);
     }
