@@ -112,7 +112,7 @@ class Login extends \Phpcmf\Common
                     }
                     if ($login['code']) {
                         // 登录成功
-                        if ($login['code'] == 9) {
+                        if ($login['code'] == "sms") {
                             $this->_json(9, dr_lang('向%s的手机发送验证码：',
                                 substr($login['msg'], 0, 3).'****'.substr($login['msg'],-4)),
                                 dr_authcode($login['msg'], 'ENCODE')

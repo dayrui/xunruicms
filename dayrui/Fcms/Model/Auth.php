@@ -160,7 +160,7 @@ class Auth extends \Phpcmf\Model {
                 return dr_return_data(0, IS_DEV ? dr_lang('密码不正确') : dr_lang('登录失败'), 3);
             }
             if ($check && $data['phone']) {
-                return dr_return_data(9, $data['phone'], $data);
+                return dr_return_data("sms", $data['phone'], $data);
             }
         } else {
             $data = $this->db
