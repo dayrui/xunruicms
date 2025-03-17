@@ -33,6 +33,30 @@ class Table extends \Phpcmf\Model {
         return $this->db->query($sql);
     }
 
+    // 根据配置创建字段
+    public function create_field($table, $config) {
+
+        if (!$config || !$table) {
+            return;
+        }
+
+        foreach ($config as $field) {
+
+            if (\Phpcmf\Service::M()->db->fieldExists($field['fieldname'], $table)) {
+                continue;
+            }
+
+            $obj = \Phpcmf\Service::L('field')->get($field['fieldtype']);
+            if (!$obj) {
+                continue;
+            }
+
+            $sql = $obj->create_sql($field['fieldname'], $field['setting']['option'], dr_safe_filename($field['name']));
+            \Phpcmf\Service::M()->query(str_replace('{tablename}', \Phpcmf\Service::M()->dbprefix($table), $sql));
+        }
+
+    }
+
 
     // 创建表
     public function create_table($table, $fields, $indexs, $note) {
@@ -40,8 +64,8 @@ class Table extends \Phpcmf\Model {
         if (method_exists($this->db, 'createTable')) {
             return $this->db->createTable($table, $fields, $indexs, $note);
         }
-
     }
+
     // 创建表的sql
     public function create_table_sql($table) {
 
@@ -73,7 +97,6 @@ class Table extends \Phpcmf\Model {
         } else {
             return \Phpcmf\Service::M()->db->query('SHOW FULL COLUMNS FROM `'.$table.'`')->getResultArray();
         }
-
     }
 
 

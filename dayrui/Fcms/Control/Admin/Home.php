@@ -331,6 +331,7 @@ class Home extends \Phpcmf\Common
                 }
                 if (!$left_string) {
                     $first == $tid && $first = 0;
+                    unset($my_menu[$tid]);
                     continue; // 没有分组菜单就不要
                 }
                 $my_menu[$tid] = $top;
