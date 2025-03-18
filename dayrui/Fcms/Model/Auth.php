@@ -648,9 +648,10 @@ class Auth extends \Phpcmf\Model {
      * 判断是否具有操作权限
      *
      * @param	string	$uri
+     * @param	bool	$is_index 是否后台首页
      * @return	bool	有权限返回TRUE，否则返回FALSE
      */
-    public function _is_admin_auth($uri = '') {
+    public function _is_admin_auth($uri = '', $is_index = 0) {
 
         $uri = trim((string)$uri, '/');
 
@@ -735,7 +736,7 @@ class Auth extends \Phpcmf\Model {
         }
 
         // 验证应用插件的权限
-        if (substr_count($this_uri, '/') == 2) {
+        if (!$is_index && substr_count($this_uri, '/') == 2) {
             list($dir, $c, $m) = explode('/', $this_uri);
             $path = dr_get_app_dir($dir);
             if (is_file($path.'Models/Auth.php')) {

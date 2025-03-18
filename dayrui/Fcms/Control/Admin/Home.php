@@ -274,7 +274,7 @@ class Home extends \Phpcmf\Common
                             unset($left['link'][$i]);
                             unset($my_menu[$tid]['left'][$if]['link'][$i]);
                             continue; // 没有划分本站点就不显示
-                        } elseif ($link['uri'] && !$this->_is_admin_auth($link['uri'])) {
+                        } elseif ($link['uri'] && !\Phpcmf\Service::M('auth')->_is_admin_auth($link['uri'], 1)) {
                             // 判断权限
                             unset($left['link'][$i]);
                             unset($my_menu[$tid]['left'][$if]['link'][$i]);
