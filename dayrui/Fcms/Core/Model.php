@@ -1132,13 +1132,15 @@ class Model {
             return $this->db->whereJson($table, $name, $value);
         }
 
-        $name = $table ? '`'.$table.'`.`'.$name.'`' : '`'.$name.'`';
+        if (strpos($name, '`') === false) {
+            $name = $table ? '`'.$table.'`.`'.$name.'`' : '`'.$name.'`';
+        }
+
         if (version_compare($this->db->getVersion(), '5.7.0') < 0) {
             // 兼容写法
             return $name.' LIKE \'%"'.$value.'"%\'';
         } else {
             // 高版本写法
-            $name = $table ? "`{$table}`.`{$name}`" : "`{$name}`";
             return "(CASE WHEN JSON_VALID({$name}) THEN JSON_CONTAINS ({$name}->'$[*]', '\"".$value."\"', '$') ELSE null END)";
         }
     }
