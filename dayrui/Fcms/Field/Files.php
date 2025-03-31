@@ -168,7 +168,7 @@ class Files extends \Phpcmf\Library\A_Field {
 
         $data = [];
         $value = \Phpcmf\Service::L('Field')->post[$field['fieldname']];
-        if ($value && $value['id']) {
+        if ($value && is_array($value) && $value['id']) {
             foreach ($value['id'] as $id => $aid) {
                 $title = (string)$value['title'][$id];
                 $data['file'][$id] = $aid ? $aid : (string)$value['file'][$id];
