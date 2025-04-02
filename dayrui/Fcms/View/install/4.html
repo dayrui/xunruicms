@@ -4,7 +4,7 @@
     <div class="portlet-title">
         <div class="caption">
             <i class="fa fa-laptop font-green"></i>
-            <span class="caption-subject font-green">安装结果</span>
+            <span class="caption-subject font-green">{dr_lang('安装结果')}</span>
         </div>
     </div>
     <div class="portlet-body " style="padding:0 50px;">
@@ -20,10 +20,10 @@
                     <i class="fa fa-check-circle font-green" style="font-size: 80px;"></i>
                 </div>
                 <div class="col-md-8 text-left font-green" style="padding-top: 50px;">
-                    <p style="padding-top:15px;font-size: 30px;">安装完成</p>
-                    <p>账号：{$data.username}</p>
-                    <p>密码：{$data.password}</p>
-					<p style="padding-top: 20px;"><a href="{$admin}.php?c=login" onclick="dr_next_install()" class="btn btn-success"> 登录项目后台 </a></p>
+                    <p style="padding-top:15px;font-size: 30px;">{dr_lang('安装完成')}</p>
+                    <p>{dr_lang('账号')}：{$data.username}</p>
+                    <p>{dr_lang('密码')}：{$data.password}</p>
+					<p style="padding-top: 20px;"><a href="{$admin}.php?c=login" onclick="dr_next_install()" class="btn btn-success"> {dr_lang('登录项目后台')} </a></p>
                 </div>
             </div>
             <script>
@@ -41,7 +41,7 @@
     </div>
     <div class="portlet-body text-center">
         {if $error}
-        <a href="{$pre_url}" class="btn btn-success"> 返回上一步 </a>
+        <a href="{$pre_url}" class="btn btn-success"> {dr_lang('返回上一步')} </a>
         {/if}
     </div>
 </div>

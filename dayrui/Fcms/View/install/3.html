@@ -4,7 +4,7 @@
     <div class="portlet-title">
         <div class="caption">
             <i class="fa fa-laptop font-green"></i>
-            <span class="caption-subject font-green">正在安装数据结构</span>
+            <span class="caption-subject font-green">{dr_lang('正在安装数据结构')}</span>
         </div>
     </div>
     <div class="portlet-body " style="">
@@ -15,7 +15,7 @@
         </div>
         {else}
         <div class="scroller" style="height:300px; font-size: 12px;" data-rail-visible="1" id="dr_check_html">
-            <p>正在执行安装程序</p>
+            <p>{dr_lang('正在执行安装程序')}</p>
         </div>
         <div id="dr_error_html" style="display: none">
             <!--s-->
@@ -75,7 +75,7 @@
     </div>
     <div class="portlet-body text-center">
         {if $error}
-        <a href="{$pre_url}" class="btn btn-success"> 返回上一步 </a>
+        <a href="{$pre_url}" class="btn btn-success"> {dr_lang('返回上一步')} </a>
         {/if}
     </div>
 </div>

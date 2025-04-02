@@ -20,11 +20,7 @@ class Install extends \Phpcmf\Common {
     public function __construct()
     {
         parent::__construct();
-        $this->lock = WRITEPATH.'install.lock';
-        if (!IS_XRDEV && is_file($this->lock)) {
-            exit('安装程序已经被锁定，重新安装请删除：cache/install.lock');
-        }
-        define('SITE_LANGUAGE', 'zh-cn');
+        define('SITE_LANGUAGE', is_file(WRITEPATH.'lang.default') ? file_get_contents(WRITEPATH.'lang.default') : 'zh-cn');
         define('SITE_ID', 1);
         define('SITE_URL', '/');
         define('SITE_MURL', '/');
@@ -38,8 +34,8 @@ class Install extends \Phpcmf\Common {
         } else {
             $app = [
                 'id' => 1,
-                'name' => '迅睿CMS系统',
-                'version' => '开发版',
+                'name' => 'XunRuiCMS',
+                'version' => 'dev',
             ];
         }
         define('DR_CMS', $app['id']);
@@ -53,8 +49,16 @@ class Install extends \Phpcmf\Common {
 
     public function index() {
 
+        $this->lock = WRITEPATH.'install.lock';
+        if (!IS_XRDEV && is_file($this->lock)) {
+            exit(dr_lang('安装程序已经被锁定，重新安装请删除%s', 'cache/install.lock'));
+        }
+
         $data = [];
         $step = intval($_GET['step']);
+        if (!$step && SITE_LANGUAGE != 'zh-cn') {
+            $step = 1;
+        }
         $error = '';
         $admin = 'admin';
 
@@ -96,12 +100,12 @@ class Install extends \Phpcmf\Common {
                 }
                 $php = [
                     [
-                        'name' => 'mb string扩展',
+                        'name' => dr_lang('PHP扩展%s', 'mb string'),
                         'code' => function_exists('mb_substr'),
                         'help' => 'http://www.xunruicms.com/doc/742.html',
                     ],
                     [
-                        'name' => 'Curl扩展',
+                        'name' => dr_lang('PHP扩展%s', 'curl'),
                         'code' => function_exists('curl_init'),
                         'help' => 'http://www.xunruicms.com/doc/743.html',
                     ],
@@ -123,43 +127,47 @@ class Install extends \Phpcmf\Common {
 
                     $data = $_POST['data'];
                     if (empty($data['name'])) {
-                        $this->_json(0, '项目名称不能为空');
+                        $this->_json(0, dr_lang('项目名称不能为空'));
                     } elseif (empty($data['username'])) {
-                        $this->_json(0, '创始人账号不能为空');
+                        $this->_json(0, dr_lang('创始人账号不能为空'));
                     } elseif (empty($data['password'])) {
-                        $this->_json(0, '创始人密码不能为空');
+                        $this->_json(0, dr_lang('创始人密码不能为空'));
                     }  elseif (empty($data['email'])) {
-                        $this->_json(0, '创始人邮箱不能为空');
+                        $this->_json(0, dr_lang('创始人邮箱不能为空'));
                     } elseif (empty($data['db_host'])) {
-                        $this->_json(0, '数据库地址不能为空');
+                        $this->_json(0, dr_lang('数据库地址不能为空'));
                     } elseif (empty($data['db_user'])) {
-                        $this->_json(0, '数据库账号不能为空');
+                        $this->_json(0, dr_lang('数据库账号不能为空'));
                     } elseif (empty($data['db_name'])) {
-                        $this->_json(0, '数据库名称不能为空');
+                        $this->_json(0, dr_lang('数据库名称不能为空'));
                     } elseif (empty($data['db_pass'])) {
-                        $this->_json(0, '数据库密码不能为空');
+                        $this->_json(0, dr_lang('数据库密码不能为空'));
                     } elseif (empty($data['db_prefix'])) {
-                        $this->_json(0, '数据表前缀不能为空');
+                        $this->_json(0, dr_lang('数据表前缀不能为空'));
                     }
                     if (is_numeric(substr($data['db_name'], 0, 1))) {
-                        $this->_json(0, '数据库名称（'.$data['db_name'].'）不能是数字开头');
+                        $this->_json(0, dr_lang('数据库名称（%s）不能是数字开头', $data['db_name']));
                     } elseif (strpos($data['db_name'], '.') !== false) {
-                        $this->_json(0, '数据库名（'.$data['db_name'].'）不能存在.号');
+                        $this->_json(0, dr_lang('数据库名（%s）不能存在.号', $data['db_name']));
                     }
                     $data['db_name'] = dr_safe_filename($data['db_name']);
                     $mysqli = function_exists('mysqli_init') ? mysqli_init() : 0;
                     if (!$mysqli) {
-                        $this->_json(0, 'PHP环境必须启用Mysqli扩展');
+                        $this->_json(0, dr_lang('PHP环境必须启用Mysqli扩展'));
                     } elseif (!mysqli_real_connect($mysqli, $data['db_host'], $data['db_user'], $data['db_pass'])) {
-                        $this->_json(0, '['.mysqli_connect_errno().'] - 无法连接到数据库服务器（'.$data['db_host'].'），请检查用户名（'.$data['db_user'].'）和密码（'.$data['db_pass'].'）是否正确');
+                        if (SITE_LANGUAGE == 'zh-cn') {
+                            $this->_json(0, '['.mysqli_connect_errno().'] - 无法连接到数据库服务器（'.$data['db_host'].'），请检查用户名（'.$data['db_user'].'）和密码（'.$data['db_pass'].'）是否正确');
+                        } else {
+                            $this->_json(0, mysqli_connect_errno() . mysqli_connect_error());
+                        }
                     } elseif (!mysqli_select_db($mysqli, $data['db_name'])) {
                         if (!mysqli_query($mysqli, 'CREATE DATABASE '.$data['db_name'])) {
-                            $this->_json(0, '指定的数据库（'.$data['db_name'].'）不存在，系统尝试创建失败，请通过其他方式建立数据库');
+                            $this->_json(0, dr_lang('指定的数据库（%s）不存在，系统尝试创建失败，请通过其他方式建立数据库', $data['db_name']));
                         }
                     }
 
                     if (!mysqli_set_charset($mysqli, "utf8mb4")) {
-                        $this->_json(0, "当前MySQL不支持utf8mb4编码（".mysqli_error($mysqli)."）建议升级MySQL版本");
+                        $this->_json(0, dr_lang("当前MySQL不支持utf8mb4编码（%s）建议升级MySQL版本", mysqli_error($mysqli)));
                     }
 
                     $data['db_prefix'] = strtolower($data['db_prefix']);
@@ -167,7 +175,7 @@ class Install extends \Phpcmf\Common {
                     // 存储缓存文件中
                     $size = file_put_contents(WRITEPATH.'install.info', dr_array2string($data));
                     if (!$size || $size < 10) {
-                        $this->_json(0, '临时数据存储失败，cahce目录无法写入');
+                        $this->_json(0, dr_lang('临时数据存储失败，cahce目录无法写入'));
                     }
 
                     // 存储mysql
@@ -186,7 +194,7 @@ $db[\'default\']	= [
 ];';
                     $size = file_put_contents(CONFIGPATH.'database.php', $database);
                     if (!$size || $size < 10) {
-                        $this->_json(0, '数据库配置文件创建失败，config目录无法写入');
+                        $this->_json(0, dr_lang('数据库配置文件创建失败，config目录无法写入'));
                     }
 
                     $this->_json(1, 'index.php?c=install&m=index&is_install_db='.(!$is_demo ? 0 : intval($_POST['is_install_db'])).'&step='.($step+1));
@@ -205,16 +213,16 @@ $db[\'default\']	= [
                 $error = '';
                 file_put_contents(WRITEPATH.'install.error', '');
                 if (empty($data)) {
-                    $error = '临时数据获取失败，请返回前一页重新执行';
+                    $error = dr_lang('临时数据获取失败，请返回前一页重新执行');
                 } else {
                     $this->db = \Phpcmf\Service::M()->db;
                     // 检查数据库是否存在
                     if (!$this->db->connect(false)) {
                         // 链接失败,尝试创建数据库
-                        $error = '数据库连接失败，请返回前一页重新执行';
+                        $error = dr_lang('数据库连接失败，请返回前一页重新执行');
                     } elseif (!isset($_GET['doin']) && $this->db->tableExists($data['db_prefix'].'cron')) {
                         // 判断是否安装过
-                        $error = '指定的数据库（'.$data['db_name'].'）已经安装过表前缀（'.$data['db_prefix'].'），你可以尝试修改数据库名或者数据表前缀';
+                        $error = dr_lang('指定的数据库（%s）已经安装过表前缀（%s），你可以尝试修改数据库名或者数据表前缀', $data['db_name'], $data['db_prefix']);
                     } else {
 
                         // 导入数据结构
@@ -253,10 +261,10 @@ $db[\'default\']	= [
                                         $this->_json(0, 'SQL执行错误：'.$rt['message']);
                                     }
                                 }
-                                $this->_json(1, '正在执行：'.dr_strcut($ret, 70), ['page' => $page + 1]);
+                                $this->_json(1, dr_lang('正在执行：%s', dr_strcut($ret, 70)), ['page' => $page + 1]);
 
                             } else {
-                                $this->_json(1, '执行完成，即将安装数据信息...', ['page' => 99]);
+                                $this->_json(1, dr_lang('执行完成，即将安装数据信息...'), ['page' => 99]);
                             }
                         }
 
@@ -272,13 +280,13 @@ $db[\'default\']	= [
 
                 $data = dr_string2array(file_get_contents(WRITEPATH.'install.info'));
                 if (empty($data)) {
-                    $error = '临时数据获取失败，请返回前一页重新执行';
+                    $error = dr_lang('临时数据获取失败，请返回前一页重新执行');
                 } else {
                     $this->db = \Phpcmf\Service::M()->db;
                     // 检查数据库是否存在
                     if (!$this->db->connect(false)) {
                         // 链接失败,尝试创建数据库
-                        $error = '数据库连接失败，请返回前一页重新执行';
+                        $error = dr_lang('数据库连接失败，请返回前一页重新执行');
                     } else {
                         // 导入默认安装数据
                         $errorlog = file_get_contents(WRITEPATH.'install.error');
@@ -292,8 +300,8 @@ $db[\'default\']	= [
                                 } else {
                                     $sql = CMSPATH.'Config/Install.sql';
                                 }
-                                $error = 'SQL文件：'.$sql;
-                                $error.= '<br>关键数据表member结构不完整，检查安装包sql文件是否合理';
+                                $error = dr_lang('SQL文件：%s', $sql);
+                                $error.= '<br>'.dr_lang('关键数据表member结构不完整，检查安装包sql文件是否合理');
                             } else {
                                 // 创建账号
                                 $pwd = md5(dr_safe_password($data['password']));
@@ -305,7 +313,7 @@ $db[\'default\']	= [
                                         'username' => $data['username'],
                                         'password' => md5($pwd.$salt.$pwd),
                                         'salt' => $salt,
-                                        'name' => '创始人',
+                                        'name' => dr_lang('创始人'),
                                         'phone' => '',
                                         'money' => 1000000,
                                         'freeze' => 0,
@@ -323,7 +331,7 @@ $db[\'default\']	= [
                                         'username' => $data['username'],
                                         'password' => md5($pwd.$salt.$pwd),
                                         'salt' => $salt,
-                                        'name' => '创始人',
+                                        'name' => dr_lang('创始人'),
                                         'phone' => '',
                                         'money' => 1000000,
                                         'freeze' => 0,

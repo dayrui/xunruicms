@@ -4,7 +4,7 @@
     <div class="portlet-title">
         <div class="caption">
             <i class="fa fa-edit font-green"></i>
-            <span class="caption-subject font-green">项目信息</span>
+            <span class="caption-subject font-green">{dr_lang('项目信息')}</span>
         </div>
     </div>
     <div class="portlet-body ">
@@ -12,82 +12,82 @@
                 {dr_form_hidden()}
                 <div class="form-body">
                     <div class="form-group">
-                        <label class="control-label col-md-3">项目地址</label>
+                        <label class="control-label col-md-3">{dr_lang('项目地址')}</label>
                         <div class="col-md-7">
                             <p class="form-control-static" id="url"> {FC_NOW_HOST} </p>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="control-label col-md-3">项目名称</label>
+                        <label class="control-label col-md-3">{dr_lang('项目名称')}</label>
                         <div class="col-md-7">
-                            <input type="text" name="data[name]" value="我的项目" class="form-control" placeholder="">
+                            <input type="text" name="data[name]" value="{dr_lang('我的项目')}" class="form-control" placeholder="">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="control-label col-md-3">创始人邮箱</label>
+                        <label class="control-label col-md-3">{dr_lang('创始人邮箱')}</label>
                         <div class="col-md-7">
-                            <input type="text" name="data[email]" value="admin@admin.com" class="form-control" placeholder="此项必填">
+                            <input type="text" name="data[email]" value="admin@admin.com" class="form-control" placeholder="">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="control-label col-md-3">创始人账号</label>
+                        <label class="control-label col-md-3">{dr_lang('创始人账号')}</label>
                         <div class="col-md-7">
                             <input type="text" name="data[username]" value="admin" class="form-control" placeholder="">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="control-label col-md-3">创始人密码</label>
+                        <label class="control-label col-md-3">{dr_lang('创始人密码')}</label>
                         <div class="col-md-7">
                             <input type="text" name="data[password]" value="admin" class="form-control" placeholder="">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="control-label col-md-3">数据库地址</label>
+                        <label class="control-label col-md-3">{dr_lang('数据库地址')}</label>
                         <div class="col-md-7">
                             <input type="text" name="data[db_host]" value="127.0.0.1" class="form-control" placeholder="">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="control-label col-md-3">数据库账号</label>
+                        <label class="control-label col-md-3">{dr_lang('数据库账号')}</label>
                         <div class="col-md-7">
                             <input type="text" name="data[db_user]" value="" class="form-control" placeholder="">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="control-label col-md-3">数据库密码</label>
+                        <label class="control-label col-md-3">{dr_lang('数据库密码')}</label>
                         <div class="col-md-7">
                             <input type="text" name="data[db_pass]" value="" class="form-control" placeholder="">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="control-label col-md-3">数据库名称</label>
+                        <label class="control-label col-md-3">{dr_lang('数据库名称')}</label>
                         <div class="col-md-7">
                             <input type="text" name="data[db_name]" value="" class="form-control" placeholder="">
 
-                            <p class="help-block"> 当提示Unknown database时，请先创建数据库后再进行下一步。 </p>
+                            <p class="help-block"> {dr_lang('当提示Unknown database时，请先创建数据库后再进行下一步')} </p>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="control-label col-md-3">数据表前缀</label>
+                        <label class="control-label col-md-3">{dr_lang('数据表前缀')}</label>
                         <div class="col-md-7">
                             <input type="text" name="data[db_prefix]" value="dr_" class="form-control" placeholder="">
                         </div>
                     </div>
                     {if $is_demo}
                     <div class="form-group">
-                        <label class="control-label col-md-3">安装测试数据</label>
+                        <label class="control-label col-md-3">{dr_lang('安装测试数据')}</label>
                         <div class="col-md-7">
                             <div class="mt-radio-inline">
                                 <label class="mt-radio">
-                                    <input type="radio" name="is_install_db" value="1" checked=""> 安装
+                                    <input type="radio" name="is_install_db" value="1" checked=""> {dr_lang('安装')}
                                     <span></span>
                                 </label>
                                 <label class="mt-radio">
-                                    <input type="radio" name="is_install_db" value="0"> 不安装
+                                    <input type="radio" name="is_install_db" value="0"> {dr_lang('不安装')}
                                     <span></span>
                                 </label>
                             </div>
-                            <p class="help-block"> 新手建议选择安装测试数据，方便快速入门 </p>
+                            <p class="help-block"> {dr_lang('新手建议选择安装测试数据，方便快速入门')} </p>
                         </div>
                     </div>
                     {/if}
@@ -97,10 +97,10 @@
     </div>
     <div class="portlet-title" style="min-height: 18px;"></div>
     <div class="portlet-body text-center">
-        <a href="javascript:dr_next_install();" type='submit' class="btn btn-success"> 下一步安装 </a>
+        <a href="javascript:dr_next_install();" type='submit' class="btn btn-success"> {dr_lang('下一步安装')} </a>
     </div>
     <div class="portlet-body text-center" id="dr_loading" style="display: none; color:blue;">
-        正在安装中（这个过程一般不超过30秒）...
+        {dr_lang('正在安装中（这个过程一般不超过30秒）')}...
     </div>
 </div>
 <script>
@@ -126,7 +126,7 @@
                 $('#dr_loading').hide();
                 layer.open({
                     type: 1,
-                    title: "系统故障",
+                    title: "{dr_lang('系统故障')}",
                     fix:true,
                     shadeClose: true,
                     shade: 0,

@@ -99,8 +99,8 @@ abstract class Common extends \Frame\Controller {
         if (!is_file(MYPATH.'Config/Version.php')) {
             $this->cmf_version = [
                 'id' => 8,
-                'name' => '迅睿CMS开源框架',
-                'version' => '4.6测试版',
+                'name' => 'XunRuiCMS',
+                'version' => 'dev',
                 'downtime' => SYS_TIME,
                 'updatetime' => '--',
             ];
@@ -119,9 +119,9 @@ abstract class Common extends \Frame\Controller {
         // 项目站点不存在
         if (!isset($this->site_info[SITE_ID]) || !$this->site_info[SITE_ID]) {
             if (IS_DEV) {
-                dr_show_error('项目【'.SITE_ID.'】配置文件不存在，请检查cache/config/site.php文件数据是否完整');
+                dr_show_error(dr_lang('项目【%s】配置文件不存在，请检查cache/config/site.php文件数据是否完整', SITE_ID));
             } else {
-                dr_show_error('项目配置文件不存在');
+                dr_show_error(dr_lang('项目配置文件不存在'));
             }
         }
 
@@ -139,7 +139,7 @@ abstract class Common extends \Frame\Controller {
         define('SITE_SEOJOIN', dr_strlen($this->site_info[SITE_ID]['SITE_SEOJOIN']) ? $this->site_info[SITE_ID]['SITE_SEOJOIN'] : '_');
         define('SITE_REWRITE', (int)$this->site_info[SITE_ID]['SITE_REWRITE']);
         define('SITE_TEMPLATE', dr_strlen($this->site_info[SITE_ID]['SITE_TEMPLATE']) ? $this->site_info[SITE_ID]['SITE_TEMPLATE'] : 'default');
-        define('SITE_LANGUAGE', dr_strlen($this->site_info[SITE_ID]['SITE_LANGUAGE']) && is_file(ROOTPATH.'api/language/'.$this->site_info[SITE_ID]['SITE_LANGUAGE'].'/lang.php') ? $this->site_info[SITE_ID]['SITE_LANGUAGE'] : 'zh-cn');
+        define('SITE_LANGUAGE', dr_strlen($this->site_info[SITE_ID]['SITE_LANGUAGE']) && is_file(ROOTPATH.'api/language/'.$this->site_info[SITE_ID]['SITE_LANGUAGE'].'/lang.php') ? $this->site_info[SITE_ID]['SITE_LANGUAGE'] : (is_file(WRITEPATH.'lang.default') ? file_get_contents(WRITEPATH.'lang.default') : 'zh-cn'));
         define('SITE_TIME_FORMAT', dr_strlen($this->site_info[SITE_ID]['SITE_TIME_FORMAT']) ? $this->site_info[SITE_ID]['SITE_TIME_FORMAT'] : 'Y-m-d H:i:s');
 
         // 客户端识别
