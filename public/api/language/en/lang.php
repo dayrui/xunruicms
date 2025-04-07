@@ -1757,5 +1757,7 @@ return [
     '内容管理' => 'Content',
     '内容审核' => 'Content review',
     '创建菜单' => 'Create menu',
+    '联动菜单字段' => 'Linkage menu fields',
+    '域名设置' => 'Domain Name Settings',
 
 ];
