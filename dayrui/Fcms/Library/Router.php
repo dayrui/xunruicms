@@ -500,7 +500,7 @@ class Router {
         $server = strtolower($_SERVER['SERVER_SOFTWARE']);
         if (strpos($server, 'apache') !== FALSE) {
             $name = 'Apache';
-            $note = '<font color=red><b>将以下内容保存为.htaccess文件，放到每个域名所绑定的根目录</b></font>';
+            $note = '<font color=red><b>'.dr_lang('将以下内容保存为.htaccess文件，放到每个域名所绑定的根目录').'</b></font>';
             $code = '';
             $code.= 'RewriteEngine On'.PHP_EOL.PHP_EOL;
             $code.= 'RewriteBase '.$root.'/'.PHP_EOL
@@ -509,7 +509,7 @@ class Router {
                 .'RewriteRule !.(js|ico|gif|jpe?g|bmp|png|css)$ '.$root.'/index.php [NC,L]'.PHP_EOL.PHP_EOL;
         } elseif (strpos($server, 'nginx') !== FALSE) {
             $name = $server;
-            $note = '<font color=red><b>将以下代码放到Nginx配置文件中去（如果是绑定了域名，所绑定目录也要配置下面的代码）</b></font>';
+            $note = '<font color=red><b>'.dr_lang('将以下代码放到Nginx配置文件中去（如果是绑定了域名，所绑定目录也要配置下面的代码）').'</b></font>';
             // 子目录
             $code = '###当存在多个子目录格式的域名时，需要多写几组location标签：location /目录/ '.PHP_EOL;
             // 主目录
@@ -526,7 +526,7 @@ class Router {
                 .'}'.PHP_EOL;
         } else {
             $name = $server;
-            $note = '<font color=red><b>无法为此服务器提供伪静态规则，建议让运营商帮你把下面的Apache规则做转换</b></font>';
+            $note = '<font color=red><b>'.dr_lang('无法为此服务器提供伪静态规则，建议让运营商帮你把下面的Apache规则做转换').'</b></font>';
             $code = 'RewriteEngine On'.PHP_EOL
                 .'RewriteBase /'.PHP_EOL
                 .'RewriteCond %{REQUEST_FILENAME} !-f'.PHP_EOL

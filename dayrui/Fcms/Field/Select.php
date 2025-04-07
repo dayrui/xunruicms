@@ -24,7 +24,7 @@ class Select extends \Phpcmf\Library\A_Field {
 	 */
 	public function option($option) {
 
-        $option['options'] = isset($option['options']) ? $option['options'] : '选项名称1|1'.PHP_EOL.'选项名称2|2';
+        $option['options'] = isset($option['options']) ? $option['options'] : 'name1|1'.PHP_EOL.'name2|2';
 
 		return [
 			'

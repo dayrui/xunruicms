@@ -674,7 +674,7 @@ class Auth extends \Phpcmf\Model {
             // 补全控制器
             $uri = strpos($uri, '/') !== false ? $uri : (\Phpcmf\Service::L('router')->class.'/'.$uri);
             // 补全项目目录
-            APP_DIR && strpos($uri, APP_DIR.'/') === false && $uri = APP_DIR.'/'.$uri;
+            APP_DIR && substr_count(trim($uri, '/'), '/') == 1 && $uri = APP_DIR.'/'.$uri;
         }
 
         // 分隔URI判断权限

@@ -27,10 +27,10 @@ class Property extends \Phpcmf\Library\A_Field {
 
 	    unset($option['width']);
         if (!isset($option['name_value']) || !$option['name_value']) {
-            $option['name_value'] = '名称';
+            $option['name_value'] = dr_lang('名称');
         }
         if (!isset($option['value_value']) || !$option['value_value']) {
-            $option['value_value'] = '值';
+            $option['value_value'] = dr_lang('值');
         }
 		$str = '
         <div class="form-group">
@@ -102,12 +102,7 @@ class Property extends \Phpcmf\Library\A_Field {
         </div>
 		';
 		return ['
-                <div class="form-group">
-                    <label class="col-md-2 control-label">'.dr_lang('重要提示').'</label>
-                    <div class="col-md-9">
-                    <label class="form-control-static" style="color: red">本字段后期将被废除，新建时请使用Ftable字段（功能相同）</label>
-                    </div>
-                </div>'.$str];
+                '.$str];
 	}
 	
 	/**
@@ -162,8 +157,8 @@ class Property extends \Phpcmf\Library\A_Field {
         <table class="table fc-sku-table table-striped table-bordered table-hover">
         <thead>
         <tr>
-            <th width="200" style="border-left-width: 1px!important;">'.dr_lang($field['setting']['option']['name_value'] ? $field['setting']['option']['name_value'] : '名称').' </th>
-            <th>'.dr_lang($field['setting']['option']['value_value'] ? $field['setting']['option']['value_value'] : '值').' </th>';
+            <th width="200" style="border-left-width: 1px!important;">'.dr_lang($field['setting']['option']['name_value'] ? $field['setting']['option']['name_value'] : dr_lang('名称')).' </th>
+            <th>'.dr_lang($field['setting']['option']['value_value'] ? $field['setting']['option']['value_value'] : dr_lang('值')).' </th>';
         if (!$field['setting']['option']['is_hang']) {
             $str.='
             <th width="70" style="text-align: center"> ';
@@ -285,8 +280,8 @@ class Property extends \Phpcmf\Library\A_Field {
         <table class="table table-striped table-bordered table-advance ">
         <thead>
         <tr>
-            <th width="200" style="border-left-width: 1px!important;">'.dr_lang($field['setting']['option']['name_value'] ? $field['setting']['option']['name_value'] : '名称').' </th>
-            <th>'.dr_lang($field['setting']['option']['value_value'] ? $field['setting']['option']['value_value'] : '值').' </th>
+            <th width="200" style="border-left-width: 1px!important;">'.dr_lang($field['setting']['option']['name_value'] ? $field['setting']['option']['name_value'] : dr_lang('名称')).' </th>
+            <th>'.dr_lang($field['setting']['option']['value_value'] ? $field['setting']['option']['value_value'] : dr_lang('值')).' </th>
      
         </tr>
         </thead>

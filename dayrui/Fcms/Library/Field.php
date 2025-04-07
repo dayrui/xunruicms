@@ -528,7 +528,7 @@
                     'fieldname' => 'status',
                     'setting' => array(
                         'option' => array(
-                            'options' => '待审核|0'.PHP_EOL.'已通过|1'.PHP_EOL.'未通过|2',
+                            'options' => dr_lang('待审核').'|0'.PHP_EOL.dr_lang('已通过').'|1'.PHP_EOL.dr_lang('未通过').'|2',
                             'value' => 1
                         )
                     )
@@ -685,6 +685,10 @@
                 } elseif (isset($t['namespace']) && $t['namespace'] && $t['namespace'] != $this->app) {
                     unset($type[$i]);
                 }
+                $type[$i]['id'] = $t['id'];
+                $type[$i]['used'] = $t['used'];
+                $type[$i]['name'] = dr_lang($t['name']);
+                $type[$i]['namespace'] = $t['namespace'];
             }
             // 扫描没有定义的字段类别
             $path = dr_file_map(MYPATH.'Field');
@@ -695,7 +699,7 @@
                         && strpos(file_get_contents(MYPATH.'Field/'.$file), '<?php namespace My\Field;') !== false) {
                         $type[] = [
                             'id' => $name,
-                            'name' => $name,
+                            'name' => dr_lang($name),
                             'used' => '',
                             'namespace' => '',
                         ];

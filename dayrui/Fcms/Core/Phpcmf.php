@@ -1023,9 +1023,9 @@ abstract class Common extends \Frame\Controller {
     {
         // 默认的
         $data = [
-            'couts' => '数据统计',
-            'notice' => '通知提醒',
-            'mylink' => '快捷链接',
+            'couts' => dr_lang('数据统计'),
+            'notice' => dr_lang('通知提醒'),
+            'mylink' => dr_lang('快捷链接'),
         ];
 
         if (is_file(MYPATH.'/Config/Main.php')) {

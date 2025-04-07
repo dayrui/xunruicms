@@ -3,9 +3,9 @@
 <form action="" class="form-horizontal" method="post" name="myform" id="myform">
     {dr_form_hidden()}
     <div class="alert alert-danger">
-        自定义后台首页界面的显示内容
+        {dr_lang('自定义后台首页界面的显示内容')}
     </div>
-    <h3 class="page-title"> 面板区 <small>系统可用的面板，单击即可加入到预设区</small>
+    <h3 class="page-title"> {dr_lang('面板区')} <small>{dr_lang('系统可用的面板，单击即可加入到预设区')}</small>
     </h3>
     <div class="">
         {loop $tables $table $name}
@@ -15,14 +15,14 @@
     <script type="text/javascript">
         function dr_add_main_table(name) {
             if ($("#table_"+name).length>0){
-                dr_cmf_tips(0, '此面板已经存在');
+                dr_cmf_tips(0, '{dr_lang('此面板已经存在')}');
                 return;
             }
             $.ajax({type: "GET",dataType:"json", url: admin_file+"?c=api&m=add_main_table&table="+name,
                 success: function(json) {
                     if (json.code) {
                         $('#dr_init_add_table').html(json.msg);
-                        dr_cmf_tips(json.code, '面板添加成功，请手动进行移动调整');
+                        dr_cmf_tips(json.code, '{dr_lang('面板添加成功，请手动进行移动调整')}');
                     } else {
                         dr_cmf_tips(json.code, json.msg);
                     }
@@ -57,12 +57,12 @@
                         update: function(b, c) {
                             var value = c.item.parent().attr('id');
                             if (!value) {
-                                dr_tips(0, '数据添加异常');
+                                dr_tips(0, '{dr_lang('数据添加异常')}');
                                 return;
                             }
                             var tid = c.item.attr('id');
                             $('#dr_'+tid).val(value);
-                            dr_tips(1, '添加成功');
+                            dr_tips(1, '{dr_lang('操作成功')}');
                             if (c.item.prev().hasClass("portlet-sortable-empty")) {
                                 c.item.prev().before(c.item);
                             }
@@ -81,13 +81,13 @@
 
     <div id="sortable_portlets" class="sortable_portlets3">
         <div class="myfbody">
-            <h3 class="page-title"> 预设区 <small>可以将本区域的面板移动到正式区</small>
+            <h3 class="page-title"> {dr_lang('预设区')} <small>{dr_lang('可以将本区域的面板移动到正式区')}</small>
             </h3>
             <div class="row">
                 <div class="col-md-12 column sortable sortable2" id="dr_init_add_table">
                 </div>
             </div>
-            <h3 class="page-title"> 正式区 <small>在后台首页界面显示的面板</small>
+            <h3 class="page-title"> {dr_lang('正式区')} <small>{dr_lang('在后台首页界面显示的面板')}</small>
             </h3>
             <div class="row">
                 <div class="col-md-3 column sortable" id="3-1">
@@ -194,7 +194,7 @@
 
 <script>
     function dr_qx(name) {
-        dr_iframe('面板权限', '{dr_url('home/auth_edit')}&name='+name, '50%', '50%', 'nogo');
+        dr_iframe('{dr_lang('面板权限')}', '{dr_url('home/auth_edit')}&name='+name, '50%', '50%', 'nogo');
     }
 </script>
 

@@ -10,6 +10,7 @@
 class Menu extends \Phpcmf\Model {
 
     protected $ids;
+    protected $lang;
 
     // 新增后台菜单
     public function _add($table, $pid, $data, $mark = '', $is_return = false) {
@@ -19,6 +20,7 @@ class Menu extends \Phpcmf\Model {
         }
 
         !$mark && ($mark = $data['mark'] ? $data['mark'] : '');
+        $this->lang && isset($this->lang[$data['name']]) && ($data['name'] = $this->lang[$data['name']]);
 
         if ($table == 'admin') {
             // 重复判断
@@ -401,6 +403,11 @@ class Menu extends \Phpcmf\Model {
             $menu = require CMSPATH.'Config/Menu.php';
         }
 
+        $this->lang = [];
+        if (is_file(ROOTPATH.'api/language/'.SITE_LANGUAGE.'/menu.php')) {
+            $this->lang = require ROOTPATH.'api/language/'.SITE_LANGUAGE.'/menu.php';
+        }
+
         // 子程序菜单
         $local = \Phpcmf\Service::Apps();
         foreach ($local as $dir => $path) {
@@ -410,7 +417,8 @@ class Menu extends \Phpcmf\Model {
                     if ($cfg['type'] == 'app' && !is_file($path.'install.lock')) {
                         // 表示应用插件
                         continue;
-                    } elseif ($cfg['type'] == 'module' && IS_USE_MODULE && !$this->counts('module', '`dirname`=\''.strtolower($dir).'\'')) {
+                    } elseif ($cfg['type'] == 'module' && IS_USE_MODULE
+                        && !$this->counts('module', '`dirname`=\''.strtolower($dir).'\'')) {
                         // 表示模块
                         continue;
                     }
