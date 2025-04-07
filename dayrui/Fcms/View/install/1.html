@@ -19,7 +19,7 @@
                 <div class="form-group">
                     <label class="control-label col-md-3">{dr_lang('PHP版本要求')}</label>
                     <div class="col-md-9">
-                        <p class="form-control-static"> {FRAME_PHP_VERSION}及以上版本 </p>
+                        <p class="form-control-static"> {FRAME_PHP_VERSION}{dr_lang('及以上版本')} </p>
                     </div>
                 </div>
                 <div class="form-group">
@@ -43,7 +43,7 @@
                         {if !$t.code}
                         <p style="margin:10px 0;color:red"> <?php $error = 1;?>[{dr_lang('不支持')}]&nbsp;&nbsp;{$t.name} &nbsp; &nbsp;<a href="{$t.help}" target="_blank">查看帮助</a></p>
                         {else}
-                        <p style="margin:10px 0;"> [支持]&nbsp;&nbsp;{$t.name} </p>
+                        <p style="margin:10px 0;"> [{dr_lang('支持')}]&nbsp;&nbsp;{$t.name} </p>
                         {/if}
                         {/loop}
                     </div>
