@@ -2205,13 +2205,11 @@ a.btn.disabled,fieldset[disabled] a.btn {
 .btn-group-sm>.btn,.btn-sm {
     padding: 5px 10px;
     font-size: 12px;
-    line-height: 1.5 !important;
 }
 
 .btn-group-xs>.btn,.btn-xs {
-    padding: 2px 5px;
+    padding: 3px 5px;
     font-size: 12px;
-    line-height: 1.5 !important;
 }
 
 .btn-block {
@@ -5779,8 +5777,8 @@ li [class*=" fa-"].icon-large,li [class*=" glyphicon-"].icon-large,li [class*=" 
     color: #fff;
     text-shadow: none!important;
     text-align: center;
-    padding: .5rem .5rem;
-    font-size: .98rem;
+    padding: .7rem .5rem .5rem .5rem;
+    font-size: 1.1rem;
     font-weight: 600;
     line-height: 1;
     white-space: nowrap;
@@ -13818,6 +13816,6 @@ td>.mt-table.mt-checkbox-single,th>.mt-table.mt-checkbox-single {
     position:sticky;
     top:0;
 }
-label .btn {
+.fixed-table-toolbar label .btn {
     margin-bottom: 4px;
 }

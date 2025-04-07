@@ -1090,10 +1090,10 @@ function dr_install_confirm(url) {
         window.opener=null;
         window.open('','_self');
         window.close();
-        alert('请关闭当前窗口');
+        alert(dr_lang('请关闭当前窗口'));
     } else {
         layer.confirm(
-        '确定要刷新整个后台吗？',
+            dr_lang('确定要刷新整个后台吗？'),
         {
             icon: 3,
             shade: 0,
@@ -1117,47 +1117,33 @@ function dr_install_confirm(url) {
 
 // 安装app提示
 function dr_install_app(url) {
-    layer.confirm(
-        '当您在使用第三方应用程序时，官方不保证它的合法性、安全性、完整性、真实性或品质等，请用户自行判断是否安装并承担所有风险。',
-        {
-            shade: 0,
-            title: '免责声明',
-            btn: ['安装', '取消']
-        }, function(index){
-            var index = layer.load(2, {
-                shade: [0.3,'#fff'], //0.1透明度的白色背景
-                time: 50000
-            });
-            $.ajax({type: "GET",dataType:"json", url: url,
-                success: function(json) {
-                    layer.close(index);
-                    dr_tips(json.code, json.msg);
-                    if (json.code == 1) {
-                        setTimeout("dr_install_confirm('"+json.data.url+"')", 2000);
-                    }
-                },
-                error: function(HttpRequest, ajaxOptions, thrownError) {
-                    dr_ajax_alert_error(HttpRequest, this, thrownError);
-                }
-            });
-        }, function(index){
-            return;
+    var index = layer.load(2, {
+        shade: [0.3,'#fff'], //0.1透明度的白色背景
+        time: 50000
+    });
+    $.ajax({type: "GET",dataType:"json", url: url,
+        success: function(json) {
+            layer.close(index);
+            dr_tips(json.code, json.msg);
+            if (json.code == 1) {
+                setTimeout("dr_install_confirm('"+json.data.url+"')", 2000);
+            }
+        },
+        error: function(HttpRequest, ajaxOptions, thrownError) {
+            dr_ajax_alert_error(HttpRequest, this, thrownError);
         }
-    );
+    });
 }
 
 // 安装模块提示
 function dr_install_module_select(url) {
     layer.confirm(
-        '共享模块: 共用一个栏目，在栏目中选择模块<br>'+
-        '独立模块: 独立栏目管理，在模块中选择栏目<br>',
+        dr_lang('共享模块: 共用一个栏目，在栏目中选择模块')+'<br>'+
+        dr_lang('独立模块: 独立栏目管理，在模块中选择栏目')+'<br>',
         {
             shade: 0,
-            title: '安装选择',
-            btn: ['独立', '共享', '了解区别'],
-            btn3: function(index, layero){
-                dr_help(626);
-            }
+            title: dr_lang('安装选择'),
+            btn: [dr_lang('独立'), dr_lang('共享')]
         }, function(index){
             var index = layer.load(2, {
                 shade: [0.3,'#fff'], //0.1透明度的白色背景
@@ -1202,11 +1188,11 @@ function dr_install_module_select(url) {
 // 直接安装
 function dr_install_module(url) {
     layer.confirm(
-        '你确定要安装到当前站点吗？',
+        dr_lang('你确定要安装到当前站点吗？'),
         {
             shade: 0,
-            title: '安装',
-            btn: ['安装', '取消']
+            title: dr_lang('ts'),
+            btn: [dr_lang('ok'), dr_lang('esc')]
         }, function(index){
             var index = layer.load(2, {
                 shade: [0.3,'#fff'], //0.1透明度的白色背景
@@ -1560,12 +1546,12 @@ function dr_call_alert() {
 
 }
 function dr_seo_rule() {
-    layer.alert('通用标签<br>'+
-        '{join}	SEO连接符号，默认“_”<br>'+
-        '[{page}]	分页页码<br>'+
-        '{SITE_NAME}	网站名称<br>'+
-        '支持“对应表”任何字段，格式：{字段名}，<br>如：{title}表示标题<br>'+
-        '支持网站系统常量，格式：{大写的常量名称}，<br>如：{SITE_NAME}表示网站名称<br>'+
+    layer.alert(dr_lang('通用标签')+'<br>'+
+        '{join}	'+dr_lang('SEO连接符号，默认是_')+'<br>'+
+        '[{page}]	'+dr_lang('分页页码')+'<br>'+
+        '{SITE_NAME}	'+dr_lang('网站名称')+'<br>'+
+        dr_lang('支持表字段，格式：{字段名}')+' <br>'+dr_lang('例如：{title}表示标题')+'<br>'+
+        dr_lang('支持网站系统常量，格式：{大写的常量名称}')+'<br>'+dr_lang('例如：{SITE_NAME}表示网站名称')+'<br>'+
         ''+
         '', {
         shade: 0,
@@ -1574,12 +1560,11 @@ function dr_seo_rule() {
     });
 }
 function dr_url_module_index() {
-    layer.alert('<b>举例</b><hr>'+
-        '默认模块地址: index.php?s=news<br>'+
-        '形如news.html 这种地址格式为: {modname}.html 或者直接写成 news.html'+
-        '<br><br><br><b>通配符</b><hr>'+
-        '{modname}	表示当前模块目录<br>'+
-        '如果此模块绑定了域名,那么此规则就无效了<br>'+
+    layer.alert('<b>'+dr_lang('举例')+'</b><hr>'+
+        dr_lang('默认地址')+': index.php?s=news<br>'+
+        'news.html ===> {modname}.html'+
+        '<br><br><br><b>'+dr_lang('通配符')+'</b><hr>'+
+        '{modname}	'+dr_lang('表示当前模块目录')+'<br>'+
         ''+
         '', {
         shade: 0,
@@ -1589,26 +1574,20 @@ function dr_url_module_index() {
     });
 }
 function dr_url_module_show() {
-    layer.alert('<b>举例</b><hr>'+
-        '默认模块地址: <br>index.php?s=news&c=show&id=1<br>'+
-        '形如show/1.html <br>这种地址格式为: {modname}/{id}.html'+
-        '<br><br><b>通配符</b><hr>'+
-        '{id}   表示id<br>'+
-        '{y}   表示年<br>'+
-        '{m}   表示月<br>'+
-        '{d}   表示日<br>'+
-        '{page}   表示分页号<br>'+
-        '{dirname}   表示栏目目录名称<br>'+
-        '{pdirname}   包含父级子级层次的目录<br>'+
-        '{opdirname}   表示父级目录名称<br>'+
-        '{otdirname}   表示顶级目录名称<br>'+
-        '{modname}  表示模块目录<br>'+
-        '<br><br><b>使用自定义函数方法(需要有php开发经验)</b><hr>'+
-        '{自定义函数方法名($data)}	   表示用自定义函数方法来定义url<br>'+
-        '<br><br><b>自定义函数举例(需要有php开发经验)</b><hr>'+
-        '自定义函数文件: /config/custom.php <br>增加以下函数体:<br>'+
-        'function my_url($data) { return "你的URL"; } // 这个函数内容你自己定义<br>'+
-        '那么你就填写: {my_url($data)}<br>'+
+    layer.alert('<b>'+dr_lang('举例')+'</b><hr>'+
+        dr_lang('默认地址')+': <br>index.php?s=news&c=show&id=1<br>'+
+        'show/1.html ===> {modname}/{id}.html'+
+        '<br><br><b>'+dr_lang('通配符')+'</b><hr>'+
+        '{id}   '+dr_lang('表示id')+'<br>'+
+        '{y}   '+dr_lang('表示年')+'<br>'+
+        '{m}   '+dr_lang('表示月')+'<br>'+
+        '{d}   '+dr_lang('表示日')+'<br>'+
+        '{page}   '+dr_lang('表示分页号')+'<br>'+
+        '{dirname}   '+dr_lang('表示栏目目录名称')+'<br>'+
+        '{pdirname}   '+dr_lang('包含父级子级层次的目录')+'<br>'+
+        '{opdirname}   '+dr_lang('表示父级目录名称')+'<br>'+
+        '{otdirname}   '+dr_lang('表示顶级目录名称')+'<br>'+
+        '{modname}  '+dr_lang('表示模块目录')+'<br>'+
         ''+
         '', {
         shade: 0,
@@ -1618,24 +1597,18 @@ function dr_url_module_show() {
     });
 }
 function dr_url_module_list() {
-    layer.alert('<b>举例</b><hr>'+
-        '默认模块地址: <br>index.php?s=news&c=category&id=1<br>'+
-        '形如news/1.html <br>这种地址格式为: {dirname}/{id}.html'+
-        '<br><br><b>通配符</b><hr>'+
-        '{id}   表示栏目id<br>'+
-        '{page}   表示分页号<br>'+
-        '{dirname}   表示栏目目录名称<br>'+
-        '{pdirname}   包含父级子级层次的目录<br>'+
-        '{opdirname}   表示父级目录名称<br>'+
-        '{otdirname}   表示顶级目录名称<br>'+
-        '{modname}  表示模块目录（只能独立模块使用，共享模块不能使用）<br>'+
-        '支持主表任何字段，格式：{字段名}，如：{name}表示栏目名称<br>'+
-        '<br><br><b>使用自定义函数方法(需要有php开发经验)</b><hr>'+
-        '{自定义函数方法名($data)}	   表示用自定义函数方法来定义url<br>'+
-        '<br><br><b>自定义函数举例(需要有php开发经验)</b><hr>'+
-        '自定义函数文件: /config/custom.php <br>增加以下函数体:<br>'+
-        'function my_url($data) { return "你的URL"; } // 这个函数内容你自己定义<br>'+
-        '那么你就填写: {my_url($data)}<br>'+
+    layer.alert('<b>'+dr_lang('举例')+'</b><hr>'+
+        dr_lang('默认地址')+': <br>index.php?s=news&c=category&id=1<br>'+
+        'news/1.html ===> {dirname}/{id}.html'+
+        '<br><br><b>'+dr_lang('通配符')+'</b><hr>'+
+        '{id}   '+dr_lang('表示id')+'<br>'+
+        '{page}   '+dr_lang('表示分页号')+'<br>'+
+        '{dirname}   '+dr_lang('表示栏目目录名称')+'<br>'+
+        '{pdirname}   '+dr_lang('包含父级子级层次的目录')+'<br>'+
+        '{opdirname}   '+dr_lang('表示父级目录名称')+'<br>'+
+        '{otdirname}   '+dr_lang('表示顶级目录名称')+'<br>'+
+        '{modname}  '+dr_lang('表示模块目录')+'<br>'+
+
         '', {
         shade: 0,
         title: '',
@@ -1645,40 +1618,14 @@ function dr_url_module_list() {
 }
 
 function dr_url_page() {
-    layer.alert('<b>举例</b><hr>'+
-        '默认模块地址: <br>index.php?s=page&id=1<br>'+
-        '形如page/1.html <br>这种地址格式为: page/{id}.html'+
-        '<br><br><b>通配符</b><hr>'+
-        '{id}   表示id<br>'+
-        '{page}   表示分页号<br>'+
-        '{dirname}   表示栏目目录名称<br>'+
-        '{pdirname}   包含父级层次的目录<br>'+
-        '<br><br><b>使用自定义函数方法(需要有php开发经验)</b><hr>'+
-        '{自定义函数方法名($data)}	   表示用自定义函数方法来定义url<br>'+
-        '<br><br><b>自定义函数举例(需要有php开发经验)</b><hr>'+
-        '自定义函数文件: /config/custom.php <br>增加以下函数体:<br>'+
-        'function my_url($data) { return "你的URL"; } // 这个函数内容你自己定义<br>'+
-        '那么你就填写: {my_url($data)}<br>'+
-        ''+
-        '', {
-        shade: 0,
-        title: '',
-        area: ['50%', '50%'],
-        btn: []
-    });
-}
-function dr_url_module_tag() {
-    layer.alert('<b>举例</b><hr>'+
-        '默认模块地址: <br>index.php?s=tag&name=guanjianci<br>'+
-        '形如tag/guanjianci.html <br>这种地址格式为: tag/{tag}.html'+
-        '<br><br><b>通配符</b><hr>'+
-        '{tag}   表示tag英文名称<br>'+
-        '<br><br><b>使用自定义函数方法(需要有php开发经验)</b><hr>'+
-        '{自定义函数方法名($data)}	   表示用自定义函数方法来定义url<br>'+
-        '<br><br><b>自定义函数举例(需要有php开发经验)</b><hr>'+
-        '自定义函数文件: /config/custom.php <br>增加以下函数体:<br>'+
-        'function my_url($data) { return "你的URL"; } // 这个函数内容你自己定义<br>'+
-        '那么你就填写: {my_url($data)}<br>'+
+    layer.alert('<b>'+dr_lang('举例')+'</b><hr>'+
+        dr_lang('默认地址')+': <br>index.php?s=page&id=1<br>'+
+        'page/1.html ===> page/{id}.html'+
+        '<br><br><b>'+dr_lang('通配符')+'</b><hr>'+
+        '{id}   '+dr_lang('表示id')+'<br>'+
+        '{page}   '+dr_lang('表示分页号')+'<br>'+
+        '{dirname}   '+dr_lang('表示栏目目录名称')+'<br>'+
+        '{pdirname}   '+dr_lang('包含父级子级层次的目录')+'<br>'+
         ''+
         '', {
         shade: 0,
@@ -1688,11 +1635,11 @@ function dr_url_module_tag() {
     });
 }
 function dr_url_module_search() {
-    layer.alert('<b>举例</b><hr>'+
-        '默认模块地址: index.php?s=news&c=search<br>'+
-        '形如news/search.html 这种地址格式为: {modname}/search.html'+
-        '<br><br><br><b>通配符</b><hr>'+
-        '{modname}	表示当前模块目录<br>'+
+    layer.alert('<b>'+dr_lang('举例')+'</b><hr>'+
+        dr_lang('默认地址')+': index.php?s=news&c=search<br>'+
+        'news/search.html ===> {modname}/search.html'+
+        '<br><br><b>'+dr_lang('通配符')+'</b><hr>'+
+        '{modname}  '+dr_lang('表示模块目录')+'<br>'+
         ''+
         '', {
         shade: 0,
@@ -1703,18 +1650,12 @@ function dr_url_module_search() {
 }
 
 function dr_url_module_search_page() {
-    layer.alert('<b>举例</b><hr>'+
-        '默认模块地址: <br>index.php?s=news&c=search&字段=值<br>'+
-        '形如news/search/搜索参数.html <br>这种地址格式为: {modname}/search/{param}.html'+
-        '<br><br><b>通配符</b><hr>'+
-        '{param}   表示搜索参数<br>'+
-        '{modname}  表示模块目录<br>'+
-        '<br><br><b>使用自定义函数方法(需要有php开发经验)</b><hr>'+
-        '{自定义函数方法名($data)}	   表示用自定义函数方法来定义url<br>'+
-        '<br><br><b>自定义函数举例(需要有php开发经验)</b><hr>'+
-        '自定义函数文件: /config/custom.php <br>增加以下函数体:<br>'+
-        'function my_url($data) { return "你的URL"; } // 这个函数内容你自己定义<br>'+
-        '那么你就填写: {my_url($data)}<br>'+
+    layer.alert('<b>'+dr_lang('举例')+'</b><hr>'+
+        dr_lang('默认地址')+': <br>index.php?s=news&c=search&field=value<br>'+
+        'news/search/***.html ===> {modname}/search/{param}.html'+
+        '<br><br><b>'+dr_lang('通配符')+'</b><hr>'+
+        '{param}   '+dr_lang('表示搜索参数')+'<br>'+
+        '{modname}  '+dr_lang('表示模块目录')+'<br>'+
         ''+
         '', {
         shade: 0,
@@ -1746,12 +1687,12 @@ function dr_sync_cache(page) {
 
 function dr_help(id) {
     if (is_oemcms) {
-        dr_tips(1, '请联系开发商：'+is_oemcms);
+        dr_tips(1, dr_lang('请联系开发商')+'：'+is_oemcms);
         return;
     }
     layer.open({
         type: 2,
-        title: '<i class="fa fa-question-circle"></i> 在线帮助',
+        title: '<i class="fa fa-question-circle"></i>',
         shadeClose: true,
         scrollbar: false,
         shade: 0,
@@ -1762,12 +1703,12 @@ function dr_help(id) {
 
 function dr_search_help() {
     if (is_oemcms == 1) {
-        dr_tips(1, '请联系开发商');
+        dr_tips(1, dr_lang('请联系开发商'));
         return;
     }
     layer.open({
         type: 2,
-        title: '<i class="fa fa-question-circle"></i> 在线帮助',
+        title: '<i class="fa fa-question-circle"></i>',
         shadeClose: true,
         scrollbar: false,
         shade: 0,

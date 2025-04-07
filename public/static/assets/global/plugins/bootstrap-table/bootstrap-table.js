@@ -3039,7 +3039,7 @@
             return dr_lang('正在努力地加载数据中，请稍候');
         },
         formatRecordsPerPage: function formatRecordsPerPage(pageNumber) {
-            return dr_lang("每页显示 ").concat(pageNumber, dr_lang(" 条记录"));
+            return dr_lang("每页显示").concat(pageNumber, dr_lang("条记录"));
         },
         formatShowingRows: function formatShowingRows(pageFrom, pageTo, totalRows, totalNotFiltered) {
             if (totalNotFiltered !== undefined && totalNotFiltered > 0 && totalNotFiltered > totalRows) {

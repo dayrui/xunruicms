@@ -809,7 +809,7 @@ function dr_ajax_submit(url, form, time, go) {
                 shade: 0,
                 title: dr_lang('提示'),
                 btn: [dr_lang('确定'), dr_lang('取消')]
-            }, function(index){
+            }, function(indedr_ajax_submitx){
                 dr_post_submit(url, form, time, go);
             });
     } else {
@@ -825,10 +825,11 @@ function dr_post_addfunc(func) {
 // 处理post提交
 function dr_post_submit(url, form, time, go) {
 
+    // https不统一时，取根域名
     var p = url.split('/');
     if ((p[0] == 'http:' || p[0] == 'https:') && document.location.protocol != p[0]) {
-        alert('当前提交的URL是'+p[0]+'模式，请使用'+document.location.protocol+'模式访问再提交');
-        return;
+        const parsedUrl = new URL(url);
+        url = parsedUrl.pathname + parsedUrl.search + parsedUrl.hash;
     }
 
     url = url.replace(/&page=\d+&page/g, '&page');
@@ -843,7 +844,6 @@ function dr_post_submit(url, form, time, go) {
             return;
         }
     }
-
 
     var loading = layer.load(2, {
         shade: [0.3,'#fff'], //0.1透明度的白色背景
@@ -939,7 +939,7 @@ function dr_loginout(url) {
                 });
             }
             dr_cmf_tips(1, json.msg, json.data.time);
-            if (url && url != '退出成功') {
+            if (url && url != dr_lang('退出成功')) {
                 setTimeout("window.location.href = '"+url+"'", 2000);
             } else {
                 setTimeout('window.location.href="'+json.data.url+'"', 2000);
