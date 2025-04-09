@@ -7,55 +7,55 @@
 
 class Field extends \Phpcmf\Common {
 
-	public $name;
-	public $data;
+    public $name;
+    public $data;
 
-	public $ftype;
+    public $ftype;
 
-	public $backurl; // 返回链接
-	public $cachename; // 缓存名称
+    public $backurl; // 返回链接
+    public $cachename; // 缓存名称
 
-	public $namespace;
-	public $relatedid;
-	public $relatedname;
+    public $namespace;
+    public $relatedid;
+    public $relatedname;
 
-	public function __construct() {
-		parent::__construct();
+    public function __construct() {
+        parent::__construct();
 
-		$this->name = '字段管理';
-		$this->namespace = ''; // 设置应用目录
-		
-		// 字段来源相关表
+        $this->name = dr_lang('字段管理');
+        $this->namespace = ''; // 设置应用目录
+
+        // 字段来源相关表
         \Phpcmf\Service::M('Field')->relatedid = $this->relatedid = (int)\Phpcmf\Service::L('input')->get('rid');
-		\Phpcmf\Service::M('Field')->relatedname = $this->relatedname = \Phpcmf\Service::L('input')->get('rname');
+        \Phpcmf\Service::M('Field')->relatedname = $this->relatedname = \Phpcmf\Service::L('input')->get('rname');
 
-		list($ismain, $issearch, $iscategory) = $this->_set_init();
+        list($ismain, $issearch, $iscategory) = $this->_set_init();
 
-		// 可用字段类别
-		$this->ftype = \Phpcmf\Service::L('Field')->app($this->namespace)->type(\Phpcmf\Service::M('Field')->func);
+        // 可用字段类别
+        $this->ftype = \Phpcmf\Service::L('Field')->app($this->namespace)->type(\Phpcmf\Service::M('Field')->func);
 
-		// 判断类别权限
-		\Phpcmf\Service::V()->assign([
-			'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
-				[
-					'返回' => ['url:'.$this->backurl, 'fa fa-reply'],
-					$this->name => ['url:'.dr_url('field/index', ['rname'=>$this->relatedname, 'rid'=>$this->relatedid]), 'fa fa-code', 'field/index'],
-					'添加' => ['url:'.dr_url('field/add', ['rname'=>$this->relatedname, 'rid'=>$this->relatedid]), 'fa fa-plus', 'field/add'],
+        // 判断类别权限
+        \Phpcmf\Service::V()->assign([
+            'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
+                [
+                    '返回' => ['url:'.$this->backurl, 'fa fa-reply'],
+                    $this->name => ['url:'.dr_url('field/index', ['rname'=>$this->relatedname, 'rid'=>$this->relatedid]), 'fa fa-code', 'field/index'],
+                    '添加' => ['url:'.dr_url('field/add', ['rname'=>$this->relatedname, 'rid'=>$this->relatedid]), 'fa fa-plus', 'field/add'],
                     '导入' => ['add:field/import_add{rname='.$this->relatedname.'&rid='.$this->relatedid.'}', 'fa fa-sign-in', '60%', '70%'],
-					'修改' => ['hide:field/edit', 'fa fa-edit'],
-				]
-			),
-			'rid' => $this->relatedid,
-			'rname' => $this->relatedname,
-			'ftype' => $this->ftype,
-			'ismain' => $ismain,
-			'issearch' => $issearch,
-			'namespace' => $this->namespace,
-			'iscategory' => $iscategory,
-		]);
-	}
+                    '修改' => ['hide:field/edit', 'fa fa-edit'],
+                ]
+            ),
+            'rid' => $this->relatedid,
+            'rname' => $this->relatedname,
+            'ftype' => $this->ftype,
+            'ismain' => $ismain,
+            'issearch' => $issearch,
+            'namespace' => $this->namespace,
+            'iscategory' => $iscategory,
+        ]);
+    }
 
-	public function index() {
+    public function index() {
 
         $field = \Phpcmf\Service::M('Field')->get_all_field();
         if ($field) {
@@ -172,17 +172,17 @@ class Field extends \Phpcmf\Common {
             $list = [];
         }
 
-		\Phpcmf\Service::V()->assign(array(
-			'list' => $list,
-			'role' => \Phpcmf\Service::C()->get_cache('auth'),
-		));
-		\Phpcmf\Service::V()->display('field_index.html');
-	}
+        \Phpcmf\Service::V()->assign(array(
+            'list' => $list,
+            'role' => \Phpcmf\Service::C()->get_cache('auth'),
+        ));
+        \Phpcmf\Service::V()->display('field_index.html');
+    }
 
-	public function add() {
+    public function add() {
 
         $id = 0;
-		$page = max((int)\Phpcmf\Service::L('input')->post('page'), 0);
+        $page = max((int)\Phpcmf\Service::L('input')->post('page'), 0);
 
         // 初始化部分值
         $data = [
@@ -198,58 +198,58 @@ class Field extends \Phpcmf\Common {
             ],
         ];
 
-		// 提交表单
-		if (IS_AJAX_POST) {
-			$data = \Phpcmf\Service::L('input')->post('data', false);
-			$field = \Phpcmf\Service::L('field')->get($data['fieldtype']);
-			if (!$field) {
-				$this->_json(0, dr_lang('字段类别（%s）文件不存在', $data['fieldtype']));
-			} elseif (empty($data['name'])) {
-				$this->_json(0, dr_lang('字段显示名称不能为空'));
-			} elseif (empty($data['fieldname'])) {
-				$this->_json(0, dr_lang('字段名称不能为空'));
-			} elseif (!preg_match('/^[a-z]+[a-z0-9\_]+$/i', $data['fieldname'])) {
-				$this->_json(0, dr_lang('字段（%s）名称不规范', $data['fieldname']));
-			} elseif (strlen($data['fieldname']) > 30) {
-				$this->_json(0, dr_lang('字段（%s）名称太长', $data['fieldname']));
+        // 提交表单
+        if (IS_AJAX_POST) {
+            $data = \Phpcmf\Service::L('input')->post('data', false);
+            $field = \Phpcmf\Service::L('field')->get($data['fieldtype']);
+            if (!$field) {
+                $this->_json(0, dr_lang('字段类别（%s）文件不存在', $data['fieldtype']));
+            } elseif (empty($data['name'])) {
+                $this->_json(0, dr_lang('字段显示名称不能为空'));
+            } elseif (empty($data['fieldname'])) {
+                $this->_json(0, dr_lang('字段名称不能为空'));
+            } elseif (!preg_match('/^[a-z]+[a-z0-9\_]+$/i', $data['fieldname'])) {
+                $this->_json(0, dr_lang('字段（%s）名称不规范', $data['fieldname']));
+            } elseif (strlen($data['fieldname']) > 30) {
+                $this->_json(0, dr_lang('字段（%s）名称太长', $data['fieldname']));
             } elseif (\Phpcmf\Service::M('Field')->exitsts($data['fieldname'])) {
                 $this->_json(0, dr_lang('字段（%s）已经存在', $data['fieldname']));
-			} else {
+            } else {
                 $rt = $field->edit_config($data);
                 if (!$rt['code']) {
                     $this->_json(0, $rt['msg']);
                 }
-				$rt = \Phpcmf\Service::M('Field')->add($data, $field);
-				if (!$rt['code']) {
-					$this->_json(0, dr_lang($rt['msg']));
-				}
+                $rt = \Phpcmf\Service::M('Field')->add($data, $field);
+                if (!$rt['code']) {
+                    $this->_json(0, dr_lang($rt['msg']));
+                }
                 $this->_cache(); // 自动更新缓存
-				\Phpcmf\Service::L('input')->system_log('添加'.$this->name.'【'.$data['fieldname'].'】'.$data['name']); // 记录日志
-				$this->_json(1, dr_lang('操作成功'));
-			}
-		}
+                \Phpcmf\Service::L('input')->system_log('添加'.$this->name.'【'.$data['fieldname'].'】'.$data['name']); // 记录日志
+                $this->_json(1, dr_lang('操作成功'));
+            }
+        }
 
-		\Phpcmf\Service::V()->assign([
-			'id' => $id,
-			'page' => $page,
-			'data' => $data,
-			'form' => dr_form_hidden(['page' => $page]),
+        \Phpcmf\Service::V()->assign([
+            'id' => $id,
+            'page' => $page,
+            'data' => $data,
+            'form' => dr_form_hidden(['page' => $page]),
             'role' => \Phpcmf\Service::C()->get_cache('auth'),
             'cat_show' => 0,
         ]);
-		\Phpcmf\Service::V()->display('field_add.html');
-	}
+        \Phpcmf\Service::V()->display('field_add.html');
+    }
 
-	public function edit() {
+    public function edit() {
 
-		$id = intval(\Phpcmf\Service::L('input')->get('id'));
-		$page = max((int)\Phpcmf\Service::L('input')->get('page'), 0);
-		$data = \Phpcmf\Service::M()->table('field')->get($id);
-		if (!$data) {
+        $id = intval(\Phpcmf\Service::L('input')->get('id'));
+        $page = max((int)\Phpcmf\Service::L('input')->get('page'), 0);
+        $data = \Phpcmf\Service::M()->table('field')->get($id);
+        if (!$data) {
             $this->_json(0, dr_lang('数据#%s不存在', $id));
         }
 
-		$data['setting'] = dr_string2array($data['setting']);
+        $data['setting'] = dr_string2array($data['setting']);
 
         // 加载系统编辑器
         if ($data['fieldtype'] == 'Ueditor' && !is_file(CMSPATH.'Field/Ueditor.php')) {
@@ -268,9 +268,9 @@ class Field extends \Phpcmf\Common {
             }
         }
 
-		if (IS_AJAX_POST) {
-			$post = \Phpcmf\Service::L('input')->post('data', false);
-			$field = \Phpcmf\Service::L('field')->get($post['fieldtype']);
+        if (IS_AJAX_POST) {
+            $post = \Phpcmf\Service::L('input')->post('data', false);
+            $field = \Phpcmf\Service::L('field')->get($post['fieldtype']);
             if (!$field) {
                 $this->_json(0, dr_lang('字段类别（%s）文件不存在', $post['fieldtype']));
             }
@@ -278,29 +278,29 @@ class Field extends \Phpcmf\Common {
             if (!$rt['code']) {
                 $this->_json(0, $rt['msg']);
             }
-			$rt = \Phpcmf\Service::M('Field')->edit(
-				$data,
-				$post,
-				$field->alter_sql($data['fieldname'], $post['setting']['option'], $data['name'])
-			);
-			if (!$rt['code']) {
-			    $this->_json(0, dr_lang($rt['msg']));
+            $rt = \Phpcmf\Service::M('Field')->edit(
+                $data,
+                $post,
+                $field->alter_sql($data['fieldname'], $post['setting']['option'], $data['name'])
+            );
+            if (!$rt['code']) {
+                $this->_json(0, dr_lang($rt['msg']));
             }
             $this->_cache(); // 自动更新缓存
-			\Phpcmf\Service::L('input')->system_log('修改'.$this->name.'【'.$data['fieldname'].'】'.$data['name']); // 记录日志
-			$this->_json(1, dr_lang('操作成功'));
-		}
+            \Phpcmf\Service::L('input')->system_log('修改'.$this->name.'【'.$data['fieldname'].'】'.$data['name']); // 记录日志
+            $this->_json(1, dr_lang('操作成功'));
+        }
 
-		\Phpcmf\Service::V()->assign([
-			'id' => $id,
-			'data' => $data,
-			'page' => $page,
-			'form' => dr_form_hidden(['page' => $page]),
+        \Phpcmf\Service::V()->assign([
+            'id' => $id,
+            'data' => $data,
+            'page' => $page,
+            'form' => dr_form_hidden(['page' => $page]),
             'role' => \Phpcmf\Service::C()->get_cache('auth'),
             'is_edit' => $obj->is_edit,
-		]);
-		\Phpcmf\Service::V()->display('field_add.html');
-	}
+        ]);
+        \Phpcmf\Service::V()->display('field_add.html');
+    }
 
     public function type_edit() {
 
@@ -314,53 +314,53 @@ class Field extends \Phpcmf\Common {
 
         if (in_array($my, $int)) {
             if (in_array($to, $int)) {
-                $this->_json(1, '同一类型');
+                $this->_json(1, dr_lang('同一类型'));
             }
-            $this->_json(0, '当前字段是数字类型，变更后可能会导致无法正常存储，建议手动去数据库修改其字段数据类型，确定继续变更吗？');
+            $this->_json(0, dr_lang('当前字段存储的数据是%s，变更后建议手动去数据库将其字段数据类型改成合适的类型，确定继续变更吗？', 'INT'));
         } elseif (in_array($my, $text)) {
             if (in_array($to, $text)) {
-                $this->_json(1, '同一类型');
+                $this->_json(1, dr_lang('同一类型'));
             } elseif (stripos($to, 'editor') !== false) {
-                $this->_json(1, '同一类型');
+                $this->_json(1, dr_lang('同一类型'));
             }
-            $this->_json(0, '当前字段是TEXT类型，变更后建议手动去数据库将其字段数据类型改成合适的类型，确定继续变更吗？');
+            $this->_json(0, dr_lang('当前字段存储的数据是%s，变更后建议手动去数据库将其字段数据类型改成合适的类型，确定继续变更吗？', 'TEXT'));
         } elseif (in_array($my, $json)) {
             if (in_array($to, $json)) {
-                $this->_json(1, '同一类型');
+                $this->_json(1, dr_lang('同一类型'));
             }
-            $this->_json(0, '当前字段存储的数据是JSON格式，变更后可能无法正常筛选数据，确定继续变更吗？');
+            $this->_json(0, dr_lang('当前字段存储的数据是%s，变更后建议手动去数据库将其字段数据类型改成合适的类型，确定继续变更吗？', 'JSON'));
         } elseif (in_array($my, $char)) {
             if (in_array($to, $char)) {
-                $this->_json(1, '同一类型');
+                $this->_json(1, dr_lang('同一类型'));
             }
-            $this->_json(0, '当前字段存储的数据是CHAR格式，变更后建议手动去数据库将其字段数据类型改成合适的类型，确定继续变更吗？');
+            $this->_json(0, dr_lang('当前字段存储的数据是%s，变更后建议手动去数据库将其字段数据类型改成合适的类型，确定继续变更吗？', 'CHAR'));
         } elseif (stripos($my, 'editor') !== false && stripos($to, 'editor') !== false) {
-            $this->_json(1, '同一类型');
+            $this->_json(1, dr_lang('同一类型'));
         } else {
-            $this->_json(0, '变更字段类别可能会影响已有的数据，你确定吗？');
+            $this->_json(0, dr_lang('变更字段类别可能会影响已有的数据，你确定吗？'));
         }
     }
 
-	/**
-	 * 通用操作
-	 */
-	public function option() {
+    /**
+     * 通用操作
+     */
+    public function option() {
 
-		$id = (int)\Phpcmf\Service::L('input')->get('id');
-		$data = \Phpcmf\Service::M()->table('field')->get($id);
-		if (!$data) {
-			$this->_json(0, dr_lang('字段不存在'));
-		}
-		
-		switch (\Phpcmf\Service::L('input')->get('op')) {
-			case 'disabled':
-				$value = $data['disabled'] == 1 ? 0 : 1;
-				\Phpcmf\Service::M()->table('field')->save($id, 'disabled', $value);
+        $id = (int)\Phpcmf\Service::L('input')->get('id');
+        $data = \Phpcmf\Service::M()->table('field')->get($id);
+        if (!$data) {
+            $this->_json(0, dr_lang('字段不存在'));
+        }
+
+        switch (\Phpcmf\Service::L('input')->get('op')) {
+            case 'disabled':
+                $value = $data['disabled'] == 1 ? 0 : 1;
+                \Phpcmf\Service::M()->table('field')->save($id, 'disabled', $value);
                 $this->_cache(); // 自动更新缓存
-				\Phpcmf\Service::L('input')->system_log(($value ? '禁用' : '启用').$this->name.'【'.$data['fieldname'].'】'); // 记录日志
-				$this->_json(1, dr_lang(($value ? '禁用' : '启用').'成功'), ['value' => $value]);
-				break;
-			case 'xss':
+                \Phpcmf\Service::L('input')->system_log(($value ? '禁用' : '启用').$this->name.'【'.$data['fieldname'].'】'); // 记录日志
+                $this->_json(1, dr_lang(($value ? '禁用' : '启用').'成功'), ['value' => $value]);
+                break;
+            case 'xss':
                 // 验证字段对象的有效性
                 $obj = \Phpcmf\Service::L('Field')->get($data['fieldtype']);
                 if ($obj) {
@@ -372,49 +372,49 @@ class Field extends \Phpcmf\Common {
                         $this->_json(0, dr_lang('该字段已经强制关闭了XSS过滤'));
                     }
                 }
-				$data['setting'] = dr_string2array($data['setting']);
-				$data['setting']['validate']['xss'] = $value = $data['setting']['validate']['xss'] ? 0 : 1;
-				\Phpcmf\Service::M()->table('field')->save($id, 'setting', dr_array2string($data['setting']));
+                $data['setting'] = dr_string2array($data['setting']);
+                $data['setting']['validate']['xss'] = $value = $data['setting']['validate']['xss'] ? 0 : 1;
+                \Phpcmf\Service::M()->table('field')->save($id, 'setting', dr_array2string($data['setting']));
                 $this->_cache(); // 自动更新缓存
-				\Phpcmf\Service::L('input')->system_log($this->name.'【'.$data['fieldname'].'】'.($value ? '开启XSS' : '关闭XSS')); // 记录日志
-				$this->_json(1, dr_lang('操作成功'), ['value' => $value]);
-				break;
-			case 'member':
-				$value = $data['ismember'] ? 0 : 1;
-				\Phpcmf\Service::M()->table('field')->save($id, 'ismember', $value);
-                $this->_cache(); // 自动更新缓存
-				\Phpcmf\Service::L('input')->system_log($this->name.'【'.$data['fieldname'].'】'.($value ? '前端显示' : '前端隐藏')); // 记录日志
+                \Phpcmf\Service::L('input')->system_log($this->name.'【'.$data['fieldname'].'】'.($value ? '开启XSS' : '关闭XSS')); // 记录日志
                 $this->_json(1, dr_lang('操作成功'), ['value' => $value]);
-				break;
-			case 'save':
-				\Phpcmf\Service::M()->table('field')->save($id, 'displayorder', dr_safe_replace(\Phpcmf\Service::L('input')->get('value')));
+                break;
+            case 'member':
+                $value = $data['ismember'] ? 0 : 1;
+                \Phpcmf\Service::M()->table('field')->save($id, 'ismember', $value);
                 $this->_cache(); // 自动更新缓存
-				\Phpcmf\Service::L('input')->system_log('修改排序值: '. $this->name.'【'.$data['fieldname'].'】');
-				$this->_json(1, dr_lang('操作成功'));
-				break;
-		}
+                \Phpcmf\Service::L('input')->system_log($this->name.'【'.$data['fieldname'].'】'.($value ? '前端显示' : '前端隐藏')); // 记录日志
+                $this->_json(1, dr_lang('操作成功'), ['value' => $value]);
+                break;
+            case 'save':
+                \Phpcmf\Service::M()->table('field')->save($id, 'displayorder', dr_safe_replace(\Phpcmf\Service::L('input')->get('value')));
+                $this->_cache(); // 自动更新缓存
+                \Phpcmf\Service::L('input')->system_log('修改排序值: '. $this->name.'【'.$data['fieldname'].'】');
+                $this->_json(1, dr_lang('操作成功'));
+                break;
+        }
 
-		$this->_json(0, dr_lang('未知操作'));
-	}
+        $this->_json(0, dr_lang('未知操作'));
+    }
 
-	// 删除字段
-	public function del() {
+    // 删除字段
+    public function del() {
 
-		$ids = \Phpcmf\Service::L('input')->get_post_ids();
-		if (!$ids) {
-			$this->_json(0, dr_lang('你还没有选择呢'));
-		}
+        $ids = \Phpcmf\Service::L('input')->get_post_ids();
+        if (!$ids) {
+            $this->_json(0, dr_lang('你还没有选择呢'));
+        }
 
-		$rt = \Phpcmf\Service::M('Field')->delete_field($ids);
-		if (!$rt['code']) {
-			$this->_json(0, $rt['msg']);
-		} 
+        $rt = \Phpcmf\Service::M('Field')->delete_field($ids);
+        if (!$rt['code']) {
+            $this->_json(0, $rt['msg']);
+        }
 
         $this->_cache(); // 自动更新缓存
-		\Phpcmf\Service::L('input')->system_log('删除字段'. $this->name.' '. implode(',', $ids));
+        \Phpcmf\Service::L('input')->system_log('删除字段'. $this->name.' '. implode(',', $ids));
 
-		$this->_json(1, dr_lang('操作成功'), ['ids' => $ids]);
-	}
+        $this->_json(1, dr_lang('操作成功'), ['ids' => $ids]);
+    }
 
     // 导出
     public function export() {
@@ -535,8 +535,8 @@ class Field extends \Phpcmf\Common {
         exit;
     }
 
-	// 联动更新缓存
-	private function _cache() {
+    // 联动更新缓存
+    private function _cache() {
 
         list($case_name, $a) = explode('-', $this->relatedname);
 
@@ -612,8 +612,8 @@ class Field extends \Phpcmf\Common {
 
     }
 
-	// 初始化设置
-	private function _set_init() {
+    // 初始化设置
+    private function _set_init() {
 
         $local = \Phpcmf\Service::Apps(true);
         if ($local) {
@@ -655,7 +655,7 @@ class Field extends \Phpcmf\Common {
                     if (!$this->data) {
                         $this->_admin_msg(0, dr_lang('表单【%s】不存在', $this->relatedid));
                     }
-                    $this->name = '表单【'.$this->data['name'].'】字段';
+                    $this->name = dr_lang('表单【%s】字段', $this->data['name']);
                     $this->backurl = ''; // 返回uri地址
                     \Phpcmf\Service::M('Field')->func = 'form'; // 重要标识: 函数和识别码
                     \Phpcmf\Service::M('Field')->data = $this->data;
@@ -664,7 +664,7 @@ class Field extends \Phpcmf\Common {
                 case 'site':
                     // 网站信息
                     $ismain = 1;
-                    $this->name = '自定义字段';
+                    $this->name = dr_lang('自定义字段');
                     $this->backurl = \Phpcmf\Service::L('Router')->url('site_param/index'); // 返回uri地址
                     \Phpcmf\Service::M('Field')->func = 'site'; // 重要标识: 函数和识别码
                     break;
@@ -672,7 +672,7 @@ class Field extends \Phpcmf\Common {
                 case 'tag':
                     // _网站tag
                     $ismain = 1;
-                    $this->name = 'Tag字段';
+                    $this->name = dr_lang('自定义字段');
                     $this->backurl = \Phpcmf\Service::L('Router')->url('tag/home/index'); // 返回uri地址
                     \Phpcmf\Service::M('Field')->func = 'tag'; // 重要标识: 函数和识别码
                     break;
@@ -680,7 +680,7 @@ class Field extends \Phpcmf\Common {
                 case 'linkage':
                     // 联动菜单
                     $ismain = 1;
-                    $this->name = '联动菜单字段';
+                    $this->name = dr_lang('联动菜单字段');
                     $this->backurl = ''; // 返回uri地址
                     \Phpcmf\Service::M('Field')->func = 'linkage'; // 重要标识: 函数和识别码
                     break;
@@ -688,7 +688,7 @@ class Field extends \Phpcmf\Common {
                 case 'member':
                     // _用户主表
                     $ismain = 1;
-                    $this->name = '用户信息字段';
+                    $this->name = dr_lang('自定义字段');
                     $this->backurl = \Phpcmf\Service::L('Router')->url('member/field/index'); // 返回uri地址
                     \Phpcmf\Service::M('Field')->func = 'member'; // 重要标识: 函数和识别码
                     break;
@@ -696,7 +696,7 @@ class Field extends \Phpcmf\Common {
                 case 'navigator':
                     // _导航链接
                     $ismain = 1;
-                    $this->name = '自定义链接字段';
+                    $this->name = dr_lang('自定义字段');
                     $this->backurl = \Phpcmf\Service::L('Router')->url('navigator/home/index'); // 返回uri地址
                     \Phpcmf\Service::M('Field')->func = 'navigator'; // 重要标识: 函数和识别码
                     break;
@@ -704,7 +704,7 @@ class Field extends \Phpcmf\Common {
                 case 'order':
                     // 订单插件
                     $ismain = 1;
-                    $this->name = '订单应用';
+                    $this->name = dr_lang('自定义字段');
                     $this->backurl = \Phpcmf\Service::L('Router')->url('order/field/index'); // 返回uri地址
                     \Phpcmf\Service::M('Field')->func = 'order'; // 重要标识: 函数和识别码
                     break;
@@ -712,7 +712,7 @@ class Field extends \Phpcmf\Common {
                 case 'page':
                     // 网站单页
                     $ismain = 1;
-                    $this->name = '自定义页面字段';
+                    $this->name = dr_lang('自定义字段');
                     $this->backurl = \Phpcmf\Service::L('Router')->url('page/home/index'); // 返回uri地址
                     \Phpcmf\Service::M('Field')->func = 'page'; // 重要标识: 函数和识别码
                     break;
@@ -720,7 +720,7 @@ class Field extends \Phpcmf\Common {
                 case 'table':
                     // 任意表
                     $ismain = 1;
-                    $this->name = '数据标识【'.\Phpcmf\Service::M()->dbprefix($a).'】';
+                    $this->name = '【'.\Phpcmf\Service::M()->dbprefix($a).'】';
                     \Phpcmf\Service::M('Field')->data = $a;
                     \Phpcmf\Service::M('Field')->func = 'table'; // 重要标识: 函数和识别码
                     break;
@@ -732,7 +732,7 @@ class Field extends \Phpcmf\Common {
                         $this->_admin_msg(0, dr_lang('模块【%s】不存在', $this->relatedid));
                     }
                     $this->backurl = ''; // 返回uri地址
-                    $this->name = '模块【'.$this->data['dirname'].'】字段';
+                    $this->name = dr_lang('模块【%s】字段', $this->data['dirname']);
                     \Phpcmf\Service::M('Field')->func = 'module'; // 重要标识: 函数和识别码
                     \Phpcmf\Service::M('Field')->data = $this->data;
                     $this->namespace = $this->data['dirname'];
@@ -745,7 +745,7 @@ class Field extends \Phpcmf\Common {
                         $this->_admin_msg(0, dr_lang('模块【%s】不存在', $this->relatedid));
                     }
                     $this->backurl = ''; // 返回uri地址
-                    $this->name = '模块【'.$a.'】的表单【'.$this->data['name'].'】字段';
+                    $this->name = dr_lang('模块【%s】的表单【%s】字段', $a, $this->data['name']);
                     \Phpcmf\Service::M('Field')->func = 'mform'; // 重要标识: 函数和识别码
                     \Phpcmf\Service::M('Field')->data = $this->data;
                     $this->namespace = $this->data['module'];
@@ -754,7 +754,7 @@ class Field extends \Phpcmf\Common {
                 case 'category':
                     // 栏目自定义字段
                     $ismain = 1;
-                    $this->name = '栏目自定义字段';
+                    $this->name = dr_lang('栏目自定义字段');
                     $this->backurl = ''; // 返回uri地址
                     \Phpcmf\Service::M('Field')->func = 'category'; // 重要标识: 函数和识别码
                     \Phpcmf\Service::M('Field')->data = $a;
@@ -783,17 +783,17 @@ class Field extends \Phpcmf\Common {
                             $this->data['tid'] != 1 && $this->_admin_msg(0, dr_lang('模块栏目才支持创建'));
                             $this->data['dirname'] = $this->data['mid'];
                             $this->backurl = \Phpcmf\Service::L('Router')->url('category/index'); // 返回uri地址
-                            $this->name = '模块【'.$this->data['mid'].'】栏目【#'.$this->relatedid.'】模型字段';
+                            $this->name = dr_lang('模块【%s】栏目【#%s】模型字段', $this->data['mid'], $this->relatedid);
                         } else {
                             $this->data['dirname'] = $module;
                             $this->backurl = \Phpcmf\Service::L('Router')->url($module.'/category/index'); // 返回uri地址
-                            $this->name = '模块【'.$module.'】栏目【#'.$this->relatedid.'】模型字段';
+                            $this->name = dr_lang('模块【%s】栏目【#%s】模型字段', $module, $this->relatedid);
                         }
                     } else {
                         $this->data = [
                             'dirname' => $module,
                         ];
-                        $this->name = '模块【'.$module.'】栏目公共模型字段';
+                        $this->name = dr_lang('模块【%s】栏目公共模型字段', $module);
                         $this->backurl = \Phpcmf\Service::L('Router')->url('module/module_category/field_index', ['dir' => $module]); // 返回uri地址
                     }
 
