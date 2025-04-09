@@ -140,7 +140,7 @@ class Cloud extends \Phpcmf\Common {
     public function local() {
 
         if (SITE_ID > 1) {
-            $this->_admin_msg(0, '请切换到[主站点]操作');exit;
+            $this->_admin_msg(0, dr_lang('请切换到[主站点]操作'));exit;
         }
 
         $data = [];
@@ -197,7 +197,6 @@ class Cloud extends \Phpcmf\Common {
             'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
                 [
                     '本地应用' => [\Phpcmf\Service::L('Router')->class.'/'.\Phpcmf\Service::L('Router')->method, 'fa fa-puzzle-piece'],
-                    '应用市场' => [\Phpcmf\Service::L('Router')->class.'/app', 'fa fa-cloud'],
                     'help' => [574],
                 ]
             ),
@@ -615,6 +614,11 @@ return [
             .'&get_http=1&time='.strtotime((string)$this->cmf_version['downtime'])
             .'&id='.$cid.'&isindex='.$index.'&version='
             .$vid.'&license='.$this->cmf_license['license'];
+        if ($index) {
+            // 首页检查附带部分插件
+            $surl.= '&extends='.dr_array2string($this->_get_app_version());
+        }
+
         $json = dr_catcher_data($surl);
         if (!$json) {
             $this->_json(0, '本站：没有从服务端获取到数据，检查本地环境是否支持远程下载功能');

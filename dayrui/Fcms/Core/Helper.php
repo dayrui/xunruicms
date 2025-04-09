@@ -364,7 +364,7 @@ function dr_is_admin_search_field($t) {
     if (!$t['ismain']) {
         return 0;
     } elseif (in_array($t['fieldtype'], [
-        'Uid', 'Text', 'Textarea', 'Textbtn',
+        'Uid', 'Text', 'Textarea', 'Textbtn', 'Textselect',
         'Ueditor', 'Select', 'Radio', 'Checkbox', 'Selects', 'Editor',
         'Linkage', 'Linkages'
     ])) {

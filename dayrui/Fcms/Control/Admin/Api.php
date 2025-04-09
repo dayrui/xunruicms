@@ -900,7 +900,8 @@ class Api extends \Phpcmf\Common {
 
         $code = dr_catcher_data($url, 5);
         if ($code != 'phpcmf ok') {
-            $this->_json(0, '['.$v.']域名绑定异常，无法访问：' . $url . '，可以尝试手动访问此地址，如果提示phpcmf ok就表示成功');
+            ;
+            $this->_json(0, dr_lang('[%s]域名绑定异常，无法访问：%s，可以尝试手动访问此地址，如果提示phpcmf ok就表示成功', dr_lang($v), $url));
         }
 
         $this->_json(1, dr_lang('绑定正常'));
@@ -924,12 +925,12 @@ class Api extends \Phpcmf\Common {
 
         $url = dr_http_prefix($v) . '/api.php';
         if (strpos($v, ':') !== false) {
-            $this->_json(0, '可以尝试手动访问：' . $url . '，如果提示phpcmf ok就表示成功');
+            $this->_json(0, dr_lang('可以尝试手动访问：%s，如果提示phpcmf ok就表示成功', $url));
         }
 
         $code = dr_catcher_data($url, 5);
         if ($code != 'phpcmf ok') {
-            $this->_json(0, '['.$v.']域名绑定异常，无法访问：' . $url . '，可以尝试手动访问此地址，如果提示phpcmf ok就表示成功');
+            $this->_json(0, dr_lang('[%s]域名绑定异常，无法访问：%s，可以尝试手动访问此地址，如果提示phpcmf ok就表示成功', dr_lang($v), $url));
         }
 
         $this->_json(1, dr_lang('绑定正常'));
@@ -959,12 +960,12 @@ class Api extends \Phpcmf\Common {
 
         $url = SITE_URL.$v . '/api.php';
         if (strpos($v, ':') !== false) {
-            $this->_json(0, '可以尝试手动访问：' . $url . '，如果提示phpcmf ok就表示成功');
+            $this->_json(0, dr_lang('可以尝试手动访问：%s，如果提示phpcmf ok就表示成功', $url));
         }
 
         $code = dr_catcher_data($url, 5);
         if ($code != 'phpcmf ok') {
-            $this->_json(0, '['.$v.']目录绑定异常，无法访问：' . $url . '，可以尝试手动访问此地址，如果提示phpcmf ok就表示成功');
+            $this->_json(0, dr_lang('[%s]目录绑定异常，无法访问：%s，可以尝试手动访问此地址，如果提示phpcmf ok就表示成功', $v, $url));
         }
 
         $this->_json(1, dr_lang('目录正常'));
