@@ -258,11 +258,6 @@ return [
                             'icon' => 'fa fa-refresh',
                             'uri' => 'cloud/update',
                         ],
-                        [
-                            'name' => '文件对比',
-                            'icon' => 'fa fa-code',
-                            'uri' => 'cloud/bf',
-                        ],
                     ]
                 ],
             ],
