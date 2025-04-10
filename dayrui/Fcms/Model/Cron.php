@@ -52,6 +52,17 @@ class Cron extends \Phpcmf\Model {
         $value = dr_string2array($cron['value']);
         switch ($cron['type']) {
 
+            case 'email':
+                // 邮件发送
+                list($error, $value) = \Phpcmf\Service::L('notice')->cron_email($value['config']['tomail'], $cron['site'], $value);
+
+                // 加入队列并执行
+                return $this->save_cron($cron, [
+                    'error' => $error,
+                    'value' => $value,
+                ]);
+                break;
+
             case 'notice':
                 // 通知消息
                 list($error, $value) = \Phpcmf\Service::L('notice')->cron_notice($cron['site'], $value);

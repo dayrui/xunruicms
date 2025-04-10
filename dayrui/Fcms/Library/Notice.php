@@ -29,6 +29,36 @@ class Notice {
     }
 
     /**
+     * 发送通知动作
+     *
+     * $type    通知类型
+     * $name    动作名称
+     * $data    传入参数
+     * $value   传入参数
+     */
+    public function send($type, $name, $data, $config, $is_send = 0) {
+
+        $data = $this->_get_data($data);
+
+        // 加入队列并执行
+        $rt = \Phpcmf\Service::M('cron')->add_cron(SITE_ID, $type, [
+            'name' => $name,
+            'data' => $data,
+            'config' => $config,
+        ]);
+        if (!$rt['code']) {
+            log_message('error', '通知任务注册失败：'.$rt['msg']);
+        }
+
+        // 立即发送
+        if ($is_send) {
+            \Phpcmf\Service::M('cron')->do_cron_id($rt['code']);
+        }
+
+        return;
+    }
+
+    /**
      * 发送通知动作（按用户设置）
      *
      * $name    动作名称
@@ -85,6 +115,22 @@ class Notice {
         }
 
         return $rt;
+    }
+
+    // 来至队列中执行
+    public function cron_email($email, $siteid, $value) {
+        
+        if (!$email) {
+            $debug = 'email参数为空，不能发送邮件';
+            $error = [
+                $debug
+            ];
+            CI_DEBUG && log_message('debug', '通知任务（'.$value['name'].'）邮件执行失败：'.$debug);
+        } else {
+            $error = $this->_send_email($email, $siteid, $value);
+        }
+
+        return [$error, $error ? $value : []];
     }
 
     // 来至队列中执行
@@ -215,41 +261,52 @@ class Notice {
                 $error[] = $debug = '用户【'.$member['username'].'】的email参数为空，不能发送邮件';
                 CI_DEBUG && log_message('debug', '通知任务（'.$value['name'].'）邮件执行失败：'.$debug);
             } else {
-                $title = '';
-                $content = [];
-                if (isset($value['config']['email']['tpl_content']) && ($value['config']['email']['tpl_content'])) {
-                    $content = $value['config']['email']['tpl_content'];
-                    if (!$content) {
-                        $error[] = $debug = '自定义通知内容参数tpl_content不存在';
-                        CI_DEBUG && log_message('debug', '通知任务（'.$value['name'].'）邮件执行失败：'.$debug);
-                    }
-                } else {
-                    $rt = $this->_get_tpl_content($siteid, $value['name'], 'email', $value['data']);
-                    if (!$rt['code']) {
-                        $error[] = $debug = $rt['msg'];
-                        CI_DEBUG && log_message('debug', '通知任务（'.$value['name'].'）邮件执行失败：'.$debug);
-                    } else {
-                        $content = $rt['msg'];
-                    }
-                }
-                if ($content) {
-                    if (preg_match('/<title>(.+)<\/title>/U', $content, $mt)) {
-                        $title = $mt[1];
-                        $content = str_replace($mt[0], '', $content);
-                    }
-                    $rt = \Phpcmf\Service::M('email')->site_name($siteid)->sendmail($email, $title ? $title : '通知', $content);
-                    if (!$rt['code']) {
-                        $error[] = $debug = '邮件发送失败：'.$rt['msg'];
-                        CI_DEBUG && log_message('debug', '通知任务（'.$value['name'].'）邮件执行失败：'.$debug);
-                    } else {
-                        // 成功
-                        unset($value['config']['email']);
-                    }
+                $err = $this->_send_email($email, $siteid, $value);
+                if ($err) {
+                    $error = dr_array2array($err, $error);
                 }
             }
         }
 
         return [$error, $error ? $value : []];
+    }
+
+    protected function _send_email($email, $siteid, $value) {
+
+        $title = '';
+        $error = [];
+        $content = [];
+        if (isset($value['config']['email']['tpl_content']) && ($value['config']['email']['tpl_content'])) {
+            $content = $value['config']['email']['tpl_content'];
+            if (!$content) {
+                $error[] = $debug = '自定义通知内容参数tpl_content不存在';
+                CI_DEBUG && log_message('debug', '通知任务（'.$value['name'].'）邮件执行失败：'.$debug);
+            }
+        } else {
+            $rt = $this->_get_tpl_content($siteid, $value['name'], 'email', $value['data']);
+            if (!$rt['code']) {
+                $error[] = $debug = $rt['msg'];
+                CI_DEBUG && log_message('debug', '通知任务（'.$value['name'].'）邮件执行失败：'.$debug);
+            } else {
+                $content = $rt['msg'];
+            }
+        }
+        if ($content) {
+            if (preg_match('/<title>(.+)<\/title>/U', $content, $mt)) {
+                $title = $mt[1];
+                $content = str_replace($mt[0], '', $content);
+            }
+            $rt = \Phpcmf\Service::M('email')->site_name($siteid)->sendmail($email, $title ? $title : '通知', $content);
+            if (!$rt['code']) {
+                $error[] = $debug = '邮件发送失败：'.$rt['msg'];
+                CI_DEBUG && log_message('debug', '通知任务（'.$value['name'].'）邮件执行失败：'.$debug);
+            } else {
+                // 成功
+                unset($value['config']['email']);
+            }
+        }
+
+        return $error;
     }
 
     // 获取通知模板内容
