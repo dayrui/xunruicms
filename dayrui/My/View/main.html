@@ -7,19 +7,9 @@
 {/if}
 
 {if IS_DEV && $admin.adminid==1 && !IS_OEM_CMS}
-    {if is_file(CMSPATH.'Config/vip.lock') && !is_file(WRITEPATH.'config/safe.php')}
     <div class="note note-danger">
-        {if !dr_is_app('safe')}
-        <p><a style="color: red" href="{dr_url('cloud/local')}">当前环境未能通过安全验证，请安装【系统安全加固】插件</a></p>
-        {else}
-        <p><a style="color: red" href="{dr_url('safe/home/index')}">当前环境未能通过安全验证，请按要求设置参数</a></p>
-        {/if}
+        <p><a style="color: red" href="javascript:dr_help(204);">{dr_lang('当前环境参数已经开启开发者模式，项目上线后建议关闭开发者模式')}</a></p>
     </div>
-    {elseif IS_DEV}
-    <div class="note note-danger">
-        <p><a style="color: red" href="javascript:dr_help(204);">当前环境参数已经开启开发者模式，项目上线后建议关闭开发者模式</a></p>
-    </div>
-    {/if}
 {/if}
 
 <div class="row">
@@ -39,27 +29,27 @@
                 <ul class="use-info">
                     {if IS_OEM_CMS}
                     <li>
-                        <span>系统版本</span>
+                        <span>{dr_lang('系统版本')}</span>
                         <a target="_blank" href="{$license.url}">{$cmf_version}</a>
                         <a id="dr_cmf_update" href="{dr_url('cloud/update')}" style="margin-left: 10px;display: none" class="badge badge-danger badge-roundless">  </a>
                     </li>
 
                     <li>
-                        <span>官方网站</span>
+                        <span>{dr_lang('官方网站')}</span>
                         <a target="_blank" href="{$license.url}" style="margin-right: 10px;">{$license.name}</a>
                     </li>
                     {else}
                     <li>
-                        <span>系统版本</span>
+                        <span>{dr_lang('系统版本')}</span>
                         <a target="_blank" href="https://www.xunruicms.com/version/">{$cmf_version}</a>
                         <a id="dr_cmf_update" href="{dr_url('cloud/update')}" style="margin-left: 10px;display: none" class="badge badge-danger badge-roundless">  </a>
                     </li>
                     <li style="overflow: initial;">
-                        <span>系统内核</span>
+                        <span>{dr_lang('系统内核')}</span>
                         <a href="https://www.xunruicms.com/frame/" target="_blank">{FRAME_NAME}（{FRAME_VERSION}）</a>
                         {if $frame}
                         <div class="btn-group">
-                            <a class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown" href="javascript:;"> 切换内核
+                            <a class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown" href="javascript:;"> {dr_lang('切换内核')}
                                 <i class="fa fa-angle-down"></i>
                             </a>
                             <ul class="dropdown-menu">
@@ -84,7 +74,7 @@
                     </li>
 
                     <li>
-                        <span>官方网站</span>
+                        <span>{dr_lang('官方网站')}</span>
                         <a target="_blank" href="https://www.xunruicms.com/" style="margin-right: 10px;">www.xunruicms.com</a>
                     </li>
                     {/if}

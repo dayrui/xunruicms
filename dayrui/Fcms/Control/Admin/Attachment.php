@@ -15,7 +15,7 @@ class Attachment extends \Phpcmf\Common {
 		parent::__construct();
         $this->type = [
             0 => [
-                'name' => '本地磁盘',
+                'name' => dr_lang('本地磁盘'),
             ],
         ];
         $this->path = FCPATH.'ThirdParty/Storage/';
