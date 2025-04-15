@@ -18,11 +18,9 @@ class Lang {
      * 加载自定义语言
      */
     public function __construct(...$params) {
-        $file = ROOTPATH.'api/language/'.SITE_LANGUAGE.'/lang.php';
-        if (is_file($file)) {
-            $this->lang = require $file;
-        } else {
-            $this->lang = [];
+        $this->lang = [];
+        if (is_file(COREPATH.'Config/Lang_'.SITE_LANGUAGE.'.php')) {
+            $this->lang = require COREPATH.'Config/Lang_'.SITE_LANGUAGE.'.php';
         }
         // 执行插件自己的语言文件
         $local = \Phpcmf\Service::Apps();
@@ -34,6 +32,15 @@ class Lang {
                     foreach ($_data as $key => $name) {
                         $this->lang[$key] = $name;
                     }
+                }
+            }
+        }
+        $file = ROOTPATH.'api/language/'.SITE_LANGUAGE.'/lang.php';
+        if (is_file($file)) {
+            $lang = require $file;
+            if ($lang) {
+                foreach ($lang as $key => $name) {
+                    $this->lang[$key] = $name;
                 }
             }
         }
