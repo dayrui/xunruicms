@@ -59,7 +59,7 @@ class App extends \Phpcmf\Model {
             // 表示module表已经操作，防止误安装
             $rs = file_put_contents($path.'install.lock', 'fix');
             if (!$rs) {
-                return dr_return_data(0, 'App/'.ucfirst($dir).'/程序目录无法写入');
+                return dr_return_data(0, 'App/'.ucfirst($dir).'/'. dr_lang('目录无法写入'));
             }
             return dr_return_data(0, dr_lang('此程序已经安装'));
         }
@@ -69,7 +69,7 @@ class App extends \Phpcmf\Model {
         // 写入锁定文件
         $rt = file_put_contents($path.'install.test', SYS_TIME);
         if (!$rt) {
-            return dr_return_data(0, 'App/'.ucfirst($dir).'/程序目录无法写入');
+            return dr_return_data(0, 'App/'.ucfirst($dir).'/'. dr_lang('目录无法写入'));
         }
 
         if (is_file($path.'install.lock')) {

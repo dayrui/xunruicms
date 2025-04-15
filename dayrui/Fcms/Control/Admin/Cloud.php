@@ -542,6 +542,8 @@ return [
         $data['phpcmf']['backup_tpl'] = $this->_is_backup_file(WRITEPATH.'backups/update/template/');
         $data['phpcmf']['backup_time'] = is_dir(WRITEPATH.'backups/update/cms/') ? dr_date(filemtime(WRITEPATH.'backups/update/cms/')) : '';
 
+        $data['module'] = [];
+
         $local = dr_dir_map(APPSPATH, 1);
         foreach ($local as $dir) {
             if (is_file(APPSPATH.$dir.'/Config/App.php')) {
@@ -567,6 +569,11 @@ return [
                 }
             }
         }
+
+        if (!dr_count($data['module'])) {
+            unset($data['module']);
+        }
+
 
         $menu = [
             '版本升级' => [\Phpcmf\Service::L('Router')->class.'/'.\Phpcmf\Service::L('Router')->method, 'fa fa-refresh'],
