@@ -50,7 +50,7 @@ class Api {
         }
 
         if (IS_POST) {
-            $name = dr_rp(strtolower((string)\Phpcmf\Service::L('input')->post('name')), '.php'. '');
+            $name = dr_rp(strtolower((string)\Phpcmf\Service::L('input')->post('name')), '.php', '');
             if (!$name) {
                 \Phpcmf\Service::C()->_json(0, dr_lang('附件名称不能为空'));
             }

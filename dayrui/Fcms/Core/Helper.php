@@ -533,7 +533,7 @@ function dr_is_module($dir, $siteid = SITE_ID) {
  * @param $t 替换后的值
  * @return 进行str_replace运算
  */
-function dr_rp($str, $o, $t) {
+function dr_rp($str, $o, $t = '') {
     return str_replace($o, $t, (string)$str);
 }
 
