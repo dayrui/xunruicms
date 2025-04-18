@@ -69,7 +69,7 @@ class Exceptions extends \CodeIgniter\Debug\Exceptions {
                 $trace = $exception->getTrace();
                 if ($trace) {
                     foreach ($trace as $t) {
-                        if (strpos($t['file'], FRAMEPATH) === false) {
+                        if ($t['file'] && strpos((string)$t['file'], FRAMEPATH) === false) {
                             $message.= '<br>'.$t['function'].'：'.$t['file'].'（'.$t['line'].'）';
                         }
                     }
@@ -113,6 +113,8 @@ class Exceptions extends \CodeIgniter\Debug\Exceptions {
             $message = '(null)';
         }
 
+        // 防止模板缓存一半不完整
+        dr_dir_delete(WRITEPATH.'template/');
 
         // 调试模式不屏蔽敏感信息
         if (CI_DEBUG) {
