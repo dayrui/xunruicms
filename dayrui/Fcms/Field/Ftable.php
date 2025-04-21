@@ -28,7 +28,8 @@ class Ftable extends \Phpcmf\Library\A_Field {
     public function option($option) {
 
         $html = '';
-        for ($i = 1; $i <= 30; $i++) {
+        $max = dr_count($option['field'])+5;
+        for ($i = 1; $i <= $max; $i++) {
             $html.= '<div class="form-group">
 				<label class="col-md-2 control-label">'.dr_lang('表格第%s列', $i).'</label>
 				<div class="col-md-9">
