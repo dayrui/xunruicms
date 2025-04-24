@@ -816,7 +816,7 @@ class Api extends \Phpcmf\Common {
             ]);
             $this->_json($rt['code'], $rt['msg']);
         } else {
-            $this->_json(0, dr_lang('你没有定义第三方短信接口: '. $method));
+            $this->_json(0, dr_lang('你没有定义短信接口'));
         }
     }
 
@@ -1227,7 +1227,7 @@ class Api extends \Phpcmf\Common {
 
     // 短信接口查询
     public function sms_info() {
-        exit($this->_api_sms_info());
+        $this->_json(0, '接口弃用');
     }
 
     // 版本检查

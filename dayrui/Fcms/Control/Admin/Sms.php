@@ -28,13 +28,6 @@ class Sms extends \Phpcmf\Common
 		if (IS_AJAX_POST) {
 
 			$data = \Phpcmf\Service::L('input')->post('data');
-			if ($data['note'] && strlen($data['note']) > 30) {
-			    $this->_json(0, dr_lang('短信签名超出了范围'));
-            }
-
-			if (isset($_POST['aa']) && $_POST['aa'] == 0) {
-				unset($data['third']);
-			}
 
 			$cache['SYS_CACHE_SMS'] = (int)\Phpcmf\Service::L('input')->post('SYS_CACHE_SMS');
             if (!\Phpcmf\Service::L('Config')->file($cfile, '缓存配置文件')->to_require_one($cache)) {
@@ -60,7 +53,7 @@ class Sms extends \Phpcmf\Common
 
 		$file = WRITEPATH.'config/sms.php';
 		if (!is_file($file)) {
-		    $this->_admin_msg(0, dr_lang('没有配置短信账号，不能使用发送功能'));
+		    $this->_admin_msg(0, dr_lang('没有配置短信参数，不能使用发送功能'));
         }
 		
 		if (IS_AJAX_POST) {
@@ -72,7 +65,7 @@ class Sms extends \Phpcmf\Common
                 $this->_json(0, dr_lang('手机号码不能为空'));
             }
 
-			$ok++;
+			$ok = 0;
 			$mobile = explode(',', trim(str_replace(',,', ',', str_replace(array(PHP_EOL, chr(13), chr(10)), ',', $data['mobiles'])), ','));
 			foreach ($mobile as $m) {
                 $rt = \Phpcmf\Service::M('member')->sendsms_text($m, $data['content']);

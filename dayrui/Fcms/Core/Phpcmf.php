@@ -1050,23 +1050,6 @@ abstract class Common extends \Frame\Controller {
         return $data;
     }
 
-    /**
-     * 官方短信接口查询
-     */
-    protected function _api_sms_info() {
-
-        $uid = (int)\Phpcmf\Service::L('input')->get('uid');
-        $key = dr_safe_replace(\Phpcmf\Service::L('input')->get('key'));
-        if (!$uid || !$key) {
-            $this->_json(0, dr_lang('uid或者key不能为空'));
-        }
-
-        $url = "https://www.xunruicms.com/index.php?s=vip&c=check&uid={$uid}&key={$key}";
-        $data = dr_catcher_data($url);
-
-        $this->_json(1, $data);
-    }
-
     // 版本检查
     protected function _api_version_cmf() {
 		

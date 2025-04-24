@@ -165,7 +165,7 @@ class Cache extends \Phpcmf\Model {
                     $_cache && $app_cache[$dir] = $_cache;
                 }
             }
-            dr_dir_delete(WRITEPATH.'data');
+            //dr_dir_delete(WRITEPATH.'data');
             foreach (['auth', 'email', 'member', 'attachment', 'system'] as $m) {
                 \Phpcmf\Service::M($m)->cache();
             }
