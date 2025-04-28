@@ -779,7 +779,7 @@ class Model {
             $arr = explode('|', $value);
             $where = [];
             foreach ($arr as $val) {
-                if (is_numeric($val)) {
+                if (dr_is_numeric($val)) {
                     $where[] = ' FIND_IN_SET ('.intval($value).',`'.$table.'`.`'.$name.'`)';
                 } else {
                     $where[] = ' FIND_IN_SET ("'.dr_safe_replace($value).'",`'.$table.'`.`'.$name.'`)';
@@ -806,7 +806,7 @@ class Model {
             }
             $where = [];
             foreach ($arr as $val) {
-                if (is_numeric($val)) {
+                if (dr_is_numeric($val)) {
                     $where[] = '`'.$table.'`.`'.$name.'`='.$val;
                 } else {
                     $where[] = '`'.$table.'`.`'.$name.'`=\''.dr_safe_replace($val, ['\\', '/']).'\'';
@@ -838,7 +838,7 @@ class Model {
                 }
                 return $wh ? ('('.implode(strpos($value,  '%%') !== false ? ' AND ' : ' OR ', $wh).')') : '';
             }
-        } elseif (is_numeric($value)) {
+        } elseif (dr_is_numeric($value)) {
             return '`'.$table.'`.`'.$name.'`='.$value;
         } else {
             return '`'.$table.'`.`'.$name.'`=\''.dr_safe_replace($value, ['\\', '/']).'\'';
@@ -872,7 +872,7 @@ class Model {
             }
         } elseif ($param['field'] == 'uid' || $field[$param['field']]['fieldtype'] == 'Uid') {
             // 数字查询作为账号id
-            $uid = is_numeric($param['keyword']) ? intval($param['keyword']) : 0;
+            $uid = dr_is_numeric($param['keyword']) ? intval($param['keyword']) : 0;
             if ($uid && $this->db->table('member')->where('id', $uid)->countAllResults()) {
                 $select->where($table.'.`'.$param['field'].'` = '.intval($param['keyword']));
             } else {
@@ -1104,7 +1104,7 @@ class Model {
 
         if (is_array($name)) {
             foreach ($name as $f => $v) {
-                $this->param['where'][] = !is_numeric($f) ? [$f, $v] : $v;
+                $this->param['where'][] = !dr_is_numeric($f) ? [$f, $v] : $v;
             }
         } else {
             $this->param['where'][] = dr_strlen($value) ? [$name, $value] : $name;

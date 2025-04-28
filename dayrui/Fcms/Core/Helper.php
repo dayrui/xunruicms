@@ -2433,6 +2433,20 @@ function dr_randcode() {
 }
 
 /**
+ * 判断是否为数字类型
+ */
+function dr_is_numeric($num) {
+
+    if (is_numeric($num)) {
+        if (preg_match('/^[0-9]+$/', $num)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+/**
  * 删除目录及目录下面的所有文件
  *
  * @param    $dir        路径

@@ -1519,7 +1519,7 @@ class View {
                             $arr = explode('|', $t['value']);
                             foreach ($arr as $v) {
                                 if ($v) {
-                                    if (!is_numeric($v)) {
+                                    if (!dr_is_numeric($v)) {
                                         $v = "'".$v."'";
                                     }
                                     $vals[] = " FIND_IN_SET (".$v.", {$t['name']})";
@@ -1560,7 +1560,7 @@ class View {
                         $arr = explode(',', dr_safe_replace($t['value']));
                         $str = '';
                         foreach ($arr as $a) {
-                            if (!is_numeric($a)) {
+                            if (!dr_is_numeric($a)) {
                                 $str.= ',\''.$a.'\'';
                             } else {
                                 $str.= ','.$a;
@@ -1573,7 +1573,7 @@ class View {
                         $arr = explode(',', dr_safe_replace($t['value']));
                         $str = '';
                         foreach ($arr as $a) {
-                            if (!is_numeric($a)) {
+                            if (!dr_is_numeric($a)) {
                                 $str.= ',\''.$a.'\'';
                             } else {
                                 $str.= ','.$a;
@@ -1583,7 +1583,7 @@ class View {
                         break;
 
                     case 'NOT':
-                        $string.= $join.(is_numeric($t['value']) ? " {$t['name']} <> ".$t['value'] : " {$t['name']} <> \"".($t['value'] == "''" ? '' : dr_safe_replace($t['value']))."\"");
+                        $string.= $join.(dr_is_numeric($t['value']) ? " {$t['name']} <> ".$t['value'] : " {$t['name']} <> \"".($t['value'] == "''" ? '' : dr_safe_replace($t['value']))."\"");
                         break;
 
                     case 'BEWTEEN':
@@ -1769,7 +1769,7 @@ class View {
                         } elseif (!$t['name'] && $t['value']) {
                             $string.= $join.' '.$t['value'];
                         } else {
-                            $string.= $join.(is_numeric($t['value']) ? " {$t['name']} = ".$t['value'] : " {$t['name']} = \"".($t['value'] == "''" ? '' : dr_safe_replace($t['value']))."\"");
+                            $string.= $join.(dr_is_numeric($t['value']) ? " {$t['name']} = ".intval($t['value']) : " {$t['name']} = \"".($t['value'] == "''" ? '' : dr_safe_replace($t['value']))."\"");
                         }
                         break;
                 }
@@ -1904,7 +1904,7 @@ class View {
     // 获取分页页数
     private function _get_page_id($page) {
 
-        if (is_numeric($page)) {
+        if (dr_is_numeric($page)) {
             return max(1, (int)$_GET['page']);
         } else {
             return max(1, isset($_GET[$page]) ? (int)$_GET[$page] : 0);
