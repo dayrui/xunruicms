@@ -152,6 +152,12 @@ return [
                             'icon' => 'fa fa-cog',
                             'uri' => 'site_param/index',
                         ],
+                        [
+                            'name' => '图片设置',
+                            'icon' => 'fa fa-photo',
+                            'uri' => 'site_image/index',
+                            'displayorder' => 9
+                        ],
                     ]
                 ]
             ]

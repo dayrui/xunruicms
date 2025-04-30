@@ -1623,10 +1623,10 @@ class Image {
             $attach = \Phpcmf\Service::C()->get_attachment($img);
             if (!$attach) {
                 CI_DEBUG && log_message('debug', '图片[id#'.$img.']不存在，dr_thumb函数无法调用');
-                return ROOT_THEME_PATH.'assets/images/nopic.gif'.(CI_DEBUG ? '#图片[id#'.$img.']不存在，dr_thumb函数无法调用' : '');
+                return dr_nopic().(CI_DEBUG ? '#图片[id#'.$img.']不存在，dr_thumb函数无法调用' : '');
             } elseif (!in_array($attach['fileext'], ['png', 'jpeg', 'jpg', 'webp'])) {
                 CI_DEBUG && log_message('debug', '图片[id#'.$img.']扩展名不符合条件，dr_thumb函数无法调用');
-                return ROOT_THEME_PATH.'assets/images/nopic.gif'.(CI_DEBUG ? '#图片[id#'.$img.']扩展名不符合条件，dr_thumb函数无法调用，dr_thumb函数无法调用' : '');
+                return dr_nopic().(CI_DEBUG ? '#图片[id#'.$img.']扩展名不符合条件，dr_thumb函数无法调用，dr_thumb函数无法调用' : '');
             }
         } else {
             $attach = [
@@ -1684,7 +1684,7 @@ class Image {
         } elseif (!is_file($file)) {
             // 本地图片不存在
             CI_DEBUG && log_message('debug', '图片[id#'.$attach['id'].']的文件['.$attach['file'].']无法写入附件缓存目录，dr_thumb函数无法调用');
-            return ROOT_THEME_PATH.'assets/images/nopic.gif'.(CI_DEBUG ? '#文件['.$attach['file'].']无法写入附件缓存目录，dr_thumb函数无法调用' : '');
+            return dr_nopic().(CI_DEBUG ? '#文件['.$attach['file'].']无法写入附件缓存目录，dr_thumb函数无法调用' : '');
         }
 
         if ($width == 0 && $height == 0 && $water == 0) {

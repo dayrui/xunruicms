@@ -1767,5 +1767,7 @@ return [
     '联动菜单字段' => 'Linkage menu fields',
     '域名设置' => 'Domain Name Settings',
     '请切换到[主站点]操作' => 'Please switch to the [main site] operation',
+    '无图显示图片' => 'No image displayed',
+    '无图时显示的图片地址，默认是/static/assets/images/nopic.gif' => 'The image address displayed when there is no image, default is [/static/assets/images/nopic.gif]',
 
 ];

@@ -1359,13 +1359,22 @@ function dr_thumb_path($img = '') {
     }
 }
 
+// 无缩略图的地址
+function dr_nopic() {
+    $config = \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'image');
+    if (isset($config['nopic']) && $config['nopic']) {
+        return dr_url_rel($config['nopic']);
+    }
+    return dr_url_rel(ROOT_THEME_PATH.'assets/images/nopic.gif');
+}
+
 // 缩略图
 function dr_thumb($img, $width = 0, $height = 0, $water = 0, $mode = 'auto', $webimg = 0) {
 
     if (!$img) {
-        return dr_url_rel(ROOT_THEME_PATH.'assets/images/nopic.gif');
+        return dr_nopic();
     } elseif (is_array($img)) {
-        return IS_DEV ? '文件参数不能是数组' : dr_url_rel(ROOT_THEME_PATH.'assets/images/nopic.gif');
+        return IS_DEV ? '文件参数不能是数组' : dr_nopic();
     } elseif (!$width && !$height && !$water) {
         return dr_get_file($img).(IS_DEV ? '#没有设置高宽参数，将以原图输出' : '');
     } elseif (is_numeric($img) || $webimg) {
@@ -1399,7 +1408,7 @@ function dr_thumb($img, $width = 0, $height = 0, $water = 0, $mode = 'auto', $we
         $file.= '#图片不是数字id号，dr_thumb函数无法进行缩略图处理';
     }
 
-    return $file ? $file : dr_url_rel(ROOT_THEME_PATH.'assets/images/nopic.gif');
+    return $file ? $file : dr_nopic();
 }
 
 
