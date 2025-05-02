@@ -381,7 +381,8 @@
                     'ismember' => 1,
                     'fieldtype' => 'Text',
                     'fieldname' => 'id',
-                    'setting' => array()
+                    'setting' => array(),
+                    'displayorder' => 0
                 ),
                 'content' => array(
                     'name' => dr_lang('内容'),
@@ -389,7 +390,8 @@
                     'ismember' => 1,
                     'fieldtype' => 'Text',
                     'fieldname' => 'content',
-                    'setting' => array()
+                    'setting' => array(),
+                    'displayorder' => 0
                 ),
                 'title' => array(
                     'name' => dr_lang('主题'),
@@ -397,7 +399,8 @@
                     'ismember' => 1,
                     'fieldtype' => 'Text',
                     'fieldname' => 'title',
-                    'setting' => array()
+                    'setting' => array(),
+                    'displayorder' => 0
                 ),
                 'thumb' => array(
                     'name' => dr_lang('缩略图'),
@@ -411,7 +414,8 @@
                             'size' => 10,
                             'input' => 1,
                         )
-                    )
+                    ),
+                    'displayorder' => 0
                 ),
                 'catid' => array(
                     'name' => dr_lang('栏目'),
@@ -419,7 +423,8 @@
                     'ismember' => 1,
                     'fieldtype' => 'Text',
                     'fieldname' => 'catid',
-                    'setting' => array()
+                    'setting' => array(),
+                    'displayorder' => 0
                 ),
                 'uid' => array(
                     'name' => dr_lang('账号'),
@@ -434,7 +439,8 @@
                         'validate' => array(
                             'check' => '_check_member',
                         )
-                    )
+                    ),
+                    'displayorder' => 0
                 ),
                 'inputtime' => array(
                     'name' => dr_lang('录入时间'),
@@ -451,7 +457,8 @@
                         'validate' => array(
                             'required' => 1,
                         )
-                    )
+                    ),
+                    'displayorder' => 0
                 ),
                 'updatetime' => array(
                     'name' => dr_lang('更新时间'),
@@ -468,7 +475,8 @@
                         'validate' => array(
                             'required' => 1,
                         )
-                    )
+                    ),
+                    'displayorder' => 0
                 ),
                 'inputip' => array(
                     'name' => dr_lang('客户端IP'),
@@ -484,7 +492,8 @@
                             'func' => 'dr_show_ip',
                             'value' => \Phpcmf\Service::L('input')->ip_info()
                         )
-                    )
+                    ),
+                    'displayorder' => 0
                 ),
                 'displayorder' => array(
                     'name' => dr_lang('排列值'),
@@ -501,7 +510,8 @@
                             'show' => '1',
                             'value' => 0
                         )
-                    )
+                    ),
+                    'displayorder' => 0
                 ),
                 'hits' => array(
                     'name' => dr_lang('浏览数'),
@@ -518,7 +528,8 @@
                             'show' => '1',
                             'value' => 1
                         )
-                    )
+                    ),
+                    'displayorder' => 0
                 ),
                 'status' => array(
                     'name' => dr_lang('审核状态'),
@@ -531,7 +542,8 @@
                             'options' => dr_lang('待审核').'|0'.PHP_EOL.dr_lang('已通过').'|1'.PHP_EOL.dr_lang('未通过').'|2',
                             'value' => 1
                         )
-                    )
+                    ),
+                    'displayorder' => 0
                 ),
             ];
 
