@@ -54,6 +54,7 @@ class View {
     private $_page_used = 0; // 是否开启分页
 
     private $_list_tag = ''; // 循环体标签
+    private $_list_param = []; // 标签参数
     private $_list_where = []; // 循环体解析的条件数组
     private $_list_error = []; // 循环标签遇到的错误
     private $_is_list_search = 0; // 搜索标签
@@ -818,6 +819,7 @@ class View {
 
         $_params = trim($_params);
         $this->_list_tag = '{list '.$_params.'}';
+        $this->_list_param = [];
 
         // 过滤掉自定义where语句
         if (preg_match('/where=\'(.+)\'/sU', $_params, $match)) {
@@ -886,6 +888,7 @@ class View {
                 }
                 $param[$var] = $val; // 用于特殊action
             }
+            $this->_list_param[$var] = $val;
         }
 
         // return位置判断
@@ -2121,6 +2124,12 @@ class View {
                 'return_'.$this->_return_sql => $data,
             ];
         } else {
+            if ($data) {
+                $rt2 = \Phpcmf\Hooks::trigger_callback('view_return', $data, $this->_list_tag, $this->_list_param);
+                if ($rt2 && isset($rt2['code']) && $rt2['code']) {
+                    $data = $rt2['data'];
+                }
+            }
             if (CI_DEBUG) {
                 $debug.= '<p>总记录数：'.$total.'</p>';
                 if ($this->_page_used) {

@@ -55,8 +55,8 @@
             if (!$this->format) {
                 $this->format = '
 <div class="form-group" id="dr_row_{name}">
-    <label class="control-label col-md-2">{text}</label>
-    <div class="col-md-10">{value}</div>
+    <label class="control-label col-md-2" id="dr_row_name_{name}">{text}</label>
+    <div class="col-md-10" id="dr_row_input_{name}">{value}</div>
 </div>';
             }
 
