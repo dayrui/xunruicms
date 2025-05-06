@@ -9,11 +9,6 @@ class Site_param extends \Phpcmf\Common {
 
 	public function index() {
 
-        if (IS_USE_MODULE) {
-            dr_redirect(dr_url('module/site_param/index'));
-            exit;
-        }
-
         $logo = [
             'logo' => [
                 'ismain' => 1,

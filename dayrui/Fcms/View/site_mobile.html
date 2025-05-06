@@ -1,0 +1,182 @@
+{template "header.html"}
+
+<form action="" class="form-horizontal" method="post" name="myform" id="myform">
+    {$form}
+    <div class="myfbody">
+    <div class="portlet bordered light">
+        <div class="portlet-title tabbable-line">
+            <ul class="nav nav-tabs" style="float:left;">
+                <li class="{if $page==0}active{/if}">
+                    <a href="#tab_0" data-toggle="tab" onclick="$('#dr_page').val('0')"> <i class="fa fa-cog"></i> {dr_lang('网站设置')} </a>
+                </li>
+                <li class="">
+                    <a href="{dr_url("api/demo", ['name'=>'mobile'])}" target="_blank"> <i class="fa fa-mobile"></i> {dr_lang('预览网站')} </a>
+                </li>
+            </ul>
+        </div>
+        <div class="portlet-body">
+            <div class="tab-content">
+
+                <div class="tab-pane {if $page==0}active{/if}" id="tab_0">
+                    <div class="form-body">
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('访问模式')}</label>
+                            <div class="col-md-9">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" onclick="$('.dr_zsy').hide();$('.dr_mode_2').show();$('.dr_mode_0').hide();$('.dr_mode_1').hide()" name="data[mode]" value="-1" {if $data['mode']==-1}checked{/if} /> {dr_lang('关闭手机端（自适应模式）')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" onclick="$('.dr_zsy').show();$('.dr_mode_2').hide();$('.dr_mode_0').show();$('.dr_mode_1').hide()" name="data[mode]" value="0" {if empty($data['mode'])}checked{/if} /> {dr_lang('域名模式')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" onclick="$('.dr_zsy').show();$('.dr_mode_2').hide();$('.dr_mode_1').show();$('.dr_mode_0').hide()" name="data[mode]" value="1" {if $data['mode']==1}checked{/if} /> {dr_lang('目录模式')} <span></span></label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group dr_mode_2" style="{if $data['mode'] == -1}{else}display: none{/if}">
+                            <label class="col-md-2 control-label">{dr_lang('自动识别模板')}</label>
+                            <div class="col-md-9">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[auto2]" value="1" {if $data['auto']}checked{/if} /> {dr_lang('开启')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[auto2]" value="0" {if empty($data['auto'])}checked{/if} /> {dr_lang('关闭')} <span></span></label>
+                                </div>
+                                <span class="help-block">{dr_lang('手机设备访问时，自动识别mobile模板；关闭后始终采用PC模板')}</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group dr_mode_0" style="{if empty($data['mode'])}{else}display: none{/if}">
+                            <label class="col-md-2 control-label">{dr_lang('手机域名')}</label>
+                            <div class="col-md-9">
+
+                                <div class="input-group" style="width: 300px;">
+                                    <input type="text" id="dr_domain" type="text" name="data[domain]" value="{htmlspecialchars((string)$data['domain'])}" class="form-control input-large">
+                                    <span class="input-group-btn">
+                                        <a class="btn green" href="javascript:dr_test_domain('dr_domain');"><i class="fa fa-send"></i> {dr_lang('测试域名')}</a>
+                                    </span>
+                                </div>
+                                <span class="help-block">{dr_lang('格式：m.test.com，不能包含/符号')}</span>
+                                <div class="form-control-static" id="dr_domian_error" style="color: red;display: none"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group dr_mode_1" style="{if $data['mode'] == 1}{else}display: none{/if}">
+                            <label class="col-md-2 control-label">{dr_lang('手机目录')}</label>
+                            <div class="col-md-9">
+
+                                <div class="input-group" style="width:250px;">
+                                    <input type="text" id="dr_dirname" type="text" name="data[dirname]" value="{htmlspecialchars((string)$data['dirname'])}" class="form-control">
+                                    <span class="input-group-btn">
+                                        <a class="btn green" href="javascript:dr_test_dir('dr_dirname');"><i class="fa fa-send"></i> {dr_lang('生成目录')}</a>
+                                    </span>
+                                </div>
+                                <span class="help-block">{dr_lang('格式：mobile，不能包含/符号')}</span>
+                                <div class="form-control-static" id="dr_dir_error" style="color: red;display: none"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group dr_zsy" style="{if $data['mode']==-1}display:none{/if}">
+                            <label class="col-md-2 control-label">{dr_lang('自动识别')}</label>
+                            <div class="col-md-9">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[auto]" value="1" {if $data['auto']}checked{/if} /> {dr_lang('开启')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[auto]" value="0" {if empty($data['auto'])}checked{/if} /> {dr_lang('关闭')} <span></span></label>
+                                </div>
+                                <span class="help-block">{dr_lang('未绑定移动端域名时自动识别移动端终端模板；绑定移动端域名时自动跳转到移动端域名上')}</span>
+                                <span class="help-block">{dr_lang('当网站启用了CDN就不建议开启自动识别功能，会影响CDN的缓存加载，建议使用静态页面跳转的方式')}</span>
+                            </div>
+                        </div>
+                        <div class="form-group dr_zsy" style="{if $data['mode']==-1}display:none{/if}">
+                            <label class="col-md-2 control-label">{dr_lang('生成静态')}</label>
+                            <div class="col-md-9">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[tohtml]" value="1" {if $data['tohtml']}checked{/if} /> {dr_lang('开启')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[tohtml]" value="0" {if empty($data['tohtml'])}checked{/if} /> {dr_lang('关闭')} <span></span></label>
+                                </div>
+                                <span class="help-block">{dr_lang('当PC端执行生成静态栏目和内容的命令时，移动端也会生成相应的静态文件')}</span>
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                            <label class="col-md-2 control-label">{dr_lang('将平板端排除')}</label>
+                            <div class="col-md-9">
+                                <div class="mt-radio-inline">
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[not_pad]" value="1" {if $data['not_pad']}checked{/if} /> {dr_lang('开启')} <span></span></label>
+                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[not_pad]" value="0" {if empty($data['not_pad'])}checked{/if} /> {dr_lang('关闭')} <span></span></label>
+                                </div>
+                                <span class="help-block">{dr_lang('平板端访问时不会识别为移动端界面，平板将访问PC界面')}</span>
+                            </div>
+                        </div>
+                        <div class="form-group dr_zsy" style="{if $data['mode']==-1}display:none{/if}">
+                            <label class="col-md-2 control-label">{dr_lang('风格路径')}</label>
+                            <div class="col-md-9">
+                                <div class="form-control-static"><label>{MOBILE_THEME_PATH}</label></div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('模板路径')}</label>
+                            <div class="col-md-9">
+                                {if IS_DEV}
+                                <div class="form-control-static"><label>{TPLPATH}mobile/{SITE_TEMPLATE}/home/index.html</label></div>
+                                {else}
+                                <div class="form-control-static"><label>/{dr_lang('模板目录')}/mobile/{SITE_TEMPLATE}/home/index.html</label></div>
+                                {/if}
+                            </div>
+                        </div>
+                        {if !$is_tpl}
+                        <div class="form-group ">
+                            <label class="col-md-2 control-label">{dr_lang('模板提示')}</label>
+                            <div class="col-md-9">
+                                <div class="form-control-static" style="color:red"><label>{dr_lang('没有检测到你的手机端模板，将无法使用单独的手机界面')}</label></div>
+                            </div>
+                        </div>
+                        {/if}
+
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+    </div>
+    </div>
+    <div class="portlet-body form myfooter">
+        <div class="form-actions text-center">
+            <button type="button" onclick="dr_ajax_submit('{dr_now_url()}&page='+$('#dr_page').val(), 'myform', '2000')" class="btn blue"> <i class="fa fa-save"></i> {dr_lang('保存')}</button>
+        </div>
+    </div>
+</form>
+<script>
+    function dr_test_domain(id) {
+        $('#dr_domian_error').html('{dr_lang('正在测试中...')}');
+        $('#dr_domian_error').show();
+        $.ajax({type: "GET",dataType:"json", url: admin_file+"?c=api&m=test_mobile_domain&v="+encodeURIComponent($("#"+id).val()),
+            success: function(json) {
+                if (json.code) {
+                    dr_tips(json.code, json.msg);
+                    $('#dr_domian_error').hide();
+                } else {
+                    $('#dr_domian_error').html(json.msg);
+                }
+            },
+            error: function(HttpRequest, ajaxOptions, thrownError) {
+                dr_ajax_admin_alert_error(HttpRequest, ajaxOptions, thrownError)
+            }
+        });
+    }
+    function dr_test_dir(id) {
+        $('#dr_dir_error').html('{dr_lang('正在测试中...')}');
+        $('#dr_dir_error').show();
+        $.ajax({type: "GET",dataType:"json", url: admin_file+"?c=api&m=test_mobile_dir&v="+encodeURIComponent($("#"+id).val()),
+            success: function(json) {
+                if (json.code) {
+                    dr_tips(json.code, json.msg);
+                    $('#dr_dir_error').hide();
+                } else {
+                    $('#dr_dir_error').html(json.msg);
+                }
+            },
+            error: function(HttpRequest, ajaxOptions, thrownError) {
+                dr_ajax_admin_alert_error(HttpRequest, ajaxOptions, thrownError)
+            }
+        });
+    }
+</script>
+{template "footer.html"}

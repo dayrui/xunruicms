@@ -1,0 +1,56 @@
+{template "header.html"}
+<style>
+    body {
+        overflow: hidden
+    }
+</style>
+<form class="form-horizontal" method="post" role="form" id="myform">
+    {$form}
+    <div class="form-body">
+
+        {if $is_fclient}
+        {dr_lang('当前项目不能修改主域名，请到[%s]上修改主域名再进行数据通信操作', $fcname)}
+        {else}
+        <div class="form-group">
+            <div class="col-xs-12">
+                <div class="input-group" style="width: 100%">
+                    <input type="text" id="dr_domain" placeholder="{dr_lang('输入新域名')}" type="text" name="domain" class="form-control ">
+                    <span class="input-group-btn">
+                    <a class="btn green" href="javascript:dr_test_domain_dir('dr_domain');"><i class="fa fa-send"></i> {dr_lang('测试')}</a>
+                    </span>
+                </div>
+                <div class="form-control-static" id="dr_domian_error" style="color: red;display: none"></div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-xs-12">
+                <p class="form-control-static"> {dr_lang('例如：www.test.com，不能包含/符号')} </p>
+                <p class="form-control-static"> {dr_lang('域名变更需要提前把新域名绑定到本项目')} </p>
+            </div>
+        </div>
+        {/if}
+
+    </div>
+</form>
+
+<script>
+    function dr_test_domain_dir(id) {
+        $('#dr_domian_error').html('{dr_lang('正在测试中...')}');
+        $('#dr_domian_error').show();
+        $.ajax({type: "GET",dataType:"json", url: admin_file+"?c=api&m=test_site_domain&v="+encodeURIComponent($("#"+id).val()),
+            success: function(json) {
+                if (json.code) {
+                    dr_tips(json.code, json.msg);
+                    $('#dr_domian_error').hide();
+                } else {
+                    $('#dr_domian_error').html(json.msg);
+                }
+            },
+            error: function(HttpRequest, ajaxOptions, thrownError) {
+                dr_ajax_admin_alert_error(HttpRequest, ajaxOptions, thrownError)
+            }
+        });
+    }
+</script>
+{template "footer.html"}

@@ -148,6 +148,21 @@ return [
                     'icon' => 'fa fa-cog',
                     'link' => [
                         [
+                            'name' => '项目设置',
+                            'icon' => 'fa fa-cog',
+                            'uri' => 'site_config/index',
+                        ],
+                        [
+                            'name' => '手机设置',
+                            'icon' => 'fa fa-mobile',
+                            'uri' => 'site_mobile/index',
+                        ],
+                        [
+                            'name' => '域名绑定',
+                            'icon' => 'fa fa-globe',
+                            'uri' => 'site_domain/index',
+                        ],
+                        [
                             'name' => '项目信息',
                             'icon' => 'fa fa-cog',
                             'uri' => 'site_param/index',
