@@ -433,52 +433,126 @@ class Api {
 
         if (IS_AJAX_POST) {
             $p = (int)\Phpcmf\Service::L('input')->post('is_page');
-            $ids = \Phpcmf\Service::L('input')->get_post_ids($p ? 'ids'.$p : 'ids0');
-            if (!$ids) {
-                \Phpcmf\Service::C()->_json(0, dr_lang('没有选择文件'));
-            } elseif (dr_count($ids) > $ct - $c) {
-                \Phpcmf\Service::C()->_json(0, dr_lang('只能选择%s个文件，当前已选择%s个', $ct - $c, dr_count($ids)));
-            }
             $list = [];
-            if ($p == 2) {
-                // 文件模式
-                $ids = \Phpcmf\Service::L('input')->post('ids2');
-                foreach ($ids as $t) {
-                    $file = trim(str_replace('..', '', $t));
-                    $url = dr_get_file($file);
-                    $ext = trim(strtolower(strrchr($file, '.')), '.');
-                    $list[] = [
-                        'id' => $url,
-                        'name' => basename($t),
-                        'file' => $url,
-                        'url' => $url,
-                        'exturl' => is_file(ROOTPATH.'static/assets/images/ext/'.$ext.'.png') ? ROOT_THEME_PATH.'assets/images/ext/'.$ext.'.png' : '',
-                        'preview' => dr_file_preview_html($file, 0),
-                        'upload' => '<input type="file" name="file_data"></button>',
-                    ];
+            if ($p == 3) {
+                $post = \Phpcmf\Service::L('input')->post('data');
+                if (empty($post['url'])) {
+                    \Phpcmf\Service::C()->_json(0, dr_lang('文件地址不能为空'));
                 }
-            } else {
-                // 归档附件
-                $db = \Phpcmf\Service::M()->table($p ? 'attachment_data' : 'attachment_unused');
-                !$is_admin && $db->where('uid', $this->uid);
-                $temp = $db->where_in('id', $ids)->getAll();
-                foreach ($temp as $t) {
-                    $url = dr_get_file($t['id']);
-                    if ($t['remote'])  {
-                        $remote = \Phpcmf\Service::C()->get_cache('attachment', $t['remote']);
-                        if ($remote && $remote['value']['image']) {
-                            $url.= $remote['value']['image'];
+                $post['url'] = trim($post['url']);
+                if ($post['down']) {
+                    if (strpos($post['url'], 'http') !== 0 ) {
+                        \Phpcmf\Service::C()->_json(0, dr_lang('下载文件地址必须是https或者http开头'));
+                    }
+                    // 获取扩展名
+                    $ext = str_replace('.', '', trim(strtolower(strrchr($post['url'], '.')), '.'));
+                    if (strlen($ext) > 6) {
+                        foreach (['jpg', 'jpeg', 'png', 'gif', 'webp'] as $i) {
+                            if (strpos($post['url'], $i) !== false) {
+                                $ext = $i;
+                                break;
+                            }
+                        }
+                        if (strlen($ext) > 6) {
+                            $ext2 = str_replace('#', '', trim(strtolower(strrchr($post['url'], '#')), '#'));
+                            if ($ext2) {
+                                $ext = $ext2;
+                                $post['url'] = substr($post['url'], 0, strlen($post['url'])-strlen($ext2)-1);
+                            }
+                        }
+                        if (strlen($ext) > 6 || !$ext) {
+                            \Phpcmf\Service::C()->_json(0, dr_lang('无法获取到文件扩展名，请在URL后方加入扩展名字符串，例如：#jpg'));
                         }
                     }
+                    // 验证上传权限
+                    $this->check_upload_auth();
+                    // 下载远程文件
+                    $rt = \Phpcmf\Service::L('upload')->down_file([
+                        'url' => $post['url'],
+                        'file_ext' => $ext,
+                        'attachment' => \Phpcmf\Service::M('Attachment')->get_attach_info((int)$p['attachment'], (int)$p['image_reduce']),
+                    ]);
+                    if (!$rt['code']) {
+                        exit(dr_array2string($rt));
+                    }
+
+                    // 附件归档
+                    $att = \Phpcmf\Service::M('Attachment')->save_data($rt['data']);
+                    if (!$att['code']) {
+                        exit(dr_array2string($att));
+                    }
+
                     $list[] = [
-                        'id' => $t['id'],
-                        'name' => $t['filename'],
-                        'file' => $t['attachment'],
-                        'url' => $url,
-                        'exturl' => is_file(ROOTPATH.'static/assets/images/ext/'.$t['fileext'].'.png') ? ROOT_THEME_PATH.'assets/images/ext/'.$t['fileext'].'.png' : '',
-                        'preview' => dr_file_preview_html(dr_get_file_url($t), $t['id']),
+                        'id' => $att['code'],
+                        'name' => $rt['data']['name'],
+                        'file' => $rt['data']['file'],
+                        'url' => $rt['data']['url'],
+                        'exturl' => is_file(ROOTPATH.'static/assets/images/ext/'.$rt['data']['ext'].'.png') ? ROOT_THEME_PATH.'assets/images/ext/'.$rt['data']['ext'].'.png' : '',
+                        'preview' => dr_file_preview_html($rt['data']['url'], $att['code']),
                         'upload' => '<input type="file" name="file_data"></button>',
                     ];
+                } else {
+                    $list[] = [
+                        'id' => $post['url'],
+                        'name' => $post['name'] ? htmlspecialchars($post['name']) : $post['url'],
+                        'file' => htmlspecialchars($post['url']),
+                        'preview' => dr_file_preview_html($post['url']),
+                        'upload' => '',
+                    ];
+                }
+                $data = [
+                    'count' => 1,
+                    'result' => $list,
+                ];
+                \Phpcmf\Service::C()->_json(1, dr_lang('已选择%s个文件', $data['count']), $data);
+                exit;
+            } else {
+                $ids = \Phpcmf\Service::L('input')->get_post_ids($p ? 'ids'.$p : 'ids0');
+                if (!$ids) {
+                    \Phpcmf\Service::C()->_json(0, dr_lang('没有选择文件'));
+                } elseif (dr_count($ids) > $ct - $c) {
+                    \Phpcmf\Service::C()->_json(0, dr_lang('只能选择%s个文件，当前已选择%s个', $ct - $c, dr_count($ids)));
+                }
+                if ($p == 2) {
+                    // 文件模式
+                    $ids = \Phpcmf\Service::L('input')->post('ids2');
+                    foreach ($ids as $t) {
+                        $file = trim(str_replace('..', '', $t));
+                        $url = dr_get_file($file);
+                        $ext = trim(strtolower(strrchr($file, '.')), '.');
+                        $list[] = [
+                            'id' => $url,
+                            'name' => basename($t),
+                            'file' => $url,
+                            'url' => $url,
+                            'exturl' => is_file(ROOTPATH.'static/assets/images/ext/'.$ext.'.png') ? ROOT_THEME_PATH.'assets/images/ext/'.$ext.'.png' : '',
+                            'preview' => dr_file_preview_html($file, 0),
+                            'upload' => '<input type="file" name="file_data"></button>',
+                        ];
+                    }
+                } else {
+                    // 归档附件
+                    $db = \Phpcmf\Service::M()->table($p ? 'attachment_data' : 'attachment_unused');
+                    !$is_admin && $db->where('uid', $this->uid);
+                    $temp = $db->where_in('id', $ids)->getAll();
+                    foreach ($temp as $t) {
+                        $url = dr_get_file($t['id']);
+                        if ($t['remote'])  {
+                            $remote = \Phpcmf\Service::C()->get_cache('attachment', $t['remote']);
+                            if ($remote && $remote['value']['image']) {
+                                $url.= $remote['value']['image'];
+                            }
+                        }
+                        $list[] = [
+                            'id' => $t['id'],
+                            'name' => $t['filename'],
+                            'file' => $t['attachment'],
+                            'url' => $url,
+                            'exturl' => is_file(ROOTPATH.'static/assets/images/ext/'.$t['fileext'].'.png') ? ROOT_THEME_PATH.'assets/images/ext/'.$t['fileext'].'.png' : '',
+                            'preview' => dr_file_preview_html(dr_get_file_url($t), $t['id']),
+                            'upload' => '<input type="file" name="file_data"></button>',
+                        ];
+                    }
                 }
             }
 
@@ -526,7 +600,7 @@ class Api {
             .'&ct='.$ct
             .'&p='.\Phpcmf\Service::L('input')->get('p');
         $pp = intval($_GET['pp']);
-        $pp = $unused ? $pp : ($pp == 2 ? 2 : 1);
+        $pp = $unused ? $pp : (in_array($pp, [2,3]) ? $pp : 1);
 
         $listurl = dr_web_prefix('index.php?is_iframe=1&s=api&c=file&m=file_list')
             .'&fid='.\Phpcmf\Service::L('input')->get('fid')

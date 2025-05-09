@@ -186,6 +186,8 @@ class Ftable extends \Phpcmf\Library\A_Field {
                     } elseif (is_file(ROOTPATH.'static/assets/images/ext/'.$file['fileext'].'.png')) {
                         $preview = ROOT_THEME_PATH.'assets/images/ext/'.$file['fileext'].'.png';
                     }
+                } elseif (dr_is_image($value[$hang][$lie])) {
+                    $preview = $link = $value[$hang][$lie];
                 }
             }
             if ($config['option'] && strpos((string)$config['option'], '-') !== false) {

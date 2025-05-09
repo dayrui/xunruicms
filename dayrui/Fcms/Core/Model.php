@@ -964,7 +964,7 @@ class Model {
                 }
             }
             // 栏目查询
-            if (isset($param['catid']) && $param['catid']) {
+            if (isset($param['catid']) && $param['catid'] && function_exists('dr_cat_value')) {
                 $mid = defined('MOD_DIR') ? MOD_DIR : (APP_DIR ? APP_DIR : 'share');
                 $cat = dr_cat_value($mid, $param['catid']);
                 $cat && $cat['child'] ? $select->whereIn('catid', explode(',', $cat['childids'])) : $select->where('catid', (int)$param['catid']);
