@@ -494,6 +494,7 @@ class Api {
                 } else {
                     $list[] = [
                         'id' => $post['url'],
+                        'url' => $post['url'],
                         'name' => $post['name'] ? htmlspecialchars($post['name']) : $post['url'],
                         'file' => htmlspecialchars($post['url']),
                         'preview' => dr_file_preview_html($post['url']),
