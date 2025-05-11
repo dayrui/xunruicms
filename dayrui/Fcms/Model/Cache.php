@@ -226,6 +226,20 @@ class Cache extends \Phpcmf\Model {
                     $_cache && $app_cache[$dir] = $_cache;
                 }
             }
+            // 插件缓存
+            $apps = [];
+            if ($app_cache) {
+                foreach ($app_cache as $namespace => $c) {
+                    \Phpcmf\Service::C()->init_file($namespace);
+                    foreach ($c as $i => $apt) {
+                        $class = is_numeric($i) ? $apt : $i;
+                        $apps[] = '['.$namespace.'-'.$class.']';
+                        \Phpcmf\Service::M($class, $namespace)->cache(1);
+                    }
+                }
+            }
+            // 记录日志
+            CI_DEBUG && \Phpcmf\Service::L('input')->system_log('更新缓存：'.implode(' - ', $apps));
 
             \Phpcmf\Service::M('table')->cache(1, []);
             \Phpcmf\Service::M('menu')->cache();
