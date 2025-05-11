@@ -58,6 +58,16 @@ define('IS_AJAX_POST', IS_POST);
 // 当前系统时间戳
 define('SYS_TIME', $_SERVER['REQUEST_TIME'] ? $_SERVER['REQUEST_TIME'] : time());
 
+// 自定义函数库
+if (is_file(WEBPATH.'config/custom.php')) {
+    require WEBPATH.'config/custom.php';
+} elseif (is_file(CONFIGPATH.'custom.php')) {
+    require CONFIGPATH.'custom.php';
+}
+if (is_file(MYPATH.'Helper.php')) {
+    require MYPATH.'Helper.php';
+}
+
 // 系统变量
 $system = [
     'SYS_DEBUG' => 0,
@@ -458,6 +468,11 @@ define('IS_USE_MEMBER',  is_file(dr_get_app_dir('member').'/install.lock') ? dr_
 // 是否使用建站系统
 define('IS_USE_MODULE',  is_file(dr_get_app_dir('module').'/install.lock') ? dr_get_app_dir('module') : '');
 
+// 自定义入口执行
+if (function_exists('cms_init')) {
+    cms_init();
+}
+
 // 判断s参数,“应用程序”文件夹目录
 if (!IS_API && isset($_GET['s']) && preg_match('/^[a-z_]+$/i', $_GET['s'])) {
     // 判断会员模块,排除后台调用
@@ -496,23 +511,8 @@ if (!IS_API && isset($_GET['s']) && preg_match('/^[a-z_]+$/i', $_GET['s'])) {
 // 是否前端
 define('IS_HOME', !IS_ADMIN && !IS_MEMBER);
 
-// 自定义函数库
-if (is_file(WEBPATH.'config/custom.php')) {
-    require WEBPATH.'config/custom.php';
-} elseif (is_file(CONFIGPATH.'custom.php')) {
-    require CONFIGPATH.'custom.php';
-}
-if (is_file(MYPATH.'Helper.php')) {
-    require MYPATH.'Helper.php';
-}
-
 // 系统函数库
 require CMSPATH.'Core/Helper.php';
-
-// 自定义入口执行
-if (function_exists('cms_init')) {
-    cms_init();
-}
 
 // 进入系统框架加载
 require FRAMEPATH.'Init.php';
