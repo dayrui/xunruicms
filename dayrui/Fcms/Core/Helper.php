@@ -3048,6 +3048,12 @@ function dr_strcut($string, $limit = '100', $dot = '...') {
         return '';
     }
 
+    // 钩子处理
+    $rs = \Phpcmf\Hooks::trigger_callback('strcut', $string, $limit, $dot);
+    if ($rs && isset($rs['code']) && $rs['code'] && $rs['msg']) {
+        return $rs['msg'];
+    }
+
     $a = 0;
     if ($limit && strpos((string)$limit, ',')) {
         list($a, $length) = explode(',', $limit);
