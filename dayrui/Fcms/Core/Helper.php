@@ -1379,25 +1379,24 @@ function dr_thumb($img, $width = 0, $height = 0, $water = 0, $mode = 'auto', $we
         return dr_get_file($img).(IS_DEV ? '#没有设置高宽参数，将以原图输出' : '');
     } elseif (is_numeric($img) || $webimg) {
 
-        list($cache_path, $cache_url, $ext, $path) = dr_thumb_path($img);
-
         // 强制缩略图水印
         if (defined('SITE_THUMB_WATERMARK') && SITE_THUMB_WATERMARK) {
             $water = 1;
         }
 
+        // 钩子处理
+        $rs = \Phpcmf\Hooks::trigger_callback('thumb', $img, $width, $height, $water, $mode, $webimg);
+        if ($rs && isset($rs['code']) && $rs['code'] && $rs['msg']) {
+            return $rs['msg'];
+        }
+
         if (!IS_DEV) {
             // 非开发者模式下读取缓存
+            list($cache_path, $cache_url, $ext, $path) = dr_thumb_path($img);
             $cache_file = $path.'/'.$width.'x'.$height.($water ? '_water' : '').'_'.$mode.'.'.($ext ? 'webp' : 'jpg');
             if (is_file($cache_path.$cache_file)) {
                 return dr_url_rel($cache_url.$cache_file);
             }
-        }
-
-        // 钩子处理
-        $rs = \Phpcmf\Hooks::trigger_callback('thumb_get', $cache_path, $cache_file);
-        if ($rs && isset($rs['code']) && $rs['code'] && $rs['msg']) {
-            return $rs['msg'];
         }
 
         return dr_url_rel(\Phpcmf\Service::L('image')->thumb($img, $width, $height, $water, $mode, $webimg));
@@ -2447,6 +2446,10 @@ function dr_randcode() {
 function dr_is_numeric($num) {
 
     if (is_numeric($num)) {
+        if (substr($num, 0, 1) == 0) {
+            // 0开头的不作为数字类处理
+            return false;
+        }
         if (preg_match('/^[0-9]+$/', $num)) {
             return true;
         }
