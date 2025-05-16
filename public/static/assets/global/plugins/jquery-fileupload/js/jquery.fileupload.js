@@ -89,7 +89,7 @@
         options: {
             // The drop target element(s), by the default the complete document.
             // Set to null to disable drag & drop support:
-            dropZone: $(document),
+            dropZone: $(this),
             // The paste target element(s), by the default undefined.
             // Set to a DOM node or jQuery object to enable file pasting:
             pasteZone: undefined,
