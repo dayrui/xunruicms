@@ -473,6 +473,23 @@ if (function_exists('cms_init')) {
     cms_init();
 }
 
+// 判断自定义首页入口
+if (defined('CMSURI')
+    && !CMSURI && !IS_ADMIN
+    && !IS_API && !isset($_GET['s'])
+    && is_file(WRITEPATH.'index.lock')
+) {
+    $index = file_get_contents(WRITEPATH.'index.lock');
+    if ($index) {
+        list($a, $b, $c) = explode('/', trim($index));
+        if ($a && dr_is_app_dir($a) && $b && $c) {
+            $_GET['s'] = $a;
+            $_GET['c'] = trim($b);
+            $_GET['m'] = trim($c);
+        }
+    }
+}
+
 // 判断s参数,“应用程序”文件夹目录
 if (!IS_API && isset($_GET['s']) && preg_match('/^[a-z_]+$/i', $_GET['s'])) {
     // 判断会员模块,排除后台调用
