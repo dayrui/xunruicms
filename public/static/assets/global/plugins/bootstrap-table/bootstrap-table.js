@@ -7620,6 +7620,28 @@ function dr_table_option(url, msg) {
             });
         });
 }
+
+function dr_table_iframe(url, msg, is_post) {
+    var rows = $("#mytable").bootstrapTable('getSelections');// 获得要删除的数据
+    if (rows.length > 0) {
+        var data = '';
+        $(rows).each(function() {
+            data+= ','+this.id;
+        });
+    } else {
+        dr_tips(0, dr_lang('没有选择数据项'));
+        return;
+    }
+    dr_tips(1, data)
+    if (is_post) {
+        // 提交窗口
+        dr_iframe(msg, url+'&ids='+data);
+    } else {
+        // show窗口
+        dr_iframe_show(msg, url+'&ids='+data);
+    }
+
+}
 function dr_table_select_all(e) {
     if ($(e).is(':checked')) {
         $("#mytable").bootstrapTable('checkAll');
