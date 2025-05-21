@@ -98,6 +98,15 @@ $top = $menu_top;
                 {$mstring}
                 {/if}
 
+                {if dr_is_app('ai_helper')}
+                <li class="dropdown dropdown-extended">
+                    <a href="javascript:;" onclick="dr_iframe_show('{dr_lang('AI助手')}', '{dr_url('ai_helper/api/index')}')" class="dropdown-toggle">
+                        <div class="menu-top-icon"><i class="fa fa-adn"></i></div>
+                        <div class="top-txt-menu">{dr_lang('AI助手')}</div>
+                    </a>
+                </li>
+                {/if}
+
                 {if count($ci->site_info) > 1 && dr_is_app('sites')}
                 <li class="dropdown dropdown-extended dropdown-tasks">
                     <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
