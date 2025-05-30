@@ -19,8 +19,8 @@ class Lang {
      */
     public function __construct(...$params) {
         $this->lang = [];
-        if (is_file(COREPATH.'Config/Lang_'.SITE_LANGUAGE.'.php')) {
-            $this->lang = require COREPATH.'Config/Lang_'.SITE_LANGUAGE.'.php';
+        if (is_file(MYPATH.'Config/Lang_'.SITE_LANGUAGE.'.php')) {
+            $this->lang = require MYPATH.'Config/Lang_'.SITE_LANGUAGE.'.php';
         }
         // 执行插件自己的语言文件
         $local = \Phpcmf\Service::Apps();

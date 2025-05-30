@@ -135,6 +135,7 @@ class Form {
         }
 
         $notfields = [];
+        $radio_link_required = [];
 
         // 自定义字段验证
         if ($fields) {
@@ -191,8 +192,16 @@ class Form {
                 if ($frt) {
                     return [[], ['name' => $name, 'error' => $frt]];
                 }
+                // Radio联动字段
+                if ($field['fieldtype'] == 'Radio'
+                    && isset($field['setting']['option']['is_field_ld']) && $field['setting']['option']['is_field_ld']
+                    && isset($field['setting']['option']['field_ld'][$value])
+                    && isset($field['setting']['option']['field_ld'][$value]['hide'])
+                ) {
+                    $radio_link_required = array_merge($field['setting']['option']['field_ld'][$value]['hide'], $radio_link_required);
+                }
                 // 验证必填字段
-                if ($obj->is_validate && $validate['required']) {
+                if ($obj->is_validate && $validate['required'] && !dr_in_array($name, $radio_link_required)) {
                     if (IS_ADMIN && dr_in_array(1, \Phpcmf\Service::C()->admin['roleid'])) {
                         // 后台超管不验证必填
                     } else {

@@ -2,6 +2,7 @@
 
 /**
  * 英文语言包
+ * 本文件需要手动复制到dayrui/my/Config/Lang_en.php
  */
 
 return [
