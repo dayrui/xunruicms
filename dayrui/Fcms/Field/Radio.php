@@ -29,7 +29,8 @@ class Radio extends \Phpcmf\Library\A_Field {
                 continue;
             }
             $str.= '<label class="mt-checkbox mt-checkbox-outline">';
-            $str.= '<input type="checkbox" '.(dr_in_array($t['fieldname'], $option['field_ld'][$id][$at]) ? 'checked' : '').' name="data[setting][option][field_ld]['.$id.']['.$at.'][]" value="'.$t['fieldname'].'"> '.$t['name'].' ';
+            $str.= '<input type="checkbox" '.(dr_in_array($t['fieldname'], $option['field_ld'][$id][$at]) ? 'checked' : '').' name="data[setting][option][field_ld]['.$id.']['.$at.'][]" value="'.$t['fieldname'].'"> '
+                .($t['setting']['validate']['required'] ? '<b class="required" aria-required="true"> * </b>' : '').$t['name'].' ';
             $str.= '<span></span>';
             $str.= '</label>';
         }
@@ -48,18 +49,18 @@ class Radio extends \Phpcmf\Library\A_Field {
 
         $data = dr_format_option_array($option['options']);
         if (!$data) {
-            $ld = '需要保存字段配置后才能配置联动关系';
+            $ld = dr_lang('需要保存字段配置后才能配置联动关系');
         } else {
             $ld = '<div class="table-scrollable">';
             $ld.= '<table class="table table-striped table-bordered table-advance ">';
             $ld.= '<thead>';
             $ld.= '<tr>';
-            $ld.= '<th width="120">选项</th>';
-            $ld.= '<th>隐藏字段</th>';
+            $ld.= '<th width="120">'.dr_lang('选项').'</th>';
+            $ld.= '<th>'.dr_lang('隐藏字段').'</th>';
             $ld.= '</tr>';
             $ld.= '</thead>';
             $ld.= '<tbody>';
-            $data['dr_null'] = '未选择时';
+            $data['dr_null'] = dr_lang('未选择时');
             foreach ($data as $id => $name) {
                 $ld.= '<tr>';
                 $ld.= '<td>'.$name.'</td>';
