@@ -1420,14 +1420,14 @@ function dr_get_file($id, $full = 0) {
         return IS_DEV ? '文件参数没有值' : '';
     } elseif (is_array($id)) {
         return IS_DEV ? '文件参数不能是数组' : '';
-    }
-
-    if (is_numeric($id)) {
+    } elseif (is_numeric($id)) {
         // 表示附件id
         $info = \Phpcmf\Service::C()->get_attachment($id);
         if ($info['url']) {
             return $full ? $info['url'] : dr_url_rel($info['url']);
         }
+    } elseif (strpos($id, 'data:image/') === 0) {
+        return $id;
     }
 
     $file = dr_file($id, $full);
@@ -2041,11 +2041,7 @@ function dr_is_use_module() {
         return 0;
     }
 
-    if (is_file(IS_USE_MODULE.'/install.lock')) {
-        return IS_USE_MODULE;
-    }
-
-    return 0;
+    return IS_USE_MODULE;
 }
 
 /**

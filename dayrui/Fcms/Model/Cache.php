@@ -94,10 +94,12 @@ class Cache extends \Phpcmf\Model {
         \Phpcmf\Hooks::trigger('update_cache');
 
         if (!$this->is_sync_cache) {
+            $this->site_cache = $this->table('site')->where('disabled', 0)->getAll();
             if (dr_is_use_module()) {
-                $this->site_cache = $this->table('site')->where('disabled', 0)->getAll();
                 $this->module_cache = $this->table('module')->order_by('displayorder ASC,id ASC')->getAll();
                 \Phpcmf\Service::M('site', 'module')->cache(0, $this->site_cache, $this->module_cache);
+            } else {
+                \Phpcmf\Service::M('site')->cache(0, $this->site_cache);
             }
         }
 
@@ -166,7 +168,7 @@ class Cache extends \Phpcmf\Model {
                 }
             }
             //dr_dir_delete(WRITEPATH.'data');
-            foreach (['auth', 'email', 'member', 'attachment', 'system'] as $m) {
+            foreach (['auth', 'email', 'member', 'attachment', 'system', 'site'] as $m) {
                 \Phpcmf\Service::M($m)->cache();
             }
             // 自定义缓存
@@ -204,7 +206,7 @@ class Cache extends \Phpcmf\Model {
             }
         } else {
             // 全局缓存
-            foreach (['auth', 'email', 'member', 'attachment', 'system'] as $m) {
+            foreach (['auth', 'email', 'member', 'attachment', 'system', 'site'] as $m) {
                 \Phpcmf\Service::M($m)->cache();
             }
 
@@ -371,22 +373,30 @@ class Cache extends \Phpcmf\Model {
     }
 
     public function update_search_index() {
-        \Phpcmf\Service::M('site', 'module')->update_search_index();
+        if (IS_USE_MODULE) {
+            \Phpcmf\Service::M('site', 'module')->update_search_index();
+        }
     }
 
     // 重建子站配置文件
     public function update_site_config() {
-        \Phpcmf\Service::M('site', 'module')->update_site_config();
+        if (IS_USE_MODULE) {
+            \Phpcmf\Service::M('site', 'module')->update_site_config();
+        }
     }
 
     // 生成目录式手机目录
     public function update_mobile_webpath($path, $dirname) {
-        \Phpcmf\Service::M('site', 'module')->update_mobile_webpath($path, $dirname);
+        if (IS_USE_MODULE) {
+            \Phpcmf\Service::M('site', 'module')->update_mobile_webpath($path, $dirname);
+        }
     }
 
     // 更新项目
     public function update_webpath($name, $path, $value, $root = TEMPPATH) {
-        \Phpcmf\Service::M('site', 'module')->update_webpath($name, $path, $value, $root);
+        if (IS_USE_MODULE) {
+            \Phpcmf\Service::M('site', 'module')->update_webpath($name, $path, $value, $root);
+        }
     }
 
     // 错误输出
