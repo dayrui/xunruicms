@@ -283,7 +283,15 @@ class Hooks {
                     return $rt;
                 }
                 $msg = $rt['msg'];
-                $data = dr_array22array($data, $rt['data']);
+                if (is_array($rt['data'])) {
+                    if (is_array($data)) {
+                        $data = dr_array22array($data, $rt['data']);
+                    } else {
+                        $data = $rt['data'];
+                    }
+                } else {
+                    $data = $rt['data'];
+                }
                 if ($msg == 'merge') {
                     $arguments[0] = dr_array22array($arguments[0], $data);
                 }
