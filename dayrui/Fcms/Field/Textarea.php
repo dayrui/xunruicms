@@ -64,7 +64,7 @@ class Textarea extends \Phpcmf\Library\A_Field {
         <div class="portlet  bordered light">
         <div class="portlet-body">
         <div class="scroller" style="width:'.(\Phpcmf\Service::IS_MOBILE_USER() ? '100%' : ($field['setting']['option']['width'] ? ($field['setting']['option']['width'].(is_numeric($field['setting']['option']['width']) ? 'px' : '')) : '400px')).';height:'.($field['setting']['option']['height'] ? $field['setting']['option']['height'] : '100').'px" data-always-visible="1" data-rail-visible="1">
-        '.nl2br(htmlentities((string)$value)).'                
+        '.nl2br(htmlspecialchars_decode((string)$value)).'                
         </div>
         </div>
         </div>';
