@@ -774,13 +774,13 @@ function dr_lang(...$param) {
  * 获取终端列表
  * @return 获取终端列表
  */
-function dr_client_data() {
+function dr_client_data($siteid = SITE_ID) {
 
     $rt = [
         'pc' => 'PC端',
         'mobile' => '移动端',
     ];
-    $rt2 = \Phpcmf\Service::R(WRITEPATH.'config/app_client.php');
+    $rt2 = \Phpcmf\Service::R(WRITEPATH.'config/app_client_name_'.$siteid.'.php');
     if ($rt2) {
         $rt = $rt + $rt2;
     }

@@ -26,7 +26,7 @@ class Seo {
 
         if (IS_CLIENT) {
             // 终端模式下
-            $cdata = \Phpcmf\Service::R(WRITEPATH.'config/app_client_seo.php');
+            $cdata = \Phpcmf\Service::R(WRITEPATH.'config/app_client_seo_'.SITE_ID.'.php');
             if ($cdata && isset($cdata[IS_CLIENT]) && $cdata[IS_CLIENT]) {
                 $seo = [
                     'meta_title' => $cdata[IS_CLIENT]['SITE_TITLE'],
