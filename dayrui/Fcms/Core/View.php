@@ -926,9 +926,9 @@ class View {
         $this->_page_value = $system['page'];
 
         if (in_array(strtoupper($system['order']), ['RAND()', 'RAND'])) {
-            $cache_name = 'view-'.$this->_return_sql.md5($_params.dr_now_url().$this->_get_page_id($system['page']).$this->_is_mobile);
+            $cache_name = 'view-'.IS_CLIENT.'-'.$this->_return_sql.md5($_params.dr_now_url().$this->_get_page_id($system['page']).$this->_is_mobile);
         } else {
-            $cache_name = 'view-'.$this->_return_sql.($system['page'] ? $this->_get_page_id($system['page']) : 'one').md5($_params.$this->_is_mobile);
+            $cache_name = 'view-'.IS_CLIENT.'-'.$this->_return_sql.($system['page'] ? $this->_get_page_id($system['page']) : 'one').md5($_params.$this->_is_mobile);
         }
 
         if (!CI_DEBUG && SYS_CACHE && $system['cache']) {
