@@ -3020,12 +3020,12 @@ function dr_safe_replace_path($path) {
             MYPATH,
         ],
         [
-            'cache/',
+            '/cache/',
             '/',
-            'dayrui/App/',
-            'template/',
-            'dayrui/',
-            'dayrui/My/',
+            '/dayrui/App/',
+            '/template/',
+            '/dayrui/',
+            '/dayrui/My/',
         ],
         $path
     );
