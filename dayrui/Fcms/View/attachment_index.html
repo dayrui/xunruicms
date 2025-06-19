@@ -17,7 +17,7 @@
                 </li>
                 {if IS_USE_MODULE}
                 <li class="{if $page==1}active{/if}">
-                    <a href="#tab_1" data-toggle="tab" onclick="$('#dr_page').val('1')"> <i class="fa fa-photo"></i> {if IS_SITES}{dr_lang('[%s]缩略图', SITE_NAME)}{else}{dr_lang('缩略图')}{/if} </a>
+                    <a href="#tab_1" data-toggle="tab" onclick="$('#dr_page').val('1')"> <i class="fa fa-photo"></i> {if IS_SITES}{dr_lang('【%s】缩略图', SITE_NAME)}{else}{dr_lang('缩略图')}{/if} </a>
                 </li>
                 {/if}
             </ul>
@@ -147,7 +147,8 @@
                             <span class="help-block">{dr_lang('留空表示不要目录存储，可填参数格式：{y}表示年，{m}表示月，{d}表示日，/表示目录，不要填写其他特殊符号')}</span>
                         </div>
                     </div>
-                    <div class="form-group">
+
+                    <div class="form-group {if $data['SYS_ATTACHMENT_SAVE_ID']} hide{/if}">
                         <label class="col-md-2 control-label">{dr_lang('附件相对域名')}</label>
                         <div class="col-md-9">
                             <div class="mt-radio-inline">
@@ -157,7 +158,7 @@
                             <span class="help-block">{dr_lang('相对模式表示各个终端调用附件显示当前的域名地址，不显示主域名，需要开启服务器的目录映射到主站目录')}</span>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group {if $data['SYS_ATTACHMENT_SAVE_ID']} hide{/if}">
                         <label class="col-md-2 control-label">{dr_lang('附件上传目录')}</label>
                         <div class="col-md-9">
                             <div class="input-group input-xlarge">
@@ -169,7 +170,7 @@
                             <span class="help-block">{dr_lang('此目录必须有读写权限，绝对路径请以“/”开头')}</span>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group {if $data['SYS_ATTACHMENT_SAVE_ID']} hide{/if}">
                         <label class="col-md-2 control-label">{dr_lang('附件URL地址')}</label>
                         <div class="col-md-9">
                             <div class="input-group input-xlarge">
