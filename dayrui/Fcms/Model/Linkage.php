@@ -361,6 +361,9 @@ class Linkage extends \Phpcmf\Model {
     public function get_child_row($pid) {
         $newArr = [];
         foreach ($this->categorys as $cat) {
+            if ($cat['hidden']) {
+                continue;
+            }
             $item = [
                 'value' => $cat['id'],
                 'label' => $cat['name'],
