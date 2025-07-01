@@ -11,9 +11,11 @@ use Config\Services;
 
 define('SYSTEMPATH', BASEPATH);
 
-define('FRAME_PHP_VERSION', '7.4');  // PHP最低版本
-if (version_compare(PHP_VERSION, FRAME_PHP_VERSION) < 0) {
-    exit("<font color=red>CodeIgniter-PHP版本要求在".FRAME_PHP_VERSION."及以上，当前".PHP_VERSION."</font><hr>最低支持PHP7.2环境，需要在这里下载兼容包：https://www.xunruicms.com/doc/1166.html");
+// PHP版本检测
+$min = '7.4';
+$max = '8.4';
+if (version_compare(PHP_VERSION, $min) < 0 || version_compare(PHP_VERSION, $max) > 0) {
+    exit("<font color=red>CodeIgniter-PHP版本要求大于".$min.".0且小于".$max."，当前".PHP_VERSION."不满足运行环境</font>");
 }
 
 /*
