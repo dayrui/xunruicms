@@ -280,3 +280,11 @@
         width: 900px;
     }
 }
+.note-editable img,.note-editable video {
+    height: auto !important;
+    max-width: 100% !important;
+}
+.note-editable {
+    max-height: none !important;
+    overflow-y: visible !important;
+}
