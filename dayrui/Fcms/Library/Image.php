@@ -274,6 +274,7 @@ class Image {
 
     protected $image_info;
     protected $dest_image;
+    protected $tmp_avif;
 
 
     /**
@@ -663,6 +664,9 @@ class Image {
         // Kill the file handles
         imagedestroy($dst_img);
         imagedestroy($src_img);
+        if ($this->tmp_avif && is_file($this->tmp_avif)) {
+            unlink($this->tmp_avif);
+        }
         //chmod($this->full_dst_path, $this->file_permissions);
         return TRUE;
     }
@@ -836,6 +840,9 @@ class Image {
         // Kill the file handles
         imagedestroy($dst_img);
         imagedestroy($src_img);
+        if ($this->tmp_avif && is_file($this->tmp_avif)) {
+            unlink($this->tmp_avif);
+        }
         //chmod($this->full_dst_path, $this->file_permissions);
         return TRUE;
     }
@@ -900,6 +907,9 @@ class Image {
         }
         // Kill the file handles
         imagedestroy($src_img);
+        if ($this->tmp_avif && is_file($this->tmp_avif)) {
+            unlink($this->tmp_avif);
+        }
         //chmod($this->full_dst_path, $this->file_permissions);
         return TRUE;
     }
@@ -1069,6 +1079,9 @@ class Image {
         }
         imagedestroy($src_img);
         imagedestroy($wm_img);
+        if ($this->tmp_avif && is_file($this->tmp_avif)) {
+            unlink($this->tmp_avif);
+        }
         return TRUE;
     }
     // --------------------------------------------------------------------
@@ -1214,6 +1227,9 @@ class Image {
             $this->image_save_gd($src_img);
         }
         imagedestroy($src_img);
+        if ($this->tmp_avif && is_file($this->tmp_avif)) {
+            unlink($this->tmp_avif);
+        }
         return TRUE;
     }
     // --------------------------------------------------------------------
@@ -1227,15 +1243,35 @@ class Image {
      * @param	string
      * @return	resource
      */
-    public function image_create_gd($path = '', $image_type = '')
-    {
-        if ($path === '')
-        {
+    public function image_create_gd($path = '', $image_type = '') {
+
+        if ($path === '') {
             $path = $this->full_src_path;
         }
-        if ($image_type === '')
-        {
+        if ($image_type === '') {
             $image_type = $this->image_type;
+        }
+        $this->tmp_avif = '';
+        if (!$image_type && substr(strrchr($path, '.'), 1) == 'avif') {
+            if ( ! class_exists('Imagick'))
+            {
+                $this->set_error('Imagick扩展未安装');
+                return FALSE;
+            }
+            $imagick = new \Imagick();
+            $formats = $imagick->queryFormats();
+            if (!in_array('AVIF', $formats)) {
+                $this->set_error('Imagick扩展版本不支持AVIF');
+                return FALSE;
+            }
+            $imagick = new \Imagick($path);
+            $imagick->setImageFormat('png');
+            $imagick->writeImage($path.'.png');
+            $imagick->clear();
+            $imagick->destroy();
+            $path = $this->tmp_avif = $path.'.png';
+            $image_type = 3;
+            $this->get_image_properties($path);
         }
         switch ($image_type)
         {
@@ -1321,6 +1357,12 @@ class Image {
                     return FALSE;
                 }
                 break;
+            case 19:
+                if ( ! class_loaded('Imagick'))
+                {
+                    $this->set_error('Imagick扩展未安装');
+                    return FALSE;
+                }
             case 18:
                 if ( ! function_exists('imagewebp'))
                 {
@@ -1624,9 +1666,9 @@ class Image {
             if (!$attach) {
                 CI_DEBUG && log_message('debug', '图片[id#'.$img.']不存在，dr_thumb函数无法调用');
                 return dr_nopic().(CI_DEBUG ? '#图片[id#'.$img.']不存在，dr_thumb函数无法调用' : '');
-            } elseif (!in_array($attach['fileext'], ['png', 'jpeg', 'jpg', 'webp'])) {
-                CI_DEBUG && log_message('debug', '图片[id#'.$img.']扩展名不符合条件，dr_thumb函数无法调用');
-                return dr_nopic().(CI_DEBUG ? '#图片[id#'.$img.']扩展名不符合条件，dr_thumb函数无法调用，dr_thumb函数无法调用' : '');
+            } elseif (!in_array($attach['fileext'], ['png', 'jpeg', 'jpg', 'webp', 'avif'])) {
+                CI_DEBUG && log_message('debug', '图片[id#'.$img.']扩展名'.$attach['fileext'].'不符合条件，dr_thumb函数无法调用');
+                return dr_nopic().(CI_DEBUG ? '#图片[id#'.$img.']扩展名'.$attach['fileext'].'不符合条件，dr_thumb函数无法调用，dr_thumb函数无法调用' : '');
             }
         } else {
             $attach = [
@@ -1723,8 +1765,8 @@ class Image {
         }
 
         if (!is_file($cache_path.$cache_file)) {
-            CI_DEBUG && log_message('debug', '图片[id#'.$attach['id'].']的URL['.$attach['url'].']生成失败['.$cache_file.']原样输出');
-            return $attach['url'].(CI_DEBUG ? '#生成失败['.$cache_file.']原样输出' : ''); // 原样输出
+            CI_DEBUG && log_message('debug', '图片[id#'.$attach['id'].']的URL['.$attach['url'].']生成失败('.$this->error_msg.')['.$cache_file.']原样输出');
+            return $attach['url'].(CI_DEBUG ? '#生成失败['.$this->error_msg.']原样输出' : ''); // 原样输出
         }
 
         // 水印处理
@@ -1811,6 +1853,13 @@ class Image {
                     $source_image = imagecreatefromwebp($source_path);
                 }
                 break;
+            case 'image/avif':
+                if (!function_exists('imagecreatefromavif')) {
+                    $source_image = imagecreatefromjpeg($source_path);
+                } else {
+                    $source_image = imagecreatefromavif($source_path);
+                }
+                break;
             default:
                 return ;
                 break;
@@ -1864,6 +1913,10 @@ class Image {
         imagedestroy($source_image);
         imagedestroy($target_image);
         imagedestroy($cropped_image);
+
+        if ($this->tmp_avif && is_file($this->tmp_avif)) {
+            unlink($this->tmp_avif);
+        }
     }
 
     //..////..//////.....//////////.......///////////
@@ -1895,6 +1948,10 @@ class Image {
         list($width, $height) = $this->_fix_orientation($imgsrc, $width, $height);
         if ($type != 18 && strpos($imgsrc, '.webp')) {
             $type = 18;
+        }
+
+        if ($this->tmp_avif && is_file($this->tmp_avif)) {
+            unlink($this->tmp_avif);
         }
 
         if ($width > $cw) {
@@ -1945,6 +2002,7 @@ class Image {
                     imagewebp($image_wp, $imgsrc, 100);
                     imagedestroy($image_wp);
                     imagedestroy($image);
+                    break;
                     break;
             }
         } else {

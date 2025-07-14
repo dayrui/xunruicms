@@ -2181,7 +2181,7 @@ if (! function_exists('dr_is_image')) {
 
         return in_array(
             strpos($value, '.') !== false ? trim(strtolower(strrchr($value, '.')), '.') : $value,
-            ['jpg', 'gif', 'png', 'jpeg', 'webp']
+            ['jpg', 'gif', 'png', 'jpeg', 'webp', 'avif']
         );
     }
 }
