@@ -10125,6 +10125,27 @@ external_root_jQuery_commonjs2_jquery_commonjs_jquery_amd_jquery_default.a.summe
         });
         return button.render();
       }
+      ,qsvideo: function(context) {
+        var ui = $.summernote.ui;
+        // 创建自定义按钮
+        var button = ui.button({
+          contents: '<i class="bi bi-camera-video"></i>',
+          tooltip: dr_lang('快速视频上传'),
+          click: function () {
+            var $fileInput = $('<input type="file" accept="video/mp4" multiple style="display:none">');
+            $fileInput.appendTo('body');
+            $fileInput.trigger('click');
+            $fileInput.on('change', function() {
+              var files = this.files;
+              if (files.length > 0) {
+                summernote_uploadFiles(ui, files, context);
+              }
+              $fileInput.remove();
+            });
+          }
+        });
+        return button.render();
+      }
     },
     lang: 'en-US',
     followingToolbar: false,
@@ -10144,7 +10165,7 @@ external_root_jQuery_commonjs2_jquery_commonjs_jquery_amd_jquery_default.a.summe
       ['link', ['link']],
       ['attach', ['attach']],
       ['picture', ['qsimage', 'picture', 'help']],
-      ['video', ['video', 'llvideo']],
+      ['video', ['qsvideo', 'video', 'llvideo']],
       ['view', ['codeview'] ]
     ],
     // popover
@@ -10597,4 +10618,71 @@ function autoResizeSummernote() {
   var $editable = $('#dr_row_'+ui.options.field+' .note-editable');
   $editable.css('height', 'auto');
   $editable.css('height', $editable[0].scrollHeight + 'px');
+}
+
+
+// 上传函数，带进度条
+function summernote_uploadFiles(ui, files, context) {
+  // 支持多选，依次上传videoUrl
+  var idx = 0;
+  function uploadNext() {
+    if (idx >= files.length) {
+      dr_progress_end();
+      dr_tips(1, dr_lang('视频上传完成'));
+      return;
+    }
+    var file = files[idx];
+    var formData = new FormData();
+    formData.append('file_data', file);
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', ui.options.videoUrl, true);
+
+
+    if(idx === 0) {
+      var msg = dr_lang('正在上传视频：')+file.name;
+      dr_progress_start(msg);
+    }
+
+    xhr.upload.onprogress = function(e) {
+      if (e.lengthComputable) {
+        var percent = Math.round(e.loaded * 100 / e.total);
+        dr_progress('', percent);
+      }
+    };
+
+
+    xhr.onload = function() {
+      if (xhr.status === 200) {
+        try {
+          var resp = JSON.parse(xhr.responseText);
+          dr_progress_end();
+          if (resp.code) {
+            context.invoke('editor.pasteHTML',
+                '<p><br></p><video src="' + resp.info.url + '" controls style="width:100%;max-width:600px;" preload="metadata"></video><p><br></p>');
+          } else {
+            dr_tips(0, resp.msg);
+            return false;
+          }
+        } catch (e) {
+          dr_tips(0, dr_lang('上传失败，返回内容不是JSON'));
+          return false;
+        }
+        idx++;
+        uploadNext();
+      } else {
+        dr_tips(0, dr_lang('上传失败，状态码：') + xhr.status);
+        dr_progress_end();
+        return false;
+      }
+    };
+
+    xhr.onerror = function() {
+      dr_tips(0, dr_lang('上传出错'));
+      dr_progress_end();
+    };
+
+    xhr.send(formData);
+  }
+  uploadNext();
 }
