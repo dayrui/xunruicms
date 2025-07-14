@@ -30,6 +30,32 @@ class Editor extends \Phpcmf\Library\A_Field {
         if (!isset($option['attach_size']) || !$option['attach_size']) {
             $option['attach_size'] = 200;
         }
+        if (!isset($option['toolbar']) || !$option['toolbar']) {
+            $option['toolbar'] = "['style', ['style']],
+      ['font', ['bold', 'italic', 'underline', 'clear']],
+      ['fontname', ['fontsize']],
+      ['color', ['color']],
+      ['para', ['ul', 'ol', 'paragraph']],
+      ['table', ['table']],
+      ['link', ['link']],
+      ['attach', ['attach']],
+      ['picture', ['qsimage', 'picture', 'help']],
+      ['video', ['video', 'llvideo']],
+      ['view', ['codeview'] ]";
+        }
+        if (!isset($option['toolbar_home']) || !$option['toolbar_home']) {
+            $option['toolbar_home'] = "['style', ['style']],
+      ['font', ['bold', 'italic', 'underline', 'clear']],
+      ['fontname', ['fontsize']],
+      ['color', ['color']],
+      ['para', ['ul', 'ol', 'paragraph']],
+      ['table', ['table']],
+      ['link', ['link']],
+      ['attach', ['attach']],
+      ['picture', ['qsimage', 'picture', 'help']],
+      ['video', ['video', 'llvideo']],
+      ['view', ['codeview'] ]";
+        }
         if (!isset($option['attach_ext']) || !$option['attach_ext']) {
             $option['attach_ext'] = 'zip,rar,txt,doc';
         }
@@ -185,6 +211,21 @@ class Editor extends \Phpcmf\Library\A_Field {
                     <div class="col-md-9">
                         <label><input type="text" class="form-control" name="data[setting][option][video_size]" value="'.$option['video_size'].'"></label>
                         <span class="help-block">'.dr_lang('填写用于视频上传的最大允许上传的大小，单位MB').'</span>
+                    </div>
+                </div>
+                <hr>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">'.dr_lang('后台工具栏图标').'</label>
+                    <div class="col-md-9">
+					<textarea id="field_default_value" style="width: 90%;height: 100px;" class="form-control" name="data[setting][option][toolbar]">'.$option['toolbar'].'</textarea>
+					
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">'.dr_lang('前端工具栏图标').'</label>
+                    <div class="col-md-9">
+					<textarea id="field_default_value" style="width: 90%;height: 100px;" class="form-control" name="data[setting][option][toolbar_home]">'.$option['toolbar_home'].'</textarea>
+					
                     </div>
                 </div>
                 <hr>
@@ -433,7 +474,7 @@ class Editor extends \Phpcmf\Library\A_Field {
         $width = \Phpcmf\Service::IS_MOBILE_USER() ? '100%' : ($field['setting']['option']['width'] ? $field['setting']['option']['width'] : '100%');
 
         // 表单高度设置
-        $height = $field['setting']['option']['height'] ? $field['setting']['option']['height'] : '300';
+        $height = $field['setting']['option']['height'] ? $field['setting']['option']['height'] : '';
 
         // 字段提示信息
         $tips = $field['setting']['validate']['tips'] ? '<span class="help-block" id="dr_'.$name.'_tips">'.$field['setting']['validate']['tips'].'</span>' : '';
@@ -491,6 +532,17 @@ class Editor extends \Phpcmf\Library\A_Field {
         } else {
             $alt = '';
         }
+        $tool = '';
+        if (IS_ADMIN) {
+            if ($field['setting']['option']['toolbar']) {
+                $tool = $this->_toolbar($field['setting']['option']['toolbar']);
+            }
+        } else {
+            if ($field['setting']['option']['toolbar_home']) {
+                $tool = $this->_toolbar($field['setting']['option']['toolbar_home']);
+            }
+        }
+
         $wm = \Phpcmf\Service::C()->get_cache('site', SITE_ID, 'watermark', 'ueditor') || $field['setting']['option']['watermark'] ? 1 : 0;
         $str.= \Phpcmf\Service::L('js_packer')->pack("
         <script type=\"text/javascript\">
@@ -503,16 +555,19 @@ class Editor extends \Phpcmf\Library\A_Field {
             }
         }
             $(function(){
-            dr_is_auto_description_".$field['fieldname']."();
+                dr_is_auto_description_".$field['fieldname']."();
                 $('#dr_".$name."').summernote({
-                isMobileWidth: '".(\Phpcmf\Service::IS_MOBILE_USER() ? '95%' : '80%')."',
-                llVideoUrl: '".dr_web_prefix(''.(IS_ADMIN ? SELF.'?c=api' : 'index.php?s=api&c=file').'&m=input_file_list&is_iframe=1&p=' . $p)."',
-                llImageUrl: '".dr_web_prefix(''.(IS_ADMIN ? SELF.'?c=api' : 'index.php?s=api&c=file').'&m=input_file_list&is_iframe=1&p=' . $p2."&is_wm=".$wm)."',
-                attachUrl: '".dr_web_prefix(''.(IS_ADMIN ? SELF.'?c=api' : 'index.php?s=api&c=file').'&m=input_file_list&is_iframe=1&p=' . $p3)."',
-                isImageTitle:'".$title."',
-                isImageAlt:'".$alt."',
-                height:'".$height."',
-                width:'".$width."'});
+                    field: '".$field['fieldname']."',
+                    isMobileWidth: '".(\Phpcmf\Service::IS_MOBILE_USER() ? '95%' : '80%')."',
+                    llVideoUrl: '".dr_web_prefix(''.(IS_ADMIN ? SELF.'?c=api' : 'index.php?s=api&c=file').'&m=input_file_list&is_iframe=1&p=' . $p)."',
+                    llImageUrl: '".dr_web_prefix(''.(IS_ADMIN ? SELF.'?c=api' : 'index.php?s=api&c=file').'&m=input_file_list&is_iframe=1&p=' . $p2."&is_wm=".$wm)."',
+                    attachUrl: '".dr_web_prefix(''.(IS_ADMIN ? SELF.'?c=api' : 'index.php?s=api&c=file').'&m=input_file_list&is_iframe=1&p=' . $p3)."',
+                    isImageTitle:'".$title."',
+                    isImageAlt:'".$alt."',
+                    height:'".$height."',
+                    width:'".$width."'
+                    ".($tool)."
+                });
             });
             function dr_editor_down_img_".$field['fieldname']."(){
 var index = layer.load(2, {
@@ -625,5 +680,12 @@ $.ajax({
 
 
         return $this->input_format($name, $text, $str.$tips);
+    }
+
+    private function _toolbar($json) {
+        if (strpos($json, '"') !== false) {
+            return '';
+        }
+        return ',toolbar: ['.$json.']';
     }
 }
