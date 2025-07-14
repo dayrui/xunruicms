@@ -10075,7 +10075,57 @@ external_root_jQuery_commonjs2_jquery_commonjs_jquery_amd_jquery_default.a.summe
       'attachDialog':AttachDialog_AttachDialog, // 附件
       'airPopover': AirPopover_AirPopover
     },
-    buttons: {},
+    buttons: {
+      qsimage: function(context) {
+        var ui = $.summernote.ui;
+        // 创建自定义按钮
+        var button = ui.button({
+          contents: '<i class=\"bi bi-file-image\"></i>',
+          tooltip: dr_lang('快速上传图片'),
+          click: function () {
+            var _this = ui;
+            var $fileInput = $('<input type="file" accept="image/*" multiple style="display:none">');
+            $fileInput.appendTo('body');
+            $fileInput.trigger('click');
+            $fileInput.on('change', function() {
+              var files = this.files;
+              if (files.length > 0) {
+                for (var i = 0; i < files.length; i++) {
+                  (function(file){
+                    var reader = new FileReader();
+                    reader.onload = function(e) {
+                      // 直接插入 <img src="..."><br>
+                      var html = '<img src="' + e.target.result + '"';
+                      if (_this.options.isImageTitle == 'none') {
+                      } else if (_this.options.isImageTitle) {
+                        html+= ' title="'+_this.options.isImageTitle+'"';
+                      } else {
+                        if (file.name) {
+                          html+= ' title="'+file.name+'"';
+                        }
+                      }
+                      if (_this.options.isImageAlt == 'none') {
+                      } else if (_this.options.isImageAlt) {
+                        html+= ' alt="'+_this.options.isImageAlt+'"';
+                      } else {
+                        if (file.name) {
+                          html+= ' alt="'+file.name+'"';
+                        }
+                      }
+                      html+='>';
+                      context.invoke('editor.pasteHTML', '<p><br></p>'+html+'<p><br></p>');
+                    };
+                    reader.readAsDataURL(file);
+                  })(files[i]);
+                }
+              }
+              $fileInput.remove();
+            });
+          }
+        });
+        return button.render();
+      }
+    },
     lang: 'en-US',
     followingToolbar: false,
     toolbarPosition: 'top',
@@ -10093,7 +10143,7 @@ external_root_jQuery_commonjs2_jquery_commonjs_jquery_amd_jquery_default.a.summe
       ['table', ['table']],
       ['link', ['link']],
       ['attach', ['attach']],
-      ['picture', ['picture', 'help']],
+      ['picture', ['qsimage', 'picture', 'help']],
       ['video', ['video', 'llvideo']],
       ['view', ['codeview'] ]
     ],
@@ -10173,9 +10223,9 @@ external_root_jQuery_commonjs2_jquery_commonjs_jquery_amd_jquery_default.a.summe
       onImageLinkInsert: null,
       onImageUpload: null,
       onImageUploadError: null,
-      onInit: null,
+      onInit: autoResizeSummernote,
       onKeydown: null,
-      onKeyup: null,
+      onKeyup: autoResizeSummernote,
       onMousedown: null,
       onMouseup: null,
       onPaste: null,
@@ -10538,3 +10588,13 @@ external_root_jQuery_commonjs2_jquery_commonjs_jquery_amd_jquery_default.a.summe
 /******/ });
 });
 //# sourceMappingURL=summernote.js.map
+
+function autoResizeSummernote() {
+  var ui = $.summernote.ui;
+  if (ui.options.height) {
+    return;
+  }
+  var $editable = $('#dr_row_'+ui.options.field+' .note-editable');
+  $editable.css('height', 'auto');
+  $editable.css('height', $editable[0].scrollHeight + 'px');
+}
