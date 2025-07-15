@@ -562,6 +562,8 @@ class Editor extends \Phpcmf\Library\A_Field {
                     llVideoUrl: '".dr_web_prefix(''.(IS_ADMIN ? SELF.'?c=api' : 'index.php?s=api&c=file').'&m=input_file_list&is_iframe=1&p=' . $p)."',
                     llImageUrl: '".dr_web_prefix(''.(IS_ADMIN ? SELF.'?c=api' : 'index.php?s=api&c=file').'&m=input_file_list&is_iframe=1&p=' . $p2."&is_wm=".$wm)."',
                     attachUrl: '".dr_web_prefix(''.(IS_ADMIN ? SELF.'?c=api' : 'index.php?s=api&c=file').'&m=input_file_list&is_iframe=1&p=' . $p3)."',
+                    videoUrl: '".dr_web_prefix(''.(IS_ADMIN ? SELF.'?c=api' : 'index.php?s=api&c=file').'&m=upload&is_iframe=1&token='.dr_get_csrf_token().'&rid='.$this->rid.'&p=' . $p)."',
+                    videoLinkUrl: '".dr_web_prefix(''.(IS_ADMIN ? SELF.'?c=api' : 'index.php?s=api&c=file').'&m=video&is_iframe=1&token='.dr_get_csrf_token().'&rid='.$this->rid.'&p=' . $p)."',
                     isImageTitle:'".$title."',
                     isImageAlt:'".$alt."',
                     height:'".$height."',
@@ -674,9 +676,9 @@ $.ajax({
                   <a class="btn blue btn-xs" onclick="dr_editor_down_img_'.$field['fieldname'].'()"> '.dr_lang('一键下载远程图片').' </a>
                  </label>';
             }
-
             $str.= '</div>';
         }
+
 
 
         return $this->input_format($name, $text, $str.$tips);

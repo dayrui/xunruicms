@@ -1065,5 +1065,72 @@ class Api {
         \Phpcmf\Service::C()->_json(1, dr_web_prefix(''.(IS_ADMIN ? SELF.'?c=api' : 'index.php?s=api&c=file').'&m=down_img_list&vid='.$vid));
     }
 
+    /**
+     * 视频外链解析
+     */
+    public function video_link() {
+
+        // 验证上传权限
+        $this->check_upload_auth();
+
+        $url = XR_L('input')->post('url');
+        if (!$url) {
+            \Phpcmf\Service::C()->_json(0, dr_lang('视频地址不能为空'));
+        }
+
+        // 各平台正则
+        $ytRegExp = '/\/\/(?:(?:www|m)\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w|-]{11})(?:(?:[\?&]t=)(\S+))?$/';
+        $ytRegExpForStart = '/^(?:(\d+)h)?(?:(\d+)m)?(?:(\d+)s)?$/';
+        $igRegExp = '/(?:www\.|\/\/)instagram\.com\/p\/(.[a-zA-Z0-9_-]*)/';
+        $vRegExp = '/\/\/vine\.co\/v\/([a-zA-Z0-9]+)/';
+        $vimRegExp = '/\/\/(player\.)?vimeo\.com\/([a-z]*\/)*(\d+)[?]?.*/';
+        $dmRegExp = '/.+dailymotion.com\/(video|hub)\/([^_]+)[^#]*(#video=([^_&]+))?/';
+        $youkuRegExp = '/\/\/v\.youku\.com\/v_show\/id_(\w+)=*\.html/';
+        $qqRegExp = '/\/\/v\.qq\.com.*?vid=(.+)/';
+        $qqRegExp2 = '/\/\/v\.qq\.com\/x?\/?(page|cover).*?\/([^\/]+)\.html\??.*/';
+        $mp4RegExp = '/^.+\.(mp4|m4v)$/';
+        $oggRegExp = '/^.+\.(ogg|ogv)$/';
+        $webmRegExp = '/^.+\.(webm)$/';
+        $fbRegExp = '/(?:www\.|\/\/)facebook\.com\/([^\/]+)\/videos\/([0-9]+)/';
+
+        // 匹配
+        if (preg_match($ytRegExp, $url, $ytMatch) && strlen($ytMatch[1]) === 11) {
+            $youtubeId = $ytMatch[1];
+            $start = 0;
+            if (isset($ytMatch[2])) {
+                if (preg_match($ytRegExpForStart, $ytMatch[2], $ytMatchForStart)) {
+                    $n = [3600, 60, 1];
+                    for ($i = 0; $i < count($n); $i++) {
+                        $start += isset($ytMatchForStart[$i + 1]) ? $n[$i] * intval($ytMatchForStart[$i + 1]) : 0;
+                    }
+                }
+            }
+            $src = '//www.youtube.com/embed/' . $youtubeId . ($start > 0 ? '?start=' . $start : '');
+            $html = '<iframe frameborder="0" src="' . $src . '" width="640" height="360"></iframe>';
+        } elseif (preg_match($igRegExp, $url, $igMatch)) {
+            $html = '<iframe frameborder="0" src="https://instagram.com/p/' . $igMatch[1] . '/embed/" width="612" height="710" scrolling="no" allowtransparency="true"></iframe>';
+        } elseif (preg_match($vRegExp, $url, $vMatch)) {
+            $html = '<iframe frameborder="0" src="' . $vMatch[0] . '/embed/simple" width="600" height="600" class="vine-embed"></iframe>';
+        } elseif (preg_match($vimRegExp, $url, $vimMatch) && strlen($vimMatch[3])) {
+            $html = '<iframe webkitallowfullscreen mozallowfullscreen allowfullscreen frameborder="0" src="//player.vimeo.com/video/' . $vimMatch[3] . '" width="640" height="360"></iframe>';
+        } elseif (preg_match($dmRegExp, $url, $dmMatch) && strlen($dmMatch[2])) {
+            $html = '<iframe frameborder="0" src="//www.dailymotion.com/embed/video/' . $dmMatch[2] . '" width="640" height="360"></iframe>';
+        } elseif (preg_match($youkuRegExp, $url, $youkuMatch) && strlen($youkuMatch[1])) {
+            $html = '<iframe webkitallowfullscreen mozallowfullscreen allowfullscreen frameborder="0" height="498" width="510" src="//player.youku.com/embed/' . $youkuMatch[1] . '"></iframe>';
+        } elseif ((preg_match($qqRegExp, $url, $qqMatch) && strlen($qqMatch[1])) || (preg_match($qqRegExp2, $url, $qqMatch2) && strlen($qqMatch2[2]))) {
+            $vid = (isset($qqMatch[1]) && strlen($qqMatch[1])) ? $qqMatch[1] : $qqMatch2[2];
+            $html = '<iframe webkitallowfullscreen mozallowfullscreen allowfullscreen frameborder="0" height="310" width="500" src="https://v.qq.com/txp/iframe/player.html?vid=' . $vid . '&amp;auto=0"></iframe>';
+        } elseif (preg_match($mp4RegExp, $url) || preg_match($oggRegExp, $url) || preg_match($webmRegExp, $url)) {
+            $html = '<video controls src="' . htmlspecialchars($url) . '" width="640" height="360"></video>';
+        } elseif (preg_match($fbRegExp, $url, $fbMatch)) {
+            $html = '<iframe frameborder="0" src="https://www.facebook.com/plugins/video.php?href=' . urlencode($fbMatch[0]) . '&show_text=0&width=560" width="560" height="301" scrolling="no" allowtransparency="true"></iframe>';
+        } else {
+            // 未知视频链接
+            \Phpcmf\Service::C()->_json(0, dr_lang('视频地址系统目前不支持'));
+        }
+
+        \Phpcmf\Service::C()->_json(1, $html);
+    }
+
 
 }

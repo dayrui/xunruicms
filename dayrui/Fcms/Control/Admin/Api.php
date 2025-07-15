@@ -1434,4 +1434,11 @@ class Api extends \Phpcmf\Common {
     public function down_img() {
         \Phpcmf\Service::L('api')->down_img();
     }
+
+    /**
+     * 编辑器视频外链解析
+     */
+    public function video() {
+        \Phpcmf\Service::L('api')->video_link();
+    }
 }
