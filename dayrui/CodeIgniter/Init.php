@@ -18,6 +18,8 @@ if (version_compare(PHP_VERSION, $min) < 0 || version_compare(PHP_VERSION, $max)
     exit("<font color=red>CodeIgniter-PHP版本要求大于".$min.".0且小于".$max."，当前".PHP_VERSION."不满足运行环境</font>");
 }
 
+define('FRAME_PHP_VERSION', $min);  // PHP最低版本
+
 /*
  * 重写config函数，防止modules被加载
  */
