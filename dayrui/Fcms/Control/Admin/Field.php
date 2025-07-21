@@ -212,14 +212,26 @@ class Field extends \Phpcmf\Common {
                 $this->_json(0, dr_lang('字段（%s）名称不规范', $data['fieldname']));
             } elseif (strlen($data['fieldname']) > 30) {
                 $this->_json(0, dr_lang('字段（%s）名称太长', $data['fieldname']));
-            } elseif (\Phpcmf\Service::M('Field')->exitsts($data['fieldname'])) {
-                $this->_json(0, dr_lang('字段（%s）已经存在', $data['fieldname']));
             } else {
+                if (\Phpcmf\Service::M('Field')->exitsts($data['fieldname'])) {
+                    if (\Phpcmf\Service::M('Field')->table('field')
+                        ->where('relatedid', (int)$this->relatedid)
+                        ->where('relatedname', (string)$this->relatedname)
+                        ->where('fieldname', (string)$data['fieldname'])
+                        ->counts()) {
+                        $this->_json(0, dr_lang('字段（%s）已经存在', $data['fieldname']));
+                    } elseif (\Phpcmf\Service::M('Field')->is_sys_field($data['fieldname'])) {
+                        $this->_json(0, dr_lang('字段（%s）是系统保留字段，禁止创建', $data['fieldname']));
+                    }
+                    $is_create = 0;
+                } else {
+                    $is_create = 1;
+                }
                 $rt = $field->edit_config($data);
                 if (!$rt['code']) {
                     $this->_json(0, $rt['msg']);
                 }
-                $rt = \Phpcmf\Service::M('Field')->add($data, $field);
+                $rt = \Phpcmf\Service::M('Field')->add($data, $field, $is_create);
                 if (!$rt['code']) {
                     $this->_json(0, dr_lang($rt['msg']));
                 }

@@ -8,8 +8,8 @@
 // 表单验证类
 class Form {
 
-    public $mfields;
     public $fields;
+    public $mfields;
 
     protected $id = 0;
 

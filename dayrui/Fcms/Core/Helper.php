@@ -3953,8 +3953,7 @@ function dr_url_prefix($url, $domain = '', $siteid = SITE_ID, $is_mobile = '') {
         strlen($is_mobile) == 0 && $is_mobile = \Phpcmf\Service::IS_MOBILE();
 
         if (is_array($domain) && isset($domain['setting']['html_domain']) && $domain['setting']['html_domain']) {
-            $domain = $is_mobile && $domain['setting']['html_domain'] ? $domain['setting']['html_domain'] : $domain['setting']['html_domain'];
-            $domain = dr_http_prefix($domain);
+            $domain = dr_http_prefix($is_mobile && $domain['setting']['html_domain'] ? $domain['setting']['html_domain'] : $domain['setting']['html_domain']);
         }
 
         in_array($domain, ['MOD_DIR', 'share']) && $domain = '';
@@ -3963,7 +3962,9 @@ function dr_url_prefix($url, $domain = '', $siteid = SITE_ID, $is_mobile = '') {
         if ($domain && !dr_is_url($url)) {
             if (is_dir(dr_get_app_dir($domain))) {
                 $mod = \Phpcmf\Service::L('cache')->get('module-'.$siteid.'-'.$domain);
-                $domain = $mod && $mod['domain'] ? (\Phpcmf\Service::IS_MOBILE() && $mod['mobile_domain'] ? $mod['mobile_domain'] : $mod['domain']) : '';
+                if ($mod && $mod['domain']) {
+                    $domain = \Phpcmf\Service::IS_MOBILE() && $mod['mobile_domain'] ? $mod['mobile_domain'] : $mod['domain'];
+                }
             }
             // 域名是不是http开通
             if (!dr_is_url($domain)) {

@@ -17,6 +17,7 @@
         public $value; // 默认值
         public $fields; // 可用字段
         public $merge; // 可用merge字段
+        public $post_temp_data; // post临时储存数据，post后失效
 
         private $is_hide_merge_group = 0;
         private $app;
@@ -34,7 +35,29 @@
             return $this;
         }
 
-        // 格式化字段输入表单
+        /**
+         * 获取post临时数据
+         */
+        public function get_post_temp_data($name) {
+            if (!isset($this->post_temp_data[$name])) {
+                return [];
+            }
+            return $this->post_temp_data[$name];
+        }
+
+        /**
+         * 设置post临时数据
+         */
+        public function set_post_temp_data($name, $value) {
+            if (!isset($this->post_temp_data[$name])) {
+                $this->post_temp_data[$name] = [];
+            }
+            $this->post_temp_data[$name][] = $value;
+        }
+
+        /**
+         * 格式化字段输入表单
+         */
         public function get_field_format() {
 
             if ($this->format) {
@@ -85,6 +108,7 @@
             $mygroup = $mymerge = $merge = $group = [];
             $this->value = $data;
             $this->fields = $field;
+            $this->post_temp_data = [];
 
             if (!$this->is_hide_merge_group) {
                 // 分组字段筛选

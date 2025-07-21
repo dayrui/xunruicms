@@ -15,7 +15,9 @@ class Field extends \Phpcmf\Model {
 
     public $_table_field = [];
 
-    // 通过字段来查询表名称
+    /**
+     * 通过字段来查询表名称
+     **/
     public function get_table_name($siteid, $field) {
 
         $table = '';
@@ -145,7 +147,9 @@ class Field extends \Phpcmf\Model {
         return str_replace('{siteid}', $siteid, $table);
     }
 
-    // 全部字段
+    /**
+     * 全部字段
+     **/
     public function get_all_field() {
         
         if (!$this->relatedname) {
@@ -196,7 +200,9 @@ class Field extends \Phpcmf\Model {
         return $rt;
     }
 
-    // 获取任意表的自定义字段
+    /**
+     * 获取任意表的自定义字段
+     **/
     public function get_mytable_field($table, $siteid = 0) {
 
         $name = 'my-table-'.$table;
@@ -221,7 +227,9 @@ class Field extends \Phpcmf\Model {
         return $value;
     }
 
-    // 获取网站信息的自定义字段
+    /**
+     * 获取网站信息的自定义字段
+     **/
     public function get_mysite_field($siteid = SITE_ID) {
 
         $name = 'my-site-'.$siteid;
@@ -246,7 +254,9 @@ class Field extends \Phpcmf\Model {
         return $value;
     }
 
-    // 删除字段
+    /**
+     * 删除字段
+     **/
     public function delete_field($ids) {
 
         foreach ($ids as $id) {
@@ -281,7 +291,7 @@ class Field extends \Phpcmf\Model {
      * @param	object	$field
      * @return	void
      */
-    public function add($data, $field) {
+    public function add($data, $field, $is_create = 1) {
 
         // 验证字段上限
         /*
@@ -294,8 +304,12 @@ class Field extends \Phpcmf\Model {
             }
         }*/
 
-        // 先读取sql语句
-        $sql = $field->create_sql($data['fieldname'], $data['setting']['option'], dr_safe_filename($data['name']));
+        if ($is_create) {
+            // 先读取sql语句
+            $sql = $field->create_sql($data['fieldname'], $data['setting']['option'], dr_safe_filename($data['name']));
+        } else {
+            $sql = '';
+        }
 
         // 当为编辑器类型时，关闭xss过滤
         //$data['fieldtype'] == 'Ueditor' && $data['setting']['validate']['xss'] = 1;
@@ -398,6 +412,26 @@ class Field extends \Phpcmf\Model {
         }
 
         return $this->db->fieldExists($name, $table);
+    }
+
+    /**
+     * 是否是系统保留字段
+     */
+    public function is_sys_field($name) {
+
+        if (!$name)	{
+            return 1;
+        }
+
+        return in_array($name, [
+            'id',
+            'cat', 'category',
+            'top', 'content_page',
+            'pageid', 'params', 'page', 'pages',
+            'parent', 'urlrule', 'member',
+            'tags', 'tag', 'prev_page',
+            'next_page', 'fstatus', 'old', 'mid', 'groupid', 'related', 'kws', 'more'
+        ]);
     }
 
     //--------------------------------------------------------------------
