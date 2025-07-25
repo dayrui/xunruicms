@@ -455,7 +455,7 @@ function dr_iframe(type, url, width, height, rt) {
                                 error: function(){ }
                             });
                         }
-                        dr_cmf_tips(1, json.msg);
+                        dr_cmf_tips(json.code, json.msg);
                     } else {
                         $(body).find('#dr_row_'+json.data.field).addClass('has-error');
                         dr_cmf_tips(0, json.msg, json.data.time);
@@ -862,7 +862,7 @@ function dr_post_submit(url, form, time, go) {
                 $("#"+form+" input[name='"+token.name+"']").val(token.value);
             }
             if (json.code) {
-                dr_cmf_tips(1, json.msg, json.data.time);
+                dr_cmf_tips(json.code, json.msg, json.data.time);
                 if (json.data.htmlfile) {
                     // 执行生成htmljs
                     $.ajax({
