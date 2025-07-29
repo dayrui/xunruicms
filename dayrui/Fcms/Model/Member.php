@@ -591,10 +591,18 @@ class Member extends \Phpcmf\Model {
                     return $rt;
                 }
             }
-            if ($member['email'] && dr_in_array('email', \Phpcmf\Service::C()->member_cache['register']['field'])
+            $is_email_y = 1;
+            $is_phone_y = 1;
+            if (isset(\Phpcmf\Service::C()->member_cache['register']['field_y'])
+                && is_array(\Phpcmf\Service::C()->member_cache['register']['field_y'])) {
+                $is_email_y = in_array('email', \Phpcmf\Service::C()->member_cache['register']['field_y']);
+                $is_phone_y = in_array('phone', \Phpcmf\Service::C()->member_cache['register']['field_y']);
+            }
+            if ($is_email_y && $member['email'] && dr_in_array('email', \Phpcmf\Service::C()->member_cache['register']['field'])
                 && !\Phpcmf\Service::L('Form')->check_email($member['email'])) {
                 return dr_return_data(0, dr_lang('邮箱格式不正确'), ['field' => 'email']);
-            } elseif ($member['phone'] && dr_in_array('phone', \Phpcmf\Service::C()->member_cache['register']['field'])
+            }
+            if ($is_phone_y && $member['phone'] && dr_in_array('phone', \Phpcmf\Service::C()->member_cache['register']['field'])
                 && !\Phpcmf\Service::L('Form')->check_phone($member['phone'])) {
                 return dr_return_data(0, dr_lang('手机号码格式不正确'), ['field' => 'phone']);
             }
