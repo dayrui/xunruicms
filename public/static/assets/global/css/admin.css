@@ -13819,3 +13819,6 @@ td>.mt-table.mt-checkbox-single,th>.mt-table.mt-checkbox-single {
 .fixed-table-toolbar label .btn {
     margin-bottom: 4px;
 }
+.pagination .input-group {
+    width: 90px;
+}

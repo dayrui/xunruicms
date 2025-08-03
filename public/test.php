@@ -95,7 +95,7 @@ if (isset($_GET['log']) && $_GET['log']) {
     exit;
 }
 
-dr_echo_msg(1, '客户端字符串：'.$_SERVER['HTTP_USER_AGENT']);
+dr_echo_msg(1, '客户端字符串：'.htmlspecialchars($_SERVER['HTTP_USER_AGENT']));
 
 
 $url = 'http';
