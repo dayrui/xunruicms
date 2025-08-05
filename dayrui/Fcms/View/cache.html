@@ -136,9 +136,11 @@
                     <label>
                         <a href="javascript:dr_iframe_show('{dr_lang('升级程序脚本')}', '{dr_url('cache/update_index')}', '500px', '300px');" class="btn red btn-xs"><i class="fa fa-refresh"></i> {dr_lang('立即执行')} </a>
                     </label>
+                    {if $ci->_is_admin_auth('menu/init')}
                     <label>
                         <a href="javascript:dr_load_ajax('{dr_lang('确定初始化后台菜单吗？')}', '{dr_url('menu/init')}', 0);" class="btn blue btn-xs"><i class="fa fa-list"></i> {dr_lang('初始化后台菜单')} </a>
                     </label>
+                    {/if}
                 </td>
             </tr>
             </tbody>
