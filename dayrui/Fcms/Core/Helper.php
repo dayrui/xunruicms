@@ -744,6 +744,26 @@ function dr_cms_domain_name($url) {
 }
 
 /**
+ * 获取非空值
+ * @param $param 指定文字
+ * @return 获取第一个非空值
+ */
+function dr_is_not_null_value(...$param) {
+
+    if (empty($param)) {
+        return '';
+    }
+
+    foreach ($param as $k => $t) {
+        if (!dr_is_empty($t)) {
+            return $t;
+        }
+    }
+
+    return '';
+}
+
+/**
  * 多语言输出
  * @param $param 指定文字
  * @return 将指定文字转换成系统对于的语言文字
@@ -4367,6 +4387,18 @@ class php5replace {
         return $this->data[$value[1]];
     }
 
+    // 替换数组变量值
+    function php55_replace_or_data($value) {
+        if (isset($value[1]) && $value[1]
+            && isset($this->data[$value[1]]) && $this->data[$value[1]]) {
+            return $this->data[$value[1]];
+        } elseif (isset($value[2]) && $value[2]
+            && isset($this->data[$value[2]]) && $this->data[$value[2]]) {
+            return $this->data[$value[2]];
+        }
+        return '';
+    }
+
     // 替换函数值
     function php55_replace_function($value) {
         if (!dr_is_safe_function($value[1])) {
@@ -4399,6 +4431,7 @@ class php5replace {
         $value = preg_replace_callback('#{([a-z_0-9]+)\((.*)\)}#Ui', [$this, 'php55_replace_function'], $value);
         $value = preg_replace_callback('#{([A-Z_]+)}#U', [$this, 'php55_replace_var'], $value);
         $value = preg_replace_callback('#{([a-z_0-9]+)}#U', [$this, 'php55_replace_data'], $value);
+        $value = preg_replace_callback('#{([a-z_0-9]+)\|\|([a-z_0-9]+)}#U', [$this, 'php55_replace_or_data'], $value);
         $value = preg_replace_callback('#{([a-z_0-9]+)\.([a-z_0-9]+)}#U', [$this, 'php55_replace_data'], $value);
 
         return $value;
