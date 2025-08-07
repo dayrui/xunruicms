@@ -364,12 +364,16 @@ if (is_cli()) {
         $url.= 's';
     }
 	$host = strtolower($_SERVER['HTTP_HOST']);
-    if (strpos($host, ':') !== false) {
+    if (defined('IS_PORT_FIX') && IS_PORT_FIX && strpos($host, ':') === false) {
+        // 端口修复
+        $host.= ':'.IS_PORT_FIX;
+    } elseif (strpos($host, ':') !== false) {
         list($nhost, $port) = explode(':', $host);
         if ($port == 80) {
             $host = $nhost; // 排除80端口
         }
     }
+
     $url.= '://'.$host;
     IS_ADMIN && define('ADMIN_URL', $url.'/'); // 优先定义后台域名
     define('FC_NOW_URL', $url.($_SERVER['REQUEST_URI'] ? $_SERVER['REQUEST_URI'] : (isset($_SERVER['QUERY_STRING']) && $_SERVER['QUERY_STRING'] ? $_SERVER['PHP_SELF'].'?'.$_SERVER['QUERY_STRING'] : $_SERVER['PHP_SELF'])));
