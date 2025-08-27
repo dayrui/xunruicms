@@ -82,3 +82,183 @@
     max-width: 100%;
   }
 }
+
+
+/* 九宫格容器 - 固定4列布局 */
+.files-grid-list {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr); /* 固定4列 */
+  gap: 20px; /* 网格间距 */
+  max-width: 1200px;
+  margin: 0 auto;
+  justify-items: center; /* 水平居中 */
+  align-items: start; /* 垂直顶部对齐 */
+}
+
+/* 网格项样式 */
+.files-grid-list .grid-item {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  background: #fff;
+  width: 100%; /* 占满网格单元格 */
+  max-width: 280px; /* 最大宽度限制 */
+}
+
+.files-grid-list .grid-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* 图片预览区域 - 使用更具体的选择器覆盖外部样式 */
+.files-grid-list .grid-item .files_row_preview {
+  position: relative !important; /* 使用!important确保优先级 */
+  height: 200px !important;
+  overflow: hidden !important;
+  margin-right: 0 !important; /* 覆盖外部margin */
+  border: none !important; /* 覆盖外部border */
+  padding: 0 !important; /* 覆盖外部padding */
+  width: 100% !important; /* 覆盖外部width */
+  height: 200px !important; /* 覆盖外部height */
+  border-radius: 0 !important; /* 覆盖外部border-radius */
+  text-align: left !important; /* 覆盖外部text-align */
+}
+
+.files-grid-list .grid-item .files_row_preview img {
+  width: 100% !important; /* 覆盖外部max-width */
+  height: 100% !important; /* 覆盖外部max-height */
+  max-width: none !important; /* 覆盖外部max-width */
+  max-height: none !important; /* 覆盖外部max-height */
+  object-fit: cover !important; /* 图片平铺填充 */
+  transition: transform 0.3s ease;
+  display: block !important; /* 确保图片正确显示 */
+}
+
+.files-grid-list .grid-item .files_row_preview:hover img {
+  transform: scale(1.1);
+}
+
+/* 剪辑按钮区域 - 隐藏 */
+.files-grid-list .grid-item .mpreview {
+  position: relative;
+  width: 20px;
+  top: -20px;
+  text-align: right;
+  height: 0;
+}
+
+/* 操作按钮区域 - 在图片下方，始终显示 */
+.files-grid-list .grid-item .op-btn {
+  padding: 15px;
+  background: #f8f9fa;
+  border-top: 1px solid #eee;
+  text-align: center;
+}
+
+.files-grid-list .op-btn label {
+  margin: 0 5px;
+}
+
+.files-grid-list .op-btn .btn {
+  padding: 6px 12px;
+  font-size: 12px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.files-grid-list .op-btn .file_delete {
+  background: #dc3545;
+  color: #fff;
+}
+
+.files-grid-list .op-btn .file_delete:hover {
+  background: #c82333;
+}
+
+.files-grid-list .op-btn .file_edit {
+  background: #28a745;
+  color: #fff;
+}
+
+.files-grid-list .op-btn .file_edit:hover {
+  background: #218838;
+}
+.files-grid-list .files_show_title_html {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.files-grid-list .files_show_description_html {
+  margin-top: -5px;
+  margin-bottom: 10px;
+}
+
+/* 响应式断点优化 */
+@media (max-width: 1200px) {
+  .files-grid-list {
+    grid-template-columns: repeat(4, 1fr); /* 保持4列 */
+    gap: 18px;
+    padding: 18px;
+  }
+
+  .files-grid-list .grid-item {
+    max-width: 260px;
+  }
+}
+
+@media (max-width: 768px) {
+  .files-grid-list {
+    grid-template-columns: repeat(2, 1fr); /* 平板端2列 */
+    gap: 15px;
+    padding: 15px;
+  }
+
+  .files-grid-list .grid-item {
+    max-width: 300px;
+  }
+}
+
+@media (max-width: 480px) {
+  .files-grid-list {
+    grid-template-columns: 1fr; /* 手机端1列 */
+    gap: 15px;
+    padding: 10px;
+  }
+
+  .files-grid-list .grid-item {
+    max-width: 100%;
+  }
+
+  .files-grid-list .grid-item .files_row_preview {
+    height: 180px !important;
+  }
+}
+
+/* 可选：添加加载动画 */
+.files-grid-list .grid-item {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+
+
+/* 可选：美化滚动条 */
+.files-grid-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.files-grid-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.files-grid-list::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+.files-grid-list::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}

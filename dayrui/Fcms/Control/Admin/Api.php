@@ -146,7 +146,7 @@ class Api extends \Phpcmf\Common {
 
     // 跳转首页
     public function gohome() {
-        dr_redirect('index.php');
+        dr_redirect(SITE_URL.'index.php');
     }
 
     // 应用市场

@@ -82,6 +82,14 @@ class Files extends \Phpcmf\Library\A_Field {
                 </div>
             </div>
             <div class="form-group">
+                <label class="col-md-2 control-label">'.dr_lang('显示方式').'</label>
+                <div class="col-md-9">
+                <input type="checkbox" name="data[setting][option][grid]" '.($option['grid'] ? 'checked' : '').' value="1" data-on-text="'.dr_lang('传统模式').'" data-off-text="'.dr_lang('卡片模式').'" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                <span class="help-block">'.dr_lang('上传后的文件列表采用卡片式显示，适用于图片类文件显示方式').'</span>
+                </div>
+            </div>
+            
+            <div class="form-group">
 				<label class="col-md-2 control-label">'.dr_lang('上传数量').'</label>
 				<div class="col-md-9">
 					<label><input type="text" class="form-control" value="'.$option['count'].'" name="data[setting][option][count]"></label>
@@ -277,52 +285,83 @@ class Files extends \Phpcmf\Library\A_Field {
             'image_reduce' => $field['setting']['option']['image_reduce'],
             'count' => $count,
         ], 'ENCODE');
-
         // 显示模板
-        if ($field['setting']['option']['name'] or $field['setting']['option']['desc']) {
-            $tpl = '<tr class="template-download files_row">';
-            $tpl.= '<td style="text-align:center;width: 80px;">';
+        if (!$field['setting']['option']['grid']) {
+
+            $tpl = '<div class="grid-item  files_row">';
             $tpl.= '<div class="files_row_preview preview">{preview}</div>';
-            $tpl.= '</td>';
-            $tpl.= '<td class="files_show_info">';
-            $tpl.= '<div class="row">';
-            $tpl.= '<div class="col-md-12 files_show_title_html">';
-            if ($field['setting']['option']['name']) {
-                $tpl .= '<input  placeholder="'.dr_lang('名称').'" class="form-control files_row_title" type="text" name="data[' . $name . '][title][]" value="{title}">';
-            }
             $tpl.= '<input type="hidden" class="files_row_id" name="data[' . $name . '][id][]" value="{id}">';
             $tpl.= '<input class="files_row_name" {disabled} type="hidden" name="data[' . $name . '][file][]" value="{filepath}">';
+
+
+            $tpl.= '<div class="op-btn">';
+            $tpl.= '<label><button onclick="dr_file_remove(this)" type="button" class="btn red file_delete btn-xs"><i class="fa fa-trash"></i></button></label>';
+
+
+            $tpl.= $js_rm = '<label><button onclick="fileupload_file_edit(\''.$name.'\',this)" type="button" class="fileinput-button btn green file_edit btn-xs"><i class="fa fa-upload"></i>{upload}</button></label>';
+
             $tpl.= '</div>';
+
+            if ($field['setting']['option']['name']) {
+                $tpl.= '<div class="col-md-12 files_show_title_html">';
+                $tpl .= '<input  placeholder="'.dr_lang('名称').'" class="form-control files_row_title" type="text" name="data[' . $name . '][title][]" value="{title}">';
+                $tpl.= '</div>';
+            }
+
             if ($field['setting']['option']['desc']) {
                 $tpl.= '<div class="col-md-12 files_show_description_html">';
                 $tpl.= '<textarea placeholder="'.dr_lang('描述').'" class="form-control files_row_description" name="data['.$name.'][description][]">{description}</textarea>';
                 $tpl.= '</div>';
             }
+
             $tpl.= '</div>';
-            $tpl.= '</td>';
-
-            $tpl.= '<td style="text-align:center;width: 80px;">';
-            $tpl.= '<label><button onclick="dr_file_remove(this)" type="button" class="btn red file_delete btn-sm"><i class="fa fa-trash"></i></button></label>';
-
-            $tpl.= $js_rm = '<label><button onclick="fileupload_file_edit(\''.$name.'\',this)" type="button" class="fileinput-button btn green file_edit btn-sm"><i class="fa fa-edit"></i>{upload}</button></label>';
-
-            $tpl.= '</td>';
-            $tpl.= '</tr>';
         } else {
-            $tpl = '<div class="template-download files_row">';
-            $tpl.= '<div class="files_row_preview preview">{preview}</div>';
-            $tpl.= '<input type="hidden" class="files_row_id" name="data[' . $name . '][id][]" value="{id}">';
-            $tpl.= '<input class="files_row_name" {disabled} type="hidden" name="data[' . $name . '][file][]" value="{filepath}">';
+            // 普通table模式
+            if ($field['setting']['option']['name'] or $field['setting']['option']['desc']) {
+                // 有名字和描述
+                $tpl = '<tr class="template-download files_row">';
+                $tpl.= '<td style="text-align:center;width: 80px;">';
+                $tpl.= '<div class="files_row_preview preview">{preview}</div>';
+                $tpl.= '</td>';
+                $tpl.= '<td class="files_show_info">';
+                $tpl.= '<div class="row">';
+                $tpl.= '<div class="col-md-12 files_show_title_html">';
+                if ($field['setting']['option']['name']) {
+                    $tpl .= '<input  placeholder="'.dr_lang('名称').'" class="form-control files_row_title" type="text" name="data[' . $name . '][title][]" value="{title}">';
+                }
+                $tpl.= '<input type="hidden" class="files_row_id" name="data[' . $name . '][id][]" value="{id}">';
+                $tpl.= '<input class="files_row_name" {disabled} type="hidden" name="data[' . $name . '][file][]" value="{filepath}">';
+                $tpl.= '</div>';
+                if ($field['setting']['option']['desc']) {
+                    $tpl.= '<div class="col-md-12 files_show_description_html">';
+                    $tpl.= '<textarea placeholder="'.dr_lang('描述').'" class="form-control files_row_description" name="data['.$name.'][description][]">{description}</textarea>';
+                    $tpl.= '</div>';
+                }
+                $tpl.= '</div>';
+                $tpl.= '</td>';
 
-            $tpl.= '<div class="op-btn">';
-            $tpl.= '<label><button onclick="dr_file_remove(this)" type="button" class="btn red file_delete btn-xs"><i class="fa fa-trash"></i></button></label>';
-            $tpl.= $js_rm = '<label><button onclick="fileupload_file_edit(\''.$name.'\',this)" type="button" class="fileinput-button btn green file_edit btn-xs"><i class="fa fa-edit"></i>{upload}</button></label>';
+                $tpl.= '<td style="text-align:center;width: 80px;">';
+                $tpl.= '<label><button onclick="dr_file_remove(this)" type="button" class="btn red file_delete btn-sm"><i class="fa fa-trash"></i></button></label>';
 
-            $tpl.= '</div>';
-            $tpl.= '</div>';
+                $tpl.= $js_rm = '<label><button onclick="fileupload_file_edit(\''.$name.'\',this)" type="button" class="fileinput-button btn green file_edit btn-sm"><i class="fa fa-upload"></i>{upload}</button></label>';
 
+                $tpl.= '</td>';
+                $tpl.= '</tr>';
+            } else {
+                // 没有描述和名字修改
+                $tpl = '<div class="template-download files_row">';
+                $tpl.= '<div class="files_row_preview preview">{preview}</div>';
+                $tpl.= '<input type="hidden" class="files_row_id" name="data[' . $name . '][id][]" value="{id}">';
+                $tpl.= '<input class="files_row_name" {disabled} type="hidden" name="data[' . $name . '][file][]" value="{filepath}">';
+
+                $tpl.= '<div class="op-btn">';
+                $tpl.= '<label><button onclick="dr_file_remove(this)" type="button" class="btn red file_delete btn-xs"><i class="fa fa-trash"></i></button></label>';
+                $tpl.= $js_rm = '<label><button onclick="fileupload_file_edit(\''.$name.'\',this)" type="button" class="fileinput-button btn green file_edit btn-xs"><i class="fa fa-edit"></i>{upload}</button></label>';
+
+                $tpl.= '</div>';
+                $tpl.= '</div>';
+            }
         }
-
 
         // 已保存数据
         $val = '';
@@ -351,12 +390,17 @@ class Files extends \Phpcmf\Library\A_Field {
                 );
             }
         }
-        if ($field['setting']['option']['name'] or $field['setting']['option']['desc']) {
-            $val = '<table role="presentation" class="table table-striped table-fc-upload clearfix">
+
+        if (!$field['setting']['option']['grid']) {
+            $val = '<div id="fileupload_'.$name.'_files" class="files-grid-list">'.$val.'</div>';
+        } else {
+            if ($field['setting']['option']['name'] or $field['setting']['option']['desc']) {
+                $val = '<table role="presentation" class="table table-striped table-fc-upload clearfix">
                         <tbody id="fileupload_'.$name.'_files" class="files scroller_body">'.$val.'</tbody>
                     </table>';
-        } else {
-            $val = '<div id="fileupload_'.$name.'_files" class="files scroller_body files-image-list">'.$val.'</div>';
+            } else {
+                $val = '<div id="fileupload_'.$name.'_files" class="files scroller_body files-image-list">'.$val.'</div>';
+            }
         }
 
         $json = json_encode([
@@ -414,7 +458,7 @@ class Files extends \Phpcmf\Library\A_Field {
         }
         $str.= '
 			<div class="scroller_'.$name.'_files">
-                <div class="'.($field['setting']['option']['scroller'] ? 'scroller' : '').'" data-inited="0" data-initialized="1" data-always-visible="1" data-rail-visible="1">
+                <div class="'.($field['setting']['option']['scroller'] ? 'scroller"' : '').'" data-inited="0" data-initialized="1" data-always-visible="1" data-rail-visible="1">
                     '.$val.'
                 </div>
 			</div>
@@ -434,8 +478,11 @@ class Files extends \Phpcmf\Library\A_Field {
             var files_json_'.$name.' = '.$json.';
         $(function() {
             fileupload_files_init(files_json_'.$name.');
+            '.($field['setting']['option']['scroller'] ? '$(".scroller_'.$name.'_files .scroller").height("500");' : '').'
         });
-        </script>';
+        </script>
+        
+        ';
 
 
         // 输出最终表单显示
