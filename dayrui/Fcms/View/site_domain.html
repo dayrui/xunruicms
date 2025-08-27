@@ -27,7 +27,7 @@
                                     <input type="text" {if SITE_ID == 1} readonly{/if} name="data[site_domain]" value="{htmlspecialchars((string)$data['site_domain'])}" class="form-control input-large">
                                     <span class="input-group-btn">
                                         {if SITE_ID == 1}
-                                        <a class="btn red" href="javascript:dr_iframe('{dr_lang("变更域名")}', '{dr_url("module/site_domain/edit")}', '450px', '400px');"><i class="fa fa-edit"></i> {dr_lang('变更')}</a>
+                                        <a class="btn red" href="javascript:dr_iframe('{dr_lang("变更域名")}', '{dr_url("site_domain/edit")}', '450px', '400px');"><i class="fa fa-edit"></i> {dr_lang('变更')}</a>
                                         {else}
                                         <a class="btn blue" href="{SITE_URL}" target="_blank"><i class="fa fa-send"></i> {dr_lang('访问')}</a>
                                         {/if}
@@ -43,7 +43,7 @@
                                 <div class="input-group" style="width: 300px;">
                                 <input class="form-control input-large" readonly type="text"  value="{htmlspecialchars((string)$data['mobile_domain'])}"></label>
                                 <span class="input-group-btn">
-                                        <a class="btn red" href="{dr_url("module/site_mobile/index")}"><i class="fa fa-edit"></i> {dr_lang('变更')}</a>
+                                        <a class="btn red" href="{dr_url("site_mobile/index")}"><i class="fa fa-edit"></i> {dr_lang('变更')}</a>
 
                                     </span>
 
