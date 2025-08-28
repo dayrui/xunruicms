@@ -15,21 +15,21 @@ body,html {
     padding-top: 18px!important;
 }
 .page-sidebar .page-sidebar-menu>li.open>a, .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu>li.open>a {
-    font-size: 16px!important;
+    font-size: 18px!important;
 }
 .page-sidebar .page-sidebar-menu .sub-menu li>a, .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu .sub-menu li>a {
-    padding: 9px 15px 16px 23px!important;
-    font-size: 16px!important;
+    padding: 12px 15px 16px 23px!important;
+    font-size: 18px!important;
 }
 
 .page-sidebar .page-sidebar-menu .sub-menu li {
-    height: 38px!important;
+    height: 43px!important;
 }
 .page-sidebar,.page-header.navbar .page-logo {
-    width: 178px;
+    width: 230px;
 }
 .page-content-wrapper .page-content {
-    margin-left: 178px;
+    margin-left: 230px;
 }
 .page-sidebar .page-sidebar-menu .sub-menu li>a>i, .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu .sub-menu li>a>i {
     font-size: 18px;
