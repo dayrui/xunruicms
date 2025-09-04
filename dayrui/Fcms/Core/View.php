@@ -1196,6 +1196,13 @@ class View {
                     }
                     list($system, $where, $_order, $sql_from) = $rt['data'];
                 }
+                // catid 参数
+                if ($system['catid']) {
+                    $where[] = [
+                        'adj' => 'SQL',
+                        'value' => urldecode('`'.$table.'`.`catid` IN ('.$system['catid'].')')
+                    ];
+                }
 
                 $sql_limit = $pages = '';
                 $sql_where = $this->_get_where($where); // sql的where子句
