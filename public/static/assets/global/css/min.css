@@ -698,7 +698,7 @@ Page sidebar
     padding: 17px 15px 15px 15px;
     text-decoration: none;
     font-size: 14px;
-    font-weight: 300;
+    font-weight: 600;
     text-align: center; }
 .page-sidebar .page-sidebar-menu > li > a > .title,
 .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu > li > a > .title {
@@ -709,7 +709,7 @@ Page sidebar
 .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu > li > a > i {
     font-size: 24px;
     text-shadow: none;
-    font-weight: 300;
+    font-weight: 600;
     text-align: center; }
 .page-sidebar .page-sidebar-menu > li > a > i.glyphicon,
 .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu > li > a > i.glyphicon {
@@ -803,10 +803,10 @@ Page sidebar
 .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu .sub-menu li > a {
     display: block;
     margin: 0;
-    padding: 9px 15px 9px 15px;
+    padding: 0px 15px 9px 15px;
     text-decoration: none;
     font-size: 14px;
-    font-weight: 300;
+    font-weight: 400;
     background: none; }
 .page-sidebar .page-sidebar-menu .sub-menu li > a > i,
 .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu .sub-menu li > a > i {

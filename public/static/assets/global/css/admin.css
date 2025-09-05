@@ -7,6 +7,25 @@
     vertical-align: baseline
 }
 
+/* 标签样式优化 */
+.label {
+    display: inline-block;
+    padding: 4px 12px;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 20px;
+    transition: var(--transition);
+}
+
+.label:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+}
+
 hr,img {
     border: 0
 }
@@ -47,6 +66,34 @@ audio,canvas,progress,video {
 
 .btn,.btn-group,.btn-group-vertical,.caret,.checkbox-inline,.radio-inline,img {
     vertical-align: middle
+}
+
+/* 按钮组样式优化 */
+.btn-group {
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+}
+
+.btn-group .btn {
+    border-radius: 0;
+    margin: 0;
+    border-right: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.btn-group .btn:first-child {
+    border-top-left-radius: var(--border-radius);
+    border-bottom-left-radius: var(--border-radius);
+}
+
+.btn-group .btn:last-child {
+    border-top-right-radius: var(--border-radius);
+    border-bottom-right-radius: var(--border-radius);
+    border-right: none;
+}
+
+.btn-group .btn:hover {
+    z-index: 2;
 }
 
 audio:not([controls]) {
@@ -4108,25 +4155,25 @@ button.close {
  *//*!
  * bootstrap-switch
  */.bootstrap-switch {
-        display: inline-block;
-        direction: ltr;
-        cursor: pointer;
-        border-radius: 2px;
-        border: 1px solid #e4e6ef;
-        position: relative;
-        text-align: left;
-        overflow: hidden;
-        line-height: 8px;
+       display: inline-block;
+       direction: ltr;
+       cursor: pointer;
+       border-radius: 2px;
+       border: 1px solid #e4e6ef;
+       position: relative;
+       text-align: left;
+       overflow: hidden;
+       line-height: 8px;
        margin-top: 5px;
-        z-index: 0;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-        vertical-align: middle;
-        -webkit-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
-        transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s
-    }
+       z-index: 0;
+       -webkit-user-select: none;
+       -moz-user-select: none;
+       -ms-user-select: none;
+       user-select: none;
+       vertical-align: middle;
+       -webkit-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+       transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s
+   }
 
 .bootstrap-switch .bootstrap-switch-container {
     display: inline-block;
@@ -4276,8 +4323,8 @@ button.close {
 /*!
  * tabbable-tabdrop
  */.tabbable-tabdrop .nav-pills,.tabbable-tabdrop .nav-tabs {
-        position: relative
-    }
+       position: relative
+   }
 
 .tabbable-tabdrop .nav-pills .caret,.tabbable-tabdrop .nav-tabs .caret {
     display: none
@@ -8961,8 +9008,8 @@ body[ng-controller] .modal {
 /*!
  * tabbable-tabdrop
  */.ui-helper-hidden {
-        display: none
-    }
+       display: none
+   }
 
 .ui-helper-hidden-accessible {
     border: 0;
@@ -10914,7 +10961,7 @@ code.form-control-static {
     padding: 10px 15px;
     text-decoration: none;
     font-size: 14px;
-    font-weight: 300
+    font-weight: 500
 }
 
 .page-sidebar .page-sidebar-menu>li>a>i,.page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu>li>a>i {
@@ -11035,7 +11082,7 @@ code.form-control-static {
     padding: 6px 15px 6px 23px;
     text-decoration: none;
     font-size: 14px;
-    font-weight: 300;
+    font-weight: 400;
     background: 0 0
 }
 
@@ -11076,7 +11123,7 @@ code.form-control-static {
 }
 
 .page-sidebar .page-sidebar-menu.page-sidebar-menu-light>li .sub-menu li>a,.page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu.page-sidebar-menu-light>li .sub-menu li>a {
-    padding-top: 5px;
+    padding-top: 0px;
     padding-bottom: 8px
 }
 
@@ -11835,12 +11882,12 @@ code.form-control-static {
 }
 
 .page-sidebar .page-sidebar-menu .sub-menu li {
-    height: 32px;
+    height: 38px;
     overflow: hidden;
 }
 
 .page-sidebar .page-sidebar-menu .sub-menu li a {
-    line-height: 23px;
+    line-height: 38px;
     overflow: hidden
 }
 
@@ -11965,7 +12012,8 @@ code.form-control-static {
 
 .top-txt-menu {
     font-size: 12px!important;
-    font-style: normal!important
+    font-style: normal!important;
+    font-weight: bold;
 }
 
 .dropdown-user {
@@ -13378,6 +13426,7 @@ body{background-color:#edeff1}
 .page-admin-all .page-sidebar .page-sidebar-menu.page-sidebar-menu-light>li.active.open>a,.page-admin-all .page-sidebar .page-sidebar-menu.page-sidebar-menu-light>li.active>a,.page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu.page-sidebar-menu-light>li.active.open>a,.page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu.page-sidebar-menu-light>li.active>a {
     background:#21282e;
     border-left:4px solid #2890ff;
+    font-weight: 600;
     color:#f1f1f1
 }
 .page-admin-all .page-sidebar .page-sidebar-menu.page-sidebar-menu-light>li.active.open>a:hover,.page-admin-all .page-sidebar .page-sidebar-menu.page-sidebar-menu-light>li.active>a:hover,.page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu.page-sidebar-menu-light>li.active.open>a:hover,.page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu.page-sidebar-menu-light>li.active>a:hover {
@@ -13672,7 +13721,7 @@ body{background-color:#edeff1}
 }
 .fixed-table-container .table>thead>tr>th {
     padding-top: 0 ;
-     padding-bottom: 0;
+    padding-bottom: 0;
 }
 form .portlet.light .portlet-body {
     padding-top: 20px;

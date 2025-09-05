@@ -18,7 +18,7 @@ body,html {
     font-size: 18px!important;
 }
 .page-sidebar .page-sidebar-menu .sub-menu li>a, .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu .sub-menu li>a {
-    padding: 12px 15px 16px 23px!important;
+    padding: 3px 15px 16px 23px!important;
     font-size: 18px!important;
 }
 
