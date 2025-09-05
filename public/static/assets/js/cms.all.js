@@ -773,6 +773,7 @@ function dr_ajax_option_url(url, msg, tourl) {
 function dr_ajax_submit(url, form, time, go) {
 
     var flen = $('[id='+form+']').length;
+
     // 验证id是否存在
     if (flen == 0) {
         dr_cmf_tips(0, dr_lang('表单id属性不存在') + ' ('+form+')');
@@ -822,14 +823,37 @@ function dr_post_addfunc(func) {
     cms_post_addfunc.push(func);
 }
 
+/**
+ * 检查URL是否为跨域请求
+ * @param {string} url - 要检查的URL
+ * @returns {boolean} 是否为跨域
+ */
+function dr_is_cross_origin(url) {
+    try {
+        // 创建URL对象
+        const targetUrl = new URL(url, window.location.origin);
+        const currentOrigin = window.location.origin;
+
+        // 比较协议、主机名和端口
+        return targetUrl.origin !== currentOrigin;
+    } catch (error) {
+        // 如果URL解析失败，可能是相对路径，不是跨域
+        return false;
+    }
+}
+
 // 处理post提交
 function dr_post_submit(url, form, time, go) {
 
-    // https不统一时，取根域名
-    var p = url.split('/');
-    if ((p[0] == 'http:' || p[0] == 'https:') && document.location.protocol != p[0]) {
-        const parsedUrl = new URL(url);
-        url = parsedUrl.pathname + parsedUrl.search + parsedUrl.hash;
+    // 检查跨域
+    const targetUrl = new URL(url, window.location.origin);
+    const currentOrigin = window.location.origin;
+    if (targetUrl.origin !== currentOrigin) {
+        console.error('dr_ajax_submit: 跨域请求被阻止:', url);
+        console.error('当前域名:', currentOrigin);
+        console.error('目标域名:', targetUrl.origin);
+        dr_cmf_tips(0, 'submit函数跨域请求被阻止，请求地址'+url+'与当前域名'+currentOrigin+'不匹配');
+        return false;
     }
 
     url = url.replace(/&page=\d+&page/g, '&page');
