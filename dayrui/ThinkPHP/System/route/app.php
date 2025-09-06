@@ -32,5 +32,4 @@ isset($_GET['m']) && $_GET['m'] && is_string($_GET['m']) && $method = (dr_safe_f
 
 $ns.= '\\'.$class;
 
-unset($_GET['s']);
 Route::any('/', $ns.'/'.$method, 'GET|POST');

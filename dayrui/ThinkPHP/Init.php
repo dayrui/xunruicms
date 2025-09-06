@@ -5,7 +5,7 @@ require CMSPATH . 'Core/Service.php';
 require CMSPATH . 'Core/Hooks.php';
 require __DIR__ . '/Extend/Error.php';
 
-define('FRAME_PHP_VERSION', '7.4.0');  // PHP最低版本
+define('FRAME_PHP_VERSION', '8.0.0');  // PHP最低版本
 if (version_compare(PHP_VERSION, FRAME_PHP_VERSION) < 0) {
     exit("<font color=red>ThinkPHP-PHP版本要求在".FRAME_PHP_VERSION."及以上，当前".PHP_VERSION."</font><hr>最低支持PHP7.2环境，需要在这里下载兼容包：https://www.xunruicms.com/doc/1166.html");
 }
@@ -50,6 +50,11 @@ $loader->initialize(\Phpcmf\Service::Auto(new \Phpcmf\AutoConfig()))->register()
 // apache环境参数修正
 if (isset($_SERVER['REDIRECT_URL']) && $_SERVER['REDIRECT_URL']) {
     $_SERVER['REDIRECT_URL'] = '';
+}
+
+// 避免冲突
+if (isset($_GET['s'])) {
+    unset($_GET['s']);
 }
 
 require FRAMEPATH.'Extend/Run.php';
