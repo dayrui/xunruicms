@@ -47,30 +47,6 @@
                     <li style="overflow: initial;">
                         <span>{dr_lang('系统内核')}</span>
                         <a href="https://www.xunruicms.com/frame/" target="_blank">{FRAME_NAME}（{FRAME_VERSION}）</a>
-                        {if $frame}
-                        <div class="btn-group">
-                            <a class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown" href="javascript:;"> {dr_lang('切换内核')}
-                                <i class="fa fa-angle-down"></i>
-                            </a>
-                            <ul class="dropdown-menu">
-                                {loop $frame $t}
-                                <li><a href="javascript:dr_sys_edit('{$t}');"> {$t} </a></li>
-                                {/loop}
-                            </ul>
-                        </div>
-                        <script>
-                            function dr_sys_edit(name) {
-                                $.ajax({type: "GET",dataType:"json", url: "{dr_url('api/sys_edit')}&name="+name,
-                                    success: function(json) {
-                                        if (json.code == 1) {
-                                            setTimeout("window.location.reload(true)", 2000);
-                                        }
-                                        dr_tips(json.code, json.msg);
-                                    }
-                                });
-                            }
-                        </script>
-                        {/if}
                     </li>
 
                     <li>
