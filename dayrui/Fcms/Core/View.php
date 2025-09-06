@@ -296,7 +296,7 @@ class View {
             if (!$is_dev) {
                 unset($this->_options);
             }
-            if (CI_DEBUG || !defined('SC_HTML_FILE')) {
+            if (!defined('IS_INSTALL') && (CI_DEBUG || !defined('SC_HTML_FILE'))) {
                 \Phpcmf\Service::M()->close();
             }
         }
@@ -1593,7 +1593,7 @@ class View {
                         break;
 
                     case 'NOT':
-                        $string.= $join.(dr_is_numeric($t['value']) ? " {$t['name']} <> ".$t['value'] : " {$t['name']} <> \"".($t['value'] == "''" ? '' : dr_safe_replace($t['value']))."\"");
+                        $string.= $join.(dr_is_numeric($t['value']) ? " {$t['name']} <> ".$t['value'] : " {$t['name']} <> '".($t['value'] == "''" ? '' : dr_safe_replace($t['value']))."'");
                         break;
 
                     case 'BEWTEEN':
@@ -1779,7 +1779,7 @@ class View {
                         } elseif (!$t['name'] && $t['value']) {
                             $string.= $join.' '.$t['value'];
                         } else {
-                            $string.= $join.(dr_is_numeric($t['value']) ? " {$t['name']} = ".intval($t['value']) : " {$t['name']} = \"".($t['value'] == "''" ? '' : dr_safe_replace($t['value']))."\"");
+                            $string.= $join.(dr_is_numeric($t['value']) ? " {$t['name']} = ".intval($t['value']) : " {$t['name']} = '".($t['value'] == "''" ? '' : dr_safe_replace($t['value']))."'");
                         }
                         break;
                 }
