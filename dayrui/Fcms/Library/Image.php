@@ -1200,6 +1200,8 @@ class Image {
          * Get the rest of the string and split it into 2-length
          * hex values:
          */
+        $x_axis = intval($x_axis);
+        $y_axis = intval($y_axis);
         $txt_color = str_split(substr($this->wm_font_color, 1, 6), 2);
         $txt_color = imagecolorclosest($src_img, hexdec($txt_color[0]), hexdec($txt_color[1]), hexdec($txt_color[2]));
         // Add the text to the source image
