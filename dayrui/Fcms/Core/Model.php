@@ -1242,7 +1242,7 @@ class Model {
             $ret = '';
             $queries = explode('SQL_FINECMS_EOL', trim($query));
             foreach($queries as $query) {
-                $ret.= $query[0] == '#' || $query[0].$query[1] == '--' ? '' : PHP_EOL.$query;
+                $ret.= $query[0] == '#' || $query[0].$query[1] == '--' ? '' : ($query ? PHP_EOL.$query : '');
             }
             if (!$ret) {
                 continue;
