@@ -71,7 +71,7 @@ audio,canvas,progress,video {
 /* 按钮组样式优化 */
 .btn-group {
     border-radius: var(--border-radius);
-    overflow: hidden;
+    overflow: visible;
     box-shadow: var(--shadow-sm);
 }
 
@@ -13871,3 +13871,4 @@ td>.mt-table.mt-checkbox-single,th>.mt-table.mt-checkbox-single {
 .pagination .input-group {
     width: 90px;
 }
+
