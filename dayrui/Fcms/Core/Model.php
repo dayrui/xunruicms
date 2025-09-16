@@ -1120,7 +1120,11 @@ class Model {
             return $this;
         }
 
-        $this->param['where'][] = $name.' LIKE "%'.$value.'%"';
+        if (method_exists($this->db, 'whereLike')) {
+            $this->param['where'][] = $this->db->whereLike($name, $value);
+        } else {
+            $this->param['where'][] = $name.' LIKE "%'.$value.'%"';
+        }
 
         return $this;
     }

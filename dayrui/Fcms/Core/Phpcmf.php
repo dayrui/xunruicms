@@ -973,11 +973,11 @@ abstract class Common extends \Frame\Controller {
                         } elseif ($pos == 'bottom' && method_exists($obj, 'is_bottom_auth') && $obj->is_bottom_auth(APP_DIR)) {
                             $data = array_merge($data , $_clink) ;
                         } else {
-                            CI_DEBUG && log_message('debug', 'Auth类（'.$path.'Models/Auth'.$endfix.'.php'.'）没有定义is_'.$pos.'_auth或者is_'.$pos.'_auth验证失败');
+                            //CI_DEBUG && log_message('debug', 'Auth类（'.$path.'Models/Auth'.$endfix.'.php'.'）没有定义is_'.$pos.'_auth或者is_'.$pos.'_auth验证失败');
                         }
                     } else {
                         $data = array_merge($data , $_clink) ;
-                        CI_DEBUG && log_message('debug', '配置文件（'.$path.'Config/C'.$pos.$endfix.'.php'.'）没有定义权限验证类（'.$path.'Models/Auth'.$endfix.'.php'.'）');
+                       // CI_DEBUG && log_message('debug', '配置文件（'.$path.'Config/C'.$pos.$endfix.'.php'.'）没有定义权限验证类（'.$path.'Models/Auth'.$endfix.'.php'.'）');
                     }
                 }
             }

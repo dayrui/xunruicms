@@ -317,6 +317,7 @@ class Field extends \Phpcmf\Model {
         $data['ismain'] = (int)$data['ismain'];
         $data['setting'] = dr_array2string($data['setting']);
         $data['issystem'] = 0;
+        $data['isedit'] = 0;
         $data['issearch'] = (int)$data['issearch'];
         $data['ismember'] = (int)$data['ismember'];
         $data['disabled'] = (int)$data['disabled'];

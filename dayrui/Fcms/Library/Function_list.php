@@ -157,7 +157,7 @@ class Function_list {
     public function uid($uid, $param = [], $data = [], $field = []) {
 
         // 查询username
-        if (strlen($uid) > 12) {
+        if (!$uid || strlen($uid) > 12) {
             return dr_lang('游客');
         }
 
