@@ -257,8 +257,8 @@
     </div>
     <div class="portlet-body form myfooter">
         <div class="form-actions text-center">
-            <label><button type="button" onclick="dr_ajax_submit('{dr_now_url()}&page='+$('#dr_page').val(), 'myform', '2000', '')" class="btn blue"> <i class="fa fa-save"></i> {dr_lang('保存')}</button></label>
-                <label><button type="button" onclick="dr_ajax_submit('{dr_now_url()}&page='+$('#dr_page').val(), 'myform', '2000', '{dr_url('field/index', ['rname' => $rname, 'rid' => $rid])}')" class="btn green"> <i class="fa fa-mail-reply-all"></i> {dr_lang('保存并返回')}</button></label>
+            <label><button type="button" onclick="dr_ajax_submit3('{dr_now_url()}&page='+$('#dr_page').val(), 'myform', '2000', '')" class="btn blue"> <i class="fa fa-save"></i> {dr_lang('保存')}</button></label>
+                <label><button type="button" onclick="dr_ajax_submit3('{dr_now_url()}&page='+$('#dr_page').val(), 'myform', '2000', '{dr_url('field/index', ['rname' => $rname, 'rid' => $rid])}')" class="btn green"> <i class="fa fa-mail-reply-all"></i> {dr_lang('保存并返回')}</button></label>
         </div>
     </div>
 </form>
@@ -279,6 +279,59 @@
             }
         });
     });
+    function dr_ajax_submit3(url, form, time, go) {
+        var loading = layer.load(2, {
+            shade: [0.3,'#fff'], //0.1透明度的白色背景
+            time: 100000000
+        });
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: url,
+            data: $("#"+form).serialize(),
+            success: function(json) {
+                layer.close(loading);
+                // token 更新
+                if (json.token) {
+                    var token = json.token;
+                    $("#"+form+" input[name='"+token.name+"']").val(token.value);
+                }
+                if (json.code < 0) {
+                    layer.confirm(
+                        json.msg,
+                        {
+                            icon: 3,
+                            shade: 0,
+                            title: lang['ts'],
+                            btn: ['{dr_lang("仍然创建")}', '{dr_lang("变更名字")}']
+                        }, function(index) {
+                            dr_ajax_submit3(url+"&is_op_add=1", form, time, go);
+                        });
+                } else if (json.code > 0) {
+                    dr_cmf_tips(json.code, json.msg, json.data.time);
+                    if (time) {
+                        var gourl = url;
+                        if (go != '' && go != undefined && go != 'undefined') {
+                            gourl = go;
+                        } else if (json.data.url) {
+                            gourl = json.data.url;
+                        }
+                        setTimeout("window.location.href = '"+gourl+"'", time);
+                    }
+                    dr_sync_cache(0); // 自动更新缓存
+                } else {
+                    dr_cmf_tips(0, json.msg, json.data.time);
+                    if (json.data.field) {
+                        $('#'+form+' #dr_row_'+json.data.field).addClass('has-error');
+                        $('#'+form+' #dr_'+json.data.field).focus();
+                    }
+                }
+            },
+            error: function(HttpRequest, ajaxOptions, thrownError) {
+                dr_ajax_alert_error(HttpRequest, this, thrownError);
+            }
+        });
+    }
     function show_field_option(type) {
         {if $id}
         var ftype = '{$data.fieldtype}';

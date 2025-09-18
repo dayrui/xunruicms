@@ -222,6 +222,11 @@ class Field extends \Phpcmf\Common {
                         $this->_json(0, dr_lang('字段（%s）已经存在', $data['fieldname']));
                     } elseif (\Phpcmf\Service::M('Field')->is_sys_field($data['fieldname'])) {
                         $this->_json(0, dr_lang('字段（%s）是系统保留字段，禁止创建', $data['fieldname']));
+                    } else {
+                        // 已经存在的字段是否创建
+                        if (!isset($_GET['is_op_add'])) {
+                            $this->_json(-1, dr_lang('字段（%s）是已经存在于表中，请更换名字，否则可能会影响程序的运行', $data['fieldname']));
+                        }
                     }
                     $is_create = 0;
                 } else {
