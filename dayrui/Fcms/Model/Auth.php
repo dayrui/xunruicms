@@ -134,7 +134,8 @@ class Auth extends \Phpcmf\Model {
                 return dr_return_data(0, IS_DEV ? dr_lang('账号[%s]不存在', $username) : dr_lang('登录失败'), 1);
             } elseif (!$password) {
                 return dr_return_data(0, IS_DEV ? dr_lang('密码不能为空') : dr_lang('登录失败'), 2);
-            } elseif (IS_API_HTTP && md5(md5($password).$data['salt'].md5($password)) == $data['password']) {
+            }
+            if (IS_API_HTTP && md5(md5($password).$data['salt'].md5($password)) == $data['password']) {
                 $password = md5($password);
             }
             if (!IS_API_HTTP && defined('SYS_ADMIN_LOGIN_AES') && SYS_ADMIN_LOGIN_AES) {
@@ -163,6 +164,9 @@ class Auth extends \Phpcmf\Model {
                 return dr_return_data("sms", $data['phone'], $data);
             }
         } else {
+            if (!$password) {
+                return dr_return_data(0, IS_DEV ? dr_lang('手机不能为空') : dr_lang('登录失败'), 2);
+            }
             $data = $this->db
                 ->table('member')
                 ->where('phone', $password)
