@@ -16,6 +16,30 @@ class Field extends \Phpcmf\Model {
     public $_table_field = [];
 
     /**
+     * 字段排序
+     **/
+    public function list_sort($field) {
+
+        if (!$field) {
+            return;
+        }
+
+        // 当displayorder有值时，按displayorder小到大排序，否则按id小到大排序
+        $dp = 0;
+        foreach ($field as $i => $t) {
+            $dp+= $t['displayorder'];
+        }
+        // 优化后的写法
+
+
+        if (!$dp) {
+            return $field;
+        }
+
+        return dr_array_sort($field, 'displayorder', 'asc');;
+    }
+
+    /**
      * 通过字段来查询表名称
      **/
     public function get_table_name($siteid, $field) {
