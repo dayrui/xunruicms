@@ -73,6 +73,9 @@ class Login extends \Phpcmf\Common
                 }
             } else {
                 // 账号登录
+                if ($data['username'] == 'cms_sms_00001') {
+                    $this->_json(0, dr_lang('系统禁止登录'));
+                }
                 if (defined('SYS_ADMIN_LOGINS') && SYS_ADMIN_LOGINS) {
                     $sn = (int)$this->session()->get('fclogin_error_sn');
                     $time = (int)$this->session()->get('fclogin_error_time');
