@@ -653,13 +653,16 @@
 		place: function(){
 			if (this.isInline)
 				return this;
+            
 			var calendarWidth = this.picker.outerWidth(),
-				calendarHeight = this.picker.outerHeight(),
+				calendarHeight = this.picker.outerHeight(), //
 				visualPadding = 10,
 				container = $(this.o.container),
 				windowWidth = container.width(),
-				scrollTop = this.o.container === 'body' ? $(document).scrollTop() : container.scrollTop(),
+				scrollTop = this.o.container === 'body' ? $(document).scrollTop() : container.scrollTop(), //x
 				appendOffset = container.offset();
+
+            calendarHeight+=200; // jquery3.7fix
 
 			var parentsZindex = [];
 			this.element.parents().each(function(){
@@ -676,7 +679,7 @@
 			if (this.o.container !== 'body') {
 				top += scrollTop;
 			}
-
+ 
 			this.picker.removeClass(
 				'datepicker-orient-top datepicker-orient-bottom '+
 				'datepicker-orient-right datepicker-orient-left'
@@ -710,15 +713,17 @@
 				top_overflow;
 			if (yorient === 'auto'){
 				top_overflow = -scrollTop + top - calendarHeight;
+                //console.log(top_overflow, scrollTop, calendarHeight);
 				yorient = top_overflow < 0 ? 'bottom' : 'top';
 			}
+
 
 			this.picker.addClass('datepicker-orient-' + yorient);
 			if (yorient === 'top')
 				top -= calendarHeight + parseInt(this.picker.css('padding-top'));
 			else
 				top += height;
-
+ 
 			if (this.o.rtl) {
 				var right = windowWidth - (left + width);
 				this.picker.css({
@@ -1441,11 +1446,15 @@
 			if (dir){
 				this.viewMode = Math.max(this.o.minViewMode, Math.min(this.o.maxViewMode, this.viewMode + dir));
 			}
-			this.picker
-				.children('div')
-				.hide()
-				.filter('.datepicker-' + DPGlobal.modes[this.viewMode].clsName)
-					.show();
+            var mydiv = '.datepicker-' + DPGlobal.modes[this.viewMode].clsName;
+
+            // jquery 3.7 的兼容性处理
+            this.picker.children('div').hide();
+            var $days = this.picker.children('div').filter(mydiv);
+            if ($days.length > 0) {
+                $days[0].style.display = 'block'; // 使用原生方法绕过所有问题
+            }
+
 			this.updateNavArrows();
 		}
 	};
