@@ -15,11 +15,11 @@ if (!defined('FRAMEPATH')) {
     if (is_file(WRITEPATH.'frame.lock')) {
         $frame = (string)file_get_contents(WRITEPATH.'frame.lock');
         if (!is_file(FCPATH.$frame.'/Init.php')) {
-            $frame = 'CodeIgniter';
+            $frame = 'System';
         }
         define('FRAMEPATH', FCPATH.$frame.'/');
     } else {
-        define('FRAMEPATH', FCPATH.'CodeIgniter/');
+        define('FRAMEPATH', FCPATH.'System/');
     }
 }
 

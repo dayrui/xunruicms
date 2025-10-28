@@ -142,12 +142,7 @@ class Table extends \Phpcmf\Common {
             }
         }
 
-        $field && uasort($field, function($a, $b){
-            if($a['displayorder'] == $b['displayorder']){
-                return 0;
-            }
-            return($a['displayorder']<$b['displayorder']) ? -1 : 1;
-        });
+        $field = dr_array_sort($field, 'displayorder', 'asc');
 
         foreach ($field as $i => $t) {
             if ($t['setting']['is_right'] == 1) {

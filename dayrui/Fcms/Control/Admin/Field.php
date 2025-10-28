@@ -59,12 +59,7 @@ class Field extends \Phpcmf\Common {
 
         $field = \Phpcmf\Service::M('Field')->get_all_field();
         if ($field) {
-            uasort($field, function($a, $b){
-                if($a['displayorder'] == $b['displayorder']){
-                    return 0;
-                }
-                return($a['displayorder']<$b['displayorder']) ? -1 : 1;
-            });
+            $field = dr_array_sort($field, 'displayorder', 'asc');
             $group = [];
             $mygroup = [];
             // 分组和合并字段筛选

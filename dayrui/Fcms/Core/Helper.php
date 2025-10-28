@@ -2456,11 +2456,20 @@ function dr_randcode() {
     return \Phpcmf\Service::L('Form')->get_rand_value();
 }
 
+
 /**
  * 判断是否为数字类型
+ *
+ * @param    $num     数字类型
+ * @param   $lang     长度范围之外时直接范围false
+ * @return  如果成功则返回 TRUE，失败则返回 FALSE
  */
-function dr_is_numeric($num) {
+function dr_is_numeric($num, $lang = 10) {
 
+    if (dr_strlen($num) > $lang) {
+        return false;
+    }
+    
     if (is_numeric($num)) {
         if (substr($num, 0, 1) == 0) {
             // 0开头的不作为数字类处理
