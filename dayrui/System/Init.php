@@ -264,20 +264,6 @@ if (! function_exists('clean_path')) {
     {
    
         return $path;
-
-        try {
-            $path = realpath($path) ?: $path;
-        } catch (ErrorException|ValueError) {
-            $path = 'error file path: ' . urlencode($path);
-        }
-
-        return match (true) {
-            str_starts_with($path, APPPATH)                             => 'APPPATH' . DIRECTORY_SEPARATOR . substr($path, strlen(APPPATH)),
-            str_starts_with($path, FCPATH)                              => 'FCPATH' . DIRECTORY_SEPARATOR . substr($path, strlen(FCPATH)),
-            str_starts_with($path, ROOTPATH)                            => 'ROOTPATH' . DIRECTORY_SEPARATOR . substr($path, strlen(ROOTPATH)),
-            default                                                     => $path,
-        };
-
     }
 }
 
