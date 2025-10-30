@@ -12,15 +12,18 @@
 
 // CMS框架目录
 if (!defined('FRAMEPATH')) {
+     $frame = 'System';
     if (is_file(WRITEPATH.'frame.lock')) {
-        $frame = (string)file_get_contents(WRITEPATH.'frame.lock');
-        if (!is_file(FCPATH.$frame.'/Init.php')) {
-            $frame = 'System';
+        $name = (string)file_get_contents(WRITEPATH.'frame.lock');
+        if (is_file(FCPATH.$name.'/Init.php')) {
+            $frame = $name;
         }
-        define('FRAMEPATH', FCPATH.$frame.'/');
-    } else {
-        define('FRAMEPATH', FCPATH.'System/');
     }
+    // 低版本兼容
+    if ($frame == 'System' && version_compare(PHP_VERSION, '8.1') < 0 && is_file(FCPATH.'CodeIgniter/Init.php')) {
+        $frame = 'CodeIgniter';
+    }
+    define('FRAMEPATH', FCPATH.$frame.'/');
 }
 
 // CMS公共程序目录
