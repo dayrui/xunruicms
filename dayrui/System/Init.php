@@ -255,11 +255,6 @@ function site_url() {
 
 
 if (! function_exists('clean_path')) {
-    /**
-     * A convenience method to clean paths for
-     * a nicer looking output. Useful for exception
-     * handling, error logging, etc.
-     */
     function clean_path(string $path): string
     {
    
@@ -267,6 +262,52 @@ if (! function_exists('clean_path')) {
     }
 }
 
+if (!class_exists('Locale')) {
+    class Locale {
+
+        static private $locale;
+
+        public static function getDefault() {
+            return self::$locale;
+        }
+
+        public static function setDefault($locale) {
+            self::$locale = $locale;
+        }
+
+    }
+}
+
+if (! function_exists('env')) {
+    /**
+     * Allows user to retrieve values from the environment
+     * variables that have been set. Especially useful for
+     * retrieving values set from the .env file for
+     * use in config files.
+     *
+     * @param array<int|string, mixed>|bool|float|int|object|string|null $default
+     *
+     * @return array<int|string, mixed>|bool|float|int|object|string|null
+     */
+    function env(string $key, $default = null)
+    {
+        $value = $_ENV[$key] ?? $_SERVER[$key] ?? getenv($key);
+
+        // Not found? Return the default value
+        if ($value === false) {
+            return $default;
+        }
+
+        // Handle any boolean values
+        return match (strtolower($value)) {
+            'true'  => true,
+            'false' => false,
+            'empty' => '',
+            'null'  => null,
+            default => $value,
+        };
+    }
+}
 
 if (! function_exists('esc')) {
     /**
@@ -318,22 +359,6 @@ if (! function_exists('esc')) {
     }
 }
 
-if (!function_exists('str_contains')) {
-    function str_contains($haystack, $needle) {
-        return strpos($haystack, $needle) !== false;
-    }
-}
-if (!function_exists('str_starts_with')) {
-    function str_starts_with($haystack, $needle) {
-        return strpos($haystack, $needle) === 0;
-    }
-}
-
-if (!function_exists('str_ends_with')) {
-    function str_ends_with($haystack, $needle) {
-        return substr($haystack, -strlen($needle)) === $needle;
-    }
-}
 
 // 应用插件的自动识别
 $loader = new \Phpcmf\Auto();

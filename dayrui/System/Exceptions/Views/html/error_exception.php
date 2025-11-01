@@ -23,8 +23,9 @@ $errorId = uniqid('error', true);
     <!-- Header -->
     <div class="header">
         <div class="environment">
-            Displayed at <?= esc(date('Y-m-d H:i:s')) ?> &mdash;
-            PHP: <?= esc(PHP_VERSION) ?> 
+            <?= esc(date('Y-m-d H:i:s')) ?> &mdash;
+            PHP<?= esc(PHP_VERSION) ?>  &mdash;
+            <?= trim(esc(clean_path($_SERVER['REQUEST_URI'])), '/');?>
         </div>
         <div class="container">
             <h1><?= esc($title), esc($exception->getCode() ? ' #' . $exception->getCode() : '') ?></h1>
