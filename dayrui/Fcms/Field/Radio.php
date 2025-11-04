@@ -87,6 +87,17 @@ class Radio extends \Phpcmf\Library\A_Field {
 				</div>
 			</div>
 			<div class="form-group">
+            <label class="col-md-2 control-label">'.dr_lang('多语言翻译').'</label>
+            <div class="col-md-9">
+                <div class="mt-radio-inline">
+                    <label class="mt-radio mt-radio-outline"><input type="radio" value="0" name="data[setting][option][lang]" '.(!$option['lang'] ? 'checked' : '').' > '.dr_lang('开启').' <span></span></label>
+                    &nbsp; &nbsp;
+                    <label class="mt-radio mt-radio-outline"><input type="radio" value="1" name="data[setting][option][lang]" '.($option['lang'] ? 'checked' : '').' > '.dr_lang('关闭').' <span></span></label>
+                </div>
+                <span class="help-block">'.dr_lang('开启后选项值被系统语言包翻译，否则就保持原样显示').'</span>
+            </div>
+        	</div>
+			<div class="form-group">
 				<label class="col-md-2 control-label">'.dr_lang('条件联动关联').'</label>
 				<div class="col-md-9">
 					<div class="mt-radio-inline">
@@ -208,7 +219,7 @@ class Radio extends \Phpcmf\Library\A_Field {
 			foreach ($options as $v => $n) {
 				$s = $v == $value ? ' checked' : '';
 				$kj = '<input type="radio" name="data['.$name.']" value="'.$v.'" '.$s.' '.$field['setting']['validate']['formattr'].' />';
-				$str.= '<label class="mt-radio mt-radio-outline">'.$kj.' '.dr_lang($n).' <span></span> </label>';
+				$str.= '<label class="mt-radio mt-radio-outline">'.$kj.' '.(isset($field['setting']['option']['lang']) && $field['setting']['option']['lang'] ?  $n : dr_lang($n)).' <span></span> </label>';
 			}
 		}
 

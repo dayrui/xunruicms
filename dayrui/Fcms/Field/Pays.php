@@ -100,7 +100,6 @@ class Pays extends \Phpcmf\Library\A_Field  {
                     <label class="mt-radio mt-radio-outline"><input onclick="$(\'.gdggb\').show()" type="radio" value="1" name="data[setting][option][is_sku]" '.($option['is_sku'] ? 'checked' : '').' > '.dr_lang('开启').' <span></span></label>
                     &nbsp; &nbsp;
                     <label class="mt-radio mt-radio-outline"><input onclick="$(\'.gdggb\').hide()" type="radio" value="0" name="data[setting][option][is_sku]" '.(!$option['is_sku'] ? 'checked' : '').' > '.dr_lang('关闭').' <span></span></label>
-                   
                 </div>
                 <span class="help-block">'.dr_lang('固定规格会调用指定的规格表，用户不能修改和添加属性').'</span>
             </div>
