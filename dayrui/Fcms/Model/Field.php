@@ -453,8 +453,8 @@ class Field extends \Phpcmf\Model {
             'cat', 'category',
             'top', 'content_page',
             'pageid', 'params', 'page', 'pages',
-            'parent', 'urlrule', 'member',
-            'tags', 'tag', 'prev_page',
+            'parent', 'urlrule', 'member', 'module',
+            'tags', 'tag', 'prev_page', 'app',
             'next_page', 'fstatus', 'old', 'mid', 'groupid', 'related', 'kws', 'more'
         ]);
     }
