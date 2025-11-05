@@ -262,6 +262,8 @@ abstract class BaseExceptionHandler
             extract($vars, EXTR_SKIP);
 
             // CLI error views output to STDERR/STDOUT, so ob_start() does not work.
+            ob_clean(); //屏蔽之前输出
+
             ob_start();
             include $viewFile;
 
