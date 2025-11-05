@@ -90,7 +90,6 @@ class Run
             \CodeIgniter\Events\Events::trigger('pre_system');
         }
 
-
         $controller = 'Home';
         $method = 'index';
 

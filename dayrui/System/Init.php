@@ -395,6 +395,7 @@ if (CI_DEBUG) {
     });
 }
 
+
 // 启动框架
 $run = new \Frame\Run();
 $run->bootWeb();
