@@ -308,7 +308,7 @@ class Toolbar
             $script = PHP_EOL
                 . '<script  id="debugbar_loader" '
                 . 'data-time="' . $time . '" '
-                . 'src="' . SELF . '?debugbar"></script>'
+                . 'src="' . WEB_DIR . SELF . '?debugbar"></script>'
                 . '<script  id="debugbar_dynamic_script"></script>'
                 . '<style id="debugbar_dynamic_style"></style>'
                 . $kintScript
