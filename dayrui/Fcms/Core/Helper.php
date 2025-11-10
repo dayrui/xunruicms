@@ -6,6 +6,19 @@
  **/
 
 
+/**
+ * 结束程序
+ * @param $str
+ * @return 结束程序
+ */
+function dr_exit($str = '') {
+
+    if ($str) {
+        echo $str;
+    }
+    
+    exit;
+}
 
 /**
  * 判断是否为空白
