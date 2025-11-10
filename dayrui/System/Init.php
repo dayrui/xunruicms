@@ -56,9 +56,24 @@ if (! function_exists('csrf_token')) {
      */
     function csrf_token()
     {
-        return '_token';
+        return \Phpcmf\Service::L('Security')->csrf_token();
     }
 }
+
+if (! function_exists('csrf_hash')) {
+    /**
+     * Get the CSRF token value.
+     *
+     * @return string
+     *
+     * @throws \RuntimeException
+     */
+    function csrf_hash()
+    {
+        return \Phpcmf\Service::L('Security')->csrf_hash();
+    }
+}
+
 if (! function_exists('lang')) {
   function lang(...$param) {
 
@@ -80,20 +95,6 @@ if (! function_exists('lang')) {
         }
 
         return $string;
-    }
-}
-
-if (! function_exists('csrf_hash')) {
-    /**
-     * Get the CSRF token value.
-     *
-     * @return string
-     *
-     * @throws \RuntimeException
-     */
-    function csrf_hash()
-    {
-        return substr(SYS_KEY, 3, 10);
     }
 }
 
@@ -392,6 +393,14 @@ if (CI_DEBUG) {
         $tool =  new \CodeIgniter\Debug\Toolbar($config);
 
         $tool->respond();
+    });
+}
+// 当提交完成后执行跨站验证
+if (defined('SYS_CSRF') && SYS_CSRF && IS_POST) {
+    \Phpcmf\Hooks::on('cms_end', function ($rt) {
+        if ($rt['code']) {
+            \Phpcmf\Service::L('Security')->csrf_update();
+        }
     });
 }
 

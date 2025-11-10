@@ -119,6 +119,32 @@ class Run
             exit('<font color=red>方法不存在</font>');
         }
 
+        if (IS_POST && SYS_CSRF) {
+            // SYS_CSRF
+            if (in_array(\Phpcmf\Service::L('router')->uri(), \Phpcmf\Service::Filters())) {
+                // 过滤白名单内的控制器
+            } elseif ((defined('IS_API_HTTP') && IS_API_HTTP) || (defined('IS_API') && IS_API)) {
+                // api 请求下不做验证
+            } elseif (SYS_CSRF == 1 && IS_ADMIN) {
+                // 宽松模式，后台不验证
+            } else {
+                $token = \Phpcmf\Service::L('Security')->csrf_token();
+                $value = \Phpcmf\Service::L('Security')->csrf_hash();
+                $post = isset($_POST[$token]) && $_POST[$token] ? dr_safe_replace($_POST[$token]) : 'null';
+                if ($post == $value) {
+                    // 验证通过
+                } else {
+                    // 验证失败
+                    SYS_DEBUG && log_message('debug', 'CSRF验证拦截（系统码'.$value.' / 提交码'.$post.'）');
+                    dr_exit_msg(0, 'CSRF验证拦截', '', [
+                        'name' => $token,
+                        'value' => $value
+                    ]);
+
+                }
+            }
+        }
+
         $app->$method();
 
         if (CI_DEBUG) {
