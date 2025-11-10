@@ -6,7 +6,7 @@
  **/
 
 /**
- * 安全过滤
+ * 安全处理类
  */
 class Security {
 
@@ -856,6 +856,35 @@ class Security {
 		$str = str_replace($this->_never_call_str, array_keys($this->_never_call_str), $str);
 
 		return $str;
+	}
+
+	/**
+	 * name名称值
+	 */
+	public function csrf_token()
+	{
+		return 'csrf_'.substr(md5(SYS_KEY), 0, 10);
+	}
+
+	/**
+	 * 随机令牌
+	 */
+	public function csrf_hash()
+	{
+		$token = \Phpcmf\Service::L('cache')->get_auth_data('csrf_hash_'.SYS_KEY);
+		if (!$token) {
+			$token = bin2hex(random_bytes(32)); // 64字节hex
+			\Phpcmf\Service::L('cache')->set_auth_data('csrf_hash_'.SYS_KEY, $token);
+		}
+
+		return $token;
+	}
+
+	/**
+	 * 更新令牌
+	 */
+	public function csrf_update() {
+		\Phpcmf\Service::L('cache')->set_auth_data('csrf_hash_'.SYS_KEY, bin2hex(random_bytes(32)));
 	}
 
 

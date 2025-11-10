@@ -231,6 +231,7 @@
                         <input type="hidden" name="data[SYS_ADMIN_LOGIN_AES]" value="{$data['SYS_ADMIN_LOGIN_AES']}" class="form-control">
                         <input type="hidden" name="data[SYS_ADMIN_SMS_LOGIN]" value="{$data['SYS_ADMIN_SMS_LOGIN']}" class="form-control">
                         <input type="hidden" name="data[SYS_ADMIN_SMS_CHECK]" value="{$data['SYS_ADMIN_SMS_CHECK']}" class="form-control">
+                        <input type="hidden" name="data[SYS_CSRF_TIME]" value="1" class="form-control">
                     </div>
                 </div>
 
@@ -267,17 +268,7 @@
                                 </div>
                                 <span class="help-block">{dr_lang('防止CSRF跨站攻击，宽松模式时针对后台操作不进行验证')}</span>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-md-2 control-label">{dr_lang('CSRF验证有效期')}</label>
-                            <div class="col-md-9">
-                                <div class="mt-radio-inline">
-                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_CSRF_TIME]" value="1" {if $data['SYS_CSRF_TIME']}checked{/if} /> {dr_lang('每次生成')} <span></span></label>
-                                    <label class="mt-radio mt-radio-outline"><input type="radio" name="data[SYS_CSRF_TIME]" value="0" {if empty($data['SYS_CSRF_TIME'])}checked{/if} /> {dr_lang('定期生成')} <span></span></label>
-                                </div>
-                                <span class="help-block">{dr_lang('是否在每次请求时重新生成CSRF令牌')}</span>
-                            </div>
-                        </div>
+                        </div> 
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('自动任务权限')}</label>
                             <div class="col-md-9">
