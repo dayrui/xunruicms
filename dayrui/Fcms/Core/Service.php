@@ -19,9 +19,16 @@ class Service {
 	];
     static private $mwhere_apps = [];
     static private $filters = [
-        'home' => ['install/index'],
-        'member' => [],
-        'admin' => [],
+        'home' => [
+            'install/index',
+            'api/ueditor',
+        ],
+        'member' => [
+            'api/ueditor',
+        ],
+        'admin' => [
+            'api/ueditor',
+        ],
     ];
 
     // 获取应用自动加载

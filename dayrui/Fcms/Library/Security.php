@@ -871,10 +871,10 @@ class Security {
 	 */
 	public function csrf_hash()
 	{
-		$token = \Phpcmf\Service::L('cache')->get_auth_data('csrf_hash_'.SYS_KEY);
+
+		$token = \Phpcmf\Service::L('cache')->get_auth_data('csrf_hash_'.SYS_KEY, SITE_ID, 86400);
 		if (!$token) {
-			$token = bin2hex(random_bytes(32)); // 64字节hex
-			\Phpcmf\Service::L('cache')->set_auth_data('csrf_hash_'.SYS_KEY, $token);
+			$token = $this->csrf_update();
 		}
 
 		return $token;
@@ -884,7 +884,11 @@ class Security {
 	 * 更新令牌
 	 */
 	public function csrf_update() {
-		\Phpcmf\Service::L('cache')->set_auth_data('csrf_hash_'.SYS_KEY, bin2hex(random_bytes(32)));
+
+		$key = bin2hex(random_bytes(32));
+		\Phpcmf\Service::L('cache')->set_auth_data('csrf_hash_'.SYS_KEY, $key);
+
+		return $key;
 	}
 
 

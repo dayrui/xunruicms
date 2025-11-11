@@ -395,14 +395,6 @@ if (CI_DEBUG) {
         $tool->respond();
     });
 }
-// 当提交完成后执行跨站验证
-if (defined('SYS_CSRF') && SYS_CSRF && IS_POST) {
-    \Phpcmf\Hooks::on('cms_end', function ($rt) {
-        if ($rt['code']) {
-            \Phpcmf\Service::L('Security')->csrf_update();
-        }
-    });
-}
 
 
 // 启动框架

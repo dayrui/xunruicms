@@ -122,7 +122,7 @@ class Api {
 
             // 文件真实地址
             if ($info['remote']) {
-                $remote = $this->get_cache('attachment', $info['remote']);
+                $remote = \Phpcmf\Service::C()->get_cache('attachment', $info['remote']);
                 if (!$remote) {
                     // 远程地址无效
                     \Phpcmf\Service::C()->_json(0, dr_lang('自定义附件（%s）的配置已经不存在', $info['remote']));
