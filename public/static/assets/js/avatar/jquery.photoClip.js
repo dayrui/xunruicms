@@ -112,9 +112,12 @@
 			} else {
 				var fileReader = new FileReader();
 				fileReader.onprogress = function(e) {
-					console.log((e.loaded / e.total * 100).toFixed() + "%");
+					//console.log((e.loaded / e.total * 100).toFixed() + "%");
 				};
+				
 				fileReader.onload = function(e) {
+					//console.log(typeof lrz);
+					 
 					lrz(files)
 					.then(function (rst) {
 						// 处理成功会执行
@@ -487,7 +490,7 @@
 			var $hide = $();
 			$.each(jq, function(i, n){
 				var $n = $(n);
-				var $hidden = $n.parents().andSelf().filter(":hidden");
+				var $hidden = $n.parents().addBack().filter(":hidden");
 				var $none;
 				for (var i = 0; i < $hidden.length; i++) {
 					if (!$n.is(":hidden")) break;
@@ -541,7 +544,7 @@
 				"user-select": "none",
 				"pointer-events": "none"
 			});
-			$img.load(imgLoad);
+			$img.on('load', imgLoad); 
 			$img.attr("src", src); // 设置图片base64值
 		}
 
