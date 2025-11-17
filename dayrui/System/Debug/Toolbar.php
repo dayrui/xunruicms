@@ -276,12 +276,19 @@ class Toolbar
 
         if (IS_POST) {
             return;
+        } elseif (IS_API) {
+            return;
+        } elseif (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
+            return;
         }
+
+        //ajax请求
         
         /**
          * @var IncomingRequest|null $request
          */
         if (CI_DEBUG && ! is_cli()) {
+
 
 
             $stats   = $app->getPerformanceStats();
