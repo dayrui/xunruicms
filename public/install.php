@@ -7,19 +7,23 @@
 header('Content-Type: text/html; charset=utf-8');
 
 // 最低支持php版本
-$min = '7.4.0';
+$min = '8.1.0';
 
 !defined('WEBPATH') && define('WEBPATH', dirname(__FILE__).'/');
 if (is_file(WEBPATH.'config/api.php')) {
     !defined('CONFIGPATH') && define('CONFIGPATH',WEBPATH.'config/');
     if (is_dir(WEBPATH.'/dayrui/CodeIgniter72/')) {
         $min = '7.2.0';
+    } elseif (is_dir(WEBPATH.'/dayrui/CodeIgniter/')) {
+        $min = '7.4.0';
     }
 } else {
     !defined('CONFIGPATH') && define('CONFIGPATH', dirname(dirname(__FILE__)).'/config/');
     !defined('WRITEPATH') && define('WRITEPATH', dirname(dirname(__FILE__)).'/cache/');
     if (is_dir(dirname(dirname(__FILE__)).'/CodeIgniter72/')) {
         $min = '7.2.0';
+    } elseif (is_dir(dirname(dirname(__FILE__)).'/CodeIgniter/')) {
+        $min = '7.40';
     }
 }
 if (!defined('WRITEPATH')) {
@@ -34,7 +38,7 @@ if (!defined('WRITEPATH')) {
 
 // 判断环境
 if (version_compare(PHP_VERSION, $min) < 0) {
-    exit("<font color=red>PHP版本建议在".$min."及以上，当前".PHP_VERSION."</font><hr>最低支持PHP7.2环境，需要在这里下载兼容包：https://www.xunruicms.com/doc/1166.html");
+    exit("<font color=red>PHP版本建议在".$min."及以上，当前".PHP_VERSION."</font>");
 }
 
 $pos = strpos(trim($_SERVER['SCRIPT_NAME'], '/'), '/');
