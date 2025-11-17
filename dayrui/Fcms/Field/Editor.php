@@ -135,6 +135,23 @@ class Editor extends \Phpcmf\Library\A_Field {
                         </div>
                     </div>
                 </div>
+                <div class="form-group" '.(!$option['show_bottom_boot'] ? 'style="display:none"' : '').'>
+                    <label class="col-md-2 control-label">'.dr_lang('提取缩略图限制').'</label>
+                    <div class="col-md-9">
+                        <div class="input-inline input-small">
+                            <div class="input-group">
+                                <span class="input-group-addon">'.dr_lang('宽大于').'</span>
+                                <input type="text"  name="data[setting][option][thumb][width]" value="'.($option['thumb']['width']).'" class="form-control" placeholder="px">
+                            </div>
+                        </div>
+                        <div class="input-inline input-small">
+                            <div class="input-group">
+                                <span class="input-group-addon">'.dr_lang('高大于').'</span>
+                                <input type="text"  name="data[setting][option][thumb][height]" value="'.($option['thumb']['height']).'" class="form-control" placeholder="px">
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <hr>
                 <div class="form-group">
                     <label class="col-md-2 control-label">'.dr_lang('图片title').'</label>
@@ -316,6 +333,26 @@ class Editor extends \Phpcmf\Library\A_Field {
                         if (isset($_field['thumb']) && $_field['thumb']['fieldtype'] == 'File' && !\Phpcmf\Service::L('Field')->data[$_field['thumb']['ismain']]['thumb']) {
                             if (!is_numeric($img)) {
                                 // 下载缩略图
+                                $width = isset($field['setting']['option']['thumb']['width']) ? $field['setting']['option']['thumb']['width'] : 0;
+                                $height = isset($field['setting']['option']['thumb']['height']) ? $field['setting']['option']['thumb']['height'] : 0;
+                                // 获取图片信息
+                                if ($width || $height) {
+                                    $imageInfo = getimagesize($img);
+                                    if ($imageInfo !== false) {
+                                        // 宽度
+                                        if ($width && $imageInfo[0] < $width) {
+                                            $img = '';
+                                            continue;
+                                        }
+                                        if ($height && $imageInfo[1] < $height) {
+                                            $img = '';
+                                            continue;
+                                        }
+                                    } else {
+                                        $img = '';
+                                        continue;
+                                    }
+                                }
                                 // 判断域名白名单
                                 $arr = parse_url($img);
                                 $domain = $arr['host'];
