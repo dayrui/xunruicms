@@ -28,14 +28,14 @@ class Login extends \Phpcmf\Common
             unlink(WRITEPATH.'install.test');
         }
 
-        $is_sms = isset($_GET['is_sms']) && $_GET['is_sms'];
+        $is_sms = dr_is_app('safe') && isset($_GET['is_sms']) && $_GET['is_sms'];
 
 		if (IS_AJAX_POST) {
             $sn = 0;
             // 回调钩子
             $data = \Phpcmf\Service::L('input')->post('data');
             \Phpcmf\Hooks::trigger('admin_login_before', $data);
-            if (!IS_DEV && isset($_POST['is_check']) && $_POST['is_check']) {
+            if (!IS_DEV && dr_is_app('safe') && isset($_POST['is_check']) && $_POST['is_check']) {
                 // 二次短信验证
                 $data['phone'] = dr_authcode($data['phone'], 'DECODE');
                 if (!$data['phone']) {

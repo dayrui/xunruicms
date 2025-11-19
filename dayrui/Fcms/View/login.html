@@ -98,7 +98,7 @@
         <div class="form-actions">
             <button type="button" onclick="dr_submit()" class="btn blue btn-block"> {dr_lang('登录后台')} </button>
         </div>
-        {if SYS_ADMIN_SMS_LOGIN}
+        {if dr_is_app('safe') && defined('SYS_ADMIN_SMS_LOGIN') && SYS_ADMIN_SMS_LOGIN}
         <div class="form-actions text-right" style="margin-top: -20px;margin-bottom: -15px;">
             {if $is_sms}
             <a href="{$rlogin_url}"> {dr_lang('账号密码登录')} </a>
